@@ -58,7 +58,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (CAP-47). It is a clos
 
 ### T1: Add the playwright and Pillow dependencies
 
-- [ ] Done
+- [x] Done
 
 **What**: `playwright` and `Pillow` as runtime dependencies, lock file updated.
 **Where**: `pyproject.toml` (plus the generated lock file)
@@ -73,9 +73,9 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (CAP-47). It is a clos
 
 **Done when**:
 
-- [ ] `playwright` and `pillow` are in `[project].dependencies`; `numpy` and `coloraide` are not
-- [ ] Gate check passes: Build
-- [ ] Test count: 12 tests pass (no silent deletions)
+- [x] `playwright` and `pillow` are in `[project].dependencies`; `numpy` and `coloraide` are not
+- [x] Gate check passes: Build
+- [x] Test count: 12 tests pass (no silent deletions)
 
 **Tests**: none
 **Gate**: build
