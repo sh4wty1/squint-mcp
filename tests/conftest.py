@@ -27,6 +27,16 @@ async def client(anyio_backend: str) -> AsyncIterator[Client]:
         yield connected
 
 
+@pytest.fixture
+async def client_without_chromium(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> AsyncIterator[Client]:
+    """A second server lifespan, whose Playwright driver finds no browser installed."""
+    monkeypatch.setenv("PLAYWRIGHT_BROWSERS_PATH", str(tmp_path))
+    async with Client(server) as connected:
+        yield connected
+
+
 class _FixtureHandler(SimpleHTTPRequestHandler):
     def do_GET(self) -> None:
         if self.path == "/tick":

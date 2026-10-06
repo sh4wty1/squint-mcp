@@ -172,7 +172,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (CAP-47). It is a clos
 
 ### T5: Add the clear errors
 
-- [ ] Done
+- [x] Done
 
 **What**: The messages for zero matches, several matches, invalid selector, no rendered box, unsupported scheme, failed navigation and Chromium that cannot be launched.
 **Where**: `src/squint_mcp/tools/inspect_element.py` (the selector-count checks; the scheme, navigation, selector-syntax and launch errors in the capture module; tests under `tests/`)
@@ -187,9 +187,9 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (CAP-47). It is a clos
 
 **Done when**:
 
-- [ ] One test per AC listed above, each asserting `isError` and the spec's message
-- [ ] Gate check passes: Build
-- [ ] Test count: 46 tests pass (no silent deletions)
+- [x] One test per AC listed above, each asserting `isError` and the spec's message
+- [x] Gate check passes: Build
+- [x] Test count: 46 tests pass (no silent deletions)
 
 **Tests**: integration
 **Gate**: build

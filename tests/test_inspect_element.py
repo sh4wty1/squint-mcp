@@ -267,3 +267,56 @@ async def test_an_element_below_the_fold_has_pixels(client: Client) -> None:
     content = await inspect(client, BOX, "#below")
     assert content["box"]["y"] == 2000
     assert content["sampledColors"][0]["hex"] == "#008000"
+
+
+async def error_text(client: Client, url: str, selector: str) -> str:
+    """Call the tool, expect a tool error and return its text."""
+    result = await call(client, url, selector)
+    assert result.is_error is True
+    return " ".join(texts(result))
+
+
+async def test_selector_matching_nothing_is_an_error(client: Client) -> None:
+    text = await error_text(client, BOX, "#missing")
+    assert 'Selector "#missing" matched no elements.' in text
+
+
+async def test_selector_matching_several_elements_is_an_error(client: Client) -> None:
+    text = await error_text(client, BOX, ".dup")
+    assert 'Selector ".dup" matched 2 elements; it must match exactly one.' in text
+
+
+async def test_invalid_selector_is_an_error(client: Client) -> None:
+    assert 'Invalid selector "div[".' in await error_text(client, BOX, "div[")
+
+
+async def test_element_with_no_rendered_box_is_an_error(client: Client) -> None:
+    text = await error_text(client, BOX, "#hidden")
+    assert 'Selector "#hidden" matched an element with no rendered box.' in text
+
+
+async def test_unsupported_url_scheme_is_an_error(client: Client) -> None:
+    text = await error_text(client, "ftp://example.com/page.html", "#solid")
+    assert 'Unsupported URL scheme "ftp"; use http://, https:// or file://.' in text
+
+
+async def test_page_that_cannot_be_loaded_is_an_error(client: Client) -> None:
+    url = (FIXTURES / "no-such-page.html").as_uri()
+    assert f"Could not load {url}" in await error_text(client, url, "#solid")
+
+
+async def test_missing_chromium_names_the_install_command(
+    client_without_chromium: Client,
+) -> None:
+    text = await error_text(client_without_chromium, BOX, "#solid")
+    assert "Could not launch Chromium" in text
+    assert "playwright install chromium" in text
+
+
+async def test_server_answers_ping_while_chromium_cannot_be_launched(
+    client_without_chromium: Client,
+) -> None:
+    tools = (await client_without_chromium.list_tools()).tools
+    assert sorted(tool.name for tool in tools) == ["inspect_element", "ping"]
+    result = await client_without_chromium.call_tool("ping", {})
+    assert result.is_error is False

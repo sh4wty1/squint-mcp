@@ -5,9 +5,12 @@ import io
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from pathlib import Path
+from urllib.parse import urlsplit
 
+from mcp.server.mcpserver.exceptions import ToolError
 from PIL import Image
 from playwright.async_api import Browser, Playwright, async_playwright
+from playwright.async_api import Error as PlaywrightError
 from playwright.async_api import TimeoutError as PlaywrightTimeoutError
 
 from squint_mcp import config
@@ -30,8 +33,16 @@ class BrowserSession:
         # The lock keeps two concurrent first calls from launching two browsers.
         async with self._lock:
             if self._browser is None:
-                self._playwright = self._playwright or await async_playwright().start()
-                self._browser = await self._playwright.chromium.launch()
+                try:
+                    self._playwright = (
+                        self._playwright or await async_playwright().start()
+                    )
+                    self._browser = await self._playwright.chromium.launch()
+                except PlaywrightError as error:
+                    raise ToolError(
+                        f"Could not launch Chromium: {_first_line(error)}. "
+                        "If it is not installed, run: playwright install chromium"
+                    ) from error
             return self._browser
 
     async def close(self) -> None:
@@ -51,6 +62,11 @@ async def browser_lifespan(_: object) -> AsyncGenerator[BrowserSession]:
         await session.close()
 
 
+def _first_line(error: PlaywrightError) -> str:
+    """Playwright appends call logs and banners; the first line says what failed."""
+    return error.message.splitlines()[0]
+
+
 async def capture(
     session: BrowserSession, url: str, viewport: Viewport, selector: str
 ) -> Capture:
@@ -59,6 +75,11 @@ async def capture(
     The Capture holds the elements matched by `selector`, which reaches into
     open shadow roots.
     """
+    scheme = urlsplit(url).scheme
+    if scheme not in ("http", "https", "file"):
+        raise ToolError(
+            f'Unsupported URL scheme "{scheme}"; use http://, https:// or file://.'
+        )
     browser = await session.browser()
     context = await browser.new_context(
         viewport={"width": viewport.width, "height": viewport.height},
@@ -68,7 +89,10 @@ async def capture(
         # The tool's total timeout is the only clock; Playwright's own would race it.
         context.set_default_timeout(0)
         page = await context.new_page()
-        await page.goto(url, wait_until="load")
+        try:
+            await page.goto(url, wait_until="load")
+        except PlaywrightError as error:
+            raise ToolError(f"Could not load {url}: {_first_line(error)}") from error
         await page.evaluate(_STABILIZE)
         try:
             await page.wait_for_load_state(
@@ -78,7 +102,13 @@ async def capture(
         except PlaywrightTimeoutError:
             # Polling and analytics keep some pages busy forever: capture them anyway.
             stabilized = False
-        collected = await page.locator(f"css={selector}").evaluate_all(
+        matches = page.locator(f"css={selector}")
+        try:
+            # count() only parses and runs the selector: a failure is its syntax.
+            await matches.count()
+        except PlaywrightError as error:
+            raise ToolError(f'Invalid selector "{selector}".') from error
+        collected = await matches.evaluate_all(
             _COLLECT_ELEMENTS, list(config.INSPECT_COMPUTED_PROPERTIES)
         )
         screenshot = await page.screenshot(full_page=True)

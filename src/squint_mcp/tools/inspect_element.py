@@ -3,6 +3,7 @@
 from typing import Annotated
 
 from mcp.server.mcpserver import Context, Image
+from mcp.server.mcpserver.exceptions import ToolError
 from mcp.types import CallToolResult, TextContent
 from pydantic import BaseModel, ConfigDict
 from pydantic.alias_generators import to_camel
@@ -45,15 +46,28 @@ async def inspect_element(
     captured = await capture(
         ctx.request_context.lifespan_context, url, viewport, selector
     )
+    if not captured.elements:
+        raise ToolError(f'Selector "{selector}" matched no elements.')
+    if len(captured.elements) > 1:
+        raise ToolError(
+            f'Selector "{selector}" matched {len(captured.elements)} elements; '
+            "it must match exactly one."
+        )
     element = captured.elements[0]
     box = element.box
+    sampled_colors = sample_colors(captured.pixels, box)
+    if not sampled_colors:
+        # No pixels to sample or crop: `display: none`, zero area, or off the page.
+        raise ToolError(
+            f'Selector "{selector}" matched an element with no rendered box.'
+        )
     result = InspectElementResult(
         viewport=captured.viewport,
         stabilized=captured.stabilized,
         box=box,
         box_model=element.box_model,
         computed=element.computed,
-        sampled_colors=sample_colors(captured.pixels, box),
+        sampled_colors=sampled_colors,
     )
     state = "stabilized" if captured.stabilized else "not stabilized"
     summary = f"{selector}: {box.w:g}x{box.h:g} at ({box.x:g}, {box.y:g}), {state}"

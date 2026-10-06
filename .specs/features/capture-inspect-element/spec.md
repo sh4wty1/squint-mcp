@@ -217,19 +217,19 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | CAP-24 | P1: Stabilized, isolated Capture | T3 | Implementing |
 | CAP-25 | P1: Stabilized, isolated Capture | T3 | Implementing |
 | CAP-26 | P1: Stabilized, isolated Capture | T3 | Implementing |
-| CAP-27 | P1: Stabilized, isolated Capture | T5 | Pending |
+| CAP-27 | P1: Stabilized, isolated Capture | T5 | Implementing |
 | CAP-28 | P1: Stabilized, isolated Capture | T3 | Implementing |
 | CAP-29 | P1: Stabilized, isolated Capture | T3 | Implementing |
-| CAP-30 | P1: Clear errors | T5 | Pending |
-| CAP-31 | P1: Clear errors | T5 | Pending |
-| CAP-32 | P1: Clear errors | T5 | Pending |
-| CAP-33 | P1: Clear errors | T5 | Pending |
-| CAP-34 | P1: Clear errors | T5 | Pending |
+| CAP-30 | P1: Clear errors | T5 | Implementing |
+| CAP-31 | P1: Clear errors | T5 | Implementing |
+| CAP-32 | P1: Clear errors | T5 | Implementing |
+| CAP-33 | P1: Clear errors | T5 | Implementing |
+| CAP-34 | P1: Clear errors | T5 | Implementing |
 | CAP-35 | P1: Clear errors | T6 | Pending |
 | CAP-36 | P1: Clear errors | T3 | Implementing |
 | CAP-37 | P1: Clear errors | T3 | Implementing |
-| CAP-38 | Edge cases | T5 | Pending |
-| CAP-39 | Edge cases | T5 | Pending |
+| CAP-38 | Edge cases | T5 | Implementing |
+| CAP-39 | Edge cases | T5 | Implementing |
 | CAP-40 | P2: Tooling, configuration and documents | T2 | Implementing |
 | CAP-41 | P2: Tooling, configuration and documents | T1 | Implementing |
 | CAP-42 | P2: Tooling, configuration and documents | T3 | Implementing |
