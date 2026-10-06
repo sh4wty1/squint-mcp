@@ -86,6 +86,12 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: spec.md:49, spec.md:53 (mutants N1, N7, N8; CAP-14, CAP-20) (spec,geometry)
 - last seen: 2026-10-06T17:05:32Z
 
+### L-013 - Set a latency tolerance in the spec as a fraction of the timeout the test uses, not as a fixed number of seconds larger than it
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `spec, timing` · harmful: 0
+- features: capture-inspect-element
+- evidence: CAP-35, mutants Y11 and Y15 (tests/test_inspect_element.py:377) (spec, timing)
+- last seen: 2026-10-06T17:26:23Z
+
 ## Quarantined (failed when applied - ignore)
 
 A confirmed lesson that recurred alongside failure. Kept for the maintainer to review.
