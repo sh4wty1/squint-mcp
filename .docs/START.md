@@ -288,7 +288,34 @@ Formato do `Finding` (JSON, agnóstico de linguagem). Todo detector e toda regra
 - Interação/navegação complexa fica fora; o Squint complementa o `@playwright/mcp`
 - Código será escrito majoritariamente por agente de IA, em fluxo spec-driven (spec → tickets → implementação, 1 ticket por sessão), com revisão humana dos diffs
 
-## 15. Questões em aberto
+### Decididas no grill (2026-10-06)
+
+> Onde estas decisões conflitam com as seções 5–13, **estas valem**. Vocabulário em `CONTEXT.md`, justificativas em `docs/adr/`.
+
+- **Linguagem:** Python 3.12+, `uv`, `pyright` strict, `ruff` (ADR-0001)
+- **Vocabulário:** "detector" e "regra" viram um conceito só, **Check**; todo Check consome um **Capture** e devolve **Finding[]**; **Audit** = execução de um **Profile** (conjunto de Checks). `detectors/` + `audits/rules/` viram `checks/`
+- **Playwright:** dependência normal, restrita ao código que produz o Capture; Checks nunca importam `playwright` (ADR-0002)
+- **Stateless:** cada chamada abre a URL, estabiliza, captura e fecha. Sem `actions`. Só o estado inicial da página; o caminho futuro é anexar a um browser existente via CDP
+- **v0.1:** `ping` + `inspect_element` + `detect_visual_bugs` com 2 Checks (`low-contrast-real`, `text-clipped`). Sem tool `screenshot`. Um browser único reutilizado, sem pool
+- **Entrada:** `http(s)://` (incluindo `localhost`) e `file://`. Sem HTML bruto. Bloqueio de IPs privados é obrigatório quando o transporte HTTP entrar
+- **Navegador:** só local, headless, Chromium
+- **Idioma:** inglês em tudo que é público (código, docs, mensagens de Finding). **Licença:** MIT
+- **Finding:** campo `id` vira `check`; um Finding = um elemento × um viewport × um Check; sem id próprio; inclui trecho do texto visível (~40 caracteres); `cropPath` vira índice da imagem na resposta
+- **Imagens:** inline no MCP, no máximo 5 crops por chamada, por severidade, ~512px no maior lado. Sem escrita em disco
+- **Stabilize:** `load` → `document.fonts.ready` → zerar animações/transições → `networkidle` com timeout de ~3s que não falha (registra `stabilized: false` no Capture). Timeout total de 30s por tool. Sem scroll de lazy-load, sem pausar carrossel/vídeo
+- **Seletor:** `data-testid` > `id` (pulando ids gerados) > role+nome > CSS path; precisa ser único na página
+- **Config:** só parâmetros de tool + defaults no módulo `config`. Sem arquivo de config
+- **Shadow DOM aberto:** v0.1. **Iframes:** fora
+- **Distribuição:** só PyPI (`uvx squint-mcp`) na v0.1; Docker e registros de MCP na fase 5
+- **Versionamento:** 0.x enquanto o schema do Finding mudar. Breaking = remover/renomear campo do Finding, tool ou parâmetro. Mudar limiar ou adicionar Check não é breaking, mas vai no CHANGELOG
+
+### Adiadas (decidir quando a fase chegar, com fixture real)
+
+- Falsos positivos de `overlap` (fase 2)
+- Mockup: só PNG ou Figma (fase 3)
+- Fórmula e pesos do score do audit (fase 4)
+
+## 15. Questões em aberto (histórico, resolvidas acima)
 
 ### Q1 — Linguagem (resolver primeiro: todas as outras dependem dela)
 
