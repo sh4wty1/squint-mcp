@@ -263,7 +263,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (FND-26). It is a clos
 
 ### T8: Add the GitHub templates
 
-- [ ] Done
+- [x] Done
 
 **What**: Bug report and feature request issue templates and a pull request template.
 **Where**: `.github/ISSUE_TEMPLATE/` (two templates) and the pull request template beside it
@@ -278,8 +278,8 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (FND-26). It is a clos
 
 **Done when**:
 
-- [ ] Both issue templates have valid front matter (`name`, `about`)
-- [ ] Gate check passes: Build
+- [x] Both issue templates have valid front matter (`name`, `about`)
+- [x] Gate check passes: Build
 
 **Tests**: none
 **Gate**: build
