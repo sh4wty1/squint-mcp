@@ -76,11 +76,6 @@ npx @tech-leads-club/agent-skills install --skill harness-eval
 
 1. **Visão do projeto:** `grill-with-docs` → `to-spec`
 2. **Harness inicial** (AGENTS.md, CI, lint/tipos/testes): `npx harness-score`
-3. **Cada feature:**
-   - Grande → `tlc-spec-driven`
-   - Pequena → `tlc-spec-lean`
-   - Já planejada (spec ou ticket pronto) → `tlc-implement`
-   - Alternativa: `to-tickets` → `implement`
-   - Não misturar os dois sistemas (Matt e TLC) na mesma feature
+3. **Cada feature:** a escolha da skill segue a seção "Skill routing" do [`AGENTS.md`](AGENTS.md), que é a fonte única dessa regra.
 4. **PR:** `the-judge`
 5. **A cada marco:** `npx harness-score` e, se o AGENTS.md estiver inchando, `harness-eval`
