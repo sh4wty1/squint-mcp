@@ -62,7 +62,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (FND-26). It is a clos
 
 ### T1: Scaffold the Python project
 
-- [ ] Done
+- [x] Done
 
 **What**: `pyproject.toml` with project metadata, `requires-python >= 3.12`, runtime dependencies `mcp` and `pydantic`, dev dependencies `pyright`, `ruff`, `pytest`, pyright strict and ruff configuration; the empty `squint_mcp` package; `.python-version`; `uv.lock`; Python entries in `.gitignore`.
 **Where**: `pyproject.toml` (plus the generated lock file and the package marker)
@@ -77,9 +77,9 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (FND-26). It is a clos
 
 **Done when**:
 
-- [ ] `uv sync` succeeds on Python 3.12
-- [ ] `playwright`, `Pillow`, `numpy`, `coloraide` are absent from `pyproject.toml`
-- [ ] Gate check passes: Static
+- [x] `uv sync` succeeds on Python 3.12
+- [x] `playwright`, `Pillow`, `numpy`, `coloraide` are absent from `pyproject.toml`
+- [x] Gate check passes: Static
 
 **Tests**: none
 **Gate**: static
