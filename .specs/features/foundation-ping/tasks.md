@@ -117,7 +117,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (FND-26). It is a clos
 
 ### T3: Add the server and the ping tool
 
-- [ ] Done
+- [x] Done
 
 **What**: The MCP server named `squint-mcp` with the `ping` tool registered and annotated, and the tests that drive it through the in-memory client.
 **Where**: `src/squint_mcp/tools/ping.py` (handler and result model; registration in the server module, tests under `tests/`)
@@ -132,10 +132,10 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (FND-26). It is a clos
 
 **Done when**:
 
-- [ ] One test per AC: FND-01 to FND-08 and FND-27
-- [ ] Tests import the server only to hand it to `mcp.Client`
-- [ ] Gate check passes: Build
-- [ ] Test count: 9 tests pass
+- [x] One test per AC: FND-01 to FND-08 and FND-27
+- [x] Tests import the server only to hand it to `mcp.Client`
+- [x] Gate check passes: Build
+- [x] Test count: 9 tests pass
 
 **Tests**: integration
 **Gate**: build
