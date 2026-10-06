@@ -92,6 +92,30 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: CAP-35, mutants Y11 and Y15 (tests/test_inspect_element.py:377) (spec, timing)
 - last seen: 2026-10-06T17:26:23Z
 
+### L-014 - Give a geometric rule an outcome in the spec for coordinates below zero on each axis, not only for those past the far edge
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `spec, geometry` · harmful: 0
+- features: capture-inspect-element
+- evidence: PR #3 review F1 (src/squint_mcp/vision.py:25, src/squint_mcp/tools/inspect_element.py:66) (spec, geometry)
+- last seen: 2026-10-06T17:47:43Z
+
+### L-015 - Back every design claim about what a browser or library API covers with a test that fails when the claim is false
+- signal: `ac_gap` · recurrence: 1 feature(s) · scope: `design, external-apis` · harmful: 0
+- features: capture-inspect-element
+- evidence: PR #3 review F2 (design.md:227, src/squint_mcp/js/stabilize.js:16) (design, external-apis)
+- last seen: 2026-10-06T17:47:43Z
+
+### L-016 - Give every resource a call acquires an outcome in the spec for each way the call can end: success, error, timeout and client cancellation
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `spec, lifecycle` · harmful: 0
+- features: capture-inspect-element
+- evidence: PR #3 review F3 (design.md:212, src/squint_mcp/capture.py:116) (spec, lifecycle)
+- last seen: 2026-10-06T17:47:43Z
+
+### L-017 - State in the spec what a long-lived cached handle does when the process behind it dies
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `spec, lifecycle` · harmful: 0
+- features: capture-inspect-element
+- evidence: PR #3 review F4 (src/squint_mcp/capture.py:35) (spec, lifecycle)
+- last seen: 2026-10-06T17:47:43Z
+
 ## Quarantined (failed when applied - ignore)
 
 A confirmed lesson that recurred alongside failure. Kept for the maintainer to review.

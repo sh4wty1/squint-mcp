@@ -3,7 +3,7 @@
   "promote_threshold": 2,
   "window_days": 45,
   "quarantine_threshold": 2,
-  "next_id": 14,
+  "next_id": 18,
   "lessons": [
     {
       "id": "L-001",
@@ -238,6 +238,78 @@
       ],
       "created": "2026-10-06T17:26:23Z",
       "last_seen": "2026-10-06T17:26:23Z"
+    },
+    {
+      "id": "L-014",
+      "key": "spec_precision_gap::give a geometric rule an outcome in the spec for coordinates below zero on each axis not only for those past the far edge",
+      "text": "Give a geometric rule an outcome in the spec for coordinates below zero on each axis, not only for those past the far edge",
+      "signal": "spec_precision_gap",
+      "scope": "spec, geometry",
+      "status": "candidate",
+      "features": [
+        "capture-inspect-element"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "PR #3 review F1 (src/squint_mcp/vision.py:25, src/squint_mcp/tools/inspect_element.py:66) (spec, geometry)"
+      ],
+      "created": "2026-10-06T17:47:43Z",
+      "last_seen": "2026-10-06T17:47:43Z"
+    },
+    {
+      "id": "L-015",
+      "key": "ac_gap::back every design claim about what a browser or library api covers with a test that fails when the claim is false",
+      "text": "Back every design claim about what a browser or library API covers with a test that fails when the claim is false",
+      "signal": "ac_gap",
+      "scope": "design, external-apis",
+      "status": "candidate",
+      "features": [
+        "capture-inspect-element"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "PR #3 review F2 (design.md:227, src/squint_mcp/js/stabilize.js:16) (design, external-apis)"
+      ],
+      "created": "2026-10-06T17:47:43Z",
+      "last_seen": "2026-10-06T17:47:43Z"
+    },
+    {
+      "id": "L-016",
+      "key": "spec_precision_gap::give every resource a call acquires an outcome in the spec for each way the call can end success error timeout and client cancellation",
+      "text": "Give every resource a call acquires an outcome in the spec for each way the call can end: success, error, timeout and client cancellation",
+      "signal": "spec_precision_gap",
+      "scope": "spec, lifecycle",
+      "status": "candidate",
+      "features": [
+        "capture-inspect-element"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "PR #3 review F3 (design.md:212, src/squint_mcp/capture.py:116) (spec, lifecycle)"
+      ],
+      "created": "2026-10-06T17:47:43Z",
+      "last_seen": "2026-10-06T17:47:43Z"
+    },
+    {
+      "id": "L-017",
+      "key": "spec_precision_gap::state in the spec what a long lived cached handle does when the process behind it dies",
+      "text": "State in the spec what a long-lived cached handle does when the process behind it dies",
+      "signal": "spec_precision_gap",
+      "scope": "spec, lifecycle",
+      "status": "candidate",
+      "features": [
+        "capture-inspect-element"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "PR #3 review F4 (src/squint_mcp/capture.py:35) (spec, lifecycle)"
+      ],
+      "created": "2026-10-06T17:47:43Z",
+      "last_seen": "2026-10-06T17:47:43Z"
     }
   ]
 }
