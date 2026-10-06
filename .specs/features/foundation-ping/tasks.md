@@ -177,7 +177,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (FND-26). It is a clos
 
 ### T5: Add the CI workflow
 
-- [ ] Done
+- [x] Done
 
 **What**: GitHub Actions workflow that runs typecheck, lint, format check and tests on push to `main` and on pull requests.
 **Where**: `.github/workflows/ci.yml`
@@ -192,9 +192,9 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (FND-26). It is a clos
 
 **Done when**:
 
-- [ ] Workflow triggers on `push` to `main` and on `pull_request`
-- [ ] Each of the four commands is its own step
-- [ ] Gate check passes: Build
+- [x] Workflow triggers on `push` to `main` and on `pull_request`
+- [x] Each of the four commands is its own step
+- [x] Gate check passes: Build
 
 **Tests**: none
 **Gate**: build

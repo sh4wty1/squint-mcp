@@ -160,7 +160,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | FND-14 | P1: Quality tooling | T1 | Implementing |
 | FND-15 | P1: Quality tooling | T3 | Implementing |
 | FND-16 | P1: Quality tooling | T3 | Implementing |
-| FND-17 | P1: Quality tooling | - | Pending |
+| FND-17 | P1: Quality tooling | T5 | Implementing |
 | FND-18 | P1: Quality tooling | T2 | Implementing |
 | FND-19 | P1: Quality tooling | T1 | Implementing |
 | FND-20 | P2: Project documents | - | Pending |
@@ -172,7 +172,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | FND-26 | P2: Project documents | - | Pending |
 | FND-27 | P1: Connect and ping | T3 | Implementing |
 
-**Coverage:** 27 total, 19 implemented, 8 pending.
+**Coverage:** 27 total, 20 implemented, 7 pending.
 
 **Verification method:** FND-01 to FND-08 and FND-27 by pytest through the in-memory MCP client. FND-09 and FND-10 by the Verifier's one-off stdio launch. FND-11 to FND-15 by running the commands. FND-16 to FND-26 by file evidence; FND-17 additionally by a green CI run once the branch is pushed, which needs an explicit go-ahead.
 
