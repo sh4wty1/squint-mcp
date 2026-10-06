@@ -32,7 +32,8 @@ class BrowserSession:
     async def browser(self) -> Browser:
         # The lock keeps two concurrent first calls from launching two browsers.
         async with self._lock:
-            if self._browser is None:
+            # A browser that crashed or was closed is launched again.
+            if self._browser is None or not self._browser.is_connected():
                 try:
                     self._playwright = (
                         self._playwright or await async_playwright().start()

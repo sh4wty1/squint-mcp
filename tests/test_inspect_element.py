@@ -14,6 +14,7 @@ from PIL import Image
 
 from squint_mcp import config
 from squint_mcp.capture import BrowserSession
+from squint_mcp.server import server
 
 pytestmark = pytest.mark.anyio
 
@@ -432,3 +433,11 @@ async def test_call_cancelled_by_the_client_leaves_no_browser_context_open(
         while browsers[-1].contexts:
             await anyio.sleep(0.05)
     assert browsers[-1].contexts == []
+
+
+async def test_call_after_the_browser_died_relaunches_it(browsers: list[Any]) -> None:
+    # Its own server run: the browser of the shared client is left alone.
+    async with Client(server) as own:
+        assert (await inspect(own, BOX, "#solid"))["box"]["w"] == 120
+        await browsers[-1].close()
+        assert (await inspect(own, BOX, "#solid"))["box"]["w"] == 120
