@@ -234,7 +234,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | CAP-41 | P2: Tooling, configuration and documents | T1 | Implementing |
 | CAP-42 | P2: Tooling, configuration and documents | T3 | Implementing |
 | CAP-43 | P2: Tooling, configuration and documents | T3 | Implementing |
-| CAP-44 | P2: Tooling, configuration and documents | T7 | Pending |
+| CAP-44 | P2: Tooling, configuration and documents | T7 | Implementing |
 | CAP-45 | P2: Tooling, configuration and documents | T8 | Pending |
 | CAP-46 | P2: Tooling, configuration and documents | T8 | Pending |
 | CAP-47 | P2: Tooling, configuration and documents | Closing step | Pending |

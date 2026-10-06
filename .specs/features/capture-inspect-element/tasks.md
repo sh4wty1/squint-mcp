@@ -230,7 +230,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (CAP-47). It is a clos
 
 ### T7: Install Chromium in CI
 
-- [ ] Done
+- [x] Done
 
 **What**: A CI step that installs Chromium and its system dependencies before the tests.
 **Where**: `.github/workflows/ci.yml`
@@ -245,9 +245,9 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (CAP-47). It is a clos
 
 **Done when**:
 
-- [ ] `uv run playwright install --with-deps chromium` runs after `uv sync` and before `Tests`
-- [ ] Gate check passes: Build
-- [ ] Test count: 47 tests pass (no silent deletions)
+- [x] `uv run playwright install --with-deps chromium` runs after `uv sync` and before `Tests`
+- [x] Gate check passes: Build
+- [x] Test count: 47 tests pass (no silent deletions)
 
 **Tests**: none
 **Gate**: build
