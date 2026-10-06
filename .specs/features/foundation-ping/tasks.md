@@ -233,7 +233,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (FND-26). It is a clos
 
 ### T7: Add the community documents
 
-- [ ] Done
+- [x] Done
 
 **What**: LICENSE (MIT), CONTRIBUTING, CHANGELOG and SECURITY.
 **Where**: repository root (`LICENSE` and the three markdown documents)
@@ -248,11 +248,11 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (FND-26). It is a clos
 
 **Done when**:
 
-- [ ] LICENSE holds the MIT text and `Copyright (c) 2026 Lucas Fassi`
-- [ ] CONTRIBUTING gives setup, the four commands, Conventional Commits and the English-only rule
-- [ ] CHANGELOG follows Keep a Changelog and lists `ping` under `Unreleased`
-- [ ] SECURITY points to GitHub private vulnerability reporting
-- [ ] Gate check passes: Build
+- [x] LICENSE holds the MIT text and `Copyright (c) 2026 Lucas Fassi`
+- [x] CONTRIBUTING gives setup, the four commands, Conventional Commits and the English-only rule
+- [x] CHANGELOG follows Keep a Changelog and lists `ping` under `Unreleased`
+- [x] SECURITY points to GitHub private vulnerability reporting
+- [x] Gate check passes: Build
 
 **Tests**: none
 **Gate**: build
