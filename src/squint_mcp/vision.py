@@ -21,15 +21,13 @@ def _region(pixels: Image.Image, box: Box, margin: int) -> Image.Image:
     """The pixels of `box` grown by `margin`, clamped to the page.
 
     Boxes can be fractional (text spans are): round outwards so nothing is cut.
+    A box entirely outside the page yields an empty region.
     """
-    return pixels.crop(
-        (
-            max(0, math.floor(box.x) - margin),
-            max(0, math.floor(box.y) - margin),
-            min(pixels.width, math.ceil(box.x + box.w) + margin),
-            min(pixels.height, math.ceil(box.y + box.h) + margin),
-        )
-    )
+    left = max(0, math.floor(box.x) - margin)
+    top = max(0, math.floor(box.y) - margin)
+    right = max(left, min(pixels.width, math.ceil(box.x + box.w) + margin))
+    bottom = max(top, min(pixels.height, math.ceil(box.y + box.h) + margin))
+    return pixels.crop((left, top, right, bottom))
 
 
 def crop_png(pixels: Image.Image, box: Box) -> bytes:

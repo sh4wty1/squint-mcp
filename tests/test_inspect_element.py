@@ -338,6 +338,14 @@ async def test_element_with_no_rendered_box_is_an_error(client: Client) -> None:
     assert 'Selector "#hidden" matched an element with no rendered box.' in text
 
 
+async def test_element_outside_the_page_origin_has_no_rendered_box(
+    client: Client,
+) -> None:
+    for selector in ("#left-of-page", "#above-page"):
+        text = await error_text(client, BOX, selector)
+        assert f'Selector "{selector}" matched an element with no rendered box.' in text
+
+
 async def test_unsupported_url_scheme_is_an_error(client: Client) -> None:
     text = await error_text(client, "ftp://example.com/page.html", "#solid")
     assert 'Unsupported URL scheme "ftp"; use http://, https:// or file://.' in text

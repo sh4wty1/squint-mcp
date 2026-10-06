@@ -74,6 +74,21 @@
         height: 50px;
         background: rgb(0, 128, 0);
       }
+      /* Entirely outside the page: no pixel of them is captured. */
+      #left-of-page {
+        position: absolute;
+        top: 0;
+        left: -9999px;
+        width: 100px;
+        height: 20px;
+      }
+      #above-page {
+        position: absolute;
+        top: -9999px;
+        left: 0;
+        width: 100px;
+        height: 20px;
+      }
     </style>
   </head>
   <body>
@@ -98,5 +113,7 @@
     <div id="screen"></div>
     <div id="corner"></div>
     <div id="below"></div>
+    <div id="left-of-page"></div>
+    <div id="above-page"></div>
   </body>
 </html>
