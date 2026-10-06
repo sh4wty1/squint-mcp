@@ -4,13 +4,19 @@ from mcp.server.mcpserver import MCPServer
 from mcp.types import ToolAnnotations
 
 from squint_mcp import SERVER_NAME, __version__
+from squint_mcp.capture import browser_lifespan
+from squint_mcp.tools.inspect_element import inspect_element
 from squint_mcp.tools.ping import ping
 
-server = MCPServer(SERVER_NAME, version=__version__)
+server = MCPServer(SERVER_NAME, version=__version__, lifespan=browser_lifespan)
 
 server.add_tool(
     ping,
     annotations=ToolAnnotations(read_only_hint=True, open_world_hint=False),
+)
+server.add_tool(
+    inspect_element,
+    annotations=ToolAnnotations(read_only_hint=True, open_world_hint=True),
 )
 
 

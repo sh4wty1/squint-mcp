@@ -3,7 +3,7 @@
   "promote_threshold": 2,
   "window_days": 45,
   "quarantine_threshold": 2,
-  "next_id": 4,
+  "next_id": 18,
   "lessons": [
     {
       "id": "L-001",
@@ -58,6 +58,258 @@
       ],
       "created": "2026-10-06T15:26:56Z",
       "last_seen": "2026-10-06T15:26:56Z"
+    },
+    {
+      "id": "L-004",
+      "key": "surviving_mutant::assert pixel values at known offsets of a returned image not only its dimensions",
+      "text": "Assert pixel values at known offsets of a returned image, not only its dimensions",
+      "signal": "surviving_mutant",
+      "scope": "tests,vision",
+      "status": "candidate",
+      "features": [
+        "capture-inspect-element"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "tests/test_inspect_element.py:76 (mutant M07, CAP-13) (tests,vision)"
+      ],
+      "created": "2026-10-06T16:48:46Z",
+      "last_seen": "2026-10-06T16:48:46Z"
+    },
+    {
+      "id": "L-005",
+      "key": "surviving_mutant::test page coordinate values on a page that is scrolled when they are read not only at scroll zero",
+      "text": "Test page-coordinate values on a page that is scrolled when they are read, not only at scroll zero",
+      "signal": "surviving_mutant",
+      "scope": "tests,capture",
+      "status": "candidate",
+      "features": [
+        "capture-inspect-element"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "src/squint_mcp/js/collect_elements.js:19 (mutant M27, CAP-20) (tests,capture)"
+      ],
+      "created": "2026-10-06T16:48:46Z",
+      "last_seen": "2026-10-06T16:48:46Z"
+    },
+    {
+      "id": "L-006",
+      "key": "surviving_mutant::assert the elapsed time of a timeout test not only that the timeout error is returned",
+      "text": "Assert the elapsed time of a timeout test, not only that the timeout error is returned",
+      "signal": "surviving_mutant",
+      "scope": "tests,timeouts",
+      "status": "candidate",
+      "features": [
+        "capture-inspect-element"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "tests/test_inspect_element.py:334 (mutant M25, CAP-35) (tests,timeouts)"
+      ],
+      "created": "2026-10-06T16:48:46Z",
+      "last_seen": "2026-10-06T16:48:46Z"
+    },
+    {
+      "id": "L-007",
+      "key": "surviving_mutant::pin a time threshold with a case that ends just past it not only with one that never ends",
+      "text": "Pin a time threshold with a case that ends just past it, not only with one that never ends",
+      "signal": "surviving_mutant",
+      "scope": "tests,timeouts",
+      "status": "candidate",
+      "features": [
+        "capture-inspect-element"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "src/squint_mcp/config.py:11 (mutant M23, CAP-22) (tests,timeouts)"
+      ],
+      "created": "2026-10-06T16:48:46Z",
+      "last_seen": "2026-10-06T16:48:46Z"
+    },
+    {
+      "id": "L-008",
+      "key": "ac_gap::when a criterion names the document section a line belongs to put the line in that section",
+      "text": "When a criterion names the document section a line belongs to, put the line in that section",
+      "signal": "ac_gap",
+      "scope": "docs",
+      "status": "candidate",
+      "features": [
+        "capture-inspect-element"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "CAP-46 (README.md:47) (docs)"
+      ],
+      "created": "2026-10-06T16:48:46Z",
+      "last_seen": "2026-10-06T16:48:46Z"
+    },
+    {
+      "id": "L-009",
+      "key": "spec_precision_gap::give every field of a structured tool input an outcome in the spec that depends on that field",
+      "text": "Give every field of a structured tool input an outcome in the spec that depends on that field",
+      "signal": "spec_precision_gap",
+      "scope": "spec,mcp-tools",
+      "status": "candidate",
+      "features": [
+        "capture-inspect-element"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "CAP-17 (spec.md:110, mutant M34) (spec,mcp-tools)"
+      ],
+      "created": "2026-10-06T16:48:46Z",
+      "last_seen": "2026-10-06T16:48:46Z"
+    },
+    {
+      "id": "L-010",
+      "key": "surviving_mutant::pin a time threshold from both sides with one case that ends shortly before it and one shortly after it",
+      "text": "Pin a time threshold from both sides, with one case that ends shortly before it and one shortly after it",
+      "signal": "surviving_mutant",
+      "scope": "tests,timeouts",
+      "status": "candidate",
+      "features": [
+        "capture-inspect-element"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "src/squint_mcp/config.py:11 (mutant N9, CAP-21) (tests,timeouts)"
+      ],
+      "created": "2026-10-06T17:05:32Z",
+      "last_seen": "2026-10-06T17:05:32Z"
+    },
+    {
+      "id": "L-011",
+      "key": "surviving_mutant::patch a config value in a test with a value of the same type the config holds",
+      "text": "Patch a config value in a test with a value of the same type the config holds",
+      "signal": "surviving_mutant",
+      "scope": "tests,config",
+      "status": "candidate",
+      "features": [
+        "capture-inspect-element"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "tests/test_inspect_element.py:364 (mutant N11, CAP-35) (tests,config)"
+      ],
+      "created": "2026-10-06T17:05:32Z",
+      "last_seen": "2026-10-06T17:05:32Z"
+    },
+    {
+      "id": "L-012",
+      "key": "spec_precision_gap::give a geometric rule an outcome in the spec for every axis and every edge it applies to not for one corner",
+      "text": "Give a geometric rule an outcome in the spec for every axis and every edge it applies to, not for one corner",
+      "signal": "spec_precision_gap",
+      "scope": "spec,geometry",
+      "status": "candidate",
+      "features": [
+        "capture-inspect-element"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "spec.md:49, spec.md:53 (mutants N1, N7, N8; CAP-14, CAP-20) (spec,geometry)"
+      ],
+      "created": "2026-10-06T17:05:32Z",
+      "last_seen": "2026-10-06T17:05:32Z"
+    },
+    {
+      "id": "L-013",
+      "key": "spec_precision_gap::set a latency tolerance in the spec as a fraction of the timeout the test uses not as a fixed number of seconds larger than it",
+      "text": "Set a latency tolerance in the spec as a fraction of the timeout the test uses, not as a fixed number of seconds larger than it",
+      "signal": "spec_precision_gap",
+      "scope": "spec, timing",
+      "status": "candidate",
+      "features": [
+        "capture-inspect-element"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "CAP-35, mutants Y11 and Y15 (tests/test_inspect_element.py:377) (spec, timing)"
+      ],
+      "created": "2026-10-06T17:26:23Z",
+      "last_seen": "2026-10-06T17:26:23Z"
+    },
+    {
+      "id": "L-014",
+      "key": "spec_precision_gap::give a geometric rule an outcome in the spec for coordinates below zero on each axis not only for those past the far edge",
+      "text": "Give a geometric rule an outcome in the spec for coordinates below zero on each axis, not only for those past the far edge",
+      "signal": "spec_precision_gap",
+      "scope": "spec, geometry",
+      "status": "candidate",
+      "features": [
+        "capture-inspect-element"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "PR #3 review F1 (src/squint_mcp/vision.py:25, src/squint_mcp/tools/inspect_element.py:66) (spec, geometry)"
+      ],
+      "created": "2026-10-06T17:47:43Z",
+      "last_seen": "2026-10-06T17:47:43Z"
+    },
+    {
+      "id": "L-015",
+      "key": "ac_gap::back every design claim about what a browser or library api covers with a test that fails when the claim is false",
+      "text": "Back every design claim about what a browser or library API covers with a test that fails when the claim is false",
+      "signal": "ac_gap",
+      "scope": "design, external-apis",
+      "status": "candidate",
+      "features": [
+        "capture-inspect-element"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "PR #3 review F2 (design.md:227, src/squint_mcp/js/stabilize.js:16) (design, external-apis)"
+      ],
+      "created": "2026-10-06T17:47:43Z",
+      "last_seen": "2026-10-06T17:47:43Z"
+    },
+    {
+      "id": "L-016",
+      "key": "spec_precision_gap::give every resource a call acquires an outcome in the spec for each way the call can end success error timeout and client cancellation",
+      "text": "Give every resource a call acquires an outcome in the spec for each way the call can end: success, error, timeout and client cancellation",
+      "signal": "spec_precision_gap",
+      "scope": "spec, lifecycle",
+      "status": "candidate",
+      "features": [
+        "capture-inspect-element"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "PR #3 review F3 (design.md:212, src/squint_mcp/capture.py:116) (spec, lifecycle)"
+      ],
+      "created": "2026-10-06T17:47:43Z",
+      "last_seen": "2026-10-06T17:47:43Z"
+    },
+    {
+      "id": "L-017",
+      "key": "spec_precision_gap::state in the spec what a long lived cached handle does when the process behind it dies",
+      "text": "State in the spec what a long-lived cached handle does when the process behind it dies",
+      "signal": "spec_precision_gap",
+      "scope": "spec, lifecycle",
+      "status": "candidate",
+      "features": [
+        "capture-inspect-element"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "PR #3 review F4 (src/squint_mcp/capture.py:35) (spec, lifecycle)"
+      ],
+      "created": "2026-10-06T17:47:43Z",
+      "last_seen": "2026-10-06T17:47:43Z"
     }
   ]
 }

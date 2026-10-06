@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: boxes</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        font-size: 10px;
+      }
+      /* Border box: 40,60 120x70. Padding box (red): 110x60. */
+      #solid {
+        margin: 60px 10px 20px 40px;
+        border: 5px solid rgb(0, 0, 255);
+        padding: 10px 15px;
+        width: 80px;
+        height: 40px;
+        background: rgb(255, 0, 0);
+        font-size: 2em;
+      }
+      #full {
+        height: 20px;
+        background: rgb(200, 200, 200);
+      }
+      /* Crop source with the 16px margin: 1032x132. */
+      #wide {
+        margin: 20px 0 20px 40px;
+        width: 1000px;
+        height: 100px;
+        background: rgb(128, 0, 128);
+      }
+      /* Four flat colours covering 40%, 30%, 20% and 10% of the box. */
+      #many {
+        display: flex;
+        margin: 20px 40px;
+        width: 100px;
+        height: 40px;
+      }
+      /* The computed background-color is white; what is painted is black. */
+      #over-image {
+        margin: 20px 40px;
+        width: 100px;
+        height: 40px;
+        background-color: rgb(255, 255, 255);
+        background-image: linear-gradient(rgb(0, 0, 0), rgb(0, 0, 0));
+      }
+      #hidden {
+        display: none;
+      }
+      /* As tall as the viewport, whatever its size. */
+      #screen {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1px;
+        height: 100vh;
+      }
+      #corner {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 50px;
+        height: 50px;
+        background: rgb(0, 128, 0);
+      }
+      #below {
+        position: absolute;
+        top: 2000px;
+        left: 0;
+        width: 100px;
+        height: 50px;
+        background: rgb(0, 128, 0);
+      }
+      /* Entirely outside the page: no pixel of them is captured. */
+      #left-of-page {
+        position: absolute;
+        top: 0;
+        left: -9999px;
+        width: 100px;
+        height: 20px;
+      }
+      #above-page {
+        position: absolute;
+        top: -9999px;
+        left: 0;
+        width: 100px;
+        height: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="solid"></div>
+    <div id="full"></div>
+    <div id="wide"></div>
+    <div id="many">
+      <div style="width: 40px; background: rgb(10, 10, 10)"></div>
+      <div style="width: 30px; background: rgb(20, 20, 20)"></div>
+      <div style="width: 20px; background: rgb(30, 30, 30)"></div>
+      <div style="width: 10px; background: rgb(40, 40, 40)"></div>
+    </div>
+    <div id="over-image"></div>
+    <p class="dup">first</p>
+    <p class="dup">second</p>
+    <div id="hidden">hidden</div>
+    <div id="host">
+      <template shadowrootmode="open">
+        <span id="inner" style="color: rgb(0, 0, 255)">inside an open shadow root</span>
+      </template>
+    </div>
+    <div id="screen"></div>
+    <div id="corner"></div>
+    <div id="below"></div>
+    <div id="left-of-page"></div>
+    <div id="above-page"></div>
+  </body>
+</html>

@@ -6,6 +6,7 @@ Requires [uv](https://docs.astral.sh/uv/).
 
 ```bash
 uv sync
+uv run playwright install chromium   # the tests drive a real Chromium
 ```
 
 ## Before you open a pull request

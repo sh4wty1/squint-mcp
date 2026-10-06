@@ -8,13 +8,14 @@ It is built for coding agents that have just produced UI and need to know whethe
 
 Pre-release. Squint is **not on PyPI yet**, so `uvx squint-mcp` does not work today. For now it runs from a checkout.
 
-The server currently exposes one tool:
+The server currently exposes two tools:
 
 | Tool | Input | Output |
 | --- | --- | --- |
 | `ping` | `message` (optional string) | server `name`, `version`, and the echoed `message` |
+| `inspect_element` | `url`, `selector`, `viewport` (optional) | one element's computed styles, box model, sampled colours, `stabilized`, and a crop |
 
-`inspect_element` and `detect_visual_bugs` are next. See [`docs/ROADMAP.md`](docs/ROADMAP.md) for the delivery slices and [`docs/SPEC.md`](docs/SPEC.md) for what v0.1 will contain.
+`detect_visual_bugs` is next. See [`docs/ROADMAP.md`](docs/ROADMAP.md) for the delivery slices and [`docs/SPEC.md`](docs/SPEC.md) for what v0.1 will contain.
 
 ## Run from a checkout
 
@@ -24,6 +25,7 @@ Requires [uv](https://docs.astral.sh/uv/). uv installs Python 3.12 for you if it
 git clone https://github.com/sh4wty1/squint-mcp.git
 cd squint-mcp
 uv sync
+uv run playwright install chromium   # the browser inspect_element drives
 uv run squint-mcp
 ```
 
@@ -44,7 +46,7 @@ Then call `ping` to confirm the connection.
 
 ## Development
 
-One command each:
+One command each. The tests drive a real Chromium, installed once with `uv run playwright install chromium`.
 
 ```bash
 uv run pyright              # typecheck (strict)

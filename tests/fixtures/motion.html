@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: motion</title>
+    <style>
+      div {
+        width: 50px;
+        height: 50px;
+        background: rgb(0, 0, 0);
+      }
+      @keyframes fade {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      #animated {
+        animation: fade 60s forwards;
+      }
+      #transitioned {
+        opacity: 0;
+        transition: opacity 60s;
+      }
+      #transitioned.on {
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="animated"></div>
+    <div id="transitioned"></div>
+    <div id="shadow-host">
+      <template shadowrootmode="open">
+        <style>
+          /* The page's styles stop at the shadow boundary. */
+          div {
+            width: 50px;
+            height: 50px;
+            background: rgb(0, 0, 0);
+          }
+          @keyframes fade {
+            from {
+              opacity: 0;
+            }
+            to {
+              opacity: 1;
+            }
+          }
+          #shadow-animated {
+            animation: fade 100s forwards;
+          }
+          #shadow-late {
+            opacity: 0;
+            transition: opacity 100s;
+          }
+          #shadow-late.on {
+            opacity: 1;
+          }
+        </style>
+        <div id="shadow-animated"></div>
+        <div id="shadow-late"></div>
+      </template>
+    </div>
+    <script>
+      // Two frames, so the opacity: 0 style is painted before the class starts the transition.
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => document.getElementById("transitioned").classList.add("on")),
+      );
+      // Starts after the page was stabilized, and before the network counts as idle.
+      setTimeout(() => {
+        const shadow = document.getElementById("shadow-host").shadowRoot;
+        shadow.getElementById("shadow-late").classList.add("on");
+      }, 300);
+    </script>
+  </body>
+</html>

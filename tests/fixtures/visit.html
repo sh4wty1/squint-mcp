@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: visit counter</title>
+  </head>
+  <body>
+    <div id="probe" style="width: 50px; height: 50px"></div>
+    <script>
+      // Green on a first visit, red when an earlier visit left its mark,
+      // blue when storage does not work at all (so the test cannot pass by accident).
+      let state = "rgb(0, 128, 0)";
+      try {
+        if (localStorage.getItem("seen")) state = "rgb(255, 0, 0)";
+        localStorage.setItem("seen", "1");
+        if (localStorage.getItem("seen") !== "1") state = "rgb(0, 0, 255)";
+      } catch {
+        state = "rgb(0, 0, 255)";
+      }
+      document.getElementById("probe").style.backgroundColor = state;
+    </script>
+  </body>
+</html>
