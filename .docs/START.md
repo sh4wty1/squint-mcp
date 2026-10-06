@@ -5,7 +5,7 @@
 Servidor MCP open source que **vê** a página como um usuário e **mede** como um DevTools. Cruza a renderização real (pixels) com os dados do navegador (DOM/CSS) para detectar bugs visuais, extrair specs de design e gerar audits de UX/UI.
 
 - **Repositório:** https://github.com/sh4wty1/squint-mcp
-- **Pacote npm (pretendido):** `squint-mcp`
+- **Pacote (pretendido):** `squint-mcp` (registro depende da linguagem, ver seção 15)
 - **Licença (pretendida):** MIT
 - **Status:** ideia validada, especificação inicial. Nenhum código ainda.
 
@@ -49,20 +49,26 @@ Servidor MCP open source que **vê** a página como um usuário e **mede** como 
 
 ---
 
-## 5. Stack (proposta)
+## 5. Stack
 
-| Camada | Escolha | Motivo |
-|---|---|---|
-| Linguagem | TypeScript (Node ≥ 22) | SDK MCP oficial e Playwright nativos |
-| MCP | `@modelcontextprotocol/sdk` | Transporte stdio (local) e HTTP (remoto) |
-| Navegador | `playwright` (Chromium primeiro) | CDP, screenshots por elemento, emulação |
-| Imagem | `sharp` | Crop, amostragem de cor, resize, rápido |
-| Diff | `pixelmatch` + `pngjs` | Diff visual e heatmap |
-| Acessibilidade | `axe-core` (injetado na página) | Regras WCAG prontas |
-| Cor | `culori` | Conversão de espaços, contraste, ΔE |
-| Validação | `zod` | Schemas de input/output das tools |
-| Testes | `vitest` | Rápido, TS nativo |
-| Qualidade | ESLint + Prettier | Padrão de projetos open source TS |
+> **Linguagem ainda não decidida** — é a primeira questão do grill (seção 15, Q1).
+> As camadas abaixo valem para qualquer linguagem; a coluna de libs mostra as candidatas.
+
+| Camada | Requisito | Candidatas (Python) | Candidatas (TypeScript) |
+|---|---|---|---|
+| MCP | SDK oficial, stdio + HTTP | `mcp` (FastMCP) | `@modelcontextprotocol/sdk` |
+| Navegador | Playwright oficial, Chromium primeiro | `playwright` (async) | `playwright` |
+| Imagem | Crop, resize, amostragem de pixel | `Pillow` + `numpy` | `sharp` |
+| Visão | Regiões, bordas, alinhamento | `opencv-python` | — (limitado) |
+| Diff | Diff visual + perceptual | `scikit-image` (SSIM) | `pixelmatch` + `pngjs` |
+| Cor | Contraste WCAG, ΔE, espaços de cor | `coloraide` | `culori` |
+| Acessibilidade | Regras WCAG prontas | `axe-core` injetado na página | `axe-core` injetado na página |
+| Modelos/validação | Schemas de input/output | `pydantic` | `zod` |
+| Testes | Unit + integração com fixtures | `pytest` | `vitest` |
+| Qualidade | Tipos estritos + lint/format | `pyright` strict + `ruff` | `tsc` strict + ESLint/Prettier |
+| Distribuição | Instalação em 1 comando | `uvx squint-mcp` (PyPI) | `npx squint-mcp` (npm) |
+
+**Independente da linguagem:** o código que roda dentro da página (`page.evaluate`) é sempre JavaScript. Deve ficar isolado em arquivos `.js` dentro de `collectors/`.
 
 ---
 
@@ -70,7 +76,7 @@ Servidor MCP open source que **vê** a página como um usuário e **mede** como 
 
 ```
 ┌──────────────┐   stdio/HTTP   ┌──────────────────────────────────────┐
-│ Cliente MCP  │ ─────────────▶ │  server.ts (registro de tools)       │
+│ Cliente MCP  │ ─────────────▶ │  server (registro de tools)          │
 │ (Claude etc.)│ ◀───────────── │                                      │
 └──────────────┘                │  ┌────────────┐   ┌───────────────┐  │
                                 │  │ BrowserPool│──▶│ PageSession   │  │
@@ -98,33 +104,30 @@ Servidor MCP open source que **vê** a página como um usuário e **mede** como 
 
 ---
 
-## 7. Estrutura de pastas (proposta)
+## 7. Estrutura de pastas (proposta, agnóstica de linguagem)
 
 ```
 squint-mcp/
-├── src/
-│   ├── index.ts               # Entrypoint do binário (stdio)
-│   ├── server.ts              # Fábrica do McpServer, registra tools
-│   ├── config.ts              # Todos os limiares e defaults
+├── src/squint/                # (ou src/ em TS)
+│   ├── entrypoint             # Sobe o servidor via stdio
+│   ├── server                 # Cria o servidor MCP, registra tools
+│   ├── config                 # Todos os limiares e defaults
 │   ├── tools/                 # 1 arquivo por tool (schema + handler)
 │   ├── browser/
-│   │   ├── pool.ts            # Reuso de browser, limite de concorrência
-│   │   └── stabilize.ts       # Fontes, animações, lazy-load, scroll
-│   ├── collectors/            # Scripts que rodam via page.evaluate
-│   │   ├── styles.ts
-│   │   ├── geometry.ts
-│   │   ├── fonts.ts
-│   │   └── a11y.ts            # Wrapper do axe-core
+│   │   ├── pool               # Reuso de browser, limite de concorrência
+│   │   └── stabilize          # Fontes, animações, lazy-load, scroll
+│   ├── collectors/            # Coleta de DOM/CSS
+│   │   └── js/                # Scripts JS executados via page.evaluate
 │   ├── vision/
-│   │   ├── crop.ts
-│   │   ├── color.ts           # Amostragem, cor dominante, contraste real
-│   │   └── diff.ts            # pixelmatch + heatmap
+│   │   ├── crop
+│   │   ├── color              # Amostragem, cor dominante, contraste real
+│   │   └── diff               # Diff visual + heatmap
 │   ├── detectors/             # 1 arquivo por tipo de bug visual
 │   ├── audits/
 │   │   ├── rules/             # Regras de UX/UI (1 arquivo por regra)
-│   │   └── report.ts          # Agregação, score, Markdown/JSON
+│   │   └── report             # Agregação, score, Markdown/JSON
 │   ├── tokens/                # Extração e clusterização de design tokens
-│   └── types/finding.ts       # Modelo único de achado
+│   └── models/finding         # Modelo único de achado
 ├── fixtures/                  # HTMLs com bugs plantados (para testes)
 ├── tests/
 ├── docs/
@@ -142,23 +145,24 @@ squint-mcp/
 
 ## 8. Modelo de dados central
 
-```ts
-// Todo detector e toda regra de audit devolve isto
-export interface Finding {
-  id: string;                    // ex: "text-clipped"
-  category: 'visual-bug' | 'a11y' | 'consistency' | 'ux' | 'responsive';
-  severity: 'critical' | 'major' | 'minor' | 'info';
-  message: string;               // explicação curta, legível por humano e LLM
-  selector?: string;             // seletor estável do elemento
-  box?: { x: number; y: number; w: number; h: number };
-  viewport: { width: number; height: number };
-  evidence: {
-    computed?: Record<string, string>;          // estilos relevantes
-    measured?: Record<string, number | string>; // valores medidos em pixel
-    cropPath?: string;                          // crop do elemento com margem
-  };
-  suggestion?: string;           // correção sugerida
-  source?: string;               // norma/heurística de origem (ex: "WCAG 2.2 SC 1.4.3")
+Formato do `Finding` (JSON, agnóstico de linguagem). Todo detector e toda regra de audit devolve isto.
+
+```jsonc
+{
+  "id": "text-clipped",              // detector/regra que gerou o achado
+  "category": "visual-bug",          // visual-bug | a11y | consistency | ux | responsive
+  "severity": "major",               // critical | major | minor | info
+  "message": "Texto cortado em 14px pela largura do container",
+  "selector": "[data-testid=hero-title]", // opcional: seletor estável
+  "box": { "x": 120, "y": 340, "w": 480, "h": 56 }, // opcional, px CSS
+  "viewport": { "width": 1440, "height": 900 },
+  "evidence": {
+    "computed": { "overflow": "hidden", "font-size": "48px" }, // estilos relevantes
+    "measured": { "overflowPx": 14 },                          // valores medidos
+    "cropPath": "crops/hero-title.png"                         // crop com margem
+  },
+  "suggestion": "Permitir quebra de linha ou reduzir font-size em telas menores", // opcional
+  "source": "Squint heuristic"       // opcional: norma/heurística (ex: "WCAG 2.2 SC 1.4.3")
 }
 ```
 
@@ -178,7 +182,7 @@ export interface Finding {
 | `audit_ui` | `url`, `profile?` (`wcag`, `nielsen`, `consistency`, `full`) | relatório com score, achados e prioridades | 4 |
 
 ### Regras para as tools
-- Input sempre validado com `zod`
+- Input sempre validado por schema tipado
 - Output estruturado (`structuredContent`) + texto, com no máximo N imagens (configurável)
 - Preferir crops a prints de página inteira (custo de token)
 - Timeout por tool e erro claro quando a página não estabiliza
@@ -227,7 +231,7 @@ export interface Finding {
 ## 12. Roadmap
 
 ### Fase 0 — Fundação
-- [ ] Scaffold TS + MCP SDK + vitest + ESLint/Prettier
+- [ ] Scaffold na linguagem escolhida + SDK MCP + testes + lint/format/typecheck
 - [ ] Arquivos de projeto open source (README, LICENSE, CONTRIBUTING, CHANGELOG, SECURITY, templates do GitHub, CI)
 - [ ] Servidor sobe via stdio e responde à tool `ping`
 - [ ] `BrowserPool` e `stabilize`
@@ -254,19 +258,21 @@ export interface Finding {
 ### Fase 5 — Distribuição
 - [ ] Transporte HTTP
 - [ ] Imagem Docker com browsers inclusos
-- [ ] Publicação no npm e em registros de MCP
+- [ ] Publicação no registro de pacotes e em registros de MCP
 
 ---
 
 ## 13. Convenções de desenvolvimento
 
 - **Código sempre comentado**, explicando o *porquê* das heurísticas e limiares
-- Limiares (contraste, tamanho mínimo, ΔE) centralizados em `src/config.ts`, com a fonte citada
+- Limiares (contraste, tamanho mínimo, ΔE) centralizados no módulo `config`, com a fonte citada
+- Tipagem estrita + lint + testes rodando no CI e localmente (feedback rápido para o agente se corrigir)
 - Todo detector/regra:
   - 1 arquivo próprio
   - 1 fixture HTML com o bug plantado + 1 sem o bug
   - teste que garante detecção e ausência de falso positivo
 - Screenshots de teste com `deviceScaleFactor: 1` e animações desativadas
+- JS executado na página fica em arquivos `.js` separados, nunca em strings inline gigantes
 - Em stdio, logs só em `stderr`
 - Commits pequenos por detector/regra, seguindo Conventional Commits
 - Antes de criar regra nova, registrar a fonte em `docs/research/`
@@ -277,12 +283,37 @@ export interface Finding {
 
 - Nome: **Squint**
 - Projeto público e open source
-- TypeScript + Playwright + SDK MCP oficial
+- Playwright (Chromium primeiro) + SDK MCP oficial
 - Foco do diferencial: diagnóstico explicado **sem baseline**, cruzando pixel e DOM
 - Interação/navegação complexa fica fora; o Squint complementa o `@playwright/mcp`
+- Código será escrito majoritariamente por agente de IA, em fluxo spec-driven (spec → tickets → implementação, 1 ticket por sessão), com revisão humana dos diffs
 
 ## 15. Questões em aberto
 
+### Q1 — Linguagem (resolver primeiro: todas as outras dependem dela)
+
+Contexto:
+- O código será escrito por IA e revisado pelo autor
+- O autor não gosta de JS/TS, curte Python, conhece Java e nunca usou C#
+- O diferencial do projeto é processamento visual (pixel, cor, diff, regiões)
+
+Opções avaliadas até agora:
+
+| Opção | A favor | Contra |
+|---|---|---|
+| **Python** | Playwright oficial; melhor ecossistema de imagem/visão (OpenCV, NumPy, scikit-image, coloraide); FastMCP simples; `uvx` como distribuição; autor curte e revisa com conforto; modelos de IA muito fortes em Python | Tipagem opcional (mitigar com `pyright` strict); um pouco mais lento que Node em I/O, irrelevante aqui |
+| **TypeScript** | Playwright e SDK MCP nativos (features chegam primeiro); `page.evaluate` na mesma linguagem; `npx` é o padrão mais comum de MCPs | Autor não gosta; ecossistema de visão computacional limitado |
+| **C#** | Playwright e SDK MCP oficiais; tipagem forte; curva curta vindo de Java | Autor nunca usou; ecossistema de imagem mais fraco; comunidade MCP menor; `dotnet tool` exige SDK instalado |
+| **Java/Kotlin** | Playwright e SDK MCP oficiais; autor conhece Java; Spring AI | Distribuição pesada (JAR/Docker); foge do ecossistema de front |
+| **Go / Rust** | Binário único, ótima distribuição | Sem Playwright oficial; ecossistema de imagem fraco; muito trabalho para o ganho |
+
+Pergunta-chave para decidir: *o processamento de imagem vai ser simples (crop, amostragem, diff) ou vai evoluir para visão computacional (regiões, alinhamento de mockup, SSIM)?*
+
+Recomendação inicial (a validar no grill): **Python**.
+
+### Demais questões
+
+- **MVP / v0.1**: fases 0+1 sozinhas não mostram diferencial frente ao `@playwright/mcp`. Puxar 1 detector (ex: `low-contrast-real` ou `text-clipped`) para a v0.1?
 - **Idioma** do projeto (README, docs, mensagens dos `Finding`): inglês, português ou bilíngue?
 - **Licença**: MIT ou Apache-2.0?
 - **Onde roda o navegador**: só local na v1, ou já prever execução remota (container/VM)?
@@ -291,9 +322,9 @@ export interface Finding {
 - **Shadow DOM e iframes**: suporte em qual fase?
 - **Seletores estáveis**: ordem `data-testid` > `id` > role+nome > CSS path é suficiente?
 - **Falsos positivos** em overlap (decorativos, `position: absolute` intencional): lista de ignorados? severidade baixa por padrão?
-- **Config do usuário**: arquivo (`squint.config.json`), parâmetros de tool, ou ambos?
+- **Config do usuário**: arquivo de config, parâmetros de tool, ou ambos?
 - **Mockup**: só PNG, ou integração direta com Figma no futuro?
 - **Score do audit**: fórmula e pesos por categoria
 - **Flakiness**: quão agressivo o `stabilize` deve ser (lazy-load, carrosséis, vídeo)?
-- **Distribuição**: só npm, ou também Docker e registros de MCP desde a v0.1?
+- **Distribuição**: só registro de pacotes, ou também Docker e registros de MCP desde a v0.1?
 - **Versionamento**: quando sair de 0.x e o que conta como breaking change (schema de `Finding`?)
