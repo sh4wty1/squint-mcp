@@ -90,7 +90,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (FND-26). It is a clos
 
 ### T2: Add the config module
 
-- [ ] Done
+- [x] Done
 
 **What**: `config` module that exists and defines no thresholds.
 **Where**: `src/squint_mcp/config.py`
@@ -105,8 +105,8 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (FND-26). It is a clos
 
 **Done when**:
 
-- [ ] Module is importable and holds only its docstring
-- [ ] Gate check passes: Static
+- [x] Module is importable and holds only its docstring
+- [x] Gate check passes: Static
 
 **Tests**: none
 **Gate**: static
