@@ -205,7 +205,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (FND-26). It is a clos
 
 ### T6: Write the README
 
-- [ ] Done
+- [x] Done
 
 **What**: README stating what Squint is, that it is pre-release and not on PyPI, how to run the server from a checkout, and the four quality commands.
 **Where**: `README.md`
@@ -220,9 +220,9 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (FND-26). It is a clos
 
 **Done when**:
 
-- [ ] The four content points of FND-20 are present
-- [ ] The run-from-checkout command in the README works when executed
-- [ ] Gate check passes: Build
+- [x] The four content points of FND-20 are present
+- [x] The run-from-checkout command in the README works when executed
+- [x] Gate check passes: Build
 
 **Tests**: none
 **Gate**: build
