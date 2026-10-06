@@ -61,6 +61,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | Element with no rendered box (`display: none`, zero area) | An error, since there are no pixels to crop or sample | Returning an empty crop would be a silent non-answer | n |
 | HTTP error status (404, 500) | Not a load failure: the response page is captured | "Cannot be loaded at all" means the navigation failed; an error page still renders | n |
 | How the 30s timeout is tested | The test lowers `config.TOTAL_TIMEOUT_S` to 1 and calls the tool through the MCP boundary against a URL that never responds | A real 30s wait would slow every test run. The call and the assertions still go through the single seam | n |
+| Timeout latency | The error arrives within 2 seconds after the timeout elapses | Covers cancelling the navigation and closing the context; a looser bound would hide a timeout enforced at the wrong value | n |
 | How "Chromium not installed" is tested | A second in-memory client whose server lifespan starts with `PLAYWRIGHT_BROWSERS_PATH` pointing at an empty directory | Reproduces the real failure without uninstalling anything | n |
 | Tests when Chromium is missing on the machine | They fail, showing the tool's own "playwright install chromium" message. They are never skipped | A skip would let CI pass while testing nothing | n |
 | Criteria not observable through the tool boundary (CAP-24, CAP-28, CAP-29, the `https` third of CAP-25, CAP-40 to CAP-47) | Verified by the Verifier from file evidence, not by pytest | The source docs forbid a second test seam | n |
@@ -104,10 +105,10 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 11. WHEN `inspect_element` is called on `box.html` with selector `#over-image`, whose `background-color` is white under a black background image THEN `computed["background-color"]` SHALL be `rgb(255, 255, 255)` and `sampledColors[0].hex` SHALL be `#000000`. <!-- CAP-11 -->
 12. WHEN `inspect_element` succeeds THEN the server SHALL return `isError: false`, one text content block containing the selector, and exactly one image content block of MIME type `image/png`. <!-- CAP-12 -->
 13. WHEN `inspect_element` is called on `box.html` with selector `#solid` (120×70) THEN the crop SHALL be 152×102 px: the border box plus 16px on each side, at one image pixel per CSS pixel, not upscaled, showing the page background in the margin, the blue border and the red fill. <!-- CAP-13 -->
-14. WHEN `inspect_element` is called on `box.html` with selector `#corner`, a 50×50 element in the top-right corner of the page THEN the crop SHALL be 66×66 px, the margin being clamped to the page. <!-- CAP-14 -->
+14. WHEN `inspect_element` is called on `box.html` with selector `#corner`, a 50×50 element in the top-right corner of the page THEN the crop SHALL be 66×66 px, the margin being clamped to the page, and the crop of `#below` (100×50, in the bottom-left corner of the page) SHALL be 116×66 px. <!-- CAP-14 -->
 15. WHEN `inspect_element` is called on `box.html` with selector `#wide` (1000×100, crop source 1032×132) THEN the crop SHALL be 512×65 px. <!-- CAP-15 -->
 16. WHEN `inspect_element` is called without `viewport` THEN `viewport` SHALL equal `{"width": 1440, "height": 900}` and the full-width element `#full` SHALL have `box.w` equal to 1440 and the viewport-high element `#screen` SHALL have `box.h` equal to 900. <!-- CAP-16 -->
-17. WHEN `inspect_element` is called with `viewport` set to `{"width": 390, "height": 844}` THEN `viewport` SHALL equal that value `#full` SHALL have `box.w` equal to 390 and `#screen` SHALL have `box.h` equal to 844. <!-- CAP-17 -->
+17. WHEN `inspect_element` is called with `viewport` set to `{"width": 390, "height": 844}` THEN `viewport` SHALL equal that value, `#full` SHALL have `box.w` equal to 390 and `#screen` SHALL have `box.h` equal to 844. <!-- CAP-17 -->
 18. WHEN `inspect_element` is called with `viewport` explicitly set to `null` THEN the server SHALL return the same structured content as when `viewport` is omitted. <!-- CAP-18 -->
 19. WHEN the selector matches exactly one element inside an open shadow root (`#inner` in `box.html`) THEN the server SHALL return that element's data, with `computed.color` equal to `rgb(0, 0, 255)`. <!-- CAP-19 -->
 20. WHEN the selector matches an element below the first viewport (`#below`, at y = 2000 in `box.html`) THEN `box.y` SHALL be 2000 and `sampledColors[0].hex` SHALL be `#008000`, whether or not the page is scrolled when it is captured (`box.html#below` scrolls to the element). <!-- CAP-20 -->
@@ -124,7 +125,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 
 **Acceptance Criteria**:
 
-1. WHEN the page reaches network idle within 3 seconds THEN the server SHALL return `stabilized: true`. <!-- CAP-21 -->
+1. WHEN the page reaches network idle within 3 seconds, including a page that stays busy for 1.5 seconds first THEN the server SHALL return `stabilized: true`. <!-- CAP-21 -->
 2. IF the page does not reach network idle within 3 seconds, including a page that goes idle only after 5 seconds THEN the server SHALL return `isError: false` with `stabilized: false`. <!-- CAP-22 -->
 3. WHEN the page runs a 60-second CSS animation or transition of `opacity` from 0 to 1 THEN `computed.opacity` SHALL be `1` for the animated element and for the transitioned element. <!-- CAP-23 -->
 4. The Capture code SHALL wait for `document.fonts.ready` after `load` and before zeroing animations. <!-- CAP-24 -->
@@ -151,7 +152,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 3. IF the URL scheme is not `http`, `https` or `file` THEN the server SHALL return `isError: true` with a text block containing `Unsupported URL scheme "ftp"; use http://, https:// or file://.` (for an `ftp://` URL). <!-- CAP-32 -->
 4. IF the navigation fails THEN the server SHALL return `isError: true` with a text block containing `Could not load ` followed by the URL. <!-- CAP-33 -->
 5. IF Chromium cannot be launched THEN the server SHALL return `isError: true` with a text block containing `Could not launch Chromium` and `playwright install chromium`. <!-- CAP-34 -->
-6. IF a call has not finished within the total timeout (`config.TOTAL_TIMEOUT_S` seconds, 30 by default) THEN the server SHALL return `isError: true` with a text block containing `Timed out after Ns`, N being that number, no later than 2 seconds after the timeout elapses, and SHALL answer the next call on the same connection normally. <!-- CAP-35 -->
+6. IF a call has not finished within the total timeout (`config.TOTAL_TIMEOUT_S` seconds, 30 by default) THEN the server SHALL return `isError: true` with a text block containing `Timed out after Ns`, N being that number written without a trailing `.0` (`Timed out after 30s` by default), no earlier than the timeout and no later than 2 seconds after the timeout elapses, and SHALL answer the next call on the same connection normally. <!-- CAP-35 -->
 7. IF `inspect_element` is called without `selector` THEN the server SHALL return `isError: true` with a text block that names `selector`. <!-- CAP-36 -->
 8. IF `viewport.width` or `viewport.height` is less than 1 THEN the server SHALL return `isError: true` with a text block that names the offending field. <!-- CAP-37 -->
 

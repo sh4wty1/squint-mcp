@@ -178,8 +178,15 @@ async def test_a_page_that_never_goes_network_idle_is_returned_unstabilized(
 async def test_a_page_idle_only_after_five_seconds_is_returned_unstabilized(
     client: Client, local_server: str
 ) -> None:
-    url = f"{local_server}/polling-briefly.html"
+    url = f"{local_server}/polling-briefly.html?ms=5000"
     assert (await inspect(client, url, "#probe"))["stabilized"] is False
+
+
+async def test_a_page_idle_after_a_second_and_a_half_is_stabilized(
+    client: Client, local_server: str
+) -> None:
+    url = f"{local_server}/polling-briefly.html?ms=1500"
+    assert (await inspect(client, url, "#probe"))["stabilized"] is True
 
 
 async def test_animations_and_transitions_are_taken_to_their_end(
@@ -281,7 +288,8 @@ async def test_crop_shows_the_element_as_painted(client: Client) -> None:
 
 
 async def test_crop_margin_is_clamped_to_the_page(client: Client) -> None:
-    assert await crop_size(client, "#corner") == (66, 66)
+    assert await crop_size(client, "#corner") == (66, 66)  # top-right of the page
+    assert await crop_size(client, "#below") == (116, 66)  # bottom-left of the page
 
 
 async def test_crop_is_downscaled_to_512px_on_its_longest_side(client: Client) -> None:
@@ -361,10 +369,10 @@ async def test_call_that_outlives_the_total_timeout_is_an_error_and_server_recov
 ) -> None:
     # The only reach past the MCP boundary: 30 real seconds would slow every run.
     with monkeypatch.context() as patch:
-        patch.setattr(config, "TOTAL_TIMEOUT_S", 1)
+        patch.setattr(config, "TOTAL_TIMEOUT_S", 1.0)
         started = time.monotonic()
         text = await error_text(client, f"{local_server}/hang", "#solid")
         elapsed = time.monotonic() - started
     assert "Timed out after 1s" in text
-    assert elapsed < 3
+    assert 1 <= elapsed < 3
     assert (await inspect(client, BOX, "#solid"))["box"]["w"] == 120
