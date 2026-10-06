@@ -144,7 +144,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (CAP-47). It is a clos
 
 ### T4: Add the crop and the sampled colours
 
-- [ ] Done
+- [x] Done
 
 **What**: `vision.crop` and `vision.sample_colors`, and their use by `inspect_element`: the PNG image block and `sampledColors`.
 **Where**: `src/squint_mcp/vision.py` (and its use in the tool module, tests under `tests/`)
@@ -159,9 +159,9 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (CAP-47). It is a clos
 
 **Done when**:
 
-- [ ] One test per AC listed above
-- [ ] Gate check passes: Build
-- [ ] Test count: 38 tests pass (no silent deletions)
+- [x] One test per AC listed above
+- [x] Gate check passes: Build
+- [x] Test count: 38 tests pass (no silent deletions)
 
 **Tests**: integration
 **Gate**: build

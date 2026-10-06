@@ -1,11 +1,14 @@
 """`inspect_element` through the MCP tool boundary, against real Chromium."""
 
+import base64
+import io
 from pathlib import Path
 from typing import Any
 
 import pytest
 from mcp import Client
-from mcp.types import CallToolResult, TextContent, Tool
+from mcp.types import CallToolResult, ImageContent, TextContent, Tool
+from PIL import Image
 
 pytestmark = pytest.mark.anyio
 
@@ -49,16 +52,26 @@ def texts(result: CallToolResult) -> list[str]:
     return [block.text for block in result.content if isinstance(block, TextContent)]
 
 
+async def call(client: Client, url: str, selector: str, **extra: Any) -> CallToolResult:
+    arguments = {"url": url, "selector": selector, **extra}
+    return await client.call_tool("inspect_element", arguments)
+
+
 async def inspect(
     client: Client, url: str, selector: str, **extra: Any
 ) -> dict[str, Any]:
     """Call the tool and return its structured content, failing on a tool error."""
-    result = await client.call_tool(
-        "inspect_element", {"url": url, "selector": selector, **extra}
-    )
+    result = await call(client, url, selector, **extra)
     assert result.is_error is False, texts(result)
     assert result.structured_content is not None
     return result.structured_content
+
+
+async def crop_size(client: Client, selector: str) -> tuple[int, int]:
+    """Decode the one image the tool returns for `selector` in the box fixture."""
+    result = await call(client, BOX, selector)
+    (image,) = (block for block in result.content if isinstance(block, ImageContent))
+    return Image.open(io.BytesIO(base64.b64decode(image.data))).size
 
 
 async def test_inspect_element_is_read_only_and_open_world(client: Client) -> None:
@@ -187,3 +200,70 @@ async def test_viewport_smaller_than_one_pixel_is_rejected(client: Client) -> No
         )
         assert result.is_error is True
         assert any(field in text for text in texts(result))
+
+
+async def test_structured_content_has_exactly_the_documented_keys(
+    client: Client,
+) -> None:
+    content = await inspect(client, BOX, "#solid")
+    assert set(content) == {
+        "viewport",
+        "stabilized",
+        "box",
+        "boxModel",
+        "computed",
+        "sampledColors",
+    }
+
+
+async def test_sampled_colors_are_the_painted_colors_by_share(client: Client) -> None:
+    content = await inspect(client, BOX, "#solid")
+    assert content["sampledColors"] == [
+        {"hex": "#ff0000", "share": 0.7857},
+        {"hex": "#0000ff", "share": 0.2143},
+    ]
+
+
+async def test_sampled_colors_keep_the_three_most_frequent(client: Client) -> None:
+    content = await inspect(client, BOX, "#many")
+    assert content["sampledColors"] == [
+        {"hex": "#0a0a0a", "share": 0.4},
+        {"hex": "#141414", "share": 0.3},
+        {"hex": "#1e1e1e", "share": 0.2},
+    ]
+
+
+async def test_sampled_color_is_the_painted_one_not_the_computed_one(
+    client: Client,
+) -> None:
+    content = await inspect(client, BOX, "#over-image")
+    assert content["computed"]["background-color"] == "rgb(255, 255, 255)"
+    assert content["sampledColors"][0]["hex"] == "#000000"
+
+
+async def test_success_carries_a_summary_and_one_png_crop(client: Client) -> None:
+    result = await call(client, BOX, "#solid")
+    assert result.is_error is False
+    assert any("#solid" in text for text in texts(result))
+    images = [block for block in result.content if isinstance(block, ImageContent)]
+    assert [image.mime_type for image in images] == ["image/png"]
+
+
+async def test_crop_is_the_box_plus_a_16px_margin_at_one_pixel_per_css_pixel(
+    client: Client,
+) -> None:
+    assert await crop_size(client, "#solid") == (152, 102)
+
+
+async def test_crop_margin_is_clamped_to_the_page(client: Client) -> None:
+    assert await crop_size(client, "#corner") == (66, 66)
+
+
+async def test_crop_is_downscaled_to_512px_on_its_longest_side(client: Client) -> None:
+    assert await crop_size(client, "#wide") == (512, 65)
+
+
+async def test_an_element_below_the_fold_has_pixels(client: Client) -> None:
+    content = await inspect(client, BOX, "#below")
+    assert content["box"]["y"] == 2000
+    assert content["sampledColors"][0]["hex"] == "#008000"
