@@ -43,7 +43,7 @@ async def test_ping_takes_only_an_optional_string_message(client: Client) -> Non
     assert list(schema["properties"]) == ["message"]
     message = schema["properties"]["message"]
     accepted = {message.get("type")} | {o.get("type") for o in message.get("anyOf", [])}
-    assert "string" in accepted
+    assert accepted - {None, "null"} == {"string"}
     assert "message" not in schema.get("required", [])
 
 

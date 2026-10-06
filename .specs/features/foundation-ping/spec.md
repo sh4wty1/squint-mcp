@@ -48,6 +48,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | Version reported by `ping` | The installed package version, read from package metadata; `pyproject.toml` starts at `0.1.0` | One source of truth; nothing is published before slice 5 | n |
 | `ping` output field names | `name`, `version`, `message` | Direct reading of "server name, version, echoed message" | n |
 | `message` omitted | `message` is `null` in the output | Keeps the output shape constant | n |
+| Explicit `null` for `message` | Accepted, and equal to omitting it; string is the only other accepted type | The schema of an optional string advertises `string` or `null`; rejecting `null` would add code for no benefit | n |
 | `message` length limit | None | Local stdio server echoing to its own caller; no resource to protect | n |
 | `ping` annotations | `readOnlyHint: true`, `openWorldHint: false` | `ping` changes nothing and reaches nothing outside the process | n |
 | `ping` text summary | One text block containing the server name and the version | SPEC requires "structured content plus a text summary" and fixes no wording | n |
