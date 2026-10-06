@@ -37,11 +37,17 @@ async def client_without_chromium(
         yield connected
 
 
+_server_closing = threading.Event()
+
+
 class _FixtureHandler(SimpleHTTPRequestHandler):
     def do_GET(self) -> None:
         if self.path == "/tick":
             self.send_response(204)
             self.end_headers()
+        elif self.path == "/hang":
+            # Never answers: the page stays stuck before `load`.
+            _server_closing.wait()
         else:
             super().do_GET()
 
@@ -56,4 +62,5 @@ def local_server() -> Iterator[str]:
     with ThreadingHTTPServer(("127.0.0.1", 0), handler) as httpd:
         threading.Thread(target=httpd.serve_forever, daemon=True).start()
         yield f"http://127.0.0.1:{httpd.server_port}"
+        _server_closing.set()
         httpd.shutdown()

@@ -225,7 +225,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | CAP-32 | P1: Clear errors | T5 | Implementing |
 | CAP-33 | P1: Clear errors | T5 | Implementing |
 | CAP-34 | P1: Clear errors | T5 | Implementing |
-| CAP-35 | P1: Clear errors | T6 | Pending |
+| CAP-35 | P1: Clear errors | T6 | Implementing |
 | CAP-36 | P1: Clear errors | T3 | Implementing |
 | CAP-37 | P1: Clear errors | T3 | Implementing |
 | CAP-38 | Edge cases | T5 | Implementing |

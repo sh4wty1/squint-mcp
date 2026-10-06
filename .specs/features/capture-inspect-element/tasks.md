@@ -200,7 +200,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (CAP-47). It is a clos
 
 ### T6: Bound every call by the total timeout
 
-- [ ] Done
+- [x] Done
 
 **What**: `asyncio.timeout(config.TOTAL_TIMEOUT_S)` around the handler body and the `Timed out after Ns.` error.
 **Where**: `src/squint_mcp/tools/inspect_element.py` (modify; test under `tests/`)
@@ -215,9 +215,9 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (CAP-47). It is a clos
 
 **Done when**:
 
-- [ ] A test lowers the timeout to 1s, calls a URL that never answers, asserts `isError` and `Timed out after 1s`, then gets a successful result from the next call on the same client
-- [ ] Gate check passes: Build
-- [ ] Test count: 47 tests pass (no silent deletions)
+- [x] A test lowers the timeout to 1s, calls a URL that never answers, asserts `isError` and `Timed out after 1s`, then gets a successful result from the next call on the same client
+- [x] Gate check passes: Build
+- [x] Test count: 47 tests pass (no silent deletions)
 
 **Tests**: integration
 **Gate**: build

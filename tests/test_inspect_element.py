@@ -10,6 +10,8 @@ from mcp import Client
 from mcp.types import CallToolResult, ImageContent, TextContent, Tool
 from PIL import Image
 
+from squint_mcp import config
+
 pytestmark = pytest.mark.anyio
 
 FIXTURES = Path(__file__).parent / "fixtures"
@@ -320,3 +322,14 @@ async def test_server_answers_ping_while_chromium_cannot_be_launched(
     assert sorted(tool.name for tool in tools) == ["inspect_element", "ping"]
     result = await client_without_chromium.call_tool("ping", {})
     assert result.is_error is False
+
+
+async def test_call_that_outlives_the_total_timeout_is_an_error_and_server_recovers(
+    client: Client, local_server: str, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # The only reach past the MCP boundary: 30 real seconds would slow every run.
+    with monkeypatch.context() as patch:
+        patch.setattr(config, "TOTAL_TIMEOUT_S", 1)
+        text = await error_text(client, f"{local_server}/hang", "#solid")
+    assert "Timed out after 1s" in text
+    assert (await inspect(client, BOX, "#solid"))["box"]["w"] == 120

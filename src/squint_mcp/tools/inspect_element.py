@@ -1,5 +1,6 @@
 """The `inspect_element` tool: one element as resolved and as painted."""
 
+import asyncio
 from typing import Annotated
 
 from mcp.server.mcpserver import Context, Image
@@ -38,14 +39,19 @@ async def inspect_element(
     colours actually painted inside its box and a crop of it. `selector` is a CSS
     selector that must match exactly one element; it reaches into open shadow
     roots. `viewport` defaults to 1440x900. `stabilized` is false when the network
-    never went idle.
+    never went idle. A call that takes longer than 30s fails.
     """
     viewport = viewport or Viewport(
         width=config.DEFAULT_VIEWPORT_WIDTH, height=config.DEFAULT_VIEWPORT_HEIGHT
     )
-    captured = await capture(
-        ctx.request_context.lifespan_context, url, viewport, selector
-    )
+    try:
+        # asyncio.timeout cancels once, so the capture's cleanup still gets to run.
+        async with asyncio.timeout(config.TOTAL_TIMEOUT_S):
+            captured = await capture(
+                ctx.request_context.lifespan_context, url, viewport, selector
+            )
+    except TimeoutError as error:
+        raise ToolError(f"Timed out after {config.TOTAL_TIMEOUT_S:g}s.") from error
     if not captured.elements:
         raise ToolError(f'Selector "{selector}" matched no elements.')
     if len(captured.elements) > 1:
