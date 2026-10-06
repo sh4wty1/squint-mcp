@@ -103,14 +103,14 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 10. WHEN `inspect_element` is called on `box.html` with selector `#many`, which paints four colours THEN `sampledColors` SHALL hold exactly 3 entries ordered by `share` descending. <!-- CAP-10 -->
 11. WHEN `inspect_element` is called on `box.html` with selector `#over-image`, whose `background-color` is white under a black background image THEN `computed["background-color"]` SHALL be `rgb(255, 255, 255)` and `sampledColors[0].hex` SHALL be `#000000`. <!-- CAP-11 -->
 12. WHEN `inspect_element` succeeds THEN the server SHALL return `isError: false`, one text content block containing the selector, and exactly one image content block of MIME type `image/png`. <!-- CAP-12 -->
-13. WHEN `inspect_element` is called on `box.html` with selector `#solid` (120×70) THEN the crop SHALL be 152×102 px: the border box plus 16px on each side, at one image pixel per CSS pixel, not upscaled. <!-- CAP-13 -->
+13. WHEN `inspect_element` is called on `box.html` with selector `#solid` (120×70) THEN the crop SHALL be 152×102 px: the border box plus 16px on each side, at one image pixel per CSS pixel, not upscaled, showing the page background in the margin, the blue border and the red fill. <!-- CAP-13 -->
 14. WHEN `inspect_element` is called on `box.html` with selector `#corner`, a 50×50 element in the top-right corner of the page THEN the crop SHALL be 66×66 px, the margin being clamped to the page. <!-- CAP-14 -->
 15. WHEN `inspect_element` is called on `box.html` with selector `#wide` (1000×100, crop source 1032×132) THEN the crop SHALL be 512×65 px. <!-- CAP-15 -->
-16. WHEN `inspect_element` is called without `viewport` THEN `viewport` SHALL equal `{"width": 1440, "height": 900}` and the full-width element `#full` SHALL have `box.w` equal to 1440. <!-- CAP-16 -->
-17. WHEN `inspect_element` is called with `viewport` set to `{"width": 390, "height": 844}` THEN `viewport` SHALL equal that value and `#full` SHALL have `box.w` equal to 390. <!-- CAP-17 -->
+16. WHEN `inspect_element` is called without `viewport` THEN `viewport` SHALL equal `{"width": 1440, "height": 900}` and the full-width element `#full` SHALL have `box.w` equal to 1440 and the viewport-high element `#screen` SHALL have `box.h` equal to 900. <!-- CAP-16 -->
+17. WHEN `inspect_element` is called with `viewport` set to `{"width": 390, "height": 844}` THEN `viewport` SHALL equal that value `#full` SHALL have `box.w` equal to 390 and `#screen` SHALL have `box.h` equal to 844. <!-- CAP-17 -->
 18. WHEN `inspect_element` is called with `viewport` explicitly set to `null` THEN the server SHALL return the same structured content as when `viewport` is omitted. <!-- CAP-18 -->
 19. WHEN the selector matches exactly one element inside an open shadow root (`#inner` in `box.html`) THEN the server SHALL return that element's data, with `computed.color` equal to `rgb(0, 0, 255)`. <!-- CAP-19 -->
-20. WHEN the selector matches an element below the first viewport (`#below`, at y = 2000 in `box.html`) THEN `box.y` SHALL be 2000 and `sampledColors[0].hex` SHALL be `#008000`. <!-- CAP-20 -->
+20. WHEN the selector matches an element below the first viewport (`#below`, at y = 2000 in `box.html`) THEN `box.y` SHALL be 2000 and `sampledColors[0].hex` SHALL be `#008000`, whether or not the page is scrolled when it is captured (`box.html#below` scrolls to the element). <!-- CAP-20 -->
 
 **Independent Test**: Call `inspect_element` on `tests/fixtures/box.html` over `file://` through the in-memory client and compare the structured content and the decoded crop.
 
@@ -125,7 +125,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 **Acceptance Criteria**:
 
 1. WHEN the page reaches network idle within 3 seconds THEN the server SHALL return `stabilized: true`. <!-- CAP-21 -->
-2. IF the page does not reach network idle within 3 seconds THEN the server SHALL return `isError: false` with `stabilized: false`. <!-- CAP-22 -->
+2. IF the page does not reach network idle within 3 seconds, including a page that goes idle only after 5 seconds THEN the server SHALL return `isError: false` with `stabilized: false`. <!-- CAP-22 -->
 3. WHEN the page runs a 60-second CSS animation or transition of `opacity` from 0 to 1 THEN `computed.opacity` SHALL be `1` for the animated element and for the transitioned element. <!-- CAP-23 -->
 4. The Capture code SHALL wait for `document.fonts.ready` after `load` and before zeroing animations. <!-- CAP-24 -->
 5. The server SHALL accept `http://` URLs, `https://` URLs and `file://` URLs. <!-- CAP-25 -->
@@ -151,7 +151,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 3. IF the URL scheme is not `http`, `https` or `file` THEN the server SHALL return `isError: true` with a text block containing `Unsupported URL scheme "ftp"; use http://, https:// or file://.` (for an `ftp://` URL). <!-- CAP-32 -->
 4. IF the navigation fails THEN the server SHALL return `isError: true` with a text block containing `Could not load ` followed by the URL. <!-- CAP-33 -->
 5. IF Chromium cannot be launched THEN the server SHALL return `isError: true` with a text block containing `Could not launch Chromium` and `playwright install chromium`. <!-- CAP-34 -->
-6. IF a call has not finished within the total timeout (`config.TOTAL_TIMEOUT_S` seconds, 30 by default) THEN the server SHALL return `isError: true` with a text block containing `Timed out after Ns`, N being that number, and SHALL answer the next call on the same connection normally. <!-- CAP-35 -->
+6. IF a call has not finished within the total timeout (`config.TOTAL_TIMEOUT_S` seconds, 30 by default) THEN the server SHALL return `isError: true` with a text block containing `Timed out after Ns`, N being that number, no later than 2 seconds after the timeout elapses, and SHALL answer the next call on the same connection normally. <!-- CAP-35 -->
 7. IF `inspect_element` is called without `selector` THEN the server SHALL return `isError: true` with a text block that names `selector`. <!-- CAP-36 -->
 8. IF `viewport.width` or `viewport.height` is less than 1 THEN the server SHALL return `isError: true` with a text block that names the offending field. <!-- CAP-37 -->
 
@@ -173,7 +173,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 4. The JavaScript that runs inside the page SHALL live in `.js` files, with no JavaScript function bodies in Python strings. <!-- CAP-43 -->
 5. WHEN CI runs THEN it SHALL install Chromium before the test step. <!-- CAP-44 -->
 6. The `Unreleased` section of `CHANGELOG.md` SHALL list the `inspect_element` tool. <!-- CAP-45 -->
-7. `CONTRIBUTING.md` and the development section of `README.md` SHALL give the command that installs Chromium for the tests. <!-- CAP-46 -->
+7. `CONTRIBUTING.md` and the Development section of `README.md` SHALL give the command that installs Chromium for the tests. <!-- CAP-46 -->
 8. WHEN the Verifier reports PASS for this feature THEN `docs/ROADMAP.md` SHALL show slice 2 as `concluída` in both the table and the slice 2 section. <!-- CAP-47 -->
 
 **Independent Test**: Read `config.py`, `pyproject.toml`, the CI workflow and the documents; grep `src/` for `playwright` imports.

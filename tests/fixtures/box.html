@@ -50,6 +50,14 @@
       #hidden {
         display: none;
       }
+      /* As tall as the viewport, whatever its size. */
+      #screen {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1px;
+        height: 100vh;
+      }
       #corner {
         position: absolute;
         top: 0;
@@ -87,6 +95,7 @@
         <span id="inner" style="color: rgb(0, 0, 255)">inside an open shadow root</span>
       </template>
     </div>
+    <div id="screen"></div>
     <div id="corner"></div>
     <div id="below"></div>
   </body>

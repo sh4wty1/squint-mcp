@@ -2,6 +2,7 @@
 
 import base64
 import io
+import time
 from pathlib import Path
 from typing import Any
 
@@ -69,11 +70,15 @@ async def inspect(
     return result.structured_content
 
 
-async def crop_size(client: Client, selector: str) -> tuple[int, int]:
+async def crop(client: Client, selector: str) -> Image.Image:
     """Decode the one image the tool returns for `selector` in the box fixture."""
     result = await call(client, BOX, selector)
     (image,) = (block for block in result.content if isinstance(block, ImageContent))
-    return Image.open(io.BytesIO(base64.b64decode(image.data))).size
+    return Image.open(io.BytesIO(base64.b64decode(image.data))).convert("RGB")
+
+
+async def crop_size(client: Client, selector: str) -> tuple[int, int]:
+    return (await crop(client, selector)).size
 
 
 async def test_inspect_element_is_read_only_and_open_world(client: Client) -> None:
@@ -137,6 +142,7 @@ async def test_default_viewport_is_1440_by_900(client: Client) -> None:
     content = await inspect(client, BOX, "#full")
     assert content["viewport"] == {"width": 1440, "height": 900}
     assert content["box"]["w"] == 1440
+    assert (await inspect(client, BOX, "#screen"))["box"]["h"] == 900
 
 
 async def test_viewport_argument_sets_the_page_size(client: Client) -> None:
@@ -144,6 +150,8 @@ async def test_viewport_argument_sets_the_page_size(client: Client) -> None:
     content = await inspect(client, BOX, "#full", viewport=viewport)
     assert content["viewport"] == viewport
     assert content["box"]["w"] == 390
+    screen = await inspect(client, BOX, "#screen", viewport=viewport)
+    assert screen["box"]["h"] == 844
 
 
 async def test_null_viewport_matches_omitting_it(client: Client) -> None:
@@ -165,6 +173,13 @@ async def test_a_page_that_never_goes_network_idle_is_returned_unstabilized(
 ) -> None:
     content = await inspect(client, f"{local_server}/polling.html", "#probe")
     assert content["stabilized"] is False
+
+
+async def test_a_page_idle_only_after_five_seconds_is_returned_unstabilized(
+    client: Client, local_server: str
+) -> None:
+    url = f"{local_server}/polling-briefly.html"
+    assert (await inspect(client, url, "#probe"))["stabilized"] is False
 
 
 async def test_animations_and_transitions_are_taken_to_their_end(
@@ -257,6 +272,14 @@ async def test_crop_is_the_box_plus_a_16px_margin_at_one_pixel_per_css_pixel(
     assert await crop_size(client, "#solid") == (152, 102)
 
 
+async def test_crop_shows_the_element_as_painted(client: Client) -> None:
+    image = await crop(client, "#solid")
+    assert image.getpixel((0, 0)) == (255, 255, 255)  # margin: page background
+    assert image.getpixel((16, 16)) == (0, 0, 255)  # first pixel of the border
+    assert image.getpixel((21, 21)) == (255, 0, 0)  # first pixel inside the border
+    assert image.getpixel((76, 51)) == (255, 0, 0)  # centre
+
+
 async def test_crop_margin_is_clamped_to_the_page(client: Client) -> None:
     assert await crop_size(client, "#corner") == (66, 66)
 
@@ -267,6 +290,15 @@ async def test_crop_is_downscaled_to_512px_on_its_longest_side(client: Client) -
 
 async def test_an_element_below_the_fold_has_pixels(client: Client) -> None:
     content = await inspect(client, BOX, "#below")
+    assert content["box"]["y"] == 2000
+    assert content["sampledColors"][0]["hex"] == "#008000"
+
+
+async def test_box_stays_in_page_coordinates_when_the_page_is_scrolled(
+    client: Client,
+) -> None:
+    # The fragment scrolls the page to the element before it is captured.
+    content = await inspect(client, f"{BOX}#below", "#below")
     assert content["box"]["y"] == 2000
     assert content["sampledColors"][0]["hex"] == "#008000"
 
@@ -330,6 +362,9 @@ async def test_call_that_outlives_the_total_timeout_is_an_error_and_server_recov
     # The only reach past the MCP boundary: 30 real seconds would slow every run.
     with monkeypatch.context() as patch:
         patch.setattr(config, "TOTAL_TIMEOUT_S", 1)
+        started = time.monotonic()
         text = await error_text(client, f"{local_server}/hang", "#solid")
+        elapsed = time.monotonic() - started
     assert "Timed out after 1s" in text
+    assert elapsed < 3
     assert (await inspect(client, BOX, "#solid"))["box"]["w"] == 120

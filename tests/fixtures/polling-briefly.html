@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: network-idle only after 5 seconds</title>
+  </head>
+  <body>
+    <div id="probe" style="width: 50px; height: 50px; background: rgb(0, 0, 0)"></div>
+    <script>
+      // Busy for 5 seconds, then quiet: idle too late for a 3-second wait.
+      const polling = setInterval(() => fetch("/tick"), 100);
+      setTimeout(() => clearInterval(polling), 5000);
+    </script>
+  </body>
+</html>
