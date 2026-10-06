@@ -46,7 +46,7 @@ Then call `ping` to confirm the connection.
 
 ## Development
 
-One command each:
+One command each. The tests drive a real Chromium, installed once with `uv run playwright install chromium`.
 
 ```bash
 uv run pyright              # typecheck (strict)
