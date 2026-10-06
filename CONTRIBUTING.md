@@ -29,7 +29,7 @@ Use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/): `fea
 
 ## Language
 
-Everything public is in English: code, comments, documents, commit messages, and the messages Squint returns.
+Everything public is in English: code, comments, documents, commit messages, and the messages Squint returns. The exceptions are [`docs/ROADMAP.md`](docs/ROADMAP.md) and [`REQUIREMENTS.md`](REQUIREMENTS.md), the maintainer's planning notes, which stay in Portuguese.
 
 Use the vocabulary in [`CONTEXT.md`](CONTEXT.md). A Check yields Findings from a Capture; avoid "detector", "rule", "issue" and "screenshot" for those concepts.
 

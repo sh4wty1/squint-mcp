@@ -26,6 +26,11 @@ async def test_server_reports_its_name(client: Client) -> None:
     assert client.server_info.name == NAME
 
 
+async def test_server_reports_its_version(client: Client) -> None:
+    assert client.server_info is not None
+    assert client.server_info.version == VERSION
+
+
 async def test_ping_is_the_only_tool(client: Client) -> None:
     tools = (await client.list_tools()).tools
     assert [tool.name for tool in tools] == ["ping"]
