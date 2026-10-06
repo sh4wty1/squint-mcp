@@ -294,6 +294,7 @@ async def test_crop_margin_is_clamped_to_the_page(client: Client) -> None:
 
 async def test_crop_is_downscaled_to_512px_on_its_longest_side(client: Client) -> None:
     assert await crop_size(client, "#wide") == (512, 65)
+    assert (await crop_size(client, "#screen"))[1] == 512  # 1x900: tall, not wide
 
 
 async def test_an_element_below_the_fold_has_pixels(client: Client) -> None:
@@ -374,5 +375,5 @@ async def test_call_that_outlives_the_total_timeout_is_an_error_and_server_recov
         text = await error_text(client, f"{local_server}/hang", "#solid")
         elapsed = time.monotonic() - started
     assert "Timed out after 1s" in text
-    assert 1 <= elapsed < 3
+    assert 1 <= elapsed < 2
     assert (await inspect(client, BOX, "#solid"))["box"]["w"] == 120

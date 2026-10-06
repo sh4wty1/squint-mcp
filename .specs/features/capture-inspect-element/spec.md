@@ -61,7 +61,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | Element with no rendered box (`display: none`, zero area) | An error, since there are no pixels to crop or sample | Returning an empty crop would be a silent non-answer | n |
 | HTTP error status (404, 500) | Not a load failure: the response page is captured | "Cannot be loaded at all" means the navigation failed; an error page still renders | n |
 | How the 30s timeout is tested | The test lowers `config.TOTAL_TIMEOUT_S` to 1 and calls the tool through the MCP boundary against a URL that never responds | A real 30s wait would slow every test run. The call and the assertions still go through the single seam | n |
-| Timeout latency | The error arrives within 2 seconds after the timeout elapses | Covers cancelling the navigation and closing the context; a looser bound would hide a timeout enforced at the wrong value | n |
+| Timeout latency | The error arrives within 1 second after the timeout elapses | Covers cancelling the navigation and closing the context; a looser bound would hide a timeout enforced at the wrong value | n |
 | How "Chromium not installed" is tested | A second in-memory client whose server lifespan starts with `PLAYWRIGHT_BROWSERS_PATH` pointing at an empty directory | Reproduces the real failure without uninstalling anything | n |
 | Tests when Chromium is missing on the machine | They fail, showing the tool's own "playwright install chromium" message. They are never skipped | A skip would let CI pass while testing nothing | n |
 | Criteria not observable through the tool boundary (CAP-24, CAP-28, CAP-29, the `https` third of CAP-25, CAP-40 to CAP-47) | Verified by the Verifier from file evidence, not by pytest | The source docs forbid a second test seam | n |
@@ -106,7 +106,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 12. WHEN `inspect_element` succeeds THEN the server SHALL return `isError: false`, one text content block containing the selector, and exactly one image content block of MIME type `image/png`. <!-- CAP-12 -->
 13. WHEN `inspect_element` is called on `box.html` with selector `#solid` (120×70) THEN the crop SHALL be 152×102 px: the border box plus 16px on each side, at one image pixel per CSS pixel, not upscaled, showing the page background in the margin, the blue border and the red fill. <!-- CAP-13 -->
 14. WHEN `inspect_element` is called on `box.html` with selector `#corner`, a 50×50 element in the top-right corner of the page THEN the crop SHALL be 66×66 px, the margin being clamped to the page, and the crop of `#below` (100×50, in the bottom-left corner of the page) SHALL be 116×66 px. <!-- CAP-14 -->
-15. WHEN `inspect_element` is called on `box.html` with selector `#wide` (1000×100, crop source 1032×132) THEN the crop SHALL be 512×65 px. <!-- CAP-15 -->
+15. WHEN `inspect_element` is called on `box.html` with selector `#wide` (1000×100, crop source 1032×132) THEN the crop SHALL be 512×65 px, and the crop of the tall element `#screen` (1×900) SHALL be 512 px high. <!-- CAP-15 -->
 16. WHEN `inspect_element` is called without `viewport` THEN `viewport` SHALL equal `{"width": 1440, "height": 900}` and the full-width element `#full` SHALL have `box.w` equal to 1440 and the viewport-high element `#screen` SHALL have `box.h` equal to 900. <!-- CAP-16 -->
 17. WHEN `inspect_element` is called with `viewport` set to `{"width": 390, "height": 844}` THEN `viewport` SHALL equal that value, `#full` SHALL have `box.w` equal to 390 and `#screen` SHALL have `box.h` equal to 844. <!-- CAP-17 -->
 18. WHEN `inspect_element` is called with `viewport` explicitly set to `null` THEN the server SHALL return the same structured content as when `viewport` is omitted. <!-- CAP-18 -->
@@ -152,7 +152,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 3. IF the URL scheme is not `http`, `https` or `file` THEN the server SHALL return `isError: true` with a text block containing `Unsupported URL scheme "ftp"; use http://, https:// or file://.` (for an `ftp://` URL). <!-- CAP-32 -->
 4. IF the navigation fails THEN the server SHALL return `isError: true` with a text block containing `Could not load ` followed by the URL. <!-- CAP-33 -->
 5. IF Chromium cannot be launched THEN the server SHALL return `isError: true` with a text block containing `Could not launch Chromium` and `playwright install chromium`. <!-- CAP-34 -->
-6. IF a call has not finished within the total timeout (`config.TOTAL_TIMEOUT_S` seconds, 30 by default) THEN the server SHALL return `isError: true` with a text block containing `Timed out after Ns`, N being that number written without a trailing `.0` (`Timed out after 30s` by default), no earlier than the timeout and no later than 2 seconds after the timeout elapses, and SHALL answer the next call on the same connection normally. <!-- CAP-35 -->
+6. IF a call has not finished within the total timeout (`config.TOTAL_TIMEOUT_S` seconds, 30 by default) THEN the server SHALL return `isError: true` with a text block containing `Timed out after Ns`, N being that number written without a trailing `.0` (`Timed out after 30s` by default), no earlier than the timeout and no later than 1 second after the timeout elapses, and SHALL answer the next call on the same connection normally. <!-- CAP-35 -->
 7. IF `inspect_element` is called without `selector` THEN the server SHALL return `isError: true` with a text block that names `selector`. <!-- CAP-36 -->
 8. IF `viewport.width` or `viewport.height` is less than 1 THEN the server SHALL return `isError: true` with a text block that names the offending field. <!-- CAP-37 -->
 
@@ -192,55 +192,55 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 
 | Requirement ID | Story | Phase | Status |
 | --- | --- | --- | --- |
-| CAP-01 | P1: Inspect one element | T3 | Implementing |
-| CAP-02 | P1: Inspect one element | T3 | Implementing |
-| CAP-03 | P1: Inspect one element | T3 | Implementing |
-| CAP-04 | P1: Inspect one element | T4 | Implementing |
-| CAP-05 | P1: Inspect one element | T3 | Implementing |
-| CAP-06 | P1: Inspect one element | T3 | Implementing |
-| CAP-07 | P1: Inspect one element | T3 | Implementing |
-| CAP-08 | P1: Inspect one element | T3 | Implementing |
-| CAP-09 | P1: Inspect one element | T4 | Implementing |
-| CAP-10 | P1: Inspect one element | T4 | Implementing |
-| CAP-11 | P1: Inspect one element | T4 | Implementing |
-| CAP-12 | P1: Inspect one element | T4 | Implementing |
-| CAP-13 | P1: Inspect one element | T4 | Implementing |
-| CAP-14 | P1: Inspect one element | T4 | Implementing |
-| CAP-15 | P1: Inspect one element | T4 | Implementing |
-| CAP-16 | P1: Inspect one element | T3 | Implementing |
-| CAP-17 | P1: Inspect one element | T3 | Implementing |
-| CAP-18 | P1: Inspect one element | T3 | Implementing |
-| CAP-19 | P1: Inspect one element | T3 | Implementing |
-| CAP-20 | P1: Inspect one element | T4 | Implementing |
-| CAP-21 | P1: Stabilized, isolated Capture | T3 | Implementing |
-| CAP-22 | P1: Stabilized, isolated Capture | T3 | Implementing |
-| CAP-23 | P1: Stabilized, isolated Capture | T3 | Implementing |
-| CAP-24 | P1: Stabilized, isolated Capture | T3 | Implementing |
-| CAP-25 | P1: Stabilized, isolated Capture | T3 | Implementing |
-| CAP-26 | P1: Stabilized, isolated Capture | T3 | Implementing |
-| CAP-27 | P1: Stabilized, isolated Capture | T5 | Implementing |
-| CAP-28 | P1: Stabilized, isolated Capture | T3 | Implementing |
-| CAP-29 | P1: Stabilized, isolated Capture | T3 | Implementing |
-| CAP-30 | P1: Clear errors | T5 | Implementing |
-| CAP-31 | P1: Clear errors | T5 | Implementing |
-| CAP-32 | P1: Clear errors | T5 | Implementing |
-| CAP-33 | P1: Clear errors | T5 | Implementing |
-| CAP-34 | P1: Clear errors | T5 | Implementing |
-| CAP-35 | P1: Clear errors | T6 | Implementing |
-| CAP-36 | P1: Clear errors | T3 | Implementing |
-| CAP-37 | P1: Clear errors | T3 | Implementing |
-| CAP-38 | Edge cases | T5 | Implementing |
-| CAP-39 | Edge cases | T5 | Implementing |
-| CAP-40 | P2: Tooling, configuration and documents | T2 | Implementing |
-| CAP-41 | P2: Tooling, configuration and documents | T1 | Implementing |
-| CAP-42 | P2: Tooling, configuration and documents | T3 | Implementing |
-| CAP-43 | P2: Tooling, configuration and documents | T3 | Implementing |
-| CAP-44 | P2: Tooling, configuration and documents | T7 | Implementing |
-| CAP-45 | P2: Tooling, configuration and documents | T8 | Implementing |
-| CAP-46 | P2: Tooling, configuration and documents | T8 | Implementing |
-| CAP-47 | P2: Tooling, configuration and documents | Closing step | Pending |
+| CAP-01 | P1: Inspect one element | T3 | Verified |
+| CAP-02 | P1: Inspect one element | T3 | Verified |
+| CAP-03 | P1: Inspect one element | T3 | Verified |
+| CAP-04 | P1: Inspect one element | T4 | Verified |
+| CAP-05 | P1: Inspect one element | T3 | Verified |
+| CAP-06 | P1: Inspect one element | T3 | Verified |
+| CAP-07 | P1: Inspect one element | T3 | Verified |
+| CAP-08 | P1: Inspect one element | T3 | Verified |
+| CAP-09 | P1: Inspect one element | T4 | Verified |
+| CAP-10 | P1: Inspect one element | T4 | Verified |
+| CAP-11 | P1: Inspect one element | T4 | Verified |
+| CAP-12 | P1: Inspect one element | T4 | Verified |
+| CAP-13 | P1: Inspect one element | T4 | Verified |
+| CAP-14 | P1: Inspect one element | T4 | Verified |
+| CAP-15 | P1: Inspect one element | T4 | Verified |
+| CAP-16 | P1: Inspect one element | T3 | Verified |
+| CAP-17 | P1: Inspect one element | T3 | Verified |
+| CAP-18 | P1: Inspect one element | T3 | Verified |
+| CAP-19 | P1: Inspect one element | T3 | Verified |
+| CAP-20 | P1: Inspect one element | T4 | Verified |
+| CAP-21 | P1: Stabilized, isolated Capture | T3 | Verified |
+| CAP-22 | P1: Stabilized, isolated Capture | T3 | Verified |
+| CAP-23 | P1: Stabilized, isolated Capture | T3 | Verified |
+| CAP-24 | P1: Stabilized, isolated Capture | T3 | Verified |
+| CAP-25 | P1: Stabilized, isolated Capture | T3 | Verified |
+| CAP-26 | P1: Stabilized, isolated Capture | T3 | Verified |
+| CAP-27 | P1: Stabilized, isolated Capture | T5 | Verified |
+| CAP-28 | P1: Stabilized, isolated Capture | T3 | Verified |
+| CAP-29 | P1: Stabilized, isolated Capture | T3 | Verified |
+| CAP-30 | P1: Clear errors | T5 | Verified |
+| CAP-31 | P1: Clear errors | T5 | Verified |
+| CAP-32 | P1: Clear errors | T5 | Verified |
+| CAP-33 | P1: Clear errors | T5 | Verified |
+| CAP-34 | P1: Clear errors | T5 | Verified |
+| CAP-35 | P1: Clear errors | T6 | Verified |
+| CAP-36 | P1: Clear errors | T3 | Verified |
+| CAP-37 | P1: Clear errors | T3 | Verified |
+| CAP-38 | Edge cases | T5 | Verified |
+| CAP-39 | Edge cases | T5 | Verified |
+| CAP-40 | P2: Tooling, configuration and documents | T2 | Verified |
+| CAP-41 | P2: Tooling, configuration and documents | T1 | Verified |
+| CAP-42 | P2: Tooling, configuration and documents | T3 | Verified |
+| CAP-43 | P2: Tooling, configuration and documents | T3 | Verified |
+| CAP-44 | P2: Tooling, configuration and documents | T7 | Verified |
+| CAP-45 | P2: Tooling, configuration and documents | T8 | Verified |
+| CAP-46 | P2: Tooling, configuration and documents | T8 | Verified |
+| CAP-47 | P2: Tooling, configuration and documents | Closing step | Verified |
 
-**Coverage:** 47 total, 47 mapped to tasks, 0 unmapped.
+**Coverage:** 47 total, 47 verified. CAP-44's live CI run is confirmed once the branch is pushed.
 
 **Verification method:** pytest through the in-memory MCP client for every criterion except CAP-24, CAP-28, CAP-29 and CAP-40 to CAP-47, which the Verifier checks from file evidence. CAP-25 is tested for `file://` and `http://`; `https://` shares their code path. CAP-44's live CI run needs the branch pushed, which needs an explicit go-ahead.
 
