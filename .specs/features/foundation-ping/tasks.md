@@ -146,7 +146,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (FND-26). It is a clos
 
 ### T4: Add the stdio entry point
 
-- [ ] Done
+- [x] Done
 
 **What**: `main()` that runs the server over stdio, exposed as the `squint-mcp` console script.
 **Where**: `src/squint_mcp/server.py` (modify; script entry in the project metadata)
@@ -161,10 +161,10 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (FND-26). It is a clos
 
 **Done when**:
 
-- [ ] `uv run squint-mcp`, launched as a subprocess by an MCP stdio client, answers `initialize` and `ping`
-- [ ] Every line the process writes to stdout during that session is a JSON-RPC message
-- [ ] Gate check passes: Build
-- [ ] Test count: 9 tests pass (no silent deletions)
+- [x] `uv run squint-mcp`, launched as a subprocess by an MCP stdio client, answers `initialize` and `ping`
+- [x] Every line the process writes to stdout during that session is a JSON-RPC message
+- [x] Gate check passes: Build
+- [x] Test count: 9 tests pass (no silent deletions)
 
 **Tests**: none
 **Gate**: build

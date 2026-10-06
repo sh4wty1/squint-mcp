@@ -12,3 +12,8 @@ server.add_tool(
     ping,
     annotations=ToolAnnotations(read_only_hint=True, open_world_hint=False),
 )
+
+
+def main() -> None:
+    """Serve MCP over stdio. stdout belongs to the protocol; logs go to stderr."""
+    server.run()
