@@ -114,7 +114,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (CAP-47). It is a clos
 
 ### T3: Add Capture production and the inspect_element tool
 
-- [ ] Done
+- [x] Done
 
 **What**: The `BrowserSession` held by the server lifespan, `capture()` with stabilization, the two page scripts, and `inspect_element` returning `viewport`, `stabilized`, `box`, `boxModel` and `computed`; the fixtures and tests that drive it.
 **Where**: `src/squint_mcp/capture.py` (with its page scripts under `js/`, the tool module, the registration in the server module, fixtures and tests under `tests/`)
@@ -129,11 +129,11 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (CAP-47). It is a clos
 
 **Done when**:
 
-- [ ] One test per testable AC listed above; CAP-24, CAP-28, CAP-29, CAP-42 and CAP-43 hold by file evidence
-- [ ] `tests/test_ping.py::test_ping_is_the_only_tool` is replaced by a test asserting the exact two-tool list (CAP-01)
-- [ ] `playwright` is imported only by `capture.py`; page JavaScript lives only in `.js` files
-- [ ] Gate check passes: Build
-- [ ] Test count: 28 tests pass (12 existing, one of them rewritten, plus 16)
+- [x] One test per testable AC listed above; CAP-24, CAP-28, CAP-29, CAP-42 and CAP-43 hold by file evidence
+- [x] `tests/test_ping.py::test_ping_is_the_only_tool` is replaced by a test asserting the exact two-tool list (CAP-01)
+- [x] `playwright` is imported only by `capture.py`; page JavaScript lives only in `.js` files
+- [x] Gate check passes: Build
+- [x] Test count: 29 tests pass (12 existing, one of them rewritten, plus 17)
 
 **Tests**: integration
 **Gate**: build
@@ -161,7 +161,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (CAP-47). It is a clos
 
 - [ ] One test per AC listed above
 - [ ] Gate check passes: Build
-- [ ] Test count: 37 tests pass (no silent deletions)
+- [ ] Test count: 38 tests pass (no silent deletions)
 
 **Tests**: integration
 **Gate**: build
@@ -189,7 +189,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (CAP-47). It is a clos
 
 - [ ] One test per AC listed above, each asserting `isError` and the spec's message
 - [ ] Gate check passes: Build
-- [ ] Test count: 45 tests pass (no silent deletions)
+- [ ] Test count: 46 tests pass (no silent deletions)
 
 **Tests**: integration
 **Gate**: build
@@ -217,7 +217,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (CAP-47). It is a clos
 
 - [ ] A test lowers the timeout to 1s, calls a URL that never answers, asserts `isError` and `Timed out after 1s`, then gets a successful result from the next call on the same client
 - [ ] Gate check passes: Build
-- [ ] Test count: 46 tests pass (no silent deletions)
+- [ ] Test count: 47 tests pass (no silent deletions)
 
 **Tests**: integration
 **Gate**: build
@@ -247,7 +247,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (CAP-47). It is a clos
 
 - [ ] `uv run playwright install --with-deps chromium` runs after `uv sync` and before `Tests`
 - [ ] Gate check passes: Build
-- [ ] Test count: 46 tests pass (no silent deletions)
+- [ ] Test count: 47 tests pass (no silent deletions)
 
 **Tests**: none
 **Gate**: build
@@ -276,7 +276,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (CAP-47). It is a clos
 - [ ] `Unreleased` lists `inspect_element`
 - [ ] CONTRIBUTING and README give `uv run playwright install chromium`
 - [ ] Gate check passes: Build
-- [ ] Test count: 46 tests pass (no silent deletions)
+- [ ] Test count: 47 tests pass (no silent deletions)
 
 **Tests**: none
 **Gate**: build
