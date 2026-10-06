@@ -32,6 +32,42 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: tests/test_ping.py:51 (mutants N31, N32, FND-05) (tests,mcp-tools)
 - last seen: 2026-10-06T15:26:56Z
 
+### L-004 - Assert pixel values at known offsets of a returned image, not only its dimensions
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,vision` · harmful: 0
+- features: capture-inspect-element
+- evidence: tests/test_inspect_element.py:76 (mutant M07, CAP-13) (tests,vision)
+- last seen: 2026-10-06T16:48:46Z
+
+### L-005 - Test page-coordinate values on a page that is scrolled when they are read, not only at scroll zero
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,capture` · harmful: 0
+- features: capture-inspect-element
+- evidence: src/squint_mcp/js/collect_elements.js:19 (mutant M27, CAP-20) (tests,capture)
+- last seen: 2026-10-06T16:48:46Z
+
+### L-006 - Assert the elapsed time of a timeout test, not only that the timeout error is returned
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,timeouts` · harmful: 0
+- features: capture-inspect-element
+- evidence: tests/test_inspect_element.py:334 (mutant M25, CAP-35) (tests,timeouts)
+- last seen: 2026-10-06T16:48:46Z
+
+### L-007 - Pin a time threshold with a case that ends just past it, not only with one that never ends
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,timeouts` · harmful: 0
+- features: capture-inspect-element
+- evidence: src/squint_mcp/config.py:11 (mutant M23, CAP-22) (tests,timeouts)
+- last seen: 2026-10-06T16:48:46Z
+
+### L-008 - When a criterion names the document section a line belongs to, put the line in that section
+- signal: `ac_gap` · recurrence: 1 feature(s) · scope: `docs` · harmful: 0
+- features: capture-inspect-element
+- evidence: CAP-46 (README.md:47) (docs)
+- last seen: 2026-10-06T16:48:46Z
+
+### L-009 - Give every field of a structured tool input an outcome in the spec that depends on that field
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `spec,mcp-tools` · harmful: 0
+- features: capture-inspect-element
+- evidence: CAP-17 (spec.md:110, mutant M34) (spec,mcp-tools)
+- last seen: 2026-10-06T16:48:46Z
+
 ## Quarantined (failed when applied - ignore)
 
 A confirmed lesson that recurred alongside failure. Kept for the maintainer to review.

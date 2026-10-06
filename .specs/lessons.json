@@ -3,7 +3,7 @@
   "promote_threshold": 2,
   "window_days": 45,
   "quarantine_threshold": 2,
-  "next_id": 4,
+  "next_id": 10,
   "lessons": [
     {
       "id": "L-001",
@@ -58,6 +58,114 @@
       ],
       "created": "2026-10-06T15:26:56Z",
       "last_seen": "2026-10-06T15:26:56Z"
+    },
+    {
+      "id": "L-004",
+      "key": "surviving_mutant::assert pixel values at known offsets of a returned image not only its dimensions",
+      "text": "Assert pixel values at known offsets of a returned image, not only its dimensions",
+      "signal": "surviving_mutant",
+      "scope": "tests,vision",
+      "status": "candidate",
+      "features": [
+        "capture-inspect-element"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "tests/test_inspect_element.py:76 (mutant M07, CAP-13) (tests,vision)"
+      ],
+      "created": "2026-10-06T16:48:46Z",
+      "last_seen": "2026-10-06T16:48:46Z"
+    },
+    {
+      "id": "L-005",
+      "key": "surviving_mutant::test page coordinate values on a page that is scrolled when they are read not only at scroll zero",
+      "text": "Test page-coordinate values on a page that is scrolled when they are read, not only at scroll zero",
+      "signal": "surviving_mutant",
+      "scope": "tests,capture",
+      "status": "candidate",
+      "features": [
+        "capture-inspect-element"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "src/squint_mcp/js/collect_elements.js:19 (mutant M27, CAP-20) (tests,capture)"
+      ],
+      "created": "2026-10-06T16:48:46Z",
+      "last_seen": "2026-10-06T16:48:46Z"
+    },
+    {
+      "id": "L-006",
+      "key": "surviving_mutant::assert the elapsed time of a timeout test not only that the timeout error is returned",
+      "text": "Assert the elapsed time of a timeout test, not only that the timeout error is returned",
+      "signal": "surviving_mutant",
+      "scope": "tests,timeouts",
+      "status": "candidate",
+      "features": [
+        "capture-inspect-element"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "tests/test_inspect_element.py:334 (mutant M25, CAP-35) (tests,timeouts)"
+      ],
+      "created": "2026-10-06T16:48:46Z",
+      "last_seen": "2026-10-06T16:48:46Z"
+    },
+    {
+      "id": "L-007",
+      "key": "surviving_mutant::pin a time threshold with a case that ends just past it not only with one that never ends",
+      "text": "Pin a time threshold with a case that ends just past it, not only with one that never ends",
+      "signal": "surviving_mutant",
+      "scope": "tests,timeouts",
+      "status": "candidate",
+      "features": [
+        "capture-inspect-element"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "src/squint_mcp/config.py:11 (mutant M23, CAP-22) (tests,timeouts)"
+      ],
+      "created": "2026-10-06T16:48:46Z",
+      "last_seen": "2026-10-06T16:48:46Z"
+    },
+    {
+      "id": "L-008",
+      "key": "ac_gap::when a criterion names the document section a line belongs to put the line in that section",
+      "text": "When a criterion names the document section a line belongs to, put the line in that section",
+      "signal": "ac_gap",
+      "scope": "docs",
+      "status": "candidate",
+      "features": [
+        "capture-inspect-element"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "CAP-46 (README.md:47) (docs)"
+      ],
+      "created": "2026-10-06T16:48:46Z",
+      "last_seen": "2026-10-06T16:48:46Z"
+    },
+    {
+      "id": "L-009",
+      "key": "spec_precision_gap::give every field of a structured tool input an outcome in the spec that depends on that field",
+      "text": "Give every field of a structured tool input an outcome in the spec that depends on that field",
+      "signal": "spec_precision_gap",
+      "scope": "spec,mcp-tools",
+      "status": "candidate",
+      "features": [
+        "capture-inspect-element"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "CAP-17 (spec.md:110, mutant M34) (spec,mcp-tools)"
+      ],
+      "created": "2026-10-06T16:48:46Z",
+      "last_seen": "2026-10-06T16:48:46Z"
     }
   ]
 }
