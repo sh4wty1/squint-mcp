@@ -147,37 +147,37 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 
 | Requirement ID | Story | Phase | Status |
 | --- | --- | --- | --- |
-| FND-01 | P1: Connect and ping | T3 | Implementing |
-| FND-02 | P1: Connect and ping | T3 | Implementing |
-| FND-03 | P1: Connect and ping | T3 | Implementing |
-| FND-04 | P1: Connect and ping | T3 | Implementing |
-| FND-05 | P1: Connect and ping | T3 | Implementing |
-| FND-06 | P1: Connect and ping | T3 | Implementing |
-| FND-07 | P1: Connect and ping | T3 | Implementing |
-| FND-08 | P1: Connect and ping | T3 | Implementing |
-| FND-09 | P1: Connect and ping | T4 | Implementing |
-| FND-10 | P1: Connect and ping | T4 | Implementing |
-| FND-11 | P1: Quality tooling | T1 | Implementing |
-| FND-12 | P1: Quality tooling | T1 | Implementing |
-| FND-13 | P1: Quality tooling | T1 | Implementing |
-| FND-14 | P1: Quality tooling | T1 | Implementing |
-| FND-15 | P1: Quality tooling | T3 | Implementing |
-| FND-16 | P1: Quality tooling | T3 | Implementing |
-| FND-17 | P1: Quality tooling | T5 | Implementing |
-| FND-18 | P1: Quality tooling | T2 | Implementing |
-| FND-19 | P1: Quality tooling | T1 | Implementing |
-| FND-20 | P2: Project documents | T6 | Implementing |
-| FND-21 | P2: Project documents | T7 | Implementing |
-| FND-22 | P2: Project documents | T7 | Implementing |
-| FND-23 | P2: Project documents | T7 | Implementing |
-| FND-24 | P2: Project documents | T7 | Implementing |
-| FND-25 | P2: Project documents | T8 | Implementing |
-| FND-26 | P2: Project documents | - | Pending |
-| FND-27 | P1: Connect and ping | T3 | Implementing |
-| FND-28 | P1: Connect and ping | T3 | Implementing |
-| FND-29 | P1: Connect and ping | T3 | Implementing |
+| FND-01 | P1: Connect and ping | T3 | Verified |
+| FND-02 | P1: Connect and ping | T3 | Verified |
+| FND-03 | P1: Connect and ping | T3 | Verified |
+| FND-04 | P1: Connect and ping | T3 | Verified |
+| FND-05 | P1: Connect and ping | T3 | Verified |
+| FND-06 | P1: Connect and ping | T3 | Verified |
+| FND-07 | P1: Connect and ping | T3 | Verified |
+| FND-08 | P1: Connect and ping | T3 | Verified |
+| FND-09 | P1: Connect and ping | T4 | Verified |
+| FND-10 | P1: Connect and ping | T4 | Verified |
+| FND-11 | P1: Quality tooling | T1 | Verified |
+| FND-12 | P1: Quality tooling | T1 | Verified |
+| FND-13 | P1: Quality tooling | T1 | Verified |
+| FND-14 | P1: Quality tooling | T1 | Verified |
+| FND-15 | P1: Quality tooling | T3 | Verified |
+| FND-16 | P1: Quality tooling | T3 | Verified |
+| FND-17 | P1: Quality tooling | T5 | Verified |
+| FND-18 | P1: Quality tooling | T2 | Verified |
+| FND-19 | P1: Quality tooling | T1 | Verified |
+| FND-20 | P2: Project documents | T6 | Verified |
+| FND-21 | P2: Project documents | T7 | Verified |
+| FND-22 | P2: Project documents | T7 | Verified |
+| FND-23 | P2: Project documents | T7 | Verified |
+| FND-24 | P2: Project documents | T7 | Verified |
+| FND-25 | P2: Project documents | T8 | Verified |
+| FND-26 | P2: Project documents | Closing step | Verified |
+| FND-27 | P1: Connect and ping | T3 | Verified |
+| FND-28 | P1: Connect and ping | T3 | Verified |
+| FND-29 | P1: Connect and ping | T3 | Verified |
 
-**Coverage:** 29 total, 28 implemented, 1 pending.
+**Coverage:** 29 total, 29 verified. FND-17's live CI run is confirmed on the pull request.
 
 **Verification method:** FND-01 to FND-08 and FND-27 to FND-29 by pytest through the in-memory MCP client. FND-09 and FND-10 by the Verifier's one-off stdio launch. FND-11 to FND-15 by running the commands. FND-16 to FND-26 by file evidence; FND-17 additionally by a green CI run once the branch is pushed, which needs an explicit go-ahead.
 

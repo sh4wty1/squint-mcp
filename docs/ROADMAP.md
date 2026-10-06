@@ -4,9 +4,16 @@ A v0.1 descrita em [`SPEC.md`](SPEC.md) é entregue em 5 fatias verticais. Cada 
 
 Épico: issue #1.
 
+## Como usar
+
+- A próxima tarefa é a primeira fatia `pendente` cujas dependências estão `concluída`.
+- Peça a spec dela com a skill da coluna `Skill` (por exemplo: `/tlc-spec-driven specify feature: <nome da fatia>`), uma fatia por sessão.
+- Ao fechar uma fatia, o status muda para `concluída` na tabela e na seção dela.
+- Quando a fatia 5 fechar, o roadmap pós-v0.1 é criado neste mesmo formato.
+
 | # | Fatia | Depende de | Skill | Status |
 |---|---|---|---|---|
-| 1 | Fundação + `ping` | — | `tlc-spec-driven` | pendente |
+| 1 | Fundação + `ping` | — | `tlc-spec-driven` | concluída |
 | 2 | Capture + `inspect_element` | 1 | `tlc-spec-driven` | pendente |
 | 3 | `detect_visual_bugs` + `text-clipped` | 2 | `tlc-spec-driven` | pendente |
 | 4 | `low-contrast-real` | 3 | `tlc-spec-lean` | pendente |
@@ -28,7 +35,7 @@ A v0.1 descrita em [`SPEC.md`](SPEC.md) é entregue em 5 fatias verticais. Cada 
 - **Não entra:** Playwright, browser, Capture, Finding, qualquer Check, publicação no PyPI.
 - **Dependência:** nenhuma.
 - **Skill:** `tlc-spec-driven`.
-- **Status:** pendente.
+- **Status:** concluída. Spec e relatório de validação em [`.specs/features/foundation-ping/`](../.specs/features/foundation-ping/).
 
 ## 2. Capture + `inspect_element`
 

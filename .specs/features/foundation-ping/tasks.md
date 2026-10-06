@@ -9,7 +9,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ---
 
 **Design**: skipped. Stack and module layout are decided in `docs/SPEC.md` (Implementation Decisions).
-**Status**: In Progress
+**Status**: Done
 
 SDK note: the official MCP Python SDK is at 2.x, where `FastMCP` was renamed `MCPServer` (`mcp.server.mcpserver`) and the in-memory client is `mcp.Client(server)`. Verified by running both against `mcp 2.3.0` before writing these tasks.
 
