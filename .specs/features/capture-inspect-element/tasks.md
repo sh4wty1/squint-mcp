@@ -86,7 +86,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (CAP-47). It is a clos
 
 ### T2: Add the capture and vision defaults to config
 
-- [ ] Done
+- [x] Done
 
 **What**: Default viewport, total timeout, network-idle timeout, crop margin, crop size limit, sampled-colour count and the computed-property list, each with its source cited.
 **Where**: `src/squint_mcp/config.py`
@@ -101,9 +101,9 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (CAP-47). It is a clos
 
 **Done when**:
 
-- [ ] The seven values of CAP-40 are defined, each with a source comment
-- [ ] Gate check passes: Build
-- [ ] Test count: 12 tests pass (no silent deletions)
+- [x] The seven values of CAP-40 are defined, each with a source comment
+- [x] Gate check passes: Build
+- [x] Test count: 12 tests pass (no silent deletions)
 
 **Tests**: none
 **Gate**: build

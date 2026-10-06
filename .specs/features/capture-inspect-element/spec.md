@@ -230,7 +230,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | CAP-37 | P1: Clear errors | T3 | Pending |
 | CAP-38 | Edge cases | T5 | Pending |
 | CAP-39 | Edge cases | T5 | Pending |
-| CAP-40 | P2: Tooling, configuration and documents | T2 | Pending |
+| CAP-40 | P2: Tooling, configuration and documents | T2 | Implementing |
 | CAP-41 | P2: Tooling, configuration and documents | T1 | Implementing |
 | CAP-42 | P2: Tooling, configuration and documents | T3 | Pending |
 | CAP-43 | P2: Tooling, configuration and documents | T3 | Pending |
