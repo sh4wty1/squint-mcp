@@ -114,39 +114,57 @@ Steps, in order:
 ## Data Models
 
 ```python
-class Viewport(BaseModel):          # tool input and output
+class Viewport(BaseModel):  # tool input and output
     width: int  # >= 1
     height: int  # >= 1
 
-class Box(BaseModel):               # border box, CSS px, page coordinates
-    x: float; y: float; w: float; h: float
+
+class Box(BaseModel):  # border box, CSS px, page coordinates
+    x: float
+    y: float
+    w: float
+    h: float
+
 
 class Edges(BaseModel):
-    top: float; right: float; bottom: float; left: float
+    top: float
+    right: float
+    bottom: float
+    left: float
+
 
 class Size(BaseModel):
-    w: float; h: float
+    w: float
+    h: float
+
 
 class BoxModel(BaseModel):
-    margin: Edges; border: Edges; padding: Edges; content: Size
+    margin: Edges
+    border: Edges
+    padding: Edges
+    content: Size
 
-class Element(BaseModel):           # one element as collected in the page
+
+class Element(BaseModel):  # one element as collected in the page
     box: Box
-    box_model: BoxModel             # "boxModel" on the wire
+    box_model: BoxModel  # "boxModel" on the wire
     computed: dict[str, str]
 
+
 @dataclass(frozen=True)
-class Capture:                      # CONTEXT.md: DOM/CSS data together with rendered pixels
+class Capture:  # CONTEXT.md: DOM/CSS data together with rendered pixels
     viewport: Viewport
     stabilized: bool
-    elements: list[Element]         # the elements matched by the call's selector
-    pixels: Image.Image             # full page, RGB, 1 image px = 1 CSS px
+    elements: list[Element]  # the elements matched by the call's selector
+    pixels: Image.Image  # full page, RGB, 1 image px = 1 CSS px
+
 
 class SampledColor(BaseModel):
-    hex: str                        # "#rrggbb"
-    share: float                    # fraction of the box's pixels, 4 decimals
+    hex: str  # "#rrggbb"
+    share: float  # fraction of the box's pixels, 4 decimals
 
-class InspectElementResult(BaseModel):   # structured content, camelCase on the wire
+
+class InspectElementResult(BaseModel):  # structured content, camelCase on the wire
     viewport: Viewport
     stabilized: bool
     box: Box
