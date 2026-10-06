@@ -3,7 +3,7 @@
   "promote_threshold": 2,
   "window_days": 45,
   "quarantine_threshold": 2,
-  "next_id": 10,
+  "next_id": 13,
   "lessons": [
     {
       "id": "L-001",
@@ -166,6 +166,60 @@
       ],
       "created": "2026-10-06T16:48:46Z",
       "last_seen": "2026-10-06T16:48:46Z"
+    },
+    {
+      "id": "L-010",
+      "key": "surviving_mutant::pin a time threshold from both sides with one case that ends shortly before it and one shortly after it",
+      "text": "Pin a time threshold from both sides, with one case that ends shortly before it and one shortly after it",
+      "signal": "surviving_mutant",
+      "scope": "tests,timeouts",
+      "status": "candidate",
+      "features": [
+        "capture-inspect-element"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "src/squint_mcp/config.py:11 (mutant N9, CAP-21) (tests,timeouts)"
+      ],
+      "created": "2026-10-06T17:05:32Z",
+      "last_seen": "2026-10-06T17:05:32Z"
+    },
+    {
+      "id": "L-011",
+      "key": "surviving_mutant::patch a config value in a test with a value of the same type the config holds",
+      "text": "Patch a config value in a test with a value of the same type the config holds",
+      "signal": "surviving_mutant",
+      "scope": "tests,config",
+      "status": "candidate",
+      "features": [
+        "capture-inspect-element"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "tests/test_inspect_element.py:364 (mutant N11, CAP-35) (tests,config)"
+      ],
+      "created": "2026-10-06T17:05:32Z",
+      "last_seen": "2026-10-06T17:05:32Z"
+    },
+    {
+      "id": "L-012",
+      "key": "spec_precision_gap::give a geometric rule an outcome in the spec for every axis and every edge it applies to not for one corner",
+      "text": "Give a geometric rule an outcome in the spec for every axis and every edge it applies to, not for one corner",
+      "signal": "spec_precision_gap",
+      "scope": "spec,geometry",
+      "status": "candidate",
+      "features": [
+        "capture-inspect-element"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "spec.md:49, spec.md:53 (mutants N1, N7, N8; CAP-14, CAP-20) (spec,geometry)"
+      ],
+      "created": "2026-10-06T17:05:32Z",
+      "last_seen": "2026-10-06T17:05:32Z"
     }
   ]
 }

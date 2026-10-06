@@ -68,6 +68,24 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: CAP-17 (spec.md:110, mutant M34) (spec,mcp-tools)
 - last seen: 2026-10-06T16:48:46Z
 
+### L-010 - Pin a time threshold from both sides, with one case that ends shortly before it and one shortly after it
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,timeouts` · harmful: 0
+- features: capture-inspect-element
+- evidence: src/squint_mcp/config.py:11 (mutant N9, CAP-21) (tests,timeouts)
+- last seen: 2026-10-06T17:05:32Z
+
+### L-011 - Patch a config value in a test with a value of the same type the config holds
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,config` · harmful: 0
+- features: capture-inspect-element
+- evidence: tests/test_inspect_element.py:364 (mutant N11, CAP-35) (tests,config)
+- last seen: 2026-10-06T17:05:32Z
+
+### L-012 - Give a geometric rule an outcome in the spec for every axis and every edge it applies to, not for one corner
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `spec,geometry` · harmful: 0
+- features: capture-inspect-element
+- evidence: spec.md:49, spec.md:53 (mutants N1, N7, N8; CAP-14, CAP-20) (spec,geometry)
+- last seen: 2026-10-06T17:05:32Z
+
 ## Quarantined (failed when applied - ignore)
 
 A confirmed lesson that recurred alongside failure. Kept for the maintainer to review.
