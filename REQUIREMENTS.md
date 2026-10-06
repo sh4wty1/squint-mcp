@@ -39,6 +39,7 @@ npx skills update
 |---|---|---|
 | `tlc-spec-driven` | Features grandes: Specify → Design → Tasks → Execute, com Verifier independente | `npx @tech-leads-club/agent-skills install --skill tlc-spec-driven` |
 | `tlc-spec-lean` | Features pequenas: plano único com critérios EARS → checks → build → Verifier | `npx @tech-leads-club/agent-skills install --skill tlc-spec-lean` |
+| `tlc-implement` | Implementa trabalho já planejado: extrai um checklist, constrói e prova cada item com um Verifier independente | `npx @tech-leads-club/agent-skills install --skill tlc-implement` |
 | `the-judge` | Review de PR com evidência, postado no GitHub | `npx @tech-leads-club/agent-skills install --skill the-judge` |
 | `harness-eval` | Audit qualitativo do AGENTS.md, regras e skills | `npx @tech-leads-club/agent-skills install --skill harness-eval` |
 
@@ -64,6 +65,7 @@ npx skills@latest add mattpocock/skills --skill=implement
 # Tech Leads Club — features, qualidade e harness
 npx @tech-leads-club/agent-skills install --skill tlc-spec-driven
 npx @tech-leads-club/agent-skills install --skill tlc-spec-lean
+npx @tech-leads-club/agent-skills install --skill tlc-implement
 npx @tech-leads-club/agent-skills install --skill the-judge
 npx @tech-leads-club/agent-skills install --skill harness-eval
 ```
@@ -74,10 +76,6 @@ npx @tech-leads-club/agent-skills install --skill harness-eval
 
 1. **Visão do projeto:** `grill-with-docs` → `to-spec`
 2. **Harness inicial** (AGENTS.md, CI, lint/tipos/testes): `npx harness-score`
-3. **Cada feature:**
-   - Grande → `tlc-spec-driven`
-   - Pequena → `tlc-spec-lean`
-   - Alternativa: `to-tickets` → `implement`
-   - Não misturar os dois sistemas (Matt e TLC) na mesma feature
+3. **Cada feature:** a escolha da skill segue a seção "Skill routing" do [`AGENTS.md`](AGENTS.md), que é a fonte única dessa regra.
 4. **PR:** `the-judge`
 5. **A cada marco:** `npx harness-score` e, se o AGENTS.md estiver inchando, `harness-eval`
