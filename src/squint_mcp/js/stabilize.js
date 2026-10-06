@@ -3,21 +3,32 @@
 async () => {
   await document.fonts.ready;
 
-  // Animations and transitions that start from now on take no time.
-  const style = document.createElement("style");
-  style.textContent =
-    "*, *::before, *::after {" +
-    " animation-duration: 0s !important; animation-delay: 0s !important;" +
-    " transition-duration: 0s !important; transition-delay: 0s !important; }";
-  document.documentElement.append(style);
+  // Neither a style nor getAnimations() crosses a shadow boundary: treat the
+  // document and every open shadow root under it, however deeply nested.
+  const roots = [document];
+  for (const root of roots) {
+    for (const element of root.querySelectorAll("*")) {
+      if (element.shadowRoot) roots.push(element.shadowRoot);
+    }
+  }
 
-  // Those already running jump to their end. This also reaches open shadow trees,
-  // which the style above does not. An infinite animation has no end, so it is cancelled.
-  for (const animation of document.getAnimations()) {
-    try {
-      animation.finish();
-    } catch {
-      animation.cancel();
+  for (const root of roots) {
+    // Animations and transitions that start from now on take no time.
+    const style = document.createElement("style");
+    style.textContent =
+      "*, *::before, *::after {" +
+      " animation-duration: 0s !important; animation-delay: 0s !important;" +
+      " transition-duration: 0s !important; transition-delay: 0s !important; }";
+    (root.documentElement ?? root).append(style);
+
+    // Those already running jump to their end. An infinite animation has no end,
+    // so it is cancelled.
+    for (const animation of root.getAnimations()) {
+      try {
+        animation.finish();
+      } catch {
+        animation.cancel();
+      }
     }
   }
 };

@@ -198,6 +198,20 @@ async def test_animations_and_transitions_are_taken_to_their_end(
     ] == "1"
 
 
+async def test_animations_inside_an_open_shadow_root_are_taken_to_their_end(
+    client: Client,
+) -> None:
+    content = await inspect(client, MOTION, "#shadow-animated")
+    assert content["computed"]["opacity"] == "1"
+
+
+async def test_transitions_starting_later_inside_an_open_shadow_root_take_no_time(
+    client: Client,
+) -> None:
+    content = await inspect(client, MOTION, "#shadow-late")
+    assert content["computed"]["opacity"] == "1"
+
+
 async def test_http_urls_are_accepted(client: Client, local_server: str) -> None:
     content = await inspect(client, f"{local_server}/box.html", "#solid")
     assert content["box"] == {"x": 40, "y": 60, "w": 120, "h": 70}
