@@ -113,7 +113,8 @@ async def capture(
         )
         screenshot = await page.screenshot(full_page=True)
     finally:
-        await context.close()
+        # A client cancellation keeps cancelling every await: shield the close.
+        await asyncio.shield(context.close())
     return Capture(
         viewport=viewport,
         stabilized=stabilized,

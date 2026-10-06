@@ -209,7 +209,7 @@ Every anticipated failure is a `ToolError`. The SDK turns it into `isError: true
 | A selector containing Playwright's `>>` chains engines | `src/squint_mcp/capture.py` (new) | A caller can use non-CSS Playwright syntax | Accepted: local read-only tool, the result is still one element or an error |
 | Sub-pixel boxes (text spans have fractional widths) | `src/squint_mcp/vision.py` (new) | Crop bounds need integers | Floor the top-left, ceil the bottom-right, then clamp |
 | Exact colour counting on gradients and photos | `src/squint_mcp/vision.py` (new) | Top colours are thin bands, not perceptual clusters | Marked with a `ponytail:` comment; slice 4 defines the sampling its Check needs |
-| `finally: context.close()` runs after a timeout cancelled the task | `src/squint_mcp/capture.py` (new) | A level-triggered cancel scope would cancel the cleanup too | `asyncio.timeout` cancels once, so the cleanup await runs; verified by the test that calls again after a timeout |
+| `finally: context.close()` runs after a timeout cancelled the task | `src/squint_mcp/capture.py` (new) | A level-triggered cancel scope would cancel the cleanup too | `asyncio.timeout` cancels once, so the cleanup await runs; verified by the test that calls again after a timeout. A client cancellation is level-triggered, so the close is wrapped in `asyncio.shield`; verified by the test that cancels a call and counts the open contexts |
 
 ---
 

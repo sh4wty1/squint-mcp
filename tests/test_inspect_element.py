@@ -6,12 +6,14 @@ import time
 from pathlib import Path
 from typing import Any
 
+import anyio
 import pytest
 from mcp import Client
 from mcp.types import CallToolResult, ImageContent, TextContent, Tool
 from PIL import Image
 
 from squint_mcp import config
+from squint_mcp.capture import BrowserSession
 
 pytestmark = pytest.mark.anyio
 
@@ -399,3 +401,34 @@ async def test_call_that_outlives_the_total_timeout_is_an_error_and_server_recov
     assert "Timed out after 1s" in text
     assert 1 <= elapsed < 2
     assert (await inspect(client, BOX, "#solid"))["box"]["w"] == 120
+
+
+@pytest.fixture
+def browsers(monkeypatch: pytest.MonkeyPatch) -> list[Any]:
+    """Every browser the server hands to a call, in order.
+
+    A reach past the MCP boundary: no tool reports the open contexts of the
+    browser, and none can kill it.
+    """
+    handed_out: list[Any] = []
+    original = BrowserSession.browser
+
+    async def spy(self: BrowserSession) -> Any:
+        browser = await original(self)
+        handed_out.append(browser)
+        return browser
+
+    monkeypatch.setattr(BrowserSession, "browser", spy)
+    return handed_out
+
+
+async def test_call_cancelled_by_the_client_leaves_no_browser_context_open(
+    client: Client, local_server: str, browsers: list[Any]
+) -> None:
+    with anyio.move_on_after(1.5) as cancelled:
+        await call(client, f"{local_server}/hang", "#solid")
+    assert cancelled.cancelled_caught
+    with anyio.move_on_after(3):
+        while browsers[-1].contexts:
+            await anyio.sleep(0.05)
+    assert browsers[-1].contexts == []
