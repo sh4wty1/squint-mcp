@@ -24,6 +24,7 @@ Requires [uv](https://docs.astral.sh/uv/). uv installs Python 3.12 for you if it
 git clone https://github.com/sh4wty1/squint-mcp.git
 cd squint-mcp
 uv sync
+uv run playwright install chromium   # the browser inspect_element drives
 uv run squint-mcp
 ```
 

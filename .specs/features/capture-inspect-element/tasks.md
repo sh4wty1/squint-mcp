@@ -258,7 +258,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (CAP-47). It is a clos
 
 ### T8: Document inspect_element and the Chromium setup step
 
-- [ ] Done
+- [x] Done
 
 **What**: CHANGELOG entry for `inspect_element`; the Chromium install command in CONTRIBUTING and in the README's development section.
 **Where**: `CHANGELOG.md` (plus one setup line each in the contributing guide and the readme)
@@ -273,10 +273,10 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (CAP-47). It is a clos
 
 **Done when**:
 
-- [ ] `Unreleased` lists `inspect_element`
-- [ ] CONTRIBUTING and README give `uv run playwright install chromium`
-- [ ] Gate check passes: Build
-- [ ] Test count: 47 tests pass (no silent deletions)
+- [x] `Unreleased` lists `inspect_element`
+- [x] CONTRIBUTING and README give `uv run playwright install chromium`
+- [x] Gate check passes: Build
+- [x] Test count: 47 tests pass (no silent deletions)
 
 **Tests**: none
 **Gate**: build
