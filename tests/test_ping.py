@@ -84,3 +84,22 @@ async def test_ping_echoes_an_empty_message_as_empty(client: Client) -> None:
         "version": VERSION,
         "message": "",
     }
+
+
+async def test_ping_echoes_the_message_unchanged(client: Client) -> None:
+    message = "  a longer message, padded with spaces  "
+    result = await client.call_tool("ping", {"message": message})
+    assert result.structured_content == {
+        "name": NAME,
+        "version": VERSION,
+        "message": message,
+    }
+
+
+async def test_ping_with_null_message_matches_omitting_it(client: Client) -> None:
+    result = await client.call_tool("ping", {"message": None})
+    assert result.structured_content == {
+        "name": NAME,
+        "version": VERSION,
+        "message": None,
+    }

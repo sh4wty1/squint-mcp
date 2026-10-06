@@ -138,6 +138,8 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 ## Edge Cases
 
 - WHEN `ping` is called with `message` set to the empty string THEN the server SHALL echo `""`, not `null`. <!-- FND-27 -->
+- WHEN `ping` is called with `message` set to `"  a longer message, padded with spaces  "` THEN the server SHALL echo it character for character, with no trimming and no truncation. <!-- FND-28 -->
+- WHEN `ping` is called with `message` explicitly set to `null` THEN the server SHALL return the same structured content as when `message` is omitted. <!-- FND-29 -->
 
 ---
 
@@ -172,10 +174,12 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | FND-25 | P2: Project documents | T8 | Implementing |
 | FND-26 | P2: Project documents | - | Pending |
 | FND-27 | P1: Connect and ping | T3 | Implementing |
+| FND-28 | P1: Connect and ping | T3 | Implementing |
+| FND-29 | P1: Connect and ping | T3 | Implementing |
 
-**Coverage:** 27 total, 26 implemented, 1 pending.
+**Coverage:** 29 total, 28 implemented, 1 pending.
 
-**Verification method:** FND-01 to FND-08 and FND-27 by pytest through the in-memory MCP client. FND-09 and FND-10 by the Verifier's one-off stdio launch. FND-11 to FND-15 by running the commands. FND-16 to FND-26 by file evidence; FND-17 additionally by a green CI run once the branch is pushed, which needs an explicit go-ahead.
+**Verification method:** FND-01 to FND-08 and FND-27 to FND-29 by pytest through the in-memory MCP client. FND-09 and FND-10 by the Verifier's one-off stdio launch. FND-11 to FND-15 by running the commands. FND-16 to FND-26 by file evidence; FND-17 additionally by a green CI run once the branch is pushed, which needs an explicit go-ahead.
 
 ---
 
