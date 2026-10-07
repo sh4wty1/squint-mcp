@@ -45,7 +45,7 @@
       <div id="spaced" class="clipped">XXXXX
             XXXXX</div>
       <!-- One clipped element per selector case, each with its own number of glyphs,
-           from 8 to 23, so that a Finding can be matched to its element by text. -->
+           from 8 to 24, so that a Finding can be matched to its element by text. -->
       <!-- A unique data-testid wins over the id. -->
       <div data-testid="save" id="save-button" class="clipped">XXXXXXXX</div>
       <!-- A shared data-testid: the id is next. -->
@@ -94,6 +94,8 @@
       <section><p class="clipped">XXXXXXXXXXXXXXXXXXXXXX</p></section>
       <!-- An id that is not a CSS identifier as written. -->
       <div id="2col" class="clipped">XXXXXXXXXXXXXXXXXXXXXXX</div>
+      <!-- A tag name that is not a CSS identifier as written. -->
+      <o:p class="clipped" style="display: block">XXXXXXXXXXXXXXXXXXXXXXXX</o:p>
     </main>
   </body>
 </html>

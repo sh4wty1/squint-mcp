@@ -52,9 +52,10 @@
   // Known limit: a host with a slotted child and a shadow-root child of the same tag
   // at the same position gives both the same path when neither has a stable selector.
   const segment = (element) => {
-    const tag = element.localName;
+    // A tag name can hold a colon, as in `o:p`.
+    const tag = CSS.escape(element.localName);
     const twins = [...element.parentNode.children].filter(
-      (sibling) => sibling.localName === tag,
+      (sibling) => sibling.localName === element.localName,
     );
     return twins.length > 1 ? `${tag}:nth-of-type(${twins.indexOf(element) + 1})` : tag;
   };

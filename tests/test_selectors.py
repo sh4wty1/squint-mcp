@@ -60,6 +60,12 @@ async def test_an_id_goes_through_css_identifier_escaping(client: Client) -> Non
     assert await selector_of(client, 23) == "#\\32 col"
 
 
+async def test_a_tag_name_with_a_colon_is_escaped_in_the_css_path(
+    client: Client,
+) -> None:
+    assert await selector_of(client, 24) == "body > main > o\\:p"
+
+
 async def test_a_data_testid_repeated_inside_a_shadow_root_is_not_unique(
     client: Client,
 ) -> None:
@@ -125,7 +131,7 @@ async def test_first_finding_of_the_bug_fixture_is_the_documented_one(
 async def test_every_finding_selector_resolves_to_its_element_in_inspect_element(
     client: Client,
 ) -> None:
-    for url, count in ((BUG, 2), (SELECTORS, 19)):
+    for url, count in ((BUG, 2), (SELECTORS, 20)):
         findings = (await detect(client, url))["findings"]
         assert len(findings) == count
         for finding in findings:
