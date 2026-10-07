@@ -221,7 +221,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (DVB-68). It is a clos
 
 ### T6: Prefer stable attributes in the selector
 
-- [ ] Done
+- [x] Done
 
 **What**: The collector's selector steps before the CSS path: unique `data-testid`, unique non-generated `id`, `aria-label` with tag or explicit `role`; attribute escaping; a shadow tree's path starting at its host's selector.
 **Where**: `src/squint_mcp/js/collect_elements.js` (modify; fixture and tests under `tests/`)
@@ -236,13 +236,13 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (DVB-68). It is a clos
 
 **Done when**:
 
-- [ ] `selectors.html` holds one clipped element per case of DVB-34 to DVB-42
-- [ ] One test per case asserts the literal selector of the spec, the Finding matched to its element by `text`
-- [ ] `findings[0]` of `text-clipped-bug.html` equals the full literal of DVB-14
-- [ ] Every Finding selector of `text-clipped-bug.html` and `selectors.html`, passed to `inspect_element`, returns the Finding's `box` (DVB-18)
-- [ ] A comment in the collector names the known limit: a slotted child and a shadow child of the same tag under one host
-- [ ] Gate check passes: Build
-- [ ] Test count: at least 97 tests pass (no silent deletions)
+- [x] `selectors.html` holds one clipped element per case of DVB-34 to DVB-42
+- [x] One test per case asserts the literal selector of the spec, the Finding matched to its element by `text`
+- [x] `findings[0]` of `text-clipped-bug.html` equals the full literal of DVB-14
+- [x] Every Finding selector of `text-clipped-bug.html` and `selectors.html`, passed to `inspect_element`, returns the Finding's `box` (DVB-18)
+- [x] A comment in the collector names the known limit: a slotted child and a shadow child of the same tag under one host
+- [x] Gate check passes: Build
+- [x] Test count: at least 97 tests pass (no silent deletions)
 
 **Tests**: integration
 **Gate**: build

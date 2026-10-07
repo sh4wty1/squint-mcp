@@ -307,11 +307,11 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | DVB-11 | P1: Run Checks on a page | T2 | Implemented |
 | DVB-12 | P1: Run Checks on a page | T2 | Implemented |
 | DVB-13 | P1: Read a Finding | T2 | Implemented |
-| DVB-14 | P1: Read a Finding | T6 | In Tasks |
+| DVB-14 | P1: Read a Finding | T6 | Implemented |
 | DVB-15 | P1: Read a Finding | T2 | Implemented |
 | DVB-16 | P1: Read a Finding | T2 | Implemented |
 | DVB-17 | P1: Read a Finding | T2 | Implemented |
-| DVB-18 | P1: Read a Finding | T6 | In Tasks |
+| DVB-18 | P1: Read a Finding | T6 | Implemented |
 | DVB-19 | P1: Detect clipped text | T2 | Implemented |
 | DVB-20 | P1: Detect clipped text | T2 | Implemented |
 | DVB-21 | P1: Detect clipped text | T2 | Implemented |
@@ -327,15 +327,15 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | DVB-31 | P1: Detect clipped text | T3 | Implemented |
 | DVB-32 | P1: Detect clipped text | T3 | Implemented |
 | DVB-33 | P1: Detect clipped text | T3 | Implemented |
-| DVB-34 | P1: Stable selectors | T6 | In Tasks |
-| DVB-35 | P1: Stable selectors | T6 | In Tasks |
-| DVB-36 | P1: Stable selectors | T6 | In Tasks |
-| DVB-37 | P1: Stable selectors | T6 | In Tasks |
-| DVB-38 | P1: Stable selectors | T6 | In Tasks |
-| DVB-39 | P1: Stable selectors | T6 | In Tasks |
-| DVB-40 | P1: Stable selectors | T6 | In Tasks |
-| DVB-41 | P1: Stable selectors | T6 | In Tasks |
-| DVB-42 | P1: Stable selectors | T6 | In Tasks |
+| DVB-34 | P1: Stable selectors | T6 | Implemented |
+| DVB-35 | P1: Stable selectors | T6 | Implemented |
+| DVB-36 | P1: Stable selectors | T6 | Implemented |
+| DVB-37 | P1: Stable selectors | T6 | Implemented |
+| DVB-38 | P1: Stable selectors | T6 | Implemented |
+| DVB-39 | P1: Stable selectors | T6 | Implemented |
+| DVB-40 | P1: Stable selectors | T6 | Implemented |
+| DVB-41 | P1: Stable selectors | T6 | Implemented |
+| DVB-42 | P1: Stable selectors | T6 | Implemented |
 | DVB-43 | P1: Bounded crops | T5 | Implemented |
 | DVB-44 | P1: Bounded crops | T5 | Implemented |
 | DVB-45 | P1: Bounded crops | T5 | Implemented |

@@ -25,6 +25,16 @@
         overflow-x: hidden;
         white-space: nowrap;
       }
+      h2,
+      button {
+        font: inherit;
+      }
+      button {
+        display: block;
+        border: 0;
+        padding: 0;
+        text-align: left;
+      }
     </style>
   </head>
   <body>
@@ -34,6 +44,42 @@
       <!-- A line break and several spaces between two runs of 5 glyphs. -->
       <div id="spaced" class="clipped">XXXXX
             XXXXX</div>
+      <!-- One clipped element per selector case, each with its own number of glyphs,
+           from 8 to 17, so that a Finding can be matched to its element by text. -->
+      <!-- A unique data-testid wins over the id. -->
+      <div data-testid="save" id="save-button" class="clipped">XXXXXXXX</div>
+      <!-- A shared data-testid: the id is next. -->
+      <div data-testid="row" id="first-row" class="clipped">XXXXXXXXX</div>
+      <div data-testid="row">X</div>
+      <!-- Generated ids: the aria-label is next, with the tag or the explicit role. -->
+      <button id=":r1:" aria-label="Close dialog" class="clipped">XXXXXXXXXX</button>
+      <div id="item-48213" role="tab" aria-label="Settings" class="clipped">XXXXXXXXXXX</div>
+      <!-- A shared id and nothing else: the CSS path. -->
+      <p id="dup">X</p>
+      <p id="dup" class="clipped">XXXXXXXXXXXX</p>
+      <!-- A shared aria-label and nothing else: the CSS path. -->
+      <button aria-label="Next" class="clipped">XXXXXXXXXXXXX</button>
+      <button aria-label="Next" class="clipped">XXXXXXXXXXXXXX</button>
+      <!-- No attribute, the only h2 among its siblings. -->
+      <h2 class="clipped">XXXXXXXXXXXXXXX</h2>
+      <!-- No attribute, inside an open shadow root: the path starts at the host. -->
+      <div data-testid="card">
+        <template shadowrootmode="open">
+          <h3
+            style="
+              margin: 20px 0 0 40px;
+              width: 150px;
+              overflow-x: hidden;
+              white-space: nowrap;
+              font: inherit;
+            "
+          >
+            XXXXXXXXXXXXXXXX
+          </h3>
+        </template>
+      </div>
+      <!-- A data-testid that needs escaping. -->
+      <div data-testid='say "hi"' class="clipped">XXXXXXXXXXXXXXXXX</div>
     </main>
   </body>
 </html>
