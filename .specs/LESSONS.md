@@ -156,6 +156,48 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: DVB-66 against DVB-01 (tests/test_inspect_element.py:421) (spec)
 - last seen: 2026-10-07T16:30:33Z
 
+### L-025 - Test a generated path with a repeated tag at an ancestor level, not only at the last segment
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,selectors` · harmful: 0
+- features: detect-visual-bugs-text-clipped
+- evidence: mutant N11 (collect_elements.js:70) (tests,selectors)
+- last seen: 2026-10-07T17:06:39Z
+
+### L-026 - Test an escaped identifier with a value that needs escaping and still passes every earlier filter
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,selectors` · harmful: 0
+- features: detect-visual-bugs-text-clipped
+- evidence: mutant N8 (collect_elements.js:25) (tests,selectors)
+- last seen: 2026-10-07T17:06:39Z
+
+### L-027 - Test the validation of a list input with the invalid item after a valid one, not only alone
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,validation` · harmful: 0
+- features: detect-visual-bugs-text-clipped
+- evidence: mutant N10 (detect_visual_bugs.py:73) (tests,validation)
+- last seen: 2026-10-07T17:06:40Z
+
+### L-028 - Test a message that counts things with a count of exactly one for every noun it pluralizes
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,messages` · harmful: 0
+- features: detect-visual-bugs-text-clipped
+- evidence: mutant N5 (detect_visual_bugs.py:46) (tests,messages)
+- last seen: 2026-10-07T17:06:40Z
+
+### L-029 - Test deduplication with a repeat that is not adjacent to its first occurrence, so that keeping the first differs from keeping the last
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,ordering` · harmful: 0
+- features: detect-visual-bugs-text-clipped
+- evidence: mutant N6 (detect_visual_bugs.py:82) (tests,ordering)
+- last seen: 2026-10-07T17:06:40Z
+
+### L-030 - Pin a rule that counts characters in a string with a case where those characters are not adjacent
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,selectors` · harmful: 0
+- features: detect-visual-bugs-text-clipped
+- evidence: mutant N7 (collect_elements.js:33) (tests,selectors)
+- last seen: 2026-10-07T17:06:40Z
+
+### L-031 - Pin a clamp with an input that would cross the bound it guards, not only with inputs that stay inside it
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,geometry` · harmful: 0
+- features: detect-visual-bugs-text-clipped
+- evidence: mutant N4 (text_clipped.py:65) (tests,geometry)
+- last seen: 2026-10-07T17:06:40Z
+
 ## Quarantined (failed when applied - ignore)
 
 A confirmed lesson that recurred alongside failure. Kept for the maintainer to review.

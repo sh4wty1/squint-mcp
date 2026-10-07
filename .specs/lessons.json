@@ -3,7 +3,7 @@
   "promote_threshold": 2,
   "window_days": 45,
   "quarantine_threshold": 2,
-  "next_id": 25,
+  "next_id": 32,
   "lessons": [
     {
       "id": "L-001",
@@ -438,6 +438,132 @@
       ],
       "created": "2026-10-07T16:30:33Z",
       "last_seen": "2026-10-07T16:30:33Z"
+    },
+    {
+      "id": "L-025",
+      "key": "surviving_mutant::test a generated path with a repeated tag at an ancestor level not only at the last segment",
+      "text": "Test a generated path with a repeated tag at an ancestor level, not only at the last segment",
+      "signal": "surviving_mutant",
+      "scope": "tests,selectors",
+      "status": "candidate",
+      "features": [
+        "detect-visual-bugs-text-clipped"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "mutant N11 (collect_elements.js:70) (tests,selectors)"
+      ],
+      "created": "2026-10-07T17:06:39Z",
+      "last_seen": "2026-10-07T17:06:39Z"
+    },
+    {
+      "id": "L-026",
+      "key": "surviving_mutant::test an escaped identifier with a value that needs escaping and still passes every earlier filter",
+      "text": "Test an escaped identifier with a value that needs escaping and still passes every earlier filter",
+      "signal": "surviving_mutant",
+      "scope": "tests,selectors",
+      "status": "candidate",
+      "features": [
+        "detect-visual-bugs-text-clipped"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "mutant N8 (collect_elements.js:25) (tests,selectors)"
+      ],
+      "created": "2026-10-07T17:06:39Z",
+      "last_seen": "2026-10-07T17:06:39Z"
+    },
+    {
+      "id": "L-027",
+      "key": "surviving_mutant::test the validation of a list input with the invalid item after a valid one not only alone",
+      "text": "Test the validation of a list input with the invalid item after a valid one, not only alone",
+      "signal": "surviving_mutant",
+      "scope": "tests,validation",
+      "status": "candidate",
+      "features": [
+        "detect-visual-bugs-text-clipped"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "mutant N10 (detect_visual_bugs.py:73) (tests,validation)"
+      ],
+      "created": "2026-10-07T17:06:40Z",
+      "last_seen": "2026-10-07T17:06:40Z"
+    },
+    {
+      "id": "L-028",
+      "key": "surviving_mutant::test a message that counts things with a count of exactly one for every noun it pluralizes",
+      "text": "Test a message that counts things with a count of exactly one for every noun it pluralizes",
+      "signal": "surviving_mutant",
+      "scope": "tests,messages",
+      "status": "candidate",
+      "features": [
+        "detect-visual-bugs-text-clipped"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "mutant N5 (detect_visual_bugs.py:46) (tests,messages)"
+      ],
+      "created": "2026-10-07T17:06:40Z",
+      "last_seen": "2026-10-07T17:06:40Z"
+    },
+    {
+      "id": "L-029",
+      "key": "surviving_mutant::test deduplication with a repeat that is not adjacent to its first occurrence so that keeping the first differs from keeping the last",
+      "text": "Test deduplication with a repeat that is not adjacent to its first occurrence, so that keeping the first differs from keeping the last",
+      "signal": "surviving_mutant",
+      "scope": "tests,ordering",
+      "status": "candidate",
+      "features": [
+        "detect-visual-bugs-text-clipped"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "mutant N6 (detect_visual_bugs.py:82) (tests,ordering)"
+      ],
+      "created": "2026-10-07T17:06:40Z",
+      "last_seen": "2026-10-07T17:06:40Z"
+    },
+    {
+      "id": "L-030",
+      "key": "surviving_mutant::pin a rule that counts characters in a string with a case where those characters are not adjacent",
+      "text": "Pin a rule that counts characters in a string with a case where those characters are not adjacent",
+      "signal": "surviving_mutant",
+      "scope": "tests,selectors",
+      "status": "candidate",
+      "features": [
+        "detect-visual-bugs-text-clipped"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "mutant N7 (collect_elements.js:33) (tests,selectors)"
+      ],
+      "created": "2026-10-07T17:06:40Z",
+      "last_seen": "2026-10-07T17:06:40Z"
+    },
+    {
+      "id": "L-031",
+      "key": "surviving_mutant::pin a clamp with an input that would cross the bound it guards not only with inputs that stay inside it",
+      "text": "Pin a clamp with an input that would cross the bound it guards, not only with inputs that stay inside it",
+      "signal": "surviving_mutant",
+      "scope": "tests,geometry",
+      "status": "candidate",
+      "features": [
+        "detect-visual-bugs-text-clipped"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "mutant N4 (text_clipped.py:65) (tests,geometry)"
+      ],
+      "created": "2026-10-07T17:06:40Z",
+      "last_seen": "2026-10-07T17:06:40Z"
     }
   ]
 }
