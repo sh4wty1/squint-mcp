@@ -2,6 +2,7 @@
 
 import base64
 import io
+import time
 from typing import Any
 
 import pytest
@@ -18,6 +19,8 @@ from helpers import (
 from mcp import Client
 from mcp.types import TextContent, Tool
 from PIL import Image
+
+from squint_mcp import config
 
 pytestmark = pytest.mark.anyio
 
@@ -255,3 +258,80 @@ async def test_a_repeated_check_name_runs_once(client: Client) -> None:
     twice = await detect(client, BUG, checks=["text-clipped", "text-clipped"])
     assert len(once["findings"]) == 2
     assert twice["findings"] == once["findings"]
+
+
+async def error_text(client: Client, arguments: dict[str, Any]) -> str:
+    """Call the tool, expect a tool error and return its text."""
+    result = await client.call_tool("detect_visual_bugs", arguments)
+    assert result.is_error is True
+    return " ".join(texts(result))
+
+
+async def test_unknown_check_is_an_error_listing_the_valid_ones(client: Client) -> None:
+    text = await error_text(client, {"url": BUG, "checks": ["nope"]})
+    assert 'Unknown check "nope". Valid checks: text-clipped.' in text
+
+
+async def test_unknown_check_is_reported_before_any_browser_work(
+    client_without_chromium: Client,
+) -> None:
+    arguments = {"url": BUG, "checks": ["nope"]}
+    text = await error_text(client_without_chromium, arguments)
+    assert 'Unknown check "nope". Valid checks: text-clipped.' in text
+    assert "Could not launch Chromium" not in text
+
+
+async def test_empty_checks_is_rejected(client: Client) -> None:
+    assert "checks" in await error_text(client, {"url": BUG, "checks": []})
+
+
+async def test_empty_viewports_is_rejected(client: Client) -> None:
+    assert "viewports" in await error_text(client, {"url": BUG, "viewports": []})
+
+
+async def test_viewport_smaller_than_one_pixel_is_rejected(client: Client) -> None:
+    for field in ("width", "height"):
+        viewport = {"width": 1440, "height": 900, field: 0}
+        text = await error_text(client, {"url": BUG, "viewports": [viewport]})
+        assert field in text
+
+
+async def test_missing_url_is_rejected(client: Client) -> None:
+    assert "url" in await error_text(client, {})
+
+
+async def test_unsupported_url_scheme_is_an_error(client: Client) -> None:
+    text = await error_text(client, {"url": "ftp://example.com/page.html"})
+    assert 'Unsupported URL scheme "ftp"; use http://, https:// or file://.' in text
+
+
+async def test_page_that_cannot_be_loaded_is_an_error(client: Client) -> None:
+    url = fixture_url("no-such-page.html")
+    assert f"Could not load {url}" in await error_text(client, {"url": url})
+
+
+async def test_missing_chromium_names_the_install_command(
+    client_without_chromium: Client,
+) -> None:
+    text = await error_text(client_without_chromium, {"url": BUG})
+    assert "Could not launch Chromium" in text
+    assert "playwright install chromium" in text
+
+
+async def test_total_timeout_covers_all_viewports_together_and_server_recovers(
+    client: Client, local_server: str, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Each viewport of the polling page takes the 3s idle wait: one fits in 4s,
+    # two do not. Patching the config is the only reach past the MCP boundary.
+    arguments = {
+        "url": f"{local_server}/polling.html",
+        "viewports": [DESKTOP, MOBILE],
+    }
+    with monkeypatch.context() as patch:
+        patch.setattr(config, "TOTAL_TIMEOUT_S", 4.0)
+        started = time.monotonic()
+        text = await error_text(client, arguments)
+        elapsed = time.monotonic() - started
+    assert "Timed out after 4s" in text
+    assert 4 <= elapsed < 5
+    assert len((await detect(client, BUG))["findings"]) == 2

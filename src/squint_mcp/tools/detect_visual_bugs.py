@@ -1,11 +1,13 @@
 """The `detect_visual_bugs` tool: runs Checks on a page and returns their Findings."""
 
+import asyncio
 from collections import Counter
 from typing import Annotated, get_args
 
 from mcp.server.mcpserver import Context, Image
+from mcp.server.mcpserver.exceptions import ToolError
 from mcp.types import CallToolResult, TextContent
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from squint_mcp import config
 from squint_mcp.capture import BrowserSession, capture
@@ -47,8 +49,8 @@ def _summary(findings: list[Finding], viewports: int) -> str:
 async def detect_visual_bugs(
     url: str,
     ctx: Context[BrowserSession],
-    viewports: list[Viewport] | None = None,
-    checks: list[str] | None = None,
+    viewports: Annotated[list[Viewport], Field(min_length=1)] | None = None,
+    checks: Annotated[list[str], Field(min_length=1)] | None = None,
 ) -> Annotated[CallToolResult, DetectVisualBugsResult]:
     """Find visual bugs in a rendered page, without a baseline.
 
@@ -62,10 +64,16 @@ async def detect_visual_bugs(
     unique on the page and works in `inspect_element`, and carries the styles
     and measurements that back it. The five most severe Findings also get a
     crop of their element: `evidence.cropIndex` is the position of that image
-    among the images of the response, or null.
+    among the images of the response, or null. A call that takes longer than
+    30s, all viewports together, fails.
     """
     # A repeated Check name or viewport counts once, at its first place.
-    selected = [CHECKS[name] for name in dict.fromkeys(checks or CHECKS)]
+    names = list(dict.fromkeys(checks or CHECKS))
+    # Before any browser work: a wrong call should not pay for a page load.
+    for name in names:
+        if name not in CHECKS:
+            valid = ", ".join(sorted(CHECKS))
+            raise ToolError(f'Unknown check "{name}". Valid checks: {valid}.')
     viewports = viewports or [
         Viewport(
             width=config.DEFAULT_VIEWPORT_WIDTH, height=config.DEFAULT_VIEWPORT_HEIGHT
@@ -73,14 +81,22 @@ async def detect_visual_bugs(
     ]
     viewports = list({(v.width, v.height): v for v in viewports}.values())
     session = ctx.request_context.lifespan_context
-    # ponytail: one viewport after another, each paying a page load and the idle
-    # wait; capture them concurrently if calls get slow.
-    captures = [await capture(session, url, viewport, "*") for viewport in viewports]
+    try:
+        # One clock for the whole call. asyncio.timeout cancels once, so the
+        # cleanup of the capture under way still gets to run.
+        async with asyncio.timeout(config.TOTAL_TIMEOUT_S):
+            # ponytail: one viewport after another, each paying a page load and
+            # the idle wait; capture them concurrently if calls get slow.
+            captures = [
+                await capture(session, url, viewport, "*") for viewport in viewports
+            ]
+    except TimeoutError as error:
+        raise ToolError(f"Timed out after {config.TOTAL_TIMEOUT_S:g}s.") from error
     found = [
         (finding, captured)
         for captured in captures
-        for check in selected
-        for finding in check(captured)
+        for name in names
+        for finding in CHECKS[name](captured)
     ]
     # A stable sort: within a severity, viewport order then document order remain.
     found.sort(key=lambda pair: _SEVERITIES.index(pair[0].severity))

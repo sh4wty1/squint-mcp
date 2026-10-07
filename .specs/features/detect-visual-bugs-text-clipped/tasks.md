@@ -282,7 +282,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (DVB-68). It is a clos
 
 ### T8: Fail clearly
 
-- [ ] Done
+- [x] Done
 
 **What**: The unknown-Check error raised before any browser work; `min_length=1` on `viewports` and `checks`; the total timeout over all viewports with its message.
 **Where**: `src/squint_mcp/tools/detect_visual_bugs.py` (modify; tests under `tests/`)
@@ -297,11 +297,11 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (DVB-68). It is a clos
 
 **Done when**:
 
-- [ ] One test per requirement asserts `isError: true` and the message text of the spec
-- [ ] DVB-51 runs on `client_without_chromium` and gets the unknown-Check message
-- [ ] The timeout test patches `config.TOTAL_TIMEOUT_S` with a float, asserts the elapsed time on both sides and then makes a second call that succeeds
-- [ ] Gate check passes: Build
-- [ ] Test count: at least 109 tests pass (no silent deletions)
+- [x] One test per requirement asserts `isError: true` and the message text of the spec
+- [x] DVB-51 runs on `client_without_chromium` and gets the unknown-Check message
+- [x] The timeout test patches `config.TOTAL_TIMEOUT_S` with a float, asserts the elapsed time on both sides and then makes a second call that succeeds
+- [x] Gate check passes: Build
+- [x] Test count: at least 109 tests pass (no silent deletions)
 
 **Tests**: integration
 **Gate**: build

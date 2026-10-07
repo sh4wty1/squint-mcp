@@ -343,16 +343,16 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | DVB-47 | P1: Several viewports | T2 | Implemented |
 | DVB-48 | P1: Several viewports | T7 | Implemented |
 | DVB-49 | P1: Several viewports | T7 | Implemented |
-| DVB-50 | P1: Clear errors | T8 | In Tasks |
-| DVB-51 | P1: Clear errors | T8 | In Tasks |
-| DVB-52 | P1: Clear errors | T8 | In Tasks |
-| DVB-53 | P1: Clear errors | T8 | In Tasks |
-| DVB-54 | P1: Clear errors | T8 | In Tasks |
-| DVB-55 | P1: Clear errors | T8 | In Tasks |
-| DVB-56 | P1: Clear errors | T8 | In Tasks |
-| DVB-57 | P1: Clear errors | T8 | In Tasks |
-| DVB-58 | P1: Clear errors | T8 | In Tasks |
-| DVB-59 | P1: Clear errors | T8 | In Tasks |
+| DVB-50 | P1: Clear errors | T8 | Implemented |
+| DVB-51 | P1: Clear errors | T8 | Implemented |
+| DVB-52 | P1: Clear errors | T8 | Implemented |
+| DVB-53 | P1: Clear errors | T8 | Implemented |
+| DVB-54 | P1: Clear errors | T8 | Implemented |
+| DVB-55 | P1: Clear errors | T8 | Implemented |
+| DVB-56 | P1: Clear errors | T8 | Implemented |
+| DVB-57 | P1: Clear errors | T8 | Implemented |
+| DVB-58 | P1: Clear errors | T8 | Implemented |
+| DVB-59 | P1: Clear errors | T8 | Implemented |
 | DVB-60 | P2: Check contract, configuration and documents | T2 | Implemented |
 | DVB-61 | P2: Check contract, configuration and documents | T2 | Implemented |
 | DVB-62 | P2: Check contract, configuration and documents | T2 | Implemented |
