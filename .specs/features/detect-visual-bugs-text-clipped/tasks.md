@@ -253,7 +253,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (DVB-68). It is a clos
 
 ### T7: Collapse repeated viewports and Check names
 
-- [ ] Done
+- [x] Done
 
 **What**: Equal viewports and repeated Check names are reduced to their first occurrence before any Capture.
 **Where**: `src/squint_mcp/tools/detect_visual_bugs.py` (modify; tests under `tests/`)
@@ -268,10 +268,10 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (DVB-68). It is a clos
 
 **Done when**:
 
-- [ ] A call with the same viewport twice returns one `captures` entry and the `findings` of the single-viewport call
-- [ ] A call with `["text-clipped", "text-clipped"]` returns the `findings` of the call with one name
-- [ ] Gate check passes: Build
-- [ ] Test count: at least 99 tests pass (no silent deletions)
+- [x] A call with the same viewport twice returns one `captures` entry and the `findings` of the single-viewport call
+- [x] A call with `["text-clipped", "text-clipped"]` returns the `findings` of the call with one name
+- [x] Gate check passes: Build
+- [x] Test count: at least 99 tests pass (no silent deletions)
 
 **Tests**: integration
 **Gate**: build

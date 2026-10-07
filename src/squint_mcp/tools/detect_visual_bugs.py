@@ -64,12 +64,14 @@ async def detect_visual_bugs(
     crop of their element: `evidence.cropIndex` is the position of that image
     among the images of the response, or null.
     """
-    selected = [CHECKS[name] for name in checks or CHECKS]
+    # A repeated Check name or viewport counts once, at its first place.
+    selected = [CHECKS[name] for name in dict.fromkeys(checks or CHECKS)]
     viewports = viewports or [
         Viewport(
             width=config.DEFAULT_VIEWPORT_WIDTH, height=config.DEFAULT_VIEWPORT_HEIGHT
         )
     ]
+    viewports = list({(v.width, v.height): v for v in viewports}.values())
     session = ctx.request_context.lifespan_context
     # ponytail: one viewport after another, each paying a page load and the idle
     # wait; capture them concurrently if calls get slow.

@@ -341,8 +341,8 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | DVB-45 | P1: Bounded crops | T5 | Implemented |
 | DVB-46 | P1: Several viewports | T2 | Implemented |
 | DVB-47 | P1: Several viewports | T2 | Implemented |
-| DVB-48 | P1: Several viewports | T7 | In Tasks |
-| DVB-49 | P1: Several viewports | T7 | In Tasks |
+| DVB-48 | P1: Several viewports | T7 | Implemented |
+| DVB-49 | P1: Several viewports | T7 | Implemented |
 | DVB-50 | P1: Clear errors | T8 | In Tasks |
 | DVB-51 | P1: Clear errors | T8 | In Tasks |
 | DVB-52 | P1: Clear errors | T8 | In Tasks |

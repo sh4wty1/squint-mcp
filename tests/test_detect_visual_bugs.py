@@ -240,3 +240,18 @@ async def test_each_crop_shows_the_box_of_its_own_finding(client: Client) -> Non
         crop = Image.open(io.BytesIO(base64.b64decode(image.data))).convert("RGB")
         assert crop.size == (182, 62)  # the 150x30 box plus 16px on each side
         assert crop.getpixel((20, 31)) == text_color  # inside the first glyph
+
+
+async def test_a_repeated_viewport_is_captured_once(client: Client) -> None:
+    once = await detect(client, RESPONSIVE, viewports=[MOBILE])
+    twice = await detect(client, RESPONSIVE, viewports=[MOBILE, MOBILE])
+    assert twice["captures"] == [{"viewport": MOBILE, "stabilized": True}]
+    assert len(once["findings"]) == 2
+    assert twice["findings"] == once["findings"]
+
+
+async def test_a_repeated_check_name_runs_once(client: Client) -> None:
+    once = await detect(client, BUG, checks=["text-clipped"])
+    twice = await detect(client, BUG, checks=["text-clipped", "text-clipped"])
+    assert len(once["findings"]) == 2
+    assert twice["findings"] == once["findings"]
