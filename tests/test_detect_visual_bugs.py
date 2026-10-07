@@ -117,6 +117,11 @@ async def test_summary_counts_findings_viewports_and_severities(client: Client) 
     assert first.text == "Found 2 findings in 1 viewport: 1 major, 1 minor."
 
 
+async def test_summary_says_finding_in_the_singular_for_one(client: Client) -> None:
+    result = await call(client, RESPONSIVE)
+    assert texts(result) == ["Found 1 finding in 1 viewport: 1 major."]
+
+
 async def test_the_same_call_returns_the_same_structured_content(
     client: Client,
 ) -> None:
@@ -180,8 +185,7 @@ async def test_findings_of_equal_severity_are_in_document_order(
         "XXXXX XXXXX",
         *("X" * glyphs for glyphs in range(8, 19)),
         "X" * 40,
-        "X" * 19,
-        "X" * 20,
+        *("X" * glyphs for glyphs in range(19, 24)),
     ]
     many = (await detect(client, MANY))["findings"]
     assert [finding["selector"] for finding in many] == [
@@ -303,6 +307,14 @@ async def test_a_repeated_viewport_is_captured_once(client: Client) -> None:
     assert twice["findings"] == once["findings"]
 
 
+async def test_a_repeated_viewport_keeps_its_first_place(client: Client) -> None:
+    content = await detect(client, RESPONSIVE, viewports=[DESKTOP, MOBILE, DESKTOP])
+    assert content["captures"] == [
+        {"viewport": DESKTOP, "stabilized": True},
+        {"viewport": MOBILE, "stabilized": True},
+    ]
+
+
 async def test_a_repeated_check_name_runs_once(client: Client) -> None:
     once = await detect(client, BUG, checks=["text-clipped"])
     twice = await detect(client, BUG, checks=["text-clipped", "text-clipped"])
@@ -319,6 +331,13 @@ async def error_text(client: Client, arguments: dict[str, Any]) -> str:
 
 async def test_unknown_check_is_an_error_listing_the_valid_ones(client: Client) -> None:
     text = await error_text(client, {"url": BUG, "checks": ["nope"]})
+    assert 'Unknown check "nope". Valid checks: text-clipped.' in text
+
+
+async def test_unknown_check_after_a_valid_one_is_still_an_error(
+    client: Client,
+) -> None:
+    text = await error_text(client, {"url": BUG, "checks": ["text-clipped", "nope"]})
     assert 'Unknown check "nope". Valid checks: text-clipped.' in text
 
 

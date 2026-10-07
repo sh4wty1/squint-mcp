@@ -45,7 +45,7 @@
       <div id="spaced" class="clipped">XXXXX
             XXXXX</div>
       <!-- One clipped element per selector case, each with its own number of glyphs,
-           from 8 to 20, so that a Finding can be matched to its element by text. -->
+           from 8 to 23, so that a Finding can be matched to its element by text. -->
       <!-- A unique data-testid wins over the id. -->
       <div data-testid="save" id="save-button" class="clipped">XXXXXXXX</div>
       <!-- A shared data-testid: the id is next. -->
@@ -86,9 +86,14 @@
       <div data-testid="twin" id="outside" class="clipped">XXXXXXXXXXXXXXXXXX</div>
       <!-- Exactly 40 glyphs: the longest text that is not cut. -->
       <div class="clipped">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</div>
-      <!-- Three digits make an id look generated; two do not. -->
-      <div id="step-123" aria-label="Step" class="clipped">XXXXXXXXXXXXXXXXXXX</div>
+      <!-- Three digits, adjacent or not, make an id look generated; two do not. -->
+      <div id="css-1a2b3c" aria-label="Step" class="clipped">XXXXXXXXXXXXXXXXXXX</div>
       <div id="col-12" aria-label="Column" class="clipped">XXXXXXXXXXXXXXXXXXXX</div>
+      <!-- The same path below two sibling containers of the same tag. -->
+      <section><p class="clipped">XXXXXXXXXXXXXXXXXXXXX</p></section>
+      <section><p class="clipped">XXXXXXXXXXXXXXXXXXXXXX</p></section>
+      <!-- An id that is not a CSS identifier as written. -->
+      <div id="2col" class="clipped">XXXXXXXXXXXXXXXXXXXXXXX</div>
     </main>
   </body>
 </html>
