@@ -89,6 +89,40 @@
         width: 100px;
         height: 20px;
       }
+      /* Layout border box 100x60, content 50x30. Painted: 40,1000 200x120. */
+      #scaled {
+        position: absolute;
+        top: 1000px;
+        left: 40px;
+        box-sizing: border-box;
+        border: 5px solid rgb(0, 0, 255);
+        padding: 10px 20px;
+        width: 100px;
+        height: 60px;
+        background: rgb(255, 0, 0);
+        transform: scale(2);
+        transform-origin: 0 0;
+      }
+      /* The same layout box, painted 60x100. */
+      #rotated {
+        position: absolute;
+        top: 1300px;
+        left: 40px;
+        box-sizing: border-box;
+        border: 5px solid rgb(0, 0, 255);
+        padding: 10px 20px;
+        width: 100px;
+        height: 60px;
+        background: rgb(255, 0, 0);
+        transform: rotate(90deg);
+      }
+      /* Not an HTMLElement: it has no offsetWidth. */
+      #vector {
+        position: absolute;
+        top: 1500px;
+        left: 40px;
+        background: rgb(0, 128, 0);
+      }
     </style>
   </head>
   <body>
@@ -115,5 +149,8 @@
     <div id="below"></div>
     <div id="left-of-page"></div>
     <div id="above-page"></div>
+    <div id="scaled"></div>
+    <div id="rotated"></div>
+    <svg id="vector" width="40" height="20"></svg>
   </body>
 </html>

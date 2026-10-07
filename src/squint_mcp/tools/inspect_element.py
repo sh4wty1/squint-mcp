@@ -39,7 +39,8 @@ async def inspect_element(
     colours actually painted inside its box and a crop of it. `selector` is a CSS
     selector that must match exactly one element; it reaches into open shadow
     roots. `viewport` defaults to 1440x900. `stabilized` is false when the network
-    never went idle. A call that takes longer than 30s fails.
+    never went idle. A call that takes longer than 30s fails. `box` is the element
+    as painted, after transforms; `boxModel` is its layout, before them.
     """
     viewport = viewport or Viewport(
         width=config.DEFAULT_VIEWPORT_WIDTH, height=config.DEFAULT_VIEWPORT_HEIGHT
