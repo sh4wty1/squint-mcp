@@ -357,7 +357,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | DVB-61 | P2: Check contract, configuration and documents | T2 | In Tasks |
 | DVB-62 | P2: Check contract, configuration and documents | T2 | In Tasks |
 | DVB-63 | P2: Check contract, configuration and documents | T2 | In Tasks |
-| DVB-64 | P2: Check contract, configuration and documents | T1 | In Tasks |
+| DVB-64 | P2: Check contract, configuration and documents | T1 | Implemented |
 | DVB-65 | P2: Check contract, configuration and documents | Verifier | In Tasks |
 | DVB-66 | P2: Check contract, configuration and documents | T2 | In Tasks |
 | DVB-67 | P2: Check contract, configuration and documents | T9 | In Tasks |

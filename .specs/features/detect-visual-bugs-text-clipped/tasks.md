@@ -68,7 +68,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (DVB-68). It is a clos
 
 ### T1: Add the Check and Finding defaults to config
 
-- [ ] Done
+- [x] Done
 
 **What**: `MAX_CROPS = 5`, `TEXT_EXCERPT_MAX_CHARS = 40`, `TEXT_CLIPPED_MIN_OVERFLOW_PX = 2`, `TEXT_CLIPPED_MAJOR_OVERFLOW_PX = 8`, `TRANSFORM_MIN_SIZE_DIFF_PX = 1` and `CAPTURE_COMPUTED_PROPERTIES` (the 20 inspect properties plus `direction`), each with its source in a comment.
 **Where**: `src/squint_mcp/config.py`
@@ -83,9 +83,9 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (DVB-68). It is a clos
 
 **Done when**:
 
-- [ ] The six values exist, each under a `# Source:` comment
-- [ ] Gate check passes: Build
-- [ ] Test count: 61 tests pass (no silent deletions)
+- [x] The six values exist, each under a `# Source:` comment
+- [x] Gate check passes: Build
+- [x] Test count: 61 tests pass (no silent deletions)
 
 **Tests**: none
 **Gate**: build

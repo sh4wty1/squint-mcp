@@ -46,3 +46,25 @@ INSPECT_COMPUTED_PROPERTIES = (
     "text-overflow",
     "white-space",
 )
+
+# Source: Squint default. What a Capture collects for every element: the inspect
+# properties plus `direction`, which tells a Check on which edge text is cut.
+CAPTURE_COMPUTED_PROPERTIES = (*INSPECT_COMPUTED_PROPERTIES, "direction")
+
+# Source: docs/SPEC.md, Images: "At most five crops per call".
+MAX_CROPS = 5
+
+# Source: docs/SPEC.md, Finding: "visible text excerpt, ~40 chars".
+TEXT_EXCERPT_MAX_CHARS = 40
+
+# Source: Squint default. scrollWidth and clientWidth are rounded integers, so a
+# difference of 1px can be rounding alone.
+TEXT_CLIPPED_MIN_OVERFLOW_PX = 2
+
+# Source: Squint default. A cut of 8px or more takes a glyph or most of one at body
+# sizes and is `major`; a smaller one is `minor`.
+TEXT_CLIPPED_MAJOR_OVERFLOW_PX = 8
+
+# Source: docs/adr/0003. An element whose painted size differs from its layout size
+# by this much is under a transform; it is the tolerance the collector uses.
+TRANSFORM_MIN_SIZE_DIFF_PX = 1
