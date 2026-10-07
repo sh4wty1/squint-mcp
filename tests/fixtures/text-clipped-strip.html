@@ -27,8 +27,20 @@
         white-space: pre;
       }
       /* 6 glyphs, then spaces that overflow: the strip is blank. The ink ends 30px
-         before the edge, which is the width of the border. */
+         before the edge, which is the width of the left border, and the borders above
+         and below the strip are not page background. */
       #bordered {
+        border: 0 solid rgb(0, 0, 255);
+        border-width: 10px 0 10px 30px;
+      }
+      /* Cut by 50px. The last 30px of the border box are border, not text. */
+      #right-border {
+        border-right: 30px solid rgb(0, 0, 255);
+      }
+      /* Narrower than one glyph: 10px, all of it inside a leading space, with the
+         only glyph out of sight. The strip must not reach into the border. */
+      #narrow {
+        width: 10px;
         border-left: 30px solid rgb(0, 0, 255);
       }
       /* #gap-at-edge: 7 glyphs, a space and 3 glyphs. The edge falls in the space,
@@ -44,5 +56,7 @@
     <div id="bordered" class="clipped">XXXXXX          </div>
     <div id="gap-at-edge" class="clipped">XXXXXXX XXX</div>
     <div id="two-colours" class="clipped">XXXXXXXXXX</div>
+    <div id="right-border" class="clipped">XXXXXXXXXX</div>
+    <div id="narrow" class="clipped">  X</div>
   </body>
 </html>

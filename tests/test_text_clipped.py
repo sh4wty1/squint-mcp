@@ -106,6 +106,20 @@ async def test_the_cut_is_looked_for_inside_the_padding_box(client: Client) -> N
     assert await findings_on(client, STRIP, "#bordered", findings) == []
 
 
+async def test_the_cut_is_looked_for_left_of_the_right_border(client: Client) -> None:
+    findings = (await detect(client, STRIP))["findings"]
+    (finding,) = await findings_on(client, STRIP, "#right-border", findings)
+    assert finding["evidence"]["measured"]["overflowPx"] == 50
+
+
+async def test_the_strip_of_a_box_narrower_than_a_glyph_stays_inside_it(
+    client: Client,
+) -> None:
+    # Nothing is painted inside the 10px box: its only glyph is out of sight.
+    findings = (await detect(client, STRIP))["findings"]
+    assert await findings_on(client, STRIP, "#narrow", findings) == []
+
+
 async def test_a_cut_falling_in_a_gap_between_glyphs_is_reported(
     client: Client,
 ) -> None:
