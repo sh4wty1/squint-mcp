@@ -161,6 +161,56 @@ async def test_text_longer_than_40_characters_is_cut_to_39_and_an_ellipsis(
     assert finding["text"] == "X" * 39 + "…"
 
 
+async def test_text_of_exactly_40_characters_is_not_cut(client: Client) -> None:
+    findings = (await detect(client, SELECTORS))["findings"]
+    assert [f["text"] for f in findings if len(f["text"]) == 40] == [
+        "X" * 39 + "…",  # `#long`, cut from 60
+        "X" * 40,
+    ]
+
+
+async def test_findings_of_equal_severity_are_in_document_order(
+    client: Client,
+) -> None:
+    findings = (await detect(client, SELECTORS))["findings"]
+    assert {finding["severity"] for finding in findings} == {"major"}
+    # The element of 16 glyphs is inside a shadow root: it sits at its host's place.
+    assert [finding["text"] for finding in findings] == [
+        "X" * 39 + "…",
+        "XXXXX XXXXX",
+        *("X" * glyphs for glyphs in range(8, 19)),
+        "X" * 40,
+        "X" * 19,
+        "X" * 20,
+    ]
+    many = (await detect(client, MANY))["findings"]
+    assert [finding["selector"] for finding in many] == [
+        "#m1",
+        "#m2",
+        "#m3",
+        "#m4",
+        "#m5",
+        "#m6",
+        "#small",
+    ]
+
+
+async def test_a_crop_is_cut_from_the_pixels_of_its_own_viewport(
+    client: Client,
+) -> None:
+    result = await call(client, RESPONSIVE, viewports=[DESKTOP, MOBILE])
+    assert result.structured_content is not None
+    findings = result.structured_content["findings"]
+    (finding,) = await findings_on(client, RESPONSIVE, "#half", findings, MOBILE)
+    crop_index: int = finding["evidence"]["cropIndex"]
+    image = images(result)[crop_index]
+    crop = Image.open(io.BytesIO(base64.b64decode(image.data))).convert("RGB")
+    assert crop.size == (227, 62)  # the 195x30 box of the 390px viewport, plus 16px
+    assert crop.getpixel((208, 31)) == (0, 0, 0)  # the last glyph the box shows
+    # Past the box the text is cut here; at 1440px wide it would go on.
+    assert crop.getpixel((213, 31)) == (255, 255, 255)
+
+
 async def test_text_whitespace_is_collapsed_to_single_spaces(client: Client) -> None:
     findings = (await detect(client, SELECTORS))["findings"]
     (finding,) = await findings_on(client, SELECTORS, "#spaced", findings)

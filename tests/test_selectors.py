@@ -40,6 +40,19 @@ async def test_an_id_with_many_digits_falls_through_to_role_and_aria_label(
     assert await selector_of(client, 11) == '[role="tab"][aria-label="Settings"]'
 
 
+async def test_an_id_with_three_digits_looks_generated_and_two_do_not(
+    client: Client,
+) -> None:
+    assert await selector_of(client, 19) == 'div[aria-label="Step"]'
+    assert await selector_of(client, 20) == "#col-12"
+
+
+async def test_a_data_testid_repeated_inside_a_shadow_root_is_not_unique(
+    client: Client,
+) -> None:
+    assert await selector_of(client, 18) == "#outside"
+
+
 async def test_a_shared_id_falls_through_to_the_css_path(client: Client) -> None:
     assert await selector_of(client, 12) == "body > main > p:nth-of-type(2)"
 
@@ -99,7 +112,7 @@ async def test_first_finding_of_the_bug_fixture_is_the_documented_one(
 async def test_every_finding_selector_resolves_to_its_element_in_inspect_element(
     client: Client,
 ) -> None:
-    for url, count in ((BUG, 2), (SELECTORS, 12)):
+    for url, count in ((BUG, 2), (SELECTORS, 16)):
         findings = (await detect(client, url))["findings"]
         assert len(findings) == count
         for finding in findings:

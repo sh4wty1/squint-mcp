@@ -45,7 +45,7 @@
       <div id="spaced" class="clipped">XXXXX
             XXXXX</div>
       <!-- One clipped element per selector case, each with its own number of glyphs,
-           from 8 to 17, so that a Finding can be matched to its element by text. -->
+           from 8 to 20, so that a Finding can be matched to its element by text. -->
       <!-- A unique data-testid wins over the id. -->
       <div data-testid="save" id="save-button" class="clipped">XXXXXXXX</div>
       <!-- A shared data-testid: the id is next. -->
@@ -76,10 +76,19 @@
           >
             XXXXXXXXXXXXXXXX
           </h3>
+          <!-- Shares its data-testid with an element outside the shadow root. -->
+          <span data-testid="twin">X</span>
         </template>
       </div>
       <!-- A data-testid that needs escaping. -->
       <div data-testid='say "hi"' class="clipped">XXXXXXXXXXXXXXXXX</div>
+      <!-- Its data-testid is repeated inside the shadow root above: the id is next. -->
+      <div data-testid="twin" id="outside" class="clipped">XXXXXXXXXXXXXXXXXX</div>
+      <!-- Exactly 40 glyphs: the longest text that is not cut. -->
+      <div class="clipped">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</div>
+      <!-- Three digits make an id look generated; two do not. -->
+      <div id="step-123" aria-label="Step" class="clipped">XXXXXXXXXXXXXXXXXXX</div>
+      <div id="col-12" aria-label="Column" class="clipped">XXXXXXXXXXXXXXXXXXXX</div>
     </main>
   </body>
 </html>
