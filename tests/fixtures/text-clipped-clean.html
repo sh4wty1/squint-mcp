@@ -70,6 +70,20 @@
       #hidden-over-pattern {
         visibility: hidden;
       }
+      /* 5 glyphs that fit in 300px. The child reaches 340px, so scrollWidth is 340,
+         and paints a second colour on the edge strip. */
+      #child-overflows {
+        position: relative;
+        width: 300px;
+      }
+      #child-overflows span {
+        position: absolute;
+        left: 290px;
+        top: 10px;
+        width: 50px;
+        height: 10px;
+        background: rgb(255, 0, 0);
+      }
       /* Painted at another size than laid out. Each is cut by 50px in layout pixels.
          They paint outside their layout place, so they come last and far apart. */
       .resized {
@@ -139,6 +153,7 @@
     <div id="pattern">
       <div id="hidden-over-pattern" class="clipped">XXXXXXXXXX</div>
     </div>
+    <div id="child-overflows" class="clipped">XXXXX<span></span></div>
     <div id="backdrop"></div>
     <div id="scaled" class="clipped resized">XXXXXXXXXX</div>
     <div id="stretched" class="clipped resized">XXXXXXXXXX</div>

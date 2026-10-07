@@ -98,6 +98,13 @@ async def test_hidden_text_over_a_pattern_is_not_reported(client: Client) -> Non
     assert await reported(client, ("#hidden-over-pattern",)) == []
 
 
+async def test_fitting_text_beside_an_overflowing_child_is_not_reported(
+    client: Client,
+) -> None:
+    # scrollWidth counts the child; the text itself ends 200px before the edge.
+    assert await reported(client, ("#child-overflows",)) == []
+
+
 async def test_an_element_painted_at_another_size_than_laid_out_is_not_reported(
     client: Client,
 ) -> None:

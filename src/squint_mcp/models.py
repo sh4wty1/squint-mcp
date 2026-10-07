@@ -53,6 +53,9 @@ class Element(BaseModel):
     """An excerpt of the text content, whitespace collapsed."""
     own_text: bool
     """Whether a non-whitespace text node is a direct child."""
+    own_text_right: float | None
+    """The right edge, as painted and in page coordinates, of the text nodes that
+    are direct children; None when they paint no box."""
     scroll_width: int
     client_width: int
     selector: str

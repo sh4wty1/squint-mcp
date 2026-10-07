@@ -1,7 +1,8 @@
 // Runs in the page over the elements matched by the selector and returns them in
 // document order. For each one: its border box as painted, in page coordinates, its
-// box model as laid out, the requested computed styles, an excerpt of its text, its
-// scroll and client width and a selector that is unique on the page.
+// box model as laid out, the requested computed styles, an excerpt of its text, the
+// right edge of its own text, its scroll and client width and a selector that is
+// unique on the page.
 (elements, { properties, textLimit, transformMinSizeDiffPx }) => {
   // Document order, an open shadow tree right after its host. Playwright lists the
   // matches inside shadow trees after the whole light tree, so its order is not used.
@@ -110,6 +111,19 @@
         : offset;
     const layoutWidth = layout(element.offsetWidth, rect.width);
     const layoutHeight = layout(element.offsetHeight, rect.height);
+    // Where the element's own text ends, as painted: a Range over each text node that
+    // is a direct child. scrollWidth cannot tell it from an overflowing child.
+    // A running maximum: one text node can paint more rects than a call takes arguments.
+    const range = document.createRange();
+    let ownTextRight = null;
+    for (const node of element.childNodes) {
+      if (node.nodeType !== Node.TEXT_NODE) continue;
+      range.selectNodeContents(node);
+      for (const textRect of range.getClientRects()) {
+        const right = textRect.right + window.scrollX;
+        if (ownTextRight === null || right > ownTextRight) ownTextRight = right;
+      }
+    }
     return {
       box: {
         x: rect.x + window.scrollX,
@@ -133,6 +147,7 @@
       ownText: [...element.childNodes].some(
         (node) => node.nodeType === Node.TEXT_NODE && node.nodeValue.trim() !== "",
       ),
+      ownTextRight,
       scrollWidth: element.scrollWidth,
       clientWidth: element.clientWidth,
       selector: selectorOf(element),

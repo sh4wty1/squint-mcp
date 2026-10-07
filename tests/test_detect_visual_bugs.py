@@ -28,6 +28,7 @@ BUG = fixture_url("text-clipped-bug.html")
 RESPONSIVE = fixture_url("responsive.html")
 SELECTORS = fixture_url("selectors.html")
 MANY = fixture_url("many.html")
+HUGE = fixture_url("huge-text.html")
 
 
 async def detect_tool(client: Client) -> Tool:
@@ -327,6 +328,11 @@ async def error_text(client: Client, arguments: dict[str, Any]) -> str:
     result = await client.call_tool("detect_visual_bugs", arguments)
     assert result.is_error is True
     return " ".join(texts(result))
+
+
+async def test_a_page_with_one_very_large_text_node_is_checked(client: Client) -> None:
+    # 100,000 lines in one text node: one client rect each.
+    assert (await detect(client, HUGE))["findings"] == []
 
 
 async def test_unknown_check_is_an_error_listing_the_valid_ones(client: Client) -> None:

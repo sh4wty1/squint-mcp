@@ -52,6 +52,11 @@ def _is_resized(element: Element) -> bool:
     )
 
 
+def _padding_right(element: Element) -> float:
+    """The right edge of the padding box, in page coordinates."""
+    return element.box.x + element.box_model.border.left + element.client_width
+
+
 def _edge_strip(element: Element) -> Box:
     """The part of the padding box within one font-size of its right edge.
 
@@ -60,9 +65,8 @@ def _edge_strip(element: Element) -> Box:
     """
     border = element.box_model.border
     font_size = float(element.computed["font-size"].removesuffix("px"))
-    padding_left = element.box.x + border.left
-    right = padding_left + element.client_width
-    left = max(padding_left, right - font_size)
+    right = _padding_right(element)
+    left = max(element.box.x + border.left, right - font_size)
     return Box(
         x=left,
         y=element.box.y + border.top,
@@ -86,6 +90,10 @@ def _is_clipped(element: Element, pixels: Image.Image) -> bool:
         and _overflow_px(element) >= config.TEXT_CLIPPED_MIN_OVERFLOW_PX
         # Before the pixels: the strip is only where layout and paint coincide.
         and not _is_resized(element)
+        # scrollWidth also counts an overflowing child: the text itself has to
+        # pass the edge.
+        and element.own_text_right is not None
+        and element.own_text_right > _padding_right(element)
         # The DOM says text overflows; the pixels say whether any of it is seen
         # being cut. A strip of one colour is hidden text or blank overflow.
         and not is_flat(pixels, _edge_strip(element))

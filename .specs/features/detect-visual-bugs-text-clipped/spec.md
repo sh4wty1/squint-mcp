@@ -26,6 +26,7 @@ Explicitly excluded. Documented to prevent scope creep.
 | Profile, Audit, score | Not in v0.1 |
 | Vertical clipping (`scrollHeight > clientHeight`) | `docs/SPEC.md` defines the signal as `scrollWidth > clientWidth` |
 | Text clipped by an ancestor that holds no text itself | Decided in `context.md`; known limit of this Check |
+| Text cut inside an inline child while the element's own text nodes end before the edge (`<div>Save <b>all the changes</b></div>`) | The Check measures only the text nodes that are direct children (Assumptions: own text against the edge); the child holds the cut text and clips nothing itself. Known limit of this Check |
 | Right-to-left text (`direction: rtl`) | The cut is on the other edge; not asked for by the roadmap |
 | Intended ellipsis (`text-overflow: ellipsis`) | Belongs to the future `ellipsis-unintended` Check |
 | Clipped text in an element painted at another size than it is laid out (a `transform` that scales, rotates or skews it, on the element or on an ancestor) | `scrollWidth` and `clientWidth` are layout pixels and the pixels are painted ones; the edge strip has no single place under a rotation or a skew (ADR-0003). Known limit of this Check |
@@ -64,6 +65,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | Clipping overflow values | `overflow-x: hidden` and `overflow-x: clip` | `auto` and `scroll` leave the text reachable by scrolling | n |
 | Minimum overflow | 2px; a 1px difference is not reported. The threshold lives in config | `scrollWidth` and `clientWidth` are rounded integers, so 1px can be rounding alone | n |
 | Pixel confirmation ("the crop ending on a cut glyph") | Confirmed when the strip of the element's padding box within one `font-size` of its right edge is painted in more than one colour. A strip of a single colour means no text is visibly cut and yields no Finding | A single pixel column would miss a cut that falls between two glyphs; one `font-size` is wider than any letter gap. Rejects screen-reader-only text, hidden text and overflow made of whitespace | n |
+| Own text against the edge | The Capture carries the right edge, as painted, of the text nodes that are direct children of the element (a `Range` over them). The Check reports only when that edge passes the right edge of the padding box. `overflowPx` stays `scrollWidth - clientWidth` | Decided with the maintainer at the review of PR #7 (F1): `scrollWidth` also counts an overflowing child, so a box whose own text fits was reported as clipped text, with the child supplying the second colour of the edge strip. The alternative, listing the case under Out of Scope, would have kept a reproduced false Finding. One more condition leaves every documented number as it is | y |
 | Ids that "look generated" | An id is skipped when it contains a character outside `[A-Za-z0-9_-]` or three or more digits | Catches `:r1:`, `radix-:r0:`, `ember1234`, `css-1a2b3c`. A real id wrongly skipped only costs a fall-through to the next step | n |
 | `data-testid` variants | Only the `data-testid` attribute | `docs/SPEC.md` names only that one | n |
 | Selector quoting | Attribute values are always double-quoted and escaped (`[data-testid="hero-title"]`): a backslash before each double quote and backslash, and each line break as its hexadecimal escape followed by a space (a line feed gives `\a `); ids go through CSS identifier escaping. `docs/SPEC.md`'s example shows the value unquoted | A quoted value is valid for every string | n |
@@ -98,10 +100,11 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 **Fixtures named below** (all under `tests/fixtures/`, white page, black Ahem text at 20px on a 30px line, each clipped element one line of `X` glyphs with `white-space: nowrap`):
 
 - `text-clipped-bug.html`: `#badge` (first in the document, 10 glyphs in a 196px box, `overflow-x: hidden`) and `[data-testid="hero-title"]` (an `h1`, 10 glyphs in a 150px box at x 40, y 120, `overflow-x: hidden`).
-- `text-clipped-clean.html`: the near-misses of DVB-24 to DVB-33 and DVB-69, one element each. `#hidden-over-pattern` is a second element for DVB-30: hidden like `#invisible`, inside a parent painted with two colours, so its edge strip is not flat.
+- `text-clipped-clean.html`: the near-misses of DVB-24 to DVB-33 and DVB-69, one element each. `#hidden-over-pattern` is a second element for DVB-30: hidden like `#invisible`, inside a parent painted with two colours, so its edge strip is not flat. `#child-overflows` is the element of DVB-71.
 - `text-clipped-bounds.html`: 10 glyphs in boxes of 199px (`#over-1`), 198px (`#over-2`), 193px (`#over-7`) and 192px (`#over-8`), plus `#clip` (150px box, `overflow-x: clip`) and `#moved` (150px box, `overflow-x: hidden`, absolutely positioned at left 40px, top 400px, with `transform: translate(30px, 10px)`).
 - `selectors.html`: one clipped element per selector case of DVB-34 to DVB-42, each with its own number of glyphs, plus `#long` and `#spaced` (DVB-16, DVB-17) and one element per bound of the Assumptions on selectors and excerpts: exactly 40 glyphs, ids of three and of two digits, an id that needs escaping, a `data-testid` repeated inside the shadow root, the same path under two sibling containers, a tag name with a colon (`o:p`), and a `data-testid` that holds a line break.
 - `text-clipped-strip.html`: three elements that pin where the cut is looked for (Assumptions: pixel confirmation): `#bordered` (borders on the left, top and bottom, blank overflow, no Finding), `#right-border` (a 30px right border, one Finding), `#narrow` (a 10px box showing no ink, no Finding), `#gap-at-edge` (the edge falls in a space between glyphs, one Finding) and `#two-colours` (transparent text over two flat bands, one Finding).
+- `huge-text.html`: a scrollable `pre` holding one text node of 100,000 lines, which paints one box per line; no Finding, and the call succeeds.
 - `many.html`: seven clipped elements, each in its own text colour: `#small` first (4px cut), then `#m1` to `#m6` (50px cut each).
 - `responsive.html`: `#fixed` (10 glyphs in a 150px box) then `#half` (10 glyphs in a box of `width: 50vw`).
 
@@ -178,6 +181,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 15. IF the element has `direction: rtl` (`#rtl`) THEN the `text-clipped` Check SHALL return no Finding for it. <!-- DVB-33 -->
 16. IF the element is painted at a size that differs from its layout size by 1px or more in width or in height THEN the `text-clipped` Check SHALL return no Finding for it; this SHALL hold in `text-clipped-clean.html` for `#scaled` (`transform: scale(1.5)`), `#stretched` (`transform: scaleY(2)`, width unchanged), `#widened` (`transform: scaleX(1.5)`, height unchanged), `#turned` (`transform: rotate(90deg)`) and `#in-scaled` (no transform of its own, inside a parent with `transform: scale(0.5)`), each of which overflows its 150px box by 50px. <!-- DVB-69 -->
 17. WHEN an element that meets DVB-19 is moved by a transform that keeps its size (`#moved` in `text-clipped-bounds.html`) THEN the `text-clipped` Check SHALL return one Finding for it with `box` equal to `{"x": 70, "y": 410, "w": 150, "h": 30}` and `evidence.measured.overflowPx` equal to 50. <!-- DVB-70 -->
+18. IF the element's own text ends before the right edge of its padding box and `scrollWidth - clientWidth` is 2 or more only because a child overflows (`#child-overflows` in `text-clipped-clean.html`: 5 glyphs, 100px, in a 300px box with `overflow-x: hidden`, and an absolutely positioned child from 290px to 340px that paints a second colour on the edge strip) THEN the `text-clipped` Check SHALL return no Finding for it. <!-- DVB-71 -->
 
 **Independent Test**: Call `detect_visual_bugs` on `text-clipped-bug.html`, `text-clipped-clean.html` and `text-clipped-bounds.html` and compare the Findings.
 
@@ -365,10 +369,11 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | DVB-68 | P2: Check contract, configuration and documents | Closing step | In Tasks |
 | DVB-69 | P1: Detect clipped text | T4 | Implemented |
 | DVB-70 | P1: Detect clipped text | T2 | Implemented |
+| DVB-71 | P1: Detect clipped text | PR #7 review (F1) | Implemented |
 
-**Coverage:** 70 total, 68 mapped to tasks, DVB-65 checked by the Verifier from file evidence, DVB-68 a closing step.
+**Coverage:** 71 total, 68 mapped to tasks, DVB-71 added by the review of PR #7, DVB-65 checked by the Verifier from file evidence, DVB-68 a closing step.
 
-**Verification method:** pytest through the in-memory MCP client for DVB-01 to DVB-59, DVB-69 and DVB-70; the Verifier checks DVB-60 to DVB-68 from file evidence.
+**Verification method:** pytest through the in-memory MCP client for DVB-01 to DVB-59 and DVB-69 to DVB-71; the Verifier checks DVB-60 to DVB-68 from file evidence.
 
 ---
 
