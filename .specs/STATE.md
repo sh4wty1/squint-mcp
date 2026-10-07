@@ -33,6 +33,6 @@
 - **Completed**: Specify (70 requirements, `validate_spec.py` clean), discuss (`context.md`), Design (`design.md`, AD-003), Tasks (`tasks.md`, `validate_tasks.py` clean). Baseline: 61 tests pass.
 - **In-progress** (file:line): none.
 - **Next step**: Execute from T1, inline (the maintainer was advised against sub-agents: the second batch is one documentation task). The Verifier runs after T9.
-- **Blockers**: none locally: the fix of issue #5 is merged into this branch from `fix/box-model-layout-content`. PR #6 itself is still open: GitHub answered 500 to every merge attempt on 2026-10-07.
+- **Blockers**: none. The fix of issue #5 is in `main` (PR #6, merge commit `8cf42be`) and in this branch.
 - **Uncommitted files**: none
 - **Branch**: `feat/detect-visual-bugs-text-clipped`
