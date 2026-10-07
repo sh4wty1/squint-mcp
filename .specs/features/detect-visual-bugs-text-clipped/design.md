@@ -172,11 +172,11 @@ class Element(BaseModel):  # one element as collected in the page; camelCase on 
     box: Box
     box_model: BoxModel
     computed: dict[str, str]
-    text: str          # excerpt: whitespace collapsed, at most 40 chars
-    own_text: bool     # has a non-whitespace text node as a direct child
+    text: str  # excerpt: whitespace collapsed, at most 40 chars
+    own_text: bool  # has a non-whitespace text node as a direct child
     scroll_width: int
     client_width: int
-    selector: str      # unique on the page
+    selector: str  # unique on the page
 
 
 Severity = Literal["critical", "major", "minor", "info"]
