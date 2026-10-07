@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: text that is not clipped</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are 200px wide.
+         The 30px line leaves 5px of page background above and below them. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      /* Each element below undoes one condition of a clipped text. */
+      .clipped {
+        margin: 20px 0 0 40px;
+        width: 150px;
+        overflow-x: hidden;
+        white-space: nowrap;
+      }
+      #fits {
+        width: 200px;
+      }
+      #wraps {
+        white-space: normal;
+      }
+      #visible {
+        overflow-x: visible;
+      }
+      #scrolls {
+        overflow-x: auto;
+      }
+      #ellipsis {
+        text-overflow: ellipsis;
+      }
+      /* The screen-reader-only pattern. */
+      #sr-only {
+        position: absolute;
+        margin: 0;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+      }
+      #invisible {
+        visibility: hidden;
+      }
+      /* 5 glyphs, then 10 spaces that overflow. */
+      #blank-tail {
+        white-space: pre;
+      }
+      #rtl {
+        direction: rtl;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="fits" class="clipped">XXXXXXXXXX</div>
+    <div id="wraps" class="clipped">XXXXX XXXXX XXXXX</div>
+    <div id="visible" class="clipped">XXXXXXXXXX</div>
+    <div id="scrolls" class="clipped">XXXXXXXXXX</div>
+    <div id="ellipsis" class="clipped">XXXXXXXXXX</div>
+    <div id="sr-only" class="clipped">XXXXXXXXXX</div>
+    <div id="invisible" class="clipped">XXXXXXXXXX</div>
+    <div id="blank-tail" class="clipped">XXXXX          </div>
+    <!-- The clipping box holds no text of its own; the text is its child's. -->
+    <div id="ancestor" class="clipped">
+      <div>XXXXXXXXXX</div>
+    </div>
+    <div id="rtl" class="clipped">XXXXXXXXXX</div>
+  </body>
+</html>

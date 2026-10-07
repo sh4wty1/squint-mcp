@@ -40,6 +40,15 @@ def crop_png(pixels: Image.Image, box: Box) -> bytes:
     return buffer.getvalue()
 
 
+def is_flat(pixels: Image.Image, box: Box) -> bool:
+    """Whether `box` is painted in a single colour. A box with no pixels is flat."""
+    region = _region(pixels, box, 0)
+    # getcolors() gives up, returning None, past `maxcolors` distinct colours.
+    return (
+        region.width * region.height == 0 or region.getcolors(maxcolors=1) is not None
+    )
+
+
 def sample_colors(pixels: Image.Image, box: Box) -> list[SampledColor]:
     """The most frequent colours painted inside the element's border box.
 

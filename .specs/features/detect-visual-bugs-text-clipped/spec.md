@@ -303,7 +303,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | DVB-07 | P1: Run Checks on a page | T2 | Implemented |
 | DVB-08 | P1: Run Checks on a page | T2 | Implemented |
 | DVB-09 | P1: Run Checks on a page | T2 | Implemented |
-| DVB-10 | P1: Run Checks on a page | T3 | In Tasks |
+| DVB-10 | P1: Run Checks on a page | T3 | Implemented |
 | DVB-11 | P1: Run Checks on a page | T2 | Implemented |
 | DVB-12 | P1: Run Checks on a page | T2 | Implemented |
 | DVB-13 | P1: Read a Finding | T2 | Implemented |
@@ -317,16 +317,16 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | DVB-21 | P1: Detect clipped text | T2 | Implemented |
 | DVB-22 | P1: Detect clipped text | T2 | Implemented |
 | DVB-23 | P1: Detect clipped text | T2 | Implemented |
-| DVB-24 | P1: Detect clipped text | T3 | In Tasks |
-| DVB-25 | P1: Detect clipped text | T3 | In Tasks |
-| DVB-26 | P1: Detect clipped text | T3 | In Tasks |
-| DVB-27 | P1: Detect clipped text | T3 | In Tasks |
-| DVB-28 | P1: Detect clipped text | T3 | In Tasks |
-| DVB-29 | P1: Detect clipped text | T3 | In Tasks |
-| DVB-30 | P1: Detect clipped text | T3 | In Tasks |
-| DVB-31 | P1: Detect clipped text | T3 | In Tasks |
-| DVB-32 | P1: Detect clipped text | T3 | In Tasks |
-| DVB-33 | P1: Detect clipped text | T3 | In Tasks |
+| DVB-24 | P1: Detect clipped text | T3 | Implemented |
+| DVB-25 | P1: Detect clipped text | T3 | Implemented |
+| DVB-26 | P1: Detect clipped text | T3 | Implemented |
+| DVB-27 | P1: Detect clipped text | T3 | Implemented |
+| DVB-28 | P1: Detect clipped text | T3 | Implemented |
+| DVB-29 | P1: Detect clipped text | T3 | Implemented |
+| DVB-30 | P1: Detect clipped text | T3 | Implemented |
+| DVB-31 | P1: Detect clipped text | T3 | Implemented |
+| DVB-32 | P1: Detect clipped text | T3 | Implemented |
+| DVB-33 | P1: Detect clipped text | T3 | Implemented |
 | DVB-34 | P1: Stable selectors | T6 | In Tasks |
 | DVB-35 | P1: Stable selectors | T6 | In Tasks |
 | DVB-36 | P1: Stable selectors | T6 | In Tasks |

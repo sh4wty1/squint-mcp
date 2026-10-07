@@ -127,7 +127,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (DVB-68). It is a clos
 
 ### T3: Confirm the cut in the pixels
 
-- [ ] Done
+- [x] Done
 
 **What**: `vision.is_flat` and design rule 7: no Finding when the edge strip of the padding box is painted in one colour.
 **Where**: `src/squint_mcp/vision.py` (and its use in the Check module, fixture and tests under `tests/`)
@@ -142,11 +142,11 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (DVB-68). It is a clos
 
 **Done when**:
 
-- [ ] `text-clipped-clean.html` holds the ten near-misses of DVB-24 to DVB-33, one element each
-- [ ] The clean fixture returns `findings` equal to `[]`, no image block and the text `No findings in 1 viewport.`
-- [ ] A test names each near-miss, so that one of them being reported says which
-- [ ] Gate check passes: Build
-- [ ] Test count: at least 82 tests pass (no silent deletions)
+- [x] `text-clipped-clean.html` holds the ten near-misses of DVB-24 to DVB-33, one element each
+- [x] The clean fixture returns `findings` equal to `[]`, no image block and the text `No findings in 1 viewport.`
+- [x] A test names each near-miss, so that one of them being reported says which
+- [x] Gate check passes: Build
+- [x] Test count: at least 82 tests pass (no silent deletions)
 
 **Tests**: integration
 **Gate**: build
