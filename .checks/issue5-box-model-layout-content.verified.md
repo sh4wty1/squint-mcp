@@ -48,7 +48,7 @@ Rows marked *not in scope* are policy and were not judged.
 
 ## Residual risk
 
-No fault was injected (profile `light`). By reading the old expression in the diff, C1 and C3 would have failed before the fix (150x70 and 10x70 against the asserted 50x30), and C4 would fail without the `??` fallback; none of that was observed by running a mutant.
+No fault was injected (profile `light`). By reading the old expression in the diff, C1 and C3 would have failed before the fix (150x90 and 10x70 against the asserted 50x30), and C4 would fail without the `??` fallback; none of that was observed by running a mutant.
 
 ## Gate
 
