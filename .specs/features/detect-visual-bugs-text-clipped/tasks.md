@@ -157,7 +157,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (DVB-68). It is a clos
 
 ### T4: Stay silent on an element painted at another size than its layout
 
-- [ ] Done
+- [x] Done
 
 **What**: Design rule 6: no Finding when `box` differs from the layout border box rebuilt from `box_model` by `TRANSFORM_MIN_SIZE_DIFF_PX` or more in width or in height. Runs before the pixel rule.
 **Where**: `src/squint_mcp/checks/text_clipped.py` (modify; fixture and test under `tests/`)
@@ -172,12 +172,12 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (DVB-68). It is a clos
 
 **Done when**:
 
-- [ ] `text-clipped-clean.html` gains `#scaled`, `#stretched`, `#turned` and `#in-scaled`, last in the document, absolutely positioned, `transform-origin: 0 0`, 200px apart
-- [ ] The clean fixture still returns no Finding, and the test fails for each of the four when rule 6 is removed
-- [ ] `#moved` is still reported (DVB-70 stays green)
-- [ ] A comment in the Check names the limit: a mirror or a half turn keeps both sizes and is read as no transform
-- [ ] Gate check passes: Build
-- [ ] Test count: at least 83 tests pass (no silent deletions)
+- [x] `text-clipped-clean.html` gains `#scaled`, `#stretched`, `#turned` and `#in-scaled`, last in the document, absolutely positioned, `transform-origin: 0 0`, 200px apart
+- [x] The clean fixture still returns no Finding, and the test fails for each of the four when rule 6 is removed
+- [x] `#moved` is still reported (DVB-70 stays green)
+- [x] A comment in the Check names the limit: a mirror or a half turn keeps both sizes and is read as no transform
+- [x] Gate check passes: Build
+- [x] Test count: at least 83 tests pass (no silent deletions)
 
 **Tests**: integration
 **Gate**: build

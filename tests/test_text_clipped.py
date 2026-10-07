@@ -90,3 +90,10 @@ async def test_text_that_is_not_visibly_cut_is_not_reported(client: Client) -> N
         "#rtl",
     )
     assert await reported(client, near_misses) == []
+
+
+async def test_an_element_painted_at_another_size_than_laid_out_is_not_reported(
+    client: Client,
+) -> None:
+    resized = ("#scaled", "#stretched", "#turned", "#in-scaled")
+    assert await reported(client, resized) == []

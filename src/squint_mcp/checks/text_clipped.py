@@ -20,6 +20,38 @@ def _overflow_px(element: Element) -> int:
     return element.scroll_width - element.client_width
 
 
+def _is_resized(element: Element) -> bool:
+    """Whether the element is painted at another size than it is laid out.
+
+    `box` is painted and the box model is layout (ADR-0003): the two differ
+    under a transform that scales, rotates or skews, on the element or on an
+    ancestor. Scroll and client width are layout pixels, so the cut has no
+    known place in the painted ones.
+    """
+    model = element.box_model
+    layout_w = (
+        model.content.w
+        + model.padding.left
+        + model.padding.right
+        + model.border.left
+        + model.border.right
+    )
+    layout_h = (
+        model.content.h
+        + model.padding.top
+        + model.padding.bottom
+        + model.border.top
+        + model.border.bottom
+    )
+    # ponytail: a mirror or a half turn keeps both sizes and is read as no
+    # transform, so the strip is read at the painted start of the text. The text
+    # is still cut there; compare positions too if such a Finding proves wrong.
+    return (
+        abs(element.box.w - layout_w) >= config.TRANSFORM_MIN_SIZE_DIFF_PX
+        or abs(element.box.h - layout_h) >= config.TRANSFORM_MIN_SIZE_DIFF_PX
+    )
+
+
 def _edge_strip(element: Element) -> Box:
     """The part of the padding box within one font-size of its right edge.
 
@@ -50,6 +82,8 @@ def _is_clipped(element: Element, pixels: Image.Image) -> bool:
         # Right-to-left text is cut on the other edge.
         and computed["direction"] == "ltr"
         and _overflow_px(element) >= config.TEXT_CLIPPED_MIN_OVERFLOW_PX
+        # Before the pixels: the strip is only where layout and paint coincide.
+        and not _is_resized(element)
         # The DOM says text overflows; the pixels say whether any of it is seen
         # being cut. A strip of one colour is hidden text or blank overflow.
         and not is_flat(pixels, _edge_strip(element))
