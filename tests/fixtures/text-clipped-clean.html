@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: text that is not clipped</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are 200px wide.
+         The 30px line leaves 5px of page background above and below them. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      /* Each element below undoes one condition of a clipped text. */
+      .clipped {
+        margin: 20px 0 0 40px;
+        width: 150px;
+        overflow-x: hidden;
+        white-space: nowrap;
+      }
+      #fits {
+        width: 200px;
+      }
+      #wraps {
+        white-space: normal;
+      }
+      #visible {
+        overflow-x: visible;
+      }
+      #scrolls {
+        overflow-x: auto;
+      }
+      #ellipsis {
+        text-overflow: ellipsis;
+      }
+      /* The screen-reader-only pattern. */
+      #sr-only {
+        position: absolute;
+        margin: 0;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+      }
+      #invisible {
+        visibility: hidden;
+      }
+      /* 5 glyphs, then 10 spaces that overflow. */
+      #blank-tail {
+        white-space: pre;
+      }
+      #rtl {
+        direction: rtl;
+      }
+      /* Hidden, with two colours painted behind its edge strip. */
+      #pattern {
+        background: repeating-linear-gradient(
+          rgb(200, 200, 200) 0 5px,
+          rgb(120, 120, 120) 5px 10px
+        );
+      }
+      #hidden-over-pattern {
+        visibility: hidden;
+      }
+      /* 5 glyphs that fit in 300px. The child reaches 340px, so scrollWidth is 340,
+         and paints a second colour on the edge strip. */
+      #child-overflows {
+        position: relative;
+        width: 300px;
+      }
+      #child-overflows span {
+        position: absolute;
+        left: 290px;
+        top: 10px;
+        width: 50px;
+        height: 10px;
+        background: rgb(255, 0, 0);
+      }
+      /* Painted at another size than laid out. Each is cut by 50px in layout pixels.
+         They paint outside their layout place, so they come last and far apart. */
+      .resized {
+        position: absolute;
+        left: 40px;
+        margin: 0;
+        transform-origin: 0 0;
+      }
+      /* Painted 225x45. */
+      #scaled {
+        top: 700px;
+        transform: scale(1.5);
+      }
+      /* Painted 150x60. */
+      #stretched {
+        top: 900px;
+        transform: scaleY(2);
+      }
+      /* Painted 225x30: only the width differs. */
+      #widened {
+        top: 1500px;
+        transform: scaleX(1.5);
+      }
+      /* Painted 151.5x30: just past the 1px that tells a transform from none. */
+      #nudged {
+        top: 1700px;
+        transform: scaleX(1.01);
+      }
+      /* Painted 30x150, to the left of its layout place. */
+      #turned {
+        top: 1100px;
+        transform: rotate(90deg);
+      }
+      /* Painted 75x15: the transform is its parent's. */
+      #scaling-parent {
+        top: 1300px;
+        transform: scale(0.5);
+      }
+      #in-scaled {
+        margin: 0;
+      }
+      /* Two colours where the edge strip of #turned and #in-scaled would be read if
+         they were taken for untransformed: 130px to 150px right of the painted box.
+         Without it that misplaced strip is blank page and looks like no cut. */
+      #backdrop {
+        position: absolute;
+        top: 1100px;
+        left: 130px;
+        width: 70px;
+        height: 230px;
+        background: repeating-linear-gradient(
+          rgb(200, 200, 200) 0 5px,
+          rgb(120, 120, 120) 5px 10px
+        );
+      }
+    </style>
+  </head>
+  <body>
+    <div id="fits" class="clipped">XXXXXXXXXX</div>
+    <div id="wraps" class="clipped">XXXXX XXXXX XXXXX</div>
+    <div id="visible" class="clipped">XXXXXXXXXX</div>
+    <div id="scrolls" class="clipped">XXXXXXXXXX</div>
+    <div id="ellipsis" class="clipped">XXXXXXXXXX</div>
+    <div id="sr-only" class="clipped">XXXXXXXXXX</div>
+    <div id="invisible" class="clipped">XXXXXXXXXX</div>
+    <div id="blank-tail" class="clipped">XXXXX          </div>
+    <!-- The clipping box holds no text of its own; the text is its child's. -->
+    <div id="ancestor" class="clipped">
+      <div>XXXXXXXXXX</div>
+    </div>
+    <div id="rtl" class="clipped">XXXXXXXXXX</div>
+    <div id="pattern">
+      <div id="hidden-over-pattern" class="clipped">XXXXXXXXXX</div>
+    </div>
+    <div id="child-overflows" class="clipped">XXXXX<span></span></div>
+    <div id="backdrop"></div>
+    <div id="scaled" class="clipped resized">XXXXXXXXXX</div>
+    <div id="stretched" class="clipped resized">XXXXXXXXXX</div>
+    <div id="turned" class="clipped resized">XXXXXXXXXX</div>
+    <div id="scaling-parent" class="resized">
+      <div id="in-scaled" class="clipped">XXXXXXXXXX</div>
+    </div>
+    <div id="widened" class="clipped resized">XXXXXXXXXX</div>
+    <div id="nudged" class="clipped resized">XXXXXXXXXX</div>
+  </body>
+</html>

@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: one very large text node</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+      }
+      /* 100,000 lines in one text node, reachable by scrolling. */
+      #huge {
+        margin: 0;
+        height: 100px;
+        overflow: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <pre id="huge"></pre>
+    <script>
+      document.getElementById("huge").textContent = "X\n".repeat(100000);
+    </script>
+  </body>
+</html>

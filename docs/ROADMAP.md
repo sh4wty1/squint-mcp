@@ -7,7 +7,8 @@ A v0.1 descrita em [`SPEC.md`](SPEC.md) é entregue em 5 fatias verticais. Cada 
 ## Como usar
 
 - A próxima tarefa é a primeira fatia `pendente` cujas dependências estão `concluída`.
-- Peça a spec dela com a skill da coluna `Skill` (por exemplo: `/tlc-spec-driven specify feature: <nome da fatia>`), uma fatia por sessão.
+- `task #N` (ou `fatia N`) é a fatia de número N da tabela abaixo. Leia a seção dela aqui antes de começar.
+- Peça a spec dela com a skill da coluna `Skill` (por exemplo: `/tlc-spec-driven specify feature: task #3`), uma fatia por sessão.
 - Ao fechar uma fatia, o status muda para `concluída` na tabela e na seção dela.
 - Quando a fatia 5 fechar, o roadmap pós-v0.1 é criado neste mesmo formato.
 
@@ -15,7 +16,7 @@ A v0.1 descrita em [`SPEC.md`](SPEC.md) é entregue em 5 fatias verticais. Cada 
 |---|---|---|---|---|
 | 1 | Fundação + `ping` | — | `tlc-spec-driven` | concluída |
 | 2 | Capture + `inspect_element` | 1 | `tlc-spec-driven` | concluída |
-| 3 | `detect_visual_bugs` + `text-clipped` | 2 | `tlc-spec-driven` | pendente |
+| 3 | `detect_visual_bugs` + `text-clipped` | 2 | `tlc-spec-driven` | concluída |
 | 4 | `low-contrast-real` | 3 | `tlc-spec-lean` | pendente |
 | 5 | Publicação no PyPI | 4 | manual (`ready-for-human`) | pendente |
 
@@ -69,7 +70,7 @@ A v0.1 descrita em [`SPEC.md`](SPEC.md) é entregue em 5 fatias verticais. Cada 
 - **Não entra:** `low-contrast-real`, demais Checks, Profile, Audit, score.
 - **Dependência:** fatia 2.
 - **Skill:** `tlc-spec-driven`.
-- **Status:** pendente.
+- **Status:** concluída. Spec, design e relatório de validação em [`.specs/features/detect-visual-bugs-text-clipped/`](../.specs/features/detect-visual-bugs-text-clipped/).
 
 ## 4. `low-contrast-real`
 

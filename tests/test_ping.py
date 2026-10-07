@@ -31,9 +31,13 @@ async def test_server_reports_its_version(client: Client) -> None:
     assert client.server_info.version == VERSION
 
 
-async def test_tools_are_exactly_ping_and_inspect_element(client: Client) -> None:
+async def test_tools_are_exactly_the_three_documented_ones(client: Client) -> None:
     tools = (await client.list_tools()).tools
-    assert sorted(tool.name for tool in tools) == ["inspect_element", "ping"]
+    assert sorted(tool.name for tool in tools) == [
+        "detect_visual_bugs",
+        "inspect_element",
+        "ping",
+    ]
 
 
 async def test_ping_is_read_only_and_closed_world(client: Client) -> None:

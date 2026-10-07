@@ -418,7 +418,11 @@ async def test_server_answers_ping_while_chromium_cannot_be_launched(
     client_without_chromium: Client,
 ) -> None:
     tools = (await client_without_chromium.list_tools()).tools
-    assert sorted(tool.name for tool in tools) == ["inspect_element", "ping"]
+    assert sorted(tool.name for tool in tools) == [
+        "detect_visual_bugs",
+        "inspect_element",
+        "ping",
+    ]
     result = await client_without_chromium.call_tool("ping", {})
     assert result.is_error is False
 

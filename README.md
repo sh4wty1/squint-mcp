@@ -8,14 +8,15 @@ It is built for coding agents that have just produced UI and need to know whethe
 
 Pre-release. Squint is **not on PyPI yet**, so `uvx squint-mcp` does not work today. For now it runs from a checkout.
 
-The server currently exposes two tools:
+The server currently exposes three tools:
 
 | Tool | Input | Output |
 | --- | --- | --- |
 | `ping` | `message` (optional string) | server `name`, `version`, and the echoed `message` |
 | `inspect_element` | `url`, `selector`, `viewport` (optional) | one element's computed styles, box model, sampled colours, `stabilized`, and a crop |
+| `detect_visual_bugs` | `url`, `viewports` (optional), `checks` (optional) | Findings ordered by severity, `stabilized` per viewport, and up to five crops |
 
-`detect_visual_bugs` is next. See [`docs/ROADMAP.md`](docs/ROADMAP.md) for the delivery slices and [`docs/SPEC.md`](docs/SPEC.md) for what v0.1 will contain.
+`detect_visual_bugs` runs one Check today, `text-clipped`; `low-contrast-real` is next. See [`docs/ROADMAP.md`](docs/ROADMAP.md) for the delivery slices and [`docs/SPEC.md`](docs/SPEC.md) for what v0.1 will contain.
 
 ## Run from a checkout
 

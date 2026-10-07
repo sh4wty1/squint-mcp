@@ -18,4 +18,21 @@
 - **Date**: 2026-10-06
 - **Status**: active
 
+### AD-003
+- **Decision**: A Capture taken for Checks holds every element of the page (open shadow trees included, in document order) with the same generic fields, among them a selector unique on the page. A Check is a function `Capture -> list[Finding]` in its own module under `src/squint_mcp/checks/`, registered by name in `checks/__init__.py`. Checks hold no page script; the tool, not the Check, orders Findings and allocates crops.
+- **Reason**: ADR-0002 makes the Capture the whole contract between browser code and Checks. One generic collector lets a new Check ship as one Python module; selectors need the live DOM, which is gone by the time a Check runs.
+- **Trade-off**: Every element is serialized on every `detect_visual_bugs` call, whatever the Checks need. A Check that needs a new fact about an element adds a field to the collector and to `Element`.
+- **Scope**: `src/squint_mcp/js/collect_elements.js`, `src/squint_mcp/models.py`, `src/squint_mcp/checks/`, `src/squint_mcp/tools/detect_visual_bugs.py`.
+- **Date**: 2026-10-06
+- **Status**: active
+
 ## Handoff
+
+- **Feature**: `detect-visual-bugs-text-clipped` (roadmap slice 3) / `.specs/features/detect-visual-bugs-text-clipped/`
+- **Phase / Task**: Execute done (T1 to T9) and validated. The third validation pass failed on four surviving mutants; Fix 16 to Fix 19 answer them and the re-run kills all four (`validation.md`, "Re-run of the survivors of pass 3"). PR #7 is open with both rounds of review answered.
+- **Completed**: Specify, discuss, Design (AD-003), Tasks, Execute, three validation passes and the re-run, the fixes of the review of PR #7 (`.checks/pr7-review-fixes.md`, verified), the status lines of F3 (`.checks/pr7-f3-status-lines.md`). Gate: 135 tests pass. Roadmap slice 3 is `concluída` (DVB-68).
+- **In-progress** (file:line): none.
+- **Next step**: the maintainer merges PR #7. Then slice 4 (`low-contrast-real`, `tlc-spec-lean`); issue #8 (document order across Checks) belongs to it.
+- **Blockers**: none. Open decision, not a blocker: text cut inside an inline child of a parent whose own text fits is no longer reported since `bc80575`; the spec does not record it.
+- **Uncommitted files**: none
+- **Branch**: `feat/detect-visual-bugs-text-clipped`
