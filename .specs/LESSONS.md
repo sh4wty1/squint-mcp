@@ -8,7 +8,11 @@
 
 Corroborated across multiple features. Safe to apply as guidance.
 
-_none_
+### L-012 - Give a geometric rule an outcome in the spec for every axis and every edge it applies to, not for one corner
+- signal: `spec_precision_gap` · recurrence: 2 feature(s) · scope: `spec,geometry` · harmful: 0
+- features: capture-inspect-element, detect-visual-bugs-text-clipped
+- evidence: spec.md:49, spec.md:53 (mutants N1, N7, N8; CAP-14, CAP-20) (spec,geometry) (+1 more)
+- last seen: 2026-10-07T16:30:33Z
 
 ## Candidates (under observation - do NOT load as guidance yet)
 
@@ -80,12 +84,6 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: tests/test_inspect_element.py:364 (mutant N11, CAP-35) (tests,config)
 - last seen: 2026-10-06T17:05:32Z
 
-### L-012 - Give a geometric rule an outcome in the spec for every axis and every edge it applies to, not for one corner
-- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `spec,geometry` · harmful: 0
-- features: capture-inspect-element
-- evidence: spec.md:49, spec.md:53 (mutants N1, N7, N8; CAP-14, CAP-20) (spec,geometry)
-- last seen: 2026-10-06T17:05:32Z
-
 ### L-013 - Set a latency tolerance in the spec as a fraction of the timeout the test uses, not as a fixed number of seconds larger than it
 - signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `spec, timing` · harmful: 0
 - features: capture-inspect-element
@@ -115,6 +113,48 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - features: capture-inspect-element
 - evidence: PR #3 review F4 (src/squint_mcp/capture.py:35) (spec, lifecycle)
 - last seen: 2026-10-06T17:47:43Z
+
+### L-018 - Test a value taken from one of several captures with a call that produces more than one capture, not only one
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,vision` · harmful: 0
+- features: detect-visual-bugs-text-clipped
+- evidence: mutant T03, src/squint_mcp/tools/detect_visual_bugs.py:105 (DVB-45) (tests,vision)
+- last seen: 2026-10-07T16:30:32Z
+
+### L-019 - Give each clause of an or-condition a fixture that only that clause catches
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,checks` · harmful: 0
+- features: detect-visual-bugs-text-clipped
+- evidence: mutant C11, src/squint_mcp/checks/text_clipped.py:50 (DVB-69) (tests,checks)
+- last seen: 2026-10-07T16:30:33Z
+
+### L-020 - Assert the full order of a returned list on a fixture with several items of equal rank, not only the place of one item
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,ordering` · harmful: 0
+- features: detect-visual-bugs-text-clipped
+- evidence: mutants J09, J10, src/squint_mcp/js/collect_elements.js:41,133 (DVB-15) (tests,ordering)
+- last seen: 2026-10-07T16:30:33Z
+
+### L-021 - Pin a count threshold with a case exactly at it and a case one past it, not only with a case far past it
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,thresholds` · harmful: 0
+- features: detect-visual-bugs-text-clipped
+- evidence: mutants J01, J03, src/squint_mcp/js/collect_elements.js:79,33 (DVB-16, DVB-37) (tests,thresholds)
+- last seen: 2026-10-07T16:30:33Z
+
+### L-022 - Pin each edge of a sampled pixel region with a fixture whose pixels differ just inside and just outside that edge
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,vision` · harmful: 0
+- features: detect-visual-bugs-text-clipped
+- evidence: mutants C13, C14, src/squint_mcp/checks/text_clipped.py:65,63 (DVB-19) (tests,vision)
+- last seen: 2026-10-07T16:30:33Z
+
+### L-023 - Measure the colours a fixture really paints before pinning a colour count, because text anti-aliasing adds colours that differ between machines
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,vision` · harmful: 0
+- features: detect-visual-bugs-text-clipped
+- evidence: mutant V01, src/squint_mcp/vision.py:48 (DVB-19) (tests,vision)
+- last seen: 2026-10-07T16:30:33Z
+
+### L-024 - When a new requirement supersedes an older one, name in the spec every existing test assertion it changes
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `spec` · harmful: 0
+- features: detect-visual-bugs-text-clipped
+- evidence: DVB-66 against DVB-01 (tests/test_inspect_element.py:421) (spec)
+- last seen: 2026-10-07T16:30:33Z
 
 ## Quarantined (failed when applied - ignore)
 
