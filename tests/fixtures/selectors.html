@@ -45,7 +45,7 @@
       <div id="spaced" class="clipped">XXXXX
             XXXXX</div>
       <!-- One clipped element per selector case, each with its own number of glyphs,
-           from 8 to 25, so that a Finding can be matched to its element by text. -->
+           from 8 to 26, so that a Finding can be matched to its element by text. -->
       <!-- A unique data-testid wins over the id. -->
       <div data-testid="save" id="save-button" class="clipped">XXXXXXXX</div>
       <!-- A shared data-testid: the id is next. -->
@@ -98,6 +98,8 @@
       <o:p class="clipped" style="display: block">XXXXXXXXXXXXXXXXXXXXXXXX</o:p>
       <!-- A data-testid that holds a line break. -->
       <div data-testid="line&#10;break" class="clipped">XXXXXXXXXXXXXXXXXXXXXXXXX</div>
+      <!-- A data-testid that holds a backslash. -->
+      <div data-testid="a\b" class="clipped">XXXXXXXXXXXXXXXXXXXXXXXXXX</div>
     </main>
   </body>
 </html>

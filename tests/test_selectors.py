@@ -103,6 +103,10 @@ async def test_a_line_break_in_an_attribute_value_is_escaped(client: Client) -> 
     assert await selector_of(client, 25) == '[data-testid="line\\a break"]'
 
 
+async def test_a_backslash_in_an_attribute_value_is_escaped(client: Client) -> None:
+    assert await selector_of(client, 26) == '[data-testid="a\\\\b"]'
+
+
 async def test_first_finding_of_the_bug_fixture_is_the_documented_one(
     client: Client,
 ) -> None:
@@ -135,7 +139,7 @@ async def test_first_finding_of_the_bug_fixture_is_the_documented_one(
 async def test_every_finding_selector_resolves_to_its_element_in_inspect_element(
     client: Client,
 ) -> None:
-    for url, count in ((BUG, 2), (SELECTORS, 21)):
+    for url, count in ((BUG, 2), (SELECTORS, 22)):
         findings = (await detect(client, url))["findings"]
         assert len(findings) == count
         for finding in findings:

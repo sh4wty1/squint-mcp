@@ -186,7 +186,7 @@ async def test_findings_of_equal_severity_are_in_document_order(
         "XXXXX XXXXX",
         *("X" * glyphs for glyphs in range(8, 19)),
         "X" * 40,
-        *("X" * glyphs for glyphs in range(19, 26)),
+        *("X" * glyphs for glyphs in range(19, 27)),
     ]
     many = (await detect(client, MANY))["findings"]
     assert [finding["selector"] for finding in many] == [
@@ -345,6 +345,13 @@ async def test_unknown_check_after_a_valid_one_is_still_an_error(
 ) -> None:
     text = await error_text(client, {"url": BUG, "checks": ["text-clipped", "nope"]})
     assert 'Unknown check "nope". Valid checks: text-clipped.' in text
+
+
+async def test_the_first_unknown_check_in_the_order_given_is_the_one_named(
+    client: Client,
+) -> None:
+    text = await error_text(client, {"url": BUG, "checks": ["zzz", "nope"]})
+    assert 'Unknown check "zzz". Valid checks: text-clipped.' in text
 
 
 async def test_unknown_check_is_reported_before_any_browser_work(
