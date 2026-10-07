@@ -3,7 +3,7 @@
   "promote_threshold": 2,
   "window_days": 45,
   "quarantine_threshold": 2,
-  "next_id": 32,
+  "next_id": 35,
   "lessons": [
     {
       "id": "L-001",
@@ -564,6 +564,60 @@
       ],
       "created": "2026-10-07T17:06:40Z",
       "last_seen": "2026-10-07T17:06:40Z"
+    },
+    {
+      "id": "L-032",
+      "key": "surviving_mutant::test a rule that reports the first of several offending items with an input that holds two of them not one",
+      "text": "Test a rule that reports the first of several offending items with an input that holds two of them, not one",
+      "signal": "surviving_mutant",
+      "scope": "tests,validation",
+      "status": "candidate",
+      "features": [
+        "detect-visual-bugs-text-clipped"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "mutant M1 (detect_visual_bugs.py:73) (tests,validation)"
+      ],
+      "created": "2026-10-07T17:41:29Z",
+      "last_seen": "2026-10-07T17:41:29Z"
+    },
+    {
+      "id": "L-033",
+      "key": "surviving_mutant::pin which box of an element a measurement uses with a fixture whose padding makes the padding box and the content box differ",
+      "text": "Pin which box of an element a measurement uses with a fixture whose padding makes the padding box and the content box differ",
+      "signal": "surviving_mutant",
+      "scope": "tests,geometry",
+      "status": "candidate",
+      "features": [
+        "detect-visual-bugs-text-clipped"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "mutant M4 (text_clipped.py:64) (tests,geometry)"
+      ],
+      "created": "2026-10-07T17:41:29Z",
+      "last_seen": "2026-10-07T17:41:29Z"
+    },
+    {
+      "id": "L-034",
+      "key": "spec_precision_gap::name in the spec every character an escaping rule covers not only the one its example shows",
+      "text": "Name in the spec every character an escaping rule covers, not only the one its example shows",
+      "signal": "spec_precision_gap",
+      "scope": "spec",
+      "status": "candidate",
+      "features": [
+        "detect-visual-bugs-text-clipped"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "mutant M6 (collect_elements.js:17); Assumptions: selector quoting (spec)"
+      ],
+      "created": "2026-10-07T17:41:29Z",
+      "last_seen": "2026-10-07T17:41:29Z"
     }
   ]
 }

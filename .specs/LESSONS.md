@@ -198,6 +198,24 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: mutant N4 (text_clipped.py:65) (tests,geometry)
 - last seen: 2026-10-07T17:06:40Z
 
+### L-032 - Test a rule that reports the first of several offending items with an input that holds two of them, not one
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,validation` · harmful: 0
+- features: detect-visual-bugs-text-clipped
+- evidence: mutant M1 (detect_visual_bugs.py:73) (tests,validation)
+- last seen: 2026-10-07T17:41:29Z
+
+### L-033 - Pin which box of an element a measurement uses with a fixture whose padding makes the padding box and the content box differ
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,geometry` · harmful: 0
+- features: detect-visual-bugs-text-clipped
+- evidence: mutant M4 (text_clipped.py:64) (tests,geometry)
+- last seen: 2026-10-07T17:41:29Z
+
+### L-034 - Name in the spec every character an escaping rule covers, not only the one its example shows
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `spec` · harmful: 0
+- features: detect-visual-bugs-text-clipped
+- evidence: mutant M6 (collect_elements.js:17); Assumptions: selector quoting (spec)
+- last seen: 2026-10-07T17:41:29Z
+
 ## Quarantined (failed when applied - ignore)
 
 A confirmed lesson that recurred alongside failure. Kept for the maintainer to review.
