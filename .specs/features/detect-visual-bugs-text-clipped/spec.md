@@ -1,6 +1,6 @@
 # detect_visual_bugs + text-clipped Specification
 
-Slice 3 of [`docs/ROADMAP.md`](../../../docs/ROADMAP.md). Source of truth: the roadmap section "3. detect_visual_bugs + text-clipped", then [`docs/SPEC.md`](../../../docs/SPEC.md), [`CONTEXT.md`](../../../CONTEXT.md), ADR-0001, ADR-0002, and the decisions AD-001 and AD-002 in [`.specs/STATE.md`](../../STATE.md). Decisions made there are final and are not restated as open here. The four decisions taken with the maintainer for this slice are in [`context.md`](context.md).
+Slice 3 of [`docs/ROADMAP.md`](../../../docs/ROADMAP.md). Source of truth: the roadmap section "3. detect_visual_bugs + text-clipped", then [`docs/SPEC.md`](../../../docs/SPEC.md), [`CONTEXT.md`](../../../CONTEXT.md), ADR-0001, ADR-0002, ADR-0003, and the decisions AD-001 and AD-002 in [`.specs/STATE.md`](../../STATE.md). Decisions made there are final and are not restated as open here. The four decisions taken with the maintainer for this slice are in [`context.md`](context.md).
 
 Scope size: Large. It adds the Finding model, the Check contract, selector generation, a second browser tool and the first Check. Design and Tasks both run.
 
@@ -28,6 +28,7 @@ Explicitly excluded. Documented to prevent scope creep.
 | Text clipped by an ancestor that holds no text itself | Decided in `context.md`; known limit of this Check |
 | Right-to-left text (`direction: rtl`) | The cut is on the other edge; not asked for by the roadmap |
 | Intended ellipsis (`text-overflow: ellipsis`) | Belongs to the future `ellipsis-unintended` Check |
+| Clipped text in an element painted at another size than it is laid out (a `transform` that scales, rotates or skews it, on the element or on an ancestor) | `scrollWidth` and `clientWidth` are layout pixels and the pixels are painted ones; the edge strip has no single place under a rotation or a skew (ADR-0003). Known limit of this Check |
 | Text inside form controls (`input`, `textarea`, `select`) | They hold no text node; not asked for by the roadmap |
 | Role selectors in Playwright syntax, computed accessible name | Decided in `context.md`: selectors are CSS only |
 | Any change to the behaviour of `inspect_element` or `ping` | Slices 1 and 2 are closed |
@@ -75,6 +76,8 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | Total timeout | 30s for the whole call, all viewports together | `docs/SPEC.md`: "every tool call bounded by a total timeout" | n |
 | One viewport failing | The whole call fails; no partial result | AD-002 | n |
 | Unknown Check | Checked before any browser work. The message names the first unknown name in the order given and lists the valid names alphabetically | A wrong call should fail without paying for a browser | n |
+| Element under a `transform` | An element whose painted border box (`box`) differs from its layout border box (`boxModel.content` plus padding and border) by 1px or more in width or in height yields no Finding. A transform that keeps both sizes is treated as none: a translated element is reported, with `box` at its painted position and `overflowPx` in layout pixels; so is a mirrored or half-turned one | ADR-0003: `box` is painted, the box model is layout, and a Check that crosses the two has to account for the transform. Staying silent costs a missed Finding; guessing where the cut is painted costs a false one, and a Finding has to be trustworthy. The 1px tolerance is the one the Capture already uses to tell a transform from none | y |
+| Fix of issue #5 | The branch takes in the fix of issue #5 (PR #6) before Design is approved | The rule above compares `box` with `boxModel.content`, which is the layout size only since that fix; before it the two were always equal and DVB-69 could not be met without a new Capture field | n |
 | Fixture text geometry | Fixtures set their text in the Ahem test font (from web-platform-tests, every glyph a 1em square of ink), bundled with the fixtures, at `font-size: 20px` and `line-height: 30px`, so `XXXXXXXXXX` is exactly 200px wide in a 30px-high box with 5px of page background above and below the glyphs. Verified at Design against real Chromium: the font declares itself public domain (CC0 fallback), Chromium loads it from a `file://` URL next to the page, and the widths are exact. Ahem's no-break space is a full square of ink; only the regular space is blank | System fonts differ between machines and CI, so exact `overflowPx` values need a font with known advances. The 30px line keeps the edge strip from being solid ink, which the pixel confirmation would read as a single colour | n |
 | Criteria not observable through the tool boundary (DVB-60 to DVB-68) | Verified by the Verifier from file evidence, not by pytest | The source docs forbid a second test seam | n |
 
@@ -95,8 +98,8 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 **Fixtures named below** (all under `tests/fixtures/`, white page, black Ahem text at 20px on a 30px line, each clipped element one line of `X` glyphs with `white-space: nowrap`):
 
 - `text-clipped-bug.html`: `#badge` (first in the document, 10 glyphs in a 196px box, `overflow-x: hidden`) and `[data-testid="hero-title"]` (an `h1`, 10 glyphs in a 150px box at x 40, y 120, `overflow-x: hidden`).
-- `text-clipped-clean.html`: the near-misses of DVB-24 to DVB-33, one element each.
-- `text-clipped-bounds.html`: 10 glyphs in boxes of 199px (`#over-1`), 198px (`#over-2`), 193px (`#over-7`) and 192px (`#over-8`), plus `#clip` (150px box, `overflow-x: clip`).
+- `text-clipped-clean.html`: the near-misses of DVB-24 to DVB-33 and DVB-69, one element each.
+- `text-clipped-bounds.html`: 10 glyphs in boxes of 199px (`#over-1`), 198px (`#over-2`), 193px (`#over-7`) and 192px (`#over-8`), plus `#clip` (150px box, `overflow-x: clip`) and `#moved` (150px box, `overflow-x: hidden`, absolutely positioned at left 40px, top 400px, with `transform: translate(30px, 10px)`).
 - `selectors.html`: one clipped element per selector case of DVB-34 to DVB-42.
 - `many.html`: seven clipped elements, each in its own text colour: `#small` first (4px cut), then `#m1` to `#m6` (50px cut each).
 - `responsive.html`: `#fixed` (10 glyphs in a 150px box) then `#half` (10 glyphs in a box of `width: 50vw`).
@@ -161,7 +164,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 2. WHEN an element meets DVB-19 with `overflow-x: clip` in place of `hidden` (`#clip` in `text-clipped-bounds.html`) THEN the `text-clipped` Check SHALL return one Finding for it with `evidence.computed["overflow-x"]` equal to `clip`. <!-- DVB-20 -->
 3. WHEN `overflowPx` is 8 or more THEN the Finding SHALL have `severity` equal to `major`; `#over-8` in `text-clipped-bounds.html` SHALL be `major` with `overflowPx` equal to 8. <!-- DVB-21 -->
 4. WHEN `overflowPx` is between 2 and 7 THEN the Finding SHALL have `severity` equal to `minor`; `#over-7` and `#over-2` in `text-clipped-bounds.html` SHALL be `minor` with `overflowPx` equal to 7 and 2. <!-- DVB-22 -->
-5. IF `scrollWidth - clientWidth` is 1 (`#over-1` in `text-clipped-bounds.html`) THEN the `text-clipped` Check SHALL return no Finding for that element, so that the fixture yields exactly 4 Findings. <!-- DVB-23 -->
+5. IF `scrollWidth - clientWidth` is 1 (`#over-1` in `text-clipped-bounds.html`) THEN the `text-clipped` Check SHALL return no Finding for that element, so that the fixture yields exactly 5 Findings. <!-- DVB-23 -->
 6. IF the text is exactly as wide as its box (`#fits` in `text-clipped-clean.html`, 200px of glyphs in a 200px box with `overflow-x: hidden`) THEN the `text-clipped` Check SHALL return no Finding for it. <!-- DVB-24 -->
 7. IF the text wraps inside a box with `overflow-x: hidden` and `white-space: normal` (`#wraps`) THEN the `text-clipped` Check SHALL return no Finding for it. <!-- DVB-25 -->
 8. IF the text overflows a box with `overflow-x: visible` (`#visible`) THEN the `text-clipped` Check SHALL return no Finding for it. <!-- DVB-26 -->
@@ -172,6 +175,8 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 13. IF only whitespace overflows, 5 glyphs followed by 10 spaces kept by `white-space: pre` in a 150px box (`#blank-tail`) THEN the `text-clipped` Check SHALL return no Finding for it. <!-- DVB-31 -->
 14. IF the box with `overflow-x: hidden` holds no text node of its own and the overflowing text belongs to a child with `overflow-x: visible` (`#ancestor`) THEN the `text-clipped` Check SHALL return no Finding for either element. <!-- DVB-32 -->
 15. IF the element has `direction: rtl` (`#rtl`) THEN the `text-clipped` Check SHALL return no Finding for it. <!-- DVB-33 -->
+16. IF the element is painted at a size that differs from its layout size by 1px or more in width or in height THEN the `text-clipped` Check SHALL return no Finding for it; this SHALL hold in `text-clipped-clean.html` for `#scaled` (`transform: scale(1.5)`), `#stretched` (`transform: scaleY(2)`, width unchanged), `#turned` (`transform: rotate(90deg)`) and `#in-scaled` (no transform of its own, inside a parent with `transform: scale(0.5)`), each of which overflows its 150px box by 50px. <!-- DVB-69 -->
+17. WHEN an element that meets DVB-19 is moved by a transform that keeps its size (`#moved` in `text-clipped-bounds.html`) THEN the `text-clipped` Check SHALL return one Finding for it with `box` equal to `{"x": 70, "y": 410, "w": 150, "h": 30}` and `evidence.measured.overflowPx` equal to 50. <!-- DVB-70 -->
 
 **Independent Test**: Call `detect_visual_bugs` on `text-clipped-bug.html`, `text-clipped-clean.html` and `text-clipped-bounds.html` and compare the Findings.
 
@@ -357,10 +362,12 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | DVB-66 | P2: Check contract, configuration and documents | - | Pending |
 | DVB-67 | P2: Check contract, configuration and documents | - | Pending |
 | DVB-68 | P2: Check contract, configuration and documents | - | Pending |
+| DVB-69 | P1: Detect clipped text | - | Pending |
+| DVB-70 | P1: Detect clipped text | - | Pending |
 
-**Coverage:** 68 total, 0 mapped to tasks, 68 unmapped ⚠️ (Tasks has not run yet).
+**Coverage:** 70 total, 0 mapped to tasks, 70 unmapped ⚠️ (Tasks has not run yet).
 
-**Verification method:** pytest through the in-memory MCP client for DVB-01 to DVB-59; the Verifier checks DVB-60 to DVB-68 from file evidence.
+**Verification method:** pytest through the in-memory MCP client for DVB-01 to DVB-59, DVB-69 and DVB-70; the Verifier checks DVB-60 to DVB-68 from file evidence.
 
 ---
 

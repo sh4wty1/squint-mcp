@@ -42,7 +42,7 @@ None. Every remaining choice is logged in the spec's Assumptions table with its 
 
 ### Declined / Undiscussed Gray Areas → Assumptions
 
-Logged in the spec's Assumptions & Open Questions: result shape (`findings`, `captures`), summary text, generated-id rule, CSS path format, text excerpt rule, pixel confirmation rule, minimum overflow, empty and duplicate list handling, fixture font.
+Logged in the spec's Assumptions & Open Questions: result shape (`findings`, `captures`), summary text, generated-id rule, CSS path format, text excerpt rule, pixel confirmation rule, minimum overflow, empty and duplicate list handling, fixture font, and (added 2026-10-07, after issue #5 and ADR-0003) elements under a `transform`.
 
 ---
 
@@ -59,3 +59,4 @@ Logged in the spec's Assumptions & Open Questions: result shape (`findings`, `ca
 - Text clipped by an ancestor container.
 - Role selectors in Playwright syntax (`role=button[name="…"]`) with a computed accessible name.
 - Right-to-left text.
+- Clipped text under a transform that scales, rotates or skews the element.
