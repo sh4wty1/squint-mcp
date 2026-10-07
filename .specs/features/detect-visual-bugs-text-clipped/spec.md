@@ -49,7 +49,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | Axis | Horizontal only | Decided with the maintainer; literal `docs/SPEC.md` | y |
 | Severity of `text-clipped` | `minor` when `overflowPx` is below 8, `major` at 8 or more; the threshold lives in config | Decided with the maintainer; makes severity ordering testable in this slice | y |
 | Reach | Only an element with a non-whitespace text node as a direct child and the clipping overflow on itself | Decided with the maintainer | y |
-| Slice 2's CAP-01 ("exactly two tools") | Superseded by DVB-01: exactly three. The tool-list test is rewritten to the new exact list | Same precedent as CAP-01 over FND-02 | n |
+| Slice 2's CAP-01 ("exactly two tools") | Superseded by DVB-01: exactly three. Both exact tool-list assertions are rewritten to the new list: the tool-list test of `tests/test_ping.py` and the one inside `test_server_answers_ping_while_chromium_cannot_be_launched` of `tests/test_inspect_element.py` | Same precedent as CAP-01 over FND-02 | n |
 | Structured content shape | `{"findings": Finding[], "captures": [{"viewport", "stabilized"}]}`, `captures` in the order the viewports were requested | `docs/SPEC.md` asks for `Finding[]` plus `stabilized` per viewport; "Capture" is the glossary term for one page at one viewport | n |
 | Key casing | camelCase in structured content, except the CSS property names inside `evidence.computed` | Same as slice 2 | n |
 | Optional Finding fields | `suggestion` and `source` are always present as keys, `null` when a Check has none | A fixed key set is easier to depend on than a varying one | n |
@@ -101,6 +101,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 - `text-clipped-clean.html`: the near-misses of DVB-24 to DVB-33 and DVB-69, one element each.
 - `text-clipped-bounds.html`: 10 glyphs in boxes of 199px (`#over-1`), 198px (`#over-2`), 193px (`#over-7`) and 192px (`#over-8`), plus `#clip` (150px box, `overflow-x: clip`) and `#moved` (150px box, `overflow-x: hidden`, absolutely positioned at left 40px, top 400px, with `transform: translate(30px, 10px)`).
 - `selectors.html`: one clipped element per selector case of DVB-34 to DVB-42.
+- `text-clipped-strip.html`: three elements that pin where the cut is looked for (Assumptions: pixel confirmation): `#bordered` (a 30px left border, blank overflow, no Finding), `#gap-at-edge` (the edge falls in a space between glyphs, one Finding) and `#two-colours` (transparent text over two flat bands, one Finding).
 - `many.html`: seven clipped elements, each in its own text colour: `#small` first (4px cut), then `#m1` to `#m6` (50px cut each).
 - `responsive.html`: `#fixed` (10 glyphs in a 150px box) then `#half` (10 glyphs in a box of `width: 50vw`).
 
@@ -175,7 +176,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 13. IF only whitespace overflows, 5 glyphs followed by 10 spaces kept by `white-space: pre` in a 150px box (`#blank-tail`) THEN the `text-clipped` Check SHALL return no Finding for it. <!-- DVB-31 -->
 14. IF the box with `overflow-x: hidden` holds no text node of its own and the overflowing text belongs to a child with `overflow-x: visible` (`#ancestor`) THEN the `text-clipped` Check SHALL return no Finding for either element. <!-- DVB-32 -->
 15. IF the element has `direction: rtl` (`#rtl`) THEN the `text-clipped` Check SHALL return no Finding for it. <!-- DVB-33 -->
-16. IF the element is painted at a size that differs from its layout size by 1px or more in width or in height THEN the `text-clipped` Check SHALL return no Finding for it; this SHALL hold in `text-clipped-clean.html` for `#scaled` (`transform: scale(1.5)`), `#stretched` (`transform: scaleY(2)`, width unchanged), `#turned` (`transform: rotate(90deg)`) and `#in-scaled` (no transform of its own, inside a parent with `transform: scale(0.5)`), each of which overflows its 150px box by 50px. <!-- DVB-69 -->
+16. IF the element is painted at a size that differs from its layout size by 1px or more in width or in height THEN the `text-clipped` Check SHALL return no Finding for it; this SHALL hold in `text-clipped-clean.html` for `#scaled` (`transform: scale(1.5)`), `#stretched` (`transform: scaleY(2)`, width unchanged), `#widened` (`transform: scaleX(1.5)`, height unchanged), `#turned` (`transform: rotate(90deg)`) and `#in-scaled` (no transform of its own, inside a parent with `transform: scale(0.5)`), each of which overflows its 150px box by 50px. <!-- DVB-69 -->
 17. WHEN an element that meets DVB-19 is moved by a transform that keeps its size (`#moved` in `text-clipped-bounds.html`) THEN the `text-clipped` Check SHALL return one Finding for it with `box` equal to `{"x": 70, "y": 410, "w": 150, "h": 30}` and `evidence.measured.overflowPx` equal to 50. <!-- DVB-70 -->
 
 **Independent Test**: Call `detect_visual_bugs` on `text-clipped-bug.html`, `text-clipped-clean.html` and `text-clipped-bounds.html` and compare the Findings.
@@ -274,7 +275,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 4. The JavaScript that runs inside the page SHALL live in `.js` files, with no JavaScript function bodies in Python strings. <!-- DVB-63 -->
 5. The `config` module SHALL define the crop limit (5), the text excerpt length (40), the minimum overflow (2px) and the `major` overflow threshold (8px), each with its source cited in a comment. <!-- DVB-64 -->
 6. The project SHALL declare no dependency that slice 2 did not declare. <!-- DVB-65 -->
-7. The tests of `inspect_element` SHALL pass without any change to their assertions. <!-- DVB-66 -->
+7. The tests of `inspect_element` SHALL pass without any change to their assertions other than the exact tool list of DVB-01. <!-- DVB-66 -->
 8. The `Unreleased` section of `CHANGELOG.md` SHALL list the `detect_visual_bugs` tool and the `text-clipped` Check, and the tool table of `README.md` SHALL list `detect_visual_bugs`. <!-- DVB-67 -->
 9. WHEN the Verifier reports PASS for this feature THEN `docs/ROADMAP.md` SHALL show slice 3 as `concluída` in both the table and the slice 3 section. <!-- DVB-68 -->
 
