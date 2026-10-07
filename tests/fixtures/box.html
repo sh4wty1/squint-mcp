@@ -123,6 +123,15 @@
         left: 40px;
         background: rgb(0, 128, 0);
       }
+      /* A fractional layout width, no transform: offsetWidth rounds it to 101. */
+      #frac {
+        position: absolute;
+        top: 1600px;
+        left: 40px;
+        width: 100.5px;
+        height: 60px;
+        background: rgb(0, 128, 0);
+      }
     </style>
   </head>
   <body>
@@ -152,5 +161,6 @@
     <div id="scaled"></div>
     <div id="rotated"></div>
     <svg id="vector" width="40" height="20"></svg>
+    <div id="frac"></div>
   </body>
 </html>

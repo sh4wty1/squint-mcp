@@ -15,10 +15,15 @@
     const border = edges("border", "-width");
     const padding = edges("padding");
     // The layout border box, before transforms: border and padding are untransformed
-    // too (ADR-0003). SVG and MathML elements have no offsetWidth and keep the rect.
-    // ponytail: offsetWidth is an integer; read computed width if sub-pixel matters.
-    const layoutWidth = element.offsetWidth ?? rect.width;
-    const layoutHeight = element.offsetHeight ?? rect.height;
+    // too (ADR-0003). offsetWidth is an integer, so the rect is kept while it agrees
+    // with it: no transform is in play then, and a fractional size stays exact. SVG
+    // and MathML elements have no offsetWidth and keep the rect.
+    // ponytail: a transform that changes a size by under 1px is read as none; read
+    // computed width if that matters.
+    const layout = (offset, painted) =>
+      offset === undefined || Math.abs(painted - offset) < 1 ? painted : offset;
+    const layoutWidth = layout(element.offsetWidth, rect.width);
+    const layoutHeight = layout(element.offsetHeight, rect.height);
     return {
       box: {
         x: rect.x + window.scrollX,

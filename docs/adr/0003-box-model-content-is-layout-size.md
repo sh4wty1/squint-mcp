@@ -5,5 +5,5 @@
 ## Consequences
 
 - For an element with a transform, `box.w` is not `content.w` plus border and padding. A Check that compares the two has to account for the transform itself.
-- The layout size is read from `offsetWidth`/`offsetHeight`, which are integers: a fractional layout width is rounded in `content` and not in `box`.
+- The layout size is read from `offsetWidth`/`offsetHeight`, which are integers. The rect is kept when it is within 1px of them: no transform is in play then, so a fractional size stays exact. Under a transform a fractional layout width is rounded in `content` and not in `box`, and a transform that changes a size by less than 1px is read as none.
 - SVG and MathML elements have no `offsetWidth`; their `content` still comes from the rect, transform included.

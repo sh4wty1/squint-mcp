@@ -155,6 +155,13 @@ async def test_box_model_content_of_an_svg_element_falls_back_to_its_rect(
     assert content["boxModel"]["content"] == {"w": 40, "h": 20}
 
 
+async def test_box_model_content_keeps_the_fractional_size_of_an_untransformed_element(
+    client: Client,
+) -> None:
+    content = await inspect(client, BOX, "#frac")
+    assert content["boxModel"]["content"] == {"w": 100.5, "h": 60}
+
+
 async def test_computed_holds_exactly_the_configured_properties(client: Client) -> None:
     content = await inspect(client, BOX, "#solid")
     assert set(content["computed"]) == COMPUTED_PROPERTIES
