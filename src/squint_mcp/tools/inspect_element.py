@@ -40,7 +40,9 @@ async def inspect_element(
     selector that must match exactly one element; it reaches into open shadow
     roots. `viewport` defaults to 1440x900. `stabilized` is false when the network
     never went idle. A call that takes longer than 30s fails. `box` is the element
-    as painted, after transforms; `boxModel` is its layout, before them.
+    as painted, after transforms; `boxModel` is its layout, before them,
+    for HTML elements. For SVG and MathML elements `boxModel.content` is still
+    derived from the painted size.
     """
     viewport = viewport or Viewport(
         width=config.DEFAULT_VIEWPORT_WIDTH, height=config.DEFAULT_VIEWPORT_HEIGHT
