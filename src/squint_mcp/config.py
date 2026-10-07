@@ -66,5 +66,5 @@ TEXT_CLIPPED_MIN_OVERFLOW_PX = 2
 TEXT_CLIPPED_MAJOR_OVERFLOW_PX = 8
 
 # Source: docs/adr/0003. An element whose painted size differs from its layout size
-# by this much is under a transform; it is the tolerance the collector uses.
+# by this much is under a transform. The collector is passed the same value.
 TRANSFORM_MIN_SIZE_DIFF_PX = 1

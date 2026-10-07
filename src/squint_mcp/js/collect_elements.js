@@ -2,7 +2,7 @@
 // document order. For each one: its border box as painted, in page coordinates, its
 // box model as laid out, the requested computed styles, an excerpt of its text, its
 // scroll and client width and a selector that is unique on the page.
-(elements, { properties, textLimit }) => {
+(elements, { properties, textLimit, transformMinSizeDiffPx }) => {
   // Document order, an open shadow tree right after its host. Playwright lists the
   // matches inside shadow trees after the whole light tree, so its order is not used.
   // ponytail: the whole page is walked and every match is serialized, whatever the
@@ -102,10 +102,12 @@
     // too (ADR-0003). offsetWidth is an integer, so the rect is kept while it agrees
     // with it: no transform is in play then, and a fractional size stays exact. SVG
     // and MathML elements have no offsetWidth and keep the rect.
-    // ponytail: a transform that changes a size by under 1px is read as none; read
-    // computed width if that matters.
+    // ponytail: a transform that changes a size by under the tolerance is read as none;
+    // read computed width if that matters.
     const layout = (offset, painted) =>
-      offset === undefined || Math.abs(painted - offset) < 1 ? painted : offset;
+      offset === undefined || Math.abs(painted - offset) < transformMinSizeDiffPx
+        ? painted
+        : offset;
     const layoutWidth = layout(element.offsetWidth, rect.width);
     const layoutHeight = layout(element.offsetHeight, rect.height);
     return {

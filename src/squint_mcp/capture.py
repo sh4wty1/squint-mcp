@@ -114,6 +114,7 @@ async def capture(
             {
                 "properties": list(config.CAPTURE_COMPUTED_PROPERTIES),
                 "textLimit": config.TEXT_EXCERPT_MAX_CHARS,
+                "transformMinSizeDiffPx": config.TRANSFORM_MIN_SIZE_DIFF_PX,
             },
         )
         screenshot = await page.screenshot(full_page=True)
