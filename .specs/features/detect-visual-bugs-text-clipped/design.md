@@ -1,9 +1,11 @@
 # detect_visual_bugs + text-clipped Design
 
 **Spec**: `.specs/features/detect-visual-bugs-text-clipped/spec.md`
-**Status**: Draft
+**Status**: Approved
 
 Every choice marked "spiked" was run against `mcp 2.3.0`, `playwright 1.63.0`, `pydantic 2.13` and real Chromium before this document was written. Conforms to AD-001 and AD-002; adds AD-003.
+
+Revised 2026-10-07 for DVB-69 and DVB-70: the transform rule of the Check was spiked against the collector of issue #5 (branch `fix/box-model-layout-content`, PR #6), which this branch must take in before Execute. File and line references to `collect_elements.js` and `inspect_element.py` are to that version.
 
 ---
 
@@ -49,8 +51,9 @@ Cost of A: every element is serialized, on every call. Accepted for v0.1 and mar
 | Scheme, load, launch and stabilization handling | `src/squint_mcp/capture.py:79-105` | Reused as is; this is where DVB-47 and DVB-56 to DVB-58 get their behaviour and messages |
 | Collector | `src/squint_mcp/js/collect_elements.js` | Extended with the new fields; still one function expression |
 | `Element`, `Box`, `BoxModel`, `Viewport`, `Capture` | `src/squint_mcp/models.py` | `Element` gains fields; the Finding models are added next to them |
+| `Element.box_model` as the layout size (ADR-0003, issue #5) | `src/squint_mcp/js/collect_elements.js:17-26` | The Check adds padding and border back to `content` and compares the result with `box` to tell a transformed element. No new Capture field |
 | `crop_png`, `_region` | `src/squint_mcp/vision.py:20-40` | Finding crops use `crop_png` unchanged; `is_flat` is built on `_region` |
-| Tool module shape, timeout block, `CallToolResult` assembly | `src/squint_mcp/tools/inspect_element.py:44-86` | Same shape for `tools/detect_visual_bugs.py` (AD-002) |
+| Tool module shape, timeout block, `CallToolResult` assembly | `src/squint_mcp/tools/inspect_element.py:47-89` | Same shape for `tools/detect_visual_bugs.py` (AD-002) |
 | Session client, `local_server`, `client_without_chromium` | `tests/conftest.py` | Reused unchanged; `/hang` serves the timeout test, `polling.html` the not-stabilized one |
 | `PIL.Image.getcolors(maxcolors=1)` | dependency | Returns `None` when a region has more than one colour: the whole of `is_flat` |
 | pydantic `Field(min_length=1)` | dependency | Empty-list validation and the schema's `minItems`, with no handler code (spiked) |
@@ -115,7 +118,7 @@ A Check returns its Findings in the order of `Capture.elements` (document order)
 - **Location**: `src/squint_mcp/checks/text_clipped.py`
 - **Interfaces**: `check(capture: Capture) -> list[Finding]`
 - **Dependencies**: `vision.is_flat`, `config`
-- **Reuses**: `Element` fields only
+- **Reuses**: `Element` fields only, `box_model` among them
 
 An element yields a Finding when all hold:
 
@@ -124,7 +127,8 @@ An element yields a Finding when all hold:
 3. `computed["text-overflow"]` is `clip`
 4. `computed["direction"]` is `ltr`
 5. `scroll_width - client_width >= config.TEXT_CLIPPED_MIN_OVERFLOW_PX`
-6. the edge strip is not flat. The strip is the part of the padding box within one `font-size` of its right edge: x from `box.x + border.left + client_width - font_size` (not left of the padding box) to `box.x + border.left + client_width`, y over the padding box's height.
+6. the element is painted at its layout size (DVB-69): `box.w` and `box.h` are each within `config.TRANSFORM_MIN_SIZE_DIFF_PX` of the layout border box, which is `box_model.content` plus padding and border on that axis. Spiked: `scale(1.5)`, `scaleY(2)`, `rotate(90deg)` and a parent's `scale(0.5)` all differ by far more than 1px and are dropped, with or without padding and border; `translate(30px, 10px)` differs by 0 and is kept, its `box` moved to (70, 410)
+7. the edge strip is not flat. Rule 6 comes first, so the strip is only ever read where painted and layout pixels coincide. The strip is the part of the padding box within one `font-size` of its right edge: x from `box.x + border.left + client_width - font_size` (not left of the padding box) to `box.x + border.left + client_width`, y over the padding box's height.
 
 Severity is `major` at `config.TEXT_CLIPPED_MAJOR_OVERFLOW_PX` or more, else `minor`. Message, suggestion and source are the fixed strings of the spec.
 
@@ -213,7 +217,7 @@ class DetectVisualBugsResult(BaseModel):  # structured content
 
 `measured` holds integers for this Check (`overflowPx`, `scrollWidth`, `clientWidth`); they are dumped as JSON integers. The type stays numeric so slice 4 can put a contrast ratio there.
 
-New config values: `CAPTURE_COMPUTED_PROPERTIES` (the 20 inspect properties plus `direction`), `MAX_CROPS = 5`, `TEXT_EXCERPT_MAX_CHARS = 40`, `TEXT_CLIPPED_MIN_OVERFLOW_PX = 2`, `TEXT_CLIPPED_MAJOR_OVERFLOW_PX = 8`.
+New config values: `CAPTURE_COMPUTED_PROPERTIES` (the 20 inspect properties plus `direction`), `MAX_CROPS = 5`, `TEXT_EXCERPT_MAX_CHARS = 40`, `TEXT_CLIPPED_MIN_OVERFLOW_PX = 2`, `TEXT_CLIPPED_MAJOR_OVERFLOW_PX = 8`, `TRANSFORM_MIN_SIZE_DIFF_PX = 1` (source: ADR-0003, the tolerance the collector uses).
 
 ---
 
@@ -239,10 +243,13 @@ Every anticipated failure is a `ToolError` (AD-002). No partial result is ever r
 | Concern | Location (file:line) | Impact | Mitigation |
 | --- | --- | --- | --- |
 | The exact-tool-list test breaks when a tool is added | `tests/test_ping.py:34` | Fails on registration of `detect_visual_bugs` | Expected (DVB-01). Rewritten in the task that registers the tool |
-| `computed` gains `direction`, and `inspect_element` promises exactly 20 keys (CAP-07) | `src/squint_mcp/tools/inspect_element.py:75` | The untouched inspect tests would fail | The tool filters `computed` to `INSPECT_COMPUTED_PROPERTIES`; DVB-66 keeps the old assertions as the guard |
+| `computed` gains `direction`, and `inspect_element` promises exactly 20 keys (CAP-07) | `src/squint_mcp/tools/inspect_element.py:78` | The untouched inspect tests would fail | The tool filters `computed` to `INSPECT_COMPUTED_PROPERTIES`; DVB-66 keeps the old assertions as the guard |
 | Every element of the page is serialized with 21 styles | `src/squint_mcp/js/collect_elements.js` | A page with thousands of elements sends megabytes over the browser pipe and may hit the 30s timeout | Accepted for v0.1; a `ponytail:` comment names the upgrade (collect only elements a Check can use). The count maps keep selector generation linear |
 | Viewports are captured one after another | `src/squint_mcp/tools/detect_visual_bugs.py` (new) | Each one pays a page load and up to 3s of idle wait | Accepted; a `ponytail:` comment names the upgrade (capture them concurrently) |
 | A host with a light-DOM child and a shadow-root child of the same tag | `src/squint_mcp/js/collect_elements.js` | Spiked: `host > h3` matches both, so the CSS path of either is not unique and `inspect_element` reports two matches | Accepted as a known limit with a comment in the collector. It needs a slotted child and a shadow child of the same tag at the same position, with no usable id or test id on either |
+| This branch does not hold the fix of issue #5 yet | `src/squint_mcp/js/collect_elements.js` | Without it `content` is derived from the painted rect, rule 6 never fires and DVB-69 fails | PR #6 is merged and `main` brought into this branch before Execute; the first task checks that `docs/adr/0003-*.md` exists |
+| A transformed element paints outside its layout place | `tests/fixtures/text-clipped-clean.html` (new) | Spiked: `#turned` paints 150px downwards and `#scaled` 75px to the right. `#sr-only`, `#invisible` and `#blank-tail` meet the DOM signal and stay silent only because their edge strip is flat: ink from a transformed neighbour on that strip would turn each into a Finding and break DVB-10 | The four DVB-69 elements go last in the fixture, absolutely positioned, `transform-origin: 0 0`, 200px apart |
+| A transform that keeps both sizes (mirror, half turn) is read as none | `src/squint_mcp/checks/text_clipped.py` (new) | The strip is read at the layout-right edge, which is the painted start of the text | Accepted (spec Assumptions): the text is still cut, so the Finding is true; a comment in the Check names the limit |
 | Text over a gradient or a photo | `src/squint_mcp/checks/text_clipped.py` (new) | The edge strip is never flat, so hidden text that still overflows is reported | Accepted: the DOM signal must already hold; the pixel step only removes the cases where nothing is painted |
 | `_region` rounds a fractional box outwards | `src/squint_mcp/vision.py:26-29` | A strip on a fractional box may include one pixel column outside the clip edge | Accepted; it can only turn a flat strip into a non-flat one when the neighbouring pixel differs |
 | Ahem's no-break space is ink, not blank | `tests/fixtures/` (new) | A "whitespace only" fixture built with `&nbsp;` would be reported | Spiked: the fixture uses regular spaces under `white-space: pre` (scrollWidth 300, strip flat) |
@@ -261,6 +268,7 @@ Every anticipated failure is a `ToolError` (AD-002). No partial result is ever r
 | Shadow boundary in the CSS path | ` > ` | A space | Spiked: `[data-testid="card"] > h3` matches the shadow root's child; the descendant form also matches slotted elements |
 | Document order | Own walk in the collector, shadow tree right after its host | Playwright's match order | Spiked: Playwright lists shadow matches after the entire light tree |
 | How all elements are selected | `capture(..., selector="*")` | A second capture function or a `None` selector | `*` already pierces open shadow roots; no new code path in `capture` |
+| Telling a transformed element | Compare `box` with the layout border box rebuilt from `box_model`, in the Check | Collecting computed `transform`; a `transformed` flag from the collector | Spiked: it also catches a transform on an ancestor, which the element's own `transform` does not show, and it adds nothing to the Capture |
 | Pixel confirmation | `getcolors(maxcolors=1) is None` on the edge strip | Comparing against a sampled background colour; a single pixel column | No background model needed, and one `font-size` of width cannot fall entirely inside a letter gap |
 | Capturing several viewports | A loop, one fresh context each | `asyncio.TaskGroup`; one context resized between captures | Simplest thing that meets the spec; a resized page keeps layout state from the previous size |
 | Crop allocation | In the tool, after sorting | In each Check | Only the tool sees every Finding of the call |

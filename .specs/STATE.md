@@ -29,10 +29,10 @@
 ## Handoff
 
 - **Feature**: `detect-visual-bugs-text-clipped` (roadmap slice 3) / `.specs/features/detect-visual-bugs-text-clipped/`
-- **Phase / Task**: Design written, waiting for the maintainer's approval. Tasks and Execute not started.
-- **Completed**: Specify (spec approved, 68 requirements, `validate_spec.py` clean), discuss (`context.md`), Design draft (`design.md`, AD-003). No production code written.
-- **In-progress** (file:line): `.specs/features/detect-visual-bugs-text-clipped/design.md:4` - `Status: Draft`, becomes `Approved` on the maintainer's word.
-- **Next step**: Get the design approved, then write `tasks.md` (`references/tasks.md`, then `scripts/validate_tasks.py`) and present it for approval.
+- **Phase / Task**: Design revised on 2026-10-07 for DVB-69 and DVB-70 (elements under a transform, after issue #5), approved by the maintainer. Tasks is next; Execute not started. PR #6 must be in this branch before Execute.
+- **Completed**: Specify (spec approved, 70 requirements, `validate_spec.py` clean), discuss (`context.md`), Design approved (`design.md`, AD-003). No production code written.
+- **In-progress** (file:line): none. `tasks.md` is the next artifact.
+- **Next step**: Write `tasks.md` (`references/tasks.md`, then `scripts/validate_tasks.py`) and present it for approval. Before Execute, merge PR #6 and bring `main` into this branch.
 - **Blockers**: none. Before Execute: `uv` must be on `PATH` (or use `pipx run uv`), then `uv sync` and `uv run playwright install chromium`. The skills under `.claude/` are git-ignored and must be installed on each machine.
 - **Uncommitted files**: none
 - **Branch**: `feat/detect-visual-bugs-text-clipped`
