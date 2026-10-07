@@ -5,9 +5,9 @@
 **Diff range**: `389230a..9500a19` (18 commits, branch `feat/detect-visual-bugs-text-clipped`)
 **Verifier**: independent sub-agent (author ≠ verifier), verification pass 3 of 3 (the last before escalating to the maintainer)
 
-**Verdict**: ✅ PASS (pass 3 itself was ❌ FAIL; its four survivors are killed in "Re-run of the survivors of pass 3", below)
+**Verdict**: ✅ PASS (pass 3 itself was ❌ FAIL; its four survivors are killed in "Re-run of the survivors of pass 3", below. The PASS rests on that re-run, not on a fourth pass of the Verifier named above; the four kills were reproduced independently in `.checks/pr7-f3-status-lines.verified.md`)
 
-Every requirement is implemented and every assertion targets the outcome the spec defines; the gate is green. Fix 8 to Fix 15 of pass 2 all meet their "done when": the 9 mutants that survived pass 2 are now killed. No defect was found in the source in any of the three passes. The verdict is FAIL because of the rule of `validate.md` as written ("Surviving mutants are fix tasks - do not mark the feature done if the sensor found weak tests"): of 8 new mutants tried for the first time in this pass, 4 survived. Three of them break a rule the spec states with a defined outcome; the fourth breaks a rule the spec states without naming its reach (a spec-precision gap). The fixes are tests, fixtures and one line of spec wording.
+What follows, down to the re-run section, is pass 3 as written at `9500a19`. Every requirement is implemented and every assertion targets the outcome the spec defines; the gate is green. Fix 8 to Fix 15 of pass 2 all meet their "done when": the 9 mutants that survived pass 2 are now killed. No defect was found in the source in any of the three passes. The verdict is FAIL because of the rule of `validate.md` as written ("Surviving mutants are fix tasks - do not mark the feature done if the sensor found weak tests"): of 8 new mutants tried for the first time in this pass, 4 survived. Three of them break a rule the spec states with a defined outcome; the fourth breaks a rule the spec states without naming its reach (a spec-precision gap). The fixes are tests, fixtures and one line of spec wording.
 
 This was the third fix→re-verify iteration, so the gaps go to the maintainer, not back into the loop. What the maintainer has to weigh is in "For the maintainer" at the end.
 
