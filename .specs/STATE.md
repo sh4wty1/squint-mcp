@@ -29,10 +29,10 @@
 ## Handoff
 
 - **Feature**: `detect-visual-bugs-text-clipped` (roadmap slice 3) / `.specs/features/detect-visual-bugs-text-clipped/`
-- **Phase / Task**: Design revised on 2026-10-07 for DVB-69 and DVB-70 (elements under a transform, after issue #5), approved by the maintainer. Tasks is next; Execute not started. PR #6 must be in this branch before Execute.
-- **Completed**: Specify (spec approved, 70 requirements, `validate_spec.py` clean), discuss (`context.md`), Design approved (`design.md`, AD-003). No production code written.
-- **In-progress** (file:line): none. `tasks.md` is the next artifact.
-- **Next step**: Write `tasks.md` (`references/tasks.md`, then `scripts/validate_tasks.py`) and present it for approval. Before Execute, merge PR #6 and bring `main` into this branch.
-- **Blockers**: none. Before Execute: `uv` must be on `PATH` (or use `pipx run uv`), then `uv sync` and `uv run playwright install chromium`. The skills under `.claude/` are git-ignored and must be installed on each machine.
+- **Phase / Task**: Tasks approved (`tasks.md`, 9 tasks in 3 phases). Execute starts at T1; no production code written yet.
+- **Completed**: Specify (70 requirements, `validate_spec.py` clean), discuss (`context.md`), Design (`design.md`, AD-003), Tasks (`tasks.md`, `validate_tasks.py` clean). Baseline: 61 tests pass.
+- **In-progress** (file:line): none.
+- **Next step**: Execute from T1, inline (the maintainer was advised against sub-agents: the second batch is one documentation task). The Verifier runs after T9.
+- **Blockers**: none locally: the fix of issue #5 is merged into this branch from `fix/box-model-layout-content`. PR #6 itself is still open: GitHub answered 500 to every merge attempt on 2026-10-07.
 - **Uncommitted files**: none
 - **Branch**: `feat/detect-visual-bugs-text-clipped`
