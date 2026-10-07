@@ -81,6 +81,8 @@ def _is_clipped(element: Element, pixels: Image.Image) -> bool:
         and computed["text-overflow"] == "clip"
         # Right-to-left text is cut on the other edge.
         and computed["direction"] == "ltr"
+        # Hidden text is not cut for anyone, whatever is painted behind it.
+        and computed["visibility"] == "visible"
         and _overflow_px(element) >= config.TEXT_CLIPPED_MIN_OVERFLOW_PX
         # Before the pixels: the strip is only where layout and paint coincide.
         and not _is_resized(element)

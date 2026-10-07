@@ -60,6 +60,16 @@
       #rtl {
         direction: rtl;
       }
+      /* Hidden, with two colours painted behind its edge strip. */
+      #pattern {
+        background: repeating-linear-gradient(
+          rgb(200, 200, 200) 0 5px,
+          rgb(120, 120, 120) 5px 10px
+        );
+      }
+      #hidden-over-pattern {
+        visibility: hidden;
+      }
       /* Painted at another size than laid out. Each is cut by 50px in layout pixels.
          They paint outside their layout place, so they come last and far apart. */
       .resized {
@@ -126,6 +136,9 @@
       <div>XXXXXXXXXX</div>
     </div>
     <div id="rtl" class="clipped">XXXXXXXXXX</div>
+    <div id="pattern">
+      <div id="hidden-over-pattern" class="clipped">XXXXXXXXXX</div>
+    </div>
     <div id="backdrop"></div>
     <div id="scaled" class="clipped resized">XXXXXXXXXX</div>
     <div id="stretched" class="clipped resized">XXXXXXXXXX</div>

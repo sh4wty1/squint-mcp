@@ -93,6 +93,11 @@ async def test_text_that_is_not_visibly_cut_is_not_reported(client: Client) -> N
     assert await reported(client, near_misses) == []
 
 
+async def test_hidden_text_over_a_pattern_is_not_reported(client: Client) -> None:
+    # The pattern behind it is not flat, so the pixels alone would confirm a cut.
+    assert await reported(client, ("#hidden-over-pattern",)) == []
+
+
 async def test_an_element_painted_at_another_size_than_laid_out_is_not_reported(
     client: Client,
 ) -> None:
