@@ -129,6 +129,39 @@ async def test_box_model_reports_margin_border_padding_and_content(
     }
 
 
+async def test_box_model_content_is_the_layout_size_of_a_scaled_element(
+    client: Client,
+) -> None:
+    content = await inspect(client, BOX, "#scaled")
+    assert content["boxModel"]["content"] == {"w": 50, "h": 30}
+
+
+async def test_box_of_a_scaled_element_is_the_transformed_rect(client: Client) -> None:
+    content = await inspect(client, BOX, "#scaled")
+    assert content["box"] == {"x": 40, "y": 1000, "w": 200, "h": 120}
+
+
+async def test_box_model_content_is_the_layout_size_of_a_rotated_element(
+    client: Client,
+) -> None:
+    content = await inspect(client, BOX, "#rotated")
+    assert content["boxModel"]["content"] == {"w": 50, "h": 30}
+
+
+async def test_box_model_content_of_an_svg_element_falls_back_to_its_rect(
+    client: Client,
+) -> None:
+    content = await inspect(client, BOX, "#vector")
+    assert content["boxModel"]["content"] == {"w": 40, "h": 20}
+
+
+async def test_box_model_content_keeps_the_fractional_size_of_an_untransformed_element(
+    client: Client,
+) -> None:
+    content = await inspect(client, BOX, "#frac")
+    assert content["boxModel"]["content"] == {"w": 100.5, "h": 60}
+
+
 async def test_computed_holds_exactly_the_configured_properties(client: Client) -> None:
     content = await inspect(client, BOX, "#solid")
     assert set(content["computed"]) == COMPUTED_PROPERTIES
