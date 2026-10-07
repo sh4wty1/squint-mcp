@@ -9,6 +9,7 @@ pytestmark = pytest.mark.anyio
 BUG = fixture_url("text-clipped-bug.html")
 BOUNDS = fixture_url("text-clipped-bounds.html")
 CLEAN = fixture_url("text-clipped-clean.html")
+STRIP = fixture_url("text-clipped-strip.html")
 
 
 async def test_text_cut_by_a_hidden_overflow_yields_one_finding(client: Client) -> None:
@@ -95,5 +96,34 @@ async def test_text_that_is_not_visibly_cut_is_not_reported(client: Client) -> N
 async def test_an_element_painted_at_another_size_than_laid_out_is_not_reported(
     client: Client,
 ) -> None:
-    resized = ("#scaled", "#stretched", "#turned", "#in-scaled")
+    resized = ("#scaled", "#stretched", "#widened", "#turned", "#in-scaled")
     assert await reported(client, resized) == []
+
+
+async def test_the_cut_is_looked_for_inside_the_padding_box(client: Client) -> None:
+    # Only blank overflow reaches the edge; the ink ends a border width before it.
+    findings = (await detect(client, STRIP))["findings"]
+    assert await findings_on(client, STRIP, "#bordered", findings) == []
+
+
+async def test_a_cut_falling_in_a_gap_between_glyphs_is_reported(
+    client: Client,
+) -> None:
+    findings = (await detect(client, STRIP))["findings"]
+    (finding,) = await findings_on(client, STRIP, "#gap-at-edge", findings)
+    assert finding["evidence"]["measured"]["overflowPx"] == 70
+
+
+async def test_an_edge_painted_in_two_colours_confirms_the_cut(client: Client) -> None:
+    findings = (await detect(client, STRIP))["findings"]
+    (finding,) = await findings_on(client, STRIP, "#two-colours", findings)
+    assert finding["evidence"]["measured"]["overflowPx"] == 50
+    # The fixture paints exactly two colours there, not more.
+    inspected = await client.call_tool(
+        "inspect_element", {"url": STRIP, "selector": "#two-colours"}
+    )
+    assert inspected.structured_content is not None
+    assert inspected.structured_content["sampledColors"] == [
+        {"hex": "#ffffff", "share": 0.5},
+        {"hex": "#c8c8c8", "share": 0.5},
+    ]

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: where the cut is looked for</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are 200px wide.
+         The 30px line leaves 5px of page background above and below them. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      /* The edge strip is the last 20px of the padding box: 130px to 150px. */
+      .clipped {
+        margin: 20px 0 0 40px;
+        width: 150px;
+        overflow-x: hidden;
+        white-space: pre;
+      }
+      /* 6 glyphs, then spaces that overflow: the strip is blank. The ink ends 30px
+         before the edge, which is the width of the border. */
+      #bordered {
+        border-left: 30px solid rgb(0, 0, 255);
+      }
+      /* #gap-at-edge: 7 glyphs, a space and 3 glyphs. The edge falls in the space,
+         10px after the ink, and the text goes on past it. */
+      /* Nothing but the background is painted: two flat bands. */
+      #two-colours {
+        color: transparent;
+        background: linear-gradient(rgb(255, 255, 255) 50%, rgb(200, 200, 200) 50%);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="bordered" class="clipped">XXXXXX          </div>
+    <div id="gap-at-edge" class="clipped">XXXXXXX XXX</div>
+    <div id="two-colours" class="clipped">XXXXXXXXXX</div>
+  </body>
+</html>
