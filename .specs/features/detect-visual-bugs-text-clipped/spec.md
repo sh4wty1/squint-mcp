@@ -360,7 +360,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | DVB-64 | P2: Check contract, configuration and documents | T1 | Implemented |
 | DVB-65 | P2: Check contract, configuration and documents | Verifier | In Tasks |
 | DVB-66 | P2: Check contract, configuration and documents | T2 | Implemented |
-| DVB-67 | P2: Check contract, configuration and documents | T9 | In Tasks |
+| DVB-67 | P2: Check contract, configuration and documents | T9 | Implemented |
 | DVB-68 | P2: Check contract, configuration and documents | Closing step | In Tasks |
 | DVB-69 | P1: Detect clipped text | T4 | Implemented |
 | DVB-70 | P1: Detect clipped text | T2 | Implemented |

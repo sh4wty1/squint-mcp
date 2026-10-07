@@ -314,7 +314,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (DVB-68). It is a clos
 
 ### T9: Document detect_visual_bugs and text-clipped
 
-- [ ] Done
+- [x] Done
 
 **What**: The tool and the Check under `Unreleased` in the changelog; `detect_visual_bugs` in the tool table of the readme.
 **Where**: `CHANGELOG.md` (plus one row in the tool table of the readme)
@@ -329,10 +329,10 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (DVB-68). It is a clos
 
 **Done when**:
 
-- [ ] `Unreleased` lists `detect_visual_bugs` and `text-clipped`
-- [ ] The readme's tool table has a `detect_visual_bugs` row
-- [ ] Gate check passes: Build
-- [ ] Test count: same as after T8 (no silent deletions)
+- [x] `Unreleased` lists `detect_visual_bugs` and `text-clipped`
+- [x] The readme's tool table has a `detect_visual_bugs` row
+- [x] Gate check passes: Build
+- [x] Test count: same as after T8 (no silent deletions)
 
 **Tests**: none
 **Gate**: build
