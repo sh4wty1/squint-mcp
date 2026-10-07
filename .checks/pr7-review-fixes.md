@@ -67,7 +67,7 @@ Proof: `grep -c "DVB-71" .specs/features/detect-visual-bugs-text-clipped/spec.md
 
 ### S5 - Gate
 
-**C9** - Type check, lint, format and the whole suite are green, with no existing assertion changed other than the Finding count of `selectors.html` (19 to 21)
+**C9** - Type check, lint, format and the whole suite are green, with no existing assertion changed other than the two that enumerate the Findings of `selectors.html`: the count in `test_selectors.py` (19 to 21) and the document-order list in `test_detect_visual_bugs.py` (two texts appended)
 Proof: `uv run pyright`
 Proof: `uv run ruff check`
 Proof: `uv run ruff format --check`
