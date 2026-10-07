@@ -185,7 +185,7 @@ async def test_findings_of_equal_severity_are_in_document_order(
         "XXXXX XXXXX",
         *("X" * glyphs for glyphs in range(8, 19)),
         "X" * 40,
-        *("X" * glyphs for glyphs in range(19, 25)),
+        *("X" * glyphs for glyphs in range(19, 26)),
     ]
     many = (await detect(client, MANY))["findings"]
     assert [finding["selector"] for finding in many] == [

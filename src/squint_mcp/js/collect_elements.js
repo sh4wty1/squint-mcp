@@ -11,10 +11,16 @@
   // How many elements of the page, shadow trees included, match each stable selector.
   const matches = new Map();
 
-  // Attribute values are always quoted, which is valid for every string.
+  // Attribute values are always quoted, which is valid for every string once the
+  // quote, the backslash and the line breaks are escaped: a CSS string cannot hold a
+  // raw line break.
+  const quoted = (value) =>
+    value
+      .replace(/[\\"]/g, "\\$&")
+      .replace(/[\n\r\f]/g, (lineBreak) => `\\${lineBreak.charCodeAt(0).toString(16)} `);
   const attribute = (element, name) => {
     const value = element.getAttribute(name);
-    return value === null ? null : `[${name}="${value.replace(/[\\"]/g, "\\$&")}"]`;
+    return value === null ? null : `[${name}="${quoted(value)}"]`;
   };
   // The selectors by attribute that `element` matches; null where it lacks the attribute.
   const stableSelectors = (element) => {
