@@ -108,7 +108,7 @@ async def test_fitting_text_beside_an_overflowing_child_is_not_reported(
 async def test_an_element_painted_at_another_size_than_laid_out_is_not_reported(
     client: Client,
 ) -> None:
-    resized = ("#scaled", "#stretched", "#widened", "#turned", "#in-scaled")
+    resized = ("#scaled", "#stretched", "#widened", "#turned", "#in-scaled", "#nudged")
     assert await reported(client, resized) == []
 
 
@@ -130,6 +130,14 @@ async def test_the_strip_of_a_box_narrower_than_a_glyph_stays_inside_it(
     # Nothing is painted inside the 10px box: its only glyph is out of sight.
     findings = (await detect(client, STRIP))["findings"]
     assert await findings_on(client, STRIP, "#narrow", findings) == []
+
+
+async def test_the_strip_ends_at_the_padding_edge_not_at_the_content_edge(
+    client: Client,
+) -> None:
+    # Ink reaches the content edge; only blank overflow reaches the padding edge.
+    findings = (await detect(client, STRIP))["findings"]
+    assert await findings_on(client, STRIP, "#padded", findings) == []
 
 
 async def test_a_cut_falling_in_a_gap_between_glyphs_is_reported(

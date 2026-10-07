@@ -43,6 +43,12 @@
         width: 10px;
         border-left: 30px solid rgb(0, 0, 255);
       }
+      /* 7 glyphs, then spaces that overflow. The padding box ends 30px after the
+         content box, at 180px: the strip is blank there, and holds ink at the
+         content edge. */
+      #padded {
+        padding-right: 30px;
+      }
       /* #gap-at-edge: 7 glyphs, a space and 3 glyphs. The edge falls in the space,
          10px after the ink, and the text goes on past it. */
       /* Nothing but the background is painted: two flat bands. */
@@ -58,5 +64,6 @@
     <div id="two-colours" class="clipped">XXXXXXXXXX</div>
     <div id="right-border" class="clipped">XXXXXXXXXX</div>
     <div id="narrow" class="clipped">  X</div>
+    <div id="padded" class="clipped">XXXXXXX          </div>
   </body>
 </html>

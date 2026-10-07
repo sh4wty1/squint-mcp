@@ -107,6 +107,11 @@
         top: 1500px;
         transform: scaleX(1.5);
       }
+      /* Painted 151.5x30: just past the 1px that tells a transform from none. */
+      #nudged {
+        top: 1700px;
+        transform: scaleX(1.01);
+      }
       /* Painted 30x150, to the left of its layout place. */
       #turned {
         top: 1100px;
@@ -162,5 +167,6 @@
       <div id="in-scaled" class="clipped">XXXXXXXXXX</div>
     </div>
     <div id="widened" class="clipped resized">XXXXXXXXXX</div>
+    <div id="nudged" class="clipped resized">XXXXXXXXXX</div>
   </body>
 </html>
