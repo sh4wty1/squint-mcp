@@ -96,7 +96,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (DVB-68). It is a clos
 
 ### T2: Add the Capture → Check → Finding flow behind detect_visual_bugs
 
-- [ ] Done
+- [x] Done
 
 **What**: The whole flow for one or more viewports, without crops: the collector emits `text` (collapsed, cut to 40 with `…`), `ownText`, `scrollWidth`, `clientWidth` and a CSS-path `selector`, in document order; `Element`, `Finding` and `Evidence` models; the Check registry; `text-clipped` with design rules 1 to 5 and the two severities; the tool with its schema, `null` handling, viewport loop, Finding order, summary line and result; registration in the server. `inspect_element` filters `computed` to its 20 properties.
 **Where**: `src/squint_mcp/tools/detect_visual_bugs.py` (with the collector script, the models, the Checks package, the registration in the server module, the `computed` filter in the inspect tool, fixtures and tests under `tests/`)
@@ -111,12 +111,12 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (DVB-68). It is a clos
 
 **Done when**:
 
-- [ ] Fixtures exist: `Ahem.ttf`, `text-clipped-bug.html`, `text-clipped-bounds.html` (with `#moved`), `responsive.html`, and `selectors.html` holding `#long` and `#spaced`
-- [ ] One test per requirement above that is observable through the tool, asserting the literal values of the spec (`overflowPx` 8, 7 and 2; exactly 5 Findings on the bounds fixture; `#moved` at `{"x": 70, "y": 410, "w": 150, "h": 30}`; the two summary lines)
-- [ ] The exact-tool-list test in `tests/test_ping.py` asserts the three names; no assertion in `tests/test_inspect_element.py` changes
-- [ ] `evidence.cropIndex` is `null` on every Finding and the response carries no image block (crops arrive in T5)
-- [ ] Gate check passes: Build
-- [ ] Test count: at least 80 tests pass (no silent deletions)
+- [x] Fixtures exist: `Ahem.ttf`, `text-clipped-bug.html`, `text-clipped-bounds.html` (with `#moved`), `responsive.html`, and `selectors.html` holding `#long` and `#spaced`
+- [x] One test per requirement above that is observable through the tool, asserting the literal values of the spec (`overflowPx` 8, 7 and 2; exactly 5 Findings on the bounds fixture; `#moved` at `{"x": 70, "y": 410, "w": 150, "h": 30}`; the two summary lines)
+- [x] The exact-tool-list test in `tests/test_ping.py` asserts the three names; no assertion in `tests/test_inspect_element.py` changes
+- [x] `evidence.cropIndex` is `null` on every Finding and the response carries no image block (crops arrive in T5)
+- [x] Gate check passes: Build
+- [x] Test count: at least 80 tests pass (no silent deletions)
 
 **Tests**: integration
 **Gate**: build

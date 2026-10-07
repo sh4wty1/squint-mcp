@@ -1,6 +1,7 @@
 """The Capture and the data it carries. No browser code here (ADR-0002)."""
 
 from dataclasses import dataclass
+from typing import Literal
 
 from PIL import Image
 from pydantic import BaseModel, ConfigDict, Field
@@ -48,6 +49,14 @@ class Element(BaseModel):
     box: Box
     box_model: BoxModel
     computed: dict[str, str]
+    text: str
+    """An excerpt of the text content, whitespace collapsed."""
+    own_text: bool
+    """Whether a non-whitespace text node is a direct child."""
+    scroll_width: int
+    client_width: int
+    selector: str
+    """Unique on the page, open shadow trees included."""
 
 
 @dataclass(frozen=True)
@@ -57,6 +66,38 @@ class Capture:
     viewport: Viewport
     stabilized: bool
     elements: list[Element]
-    """The elements matched by the selector the Capture was taken for."""
+    """The elements matched by the selector the Capture was taken for, in
+    document order."""
     pixels: Image.Image
     """The full page in RGB, one image pixel per CSS pixel."""
+
+
+Severity = Literal["critical", "major", "minor", "info"]
+Category = Literal["visual-bug", "a11y", "consistency", "ux", "responsive"]
+
+
+class Evidence(BaseModel):
+    """What backs a Finding: the styles that explain it and the numbers measured."""
+
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
+
+    computed: dict[str, str]
+    measured: dict[str, int | float]
+    crop_index: int | None = None
+    """Index of the Finding's crop among the images of the response, if it has one."""
+
+
+class Finding(BaseModel):
+    """One problem a Check found on one element of a Capture."""
+
+    check: str
+    category: Category
+    severity: Severity
+    message: str
+    selector: str
+    text: str
+    box: Box
+    viewport: Viewport
+    evidence: Evidence
+    suggestion: str | None = None
+    source: str | None = None

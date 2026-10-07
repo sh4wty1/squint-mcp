@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: clipped text that depends on the viewport</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are 200px wide.
+         The 30px line leaves 5px of page background above and below them. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      .clipped {
+        margin: 20px 0 0 40px;
+        width: 150px;
+        overflow-x: hidden;
+        white-space: nowrap;
+      }
+      /* 720px wide at 1440 (fits), 195px at 390 (cut by 5px). */
+      #half {
+        width: 50vw;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="fixed" class="clipped">XXXXXXXXXX</div>
+    <div id="half" class="clipped">XXXXXXXXXX</div>
+  </body>
+</html>

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: selectors and text excerpts</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are 200px wide.
+         The 30px line leaves 5px of page background above and below them. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      .clipped {
+        margin: 20px 0 0 40px;
+        width: 150px;
+        overflow-x: hidden;
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <!-- 60 glyphs. -->
+      <div id="long" class="clipped">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</div>
+      <!-- A line break and several spaces between two runs of 5 glyphs. -->
+      <div id="spaced" class="clipped">XXXXX
+            XXXXX</div>
+    </main>
+  </body>
+</html>

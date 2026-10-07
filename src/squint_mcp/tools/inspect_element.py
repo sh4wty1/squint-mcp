@@ -75,7 +75,10 @@ async def inspect_element(
         stabilized=captured.stabilized,
         box=box,
         box_model=element.box_model,
-        computed=element.computed,
+        # The Capture carries more properties than this tool reports.
+        computed={
+            name: element.computed[name] for name in config.INSPECT_COMPUTED_PROPERTIES
+        },
         sampled_colors=sampled_colors,
     )
     state = "stabilized" if captured.stabilized else "not stabilized"

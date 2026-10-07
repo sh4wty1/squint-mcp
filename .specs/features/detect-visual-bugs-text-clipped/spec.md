@@ -294,29 +294,29 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 
 | Requirement ID | Story | Phase | Status |
 | --- | --- | --- | --- |
-| DVB-01 | P1: Run Checks on a page | T2 | In Tasks |
-| DVB-02 | P1: Run Checks on a page | T2 | In Tasks |
-| DVB-03 | P1: Run Checks on a page | T2 | In Tasks |
-| DVB-04 | P1: Run Checks on a page | T2 | In Tasks |
-| DVB-05 | P1: Run Checks on a page | T2 | In Tasks |
-| DVB-06 | P1: Run Checks on a page | T2 | In Tasks |
-| DVB-07 | P1: Run Checks on a page | T2 | In Tasks |
-| DVB-08 | P1: Run Checks on a page | T2 | In Tasks |
-| DVB-09 | P1: Run Checks on a page | T2 | In Tasks |
+| DVB-01 | P1: Run Checks on a page | T2 | Implemented |
+| DVB-02 | P1: Run Checks on a page | T2 | Implemented |
+| DVB-03 | P1: Run Checks on a page | T2 | Implemented |
+| DVB-04 | P1: Run Checks on a page | T2 | Implemented |
+| DVB-05 | P1: Run Checks on a page | T2 | Implemented |
+| DVB-06 | P1: Run Checks on a page | T2 | Implemented |
+| DVB-07 | P1: Run Checks on a page | T2 | Implemented |
+| DVB-08 | P1: Run Checks on a page | T2 | Implemented |
+| DVB-09 | P1: Run Checks on a page | T2 | Implemented |
 | DVB-10 | P1: Run Checks on a page | T3 | In Tasks |
-| DVB-11 | P1: Run Checks on a page | T2 | In Tasks |
-| DVB-12 | P1: Run Checks on a page | T2 | In Tasks |
-| DVB-13 | P1: Read a Finding | T2 | In Tasks |
+| DVB-11 | P1: Run Checks on a page | T2 | Implemented |
+| DVB-12 | P1: Run Checks on a page | T2 | Implemented |
+| DVB-13 | P1: Read a Finding | T2 | Implemented |
 | DVB-14 | P1: Read a Finding | T6 | In Tasks |
-| DVB-15 | P1: Read a Finding | T2 | In Tasks |
-| DVB-16 | P1: Read a Finding | T2 | In Tasks |
-| DVB-17 | P1: Read a Finding | T2 | In Tasks |
+| DVB-15 | P1: Read a Finding | T2 | Implemented |
+| DVB-16 | P1: Read a Finding | T2 | Implemented |
+| DVB-17 | P1: Read a Finding | T2 | Implemented |
 | DVB-18 | P1: Read a Finding | T6 | In Tasks |
-| DVB-19 | P1: Detect clipped text | T2 | In Tasks |
-| DVB-20 | P1: Detect clipped text | T2 | In Tasks |
-| DVB-21 | P1: Detect clipped text | T2 | In Tasks |
-| DVB-22 | P1: Detect clipped text | T2 | In Tasks |
-| DVB-23 | P1: Detect clipped text | T2 | In Tasks |
+| DVB-19 | P1: Detect clipped text | T2 | Implemented |
+| DVB-20 | P1: Detect clipped text | T2 | Implemented |
+| DVB-21 | P1: Detect clipped text | T2 | Implemented |
+| DVB-22 | P1: Detect clipped text | T2 | Implemented |
+| DVB-23 | P1: Detect clipped text | T2 | Implemented |
 | DVB-24 | P1: Detect clipped text | T3 | In Tasks |
 | DVB-25 | P1: Detect clipped text | T3 | In Tasks |
 | DVB-26 | P1: Detect clipped text | T3 | In Tasks |
@@ -339,8 +339,8 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | DVB-43 | P1: Bounded crops | T5 | In Tasks |
 | DVB-44 | P1: Bounded crops | T5 | In Tasks |
 | DVB-45 | P1: Bounded crops | T5 | In Tasks |
-| DVB-46 | P1: Several viewports | T2 | In Tasks |
-| DVB-47 | P1: Several viewports | T2 | In Tasks |
+| DVB-46 | P1: Several viewports | T2 | Implemented |
+| DVB-47 | P1: Several viewports | T2 | Implemented |
 | DVB-48 | P1: Several viewports | T7 | In Tasks |
 | DVB-49 | P1: Several viewports | T7 | In Tasks |
 | DVB-50 | P1: Clear errors | T8 | In Tasks |
@@ -353,17 +353,17 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | DVB-57 | P1: Clear errors | T8 | In Tasks |
 | DVB-58 | P1: Clear errors | T8 | In Tasks |
 | DVB-59 | P1: Clear errors | T8 | In Tasks |
-| DVB-60 | P2: Check contract, configuration and documents | T2 | In Tasks |
-| DVB-61 | P2: Check contract, configuration and documents | T2 | In Tasks |
-| DVB-62 | P2: Check contract, configuration and documents | T2 | In Tasks |
-| DVB-63 | P2: Check contract, configuration and documents | T2 | In Tasks |
+| DVB-60 | P2: Check contract, configuration and documents | T2 | Implemented |
+| DVB-61 | P2: Check contract, configuration and documents | T2 | Implemented |
+| DVB-62 | P2: Check contract, configuration and documents | T2 | Implemented |
+| DVB-63 | P2: Check contract, configuration and documents | T2 | Implemented |
 | DVB-64 | P2: Check contract, configuration and documents | T1 | Implemented |
 | DVB-65 | P2: Check contract, configuration and documents | Verifier | In Tasks |
-| DVB-66 | P2: Check contract, configuration and documents | T2 | In Tasks |
+| DVB-66 | P2: Check contract, configuration and documents | T2 | Implemented |
 | DVB-67 | P2: Check contract, configuration and documents | T9 | In Tasks |
 | DVB-68 | P2: Check contract, configuration and documents | Closing step | In Tasks |
 | DVB-69 | P1: Detect clipped text | T4 | In Tasks |
-| DVB-70 | P1: Detect clipped text | T2 | In Tasks |
+| DVB-70 | P1: Detect clipped text | T2 | Implemented |
 
 **Coverage:** 70 total, 68 mapped to tasks, DVB-65 checked by the Verifier from file evidence, DVB-68 a closing step.
 

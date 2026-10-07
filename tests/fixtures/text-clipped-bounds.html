@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: clipped text, at the thresholds</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are 200px wide.
+         The 30px line leaves 5px of page background above and below them. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      .clipped {
+        margin: 20px 0 0 40px;
+        width: 150px;
+        overflow-x: hidden;
+        white-space: nowrap;
+      }
+      /* Cut by 1px, 2px, 7px and 8px. */
+      #over-1 {
+        width: 199px;
+      }
+      #over-2 {
+        width: 198px;
+      }
+      #over-7 {
+        width: 193px;
+      }
+      #over-8 {
+        width: 192px;
+      }
+      #clip {
+        overflow-x: clip;
+      }
+      /* Layout: 40,400. Painted: 70,410, at the same size. */
+      #moved {
+        position: absolute;
+        top: 400px;
+        left: 40px;
+        margin: 0;
+        transform: translate(30px, 10px);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="over-1" class="clipped">XXXXXXXXXX</div>
+    <div id="over-2" class="clipped">XXXXXXXXXX</div>
+    <div id="over-7" class="clipped">XXXXXXXXXX</div>
+    <div id="over-8" class="clipped">XXXXXXXXXX</div>
+    <div id="clip" class="clipped">XXXXXXXXXX</div>
+    <div id="moved" class="clipped">XXXXXXXXXX</div>
+  </body>
+</html>

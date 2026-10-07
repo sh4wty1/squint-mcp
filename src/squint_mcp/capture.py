@@ -74,7 +74,7 @@ async def capture(
     """Open `url` in a fresh context, stabilize it and capture it.
 
     The Capture holds the elements matched by `selector`, which reaches into
-    open shadow roots.
+    open shadow roots; `*` is every element of the page.
     """
     scheme = urlsplit(url).scheme
     if scheme not in ("http", "https", "file"):
@@ -110,7 +110,11 @@ async def capture(
         except PlaywrightError as error:
             raise ToolError(f'Invalid selector "{selector}".') from error
         collected = await matches.evaluate_all(
-            _COLLECT_ELEMENTS, list(config.INSPECT_COMPUTED_PROPERTIES)
+            _COLLECT_ELEMENTS,
+            {
+                "properties": list(config.CAPTURE_COMPUTED_PROPERTIES),
+                "textLimit": config.TEXT_EXCERPT_MAX_CHARS,
+            },
         )
         screenshot = await page.screenshot(full_page=True)
     finally:
