@@ -7,7 +7,8 @@ A v0.1 descrita em [`SPEC.md`](SPEC.md) é entregue em 5 fatias verticais. Cada 
 ## Como usar
 
 - A próxima tarefa é a primeira fatia `pendente` cujas dependências estão `concluída`.
-- Peça a spec dela com a skill da coluna `Skill` (por exemplo: `/tlc-spec-driven specify feature: <nome da fatia>`), uma fatia por sessão.
+- `task #N` (ou `fatia N`) é a fatia de número N da tabela abaixo. Leia a seção dela aqui antes de começar.
+- Peça a spec dela com a skill da coluna `Skill` (por exemplo: `/tlc-spec-driven specify feature: task #3`), uma fatia por sessão.
 - Ao fechar uma fatia, o status muda para `concluída` na tabela e na seção dela.
 - Quando a fatia 5 fechar, o roadmap pós-v0.1 é criado neste mesmo formato.
 
@@ -69,7 +70,8 @@ A v0.1 descrita em [`SPEC.md`](SPEC.md) é entregue em 5 fatias verticais. Cada 
 - **Não entra:** `low-contrast-real`, demais Checks, Profile, Audit, score.
 - **Dependência:** fatia 2.
 - **Skill:** `tlc-spec-driven`.
-- **Status:** pendente.
+- **Status:** pendente (em andamento na branch `feat/detect-visual-bugs-text-clipped`).
+- **Andamento (2026-10-06):** spec aprovada e design escrito, aguardando aprovação, em [`.specs/features/detect-visual-bugs-text-clipped/`](../.specs/features/detect-visual-bugs-text-clipped/). Nenhum código ainda. Próximo passo: aprovar o design e gerar o `tasks.md`. Para retomar: `/tlc-spec-driven resume`; o ponto de parada está no Handoff de [`.specs/STATE.md`](../.specs/STATE.md).
 
 ## 4. `low-contrast-real`
 

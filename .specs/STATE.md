@@ -18,4 +18,21 @@
 - **Date**: 2026-10-06
 - **Status**: active
 
+### AD-003
+- **Decision**: A Capture taken for Checks holds every element of the page (open shadow trees included, in document order) with the same generic fields, among them a selector unique on the page. A Check is a function `Capture -> list[Finding]` in its own module under `src/squint_mcp/checks/`, registered by name in `checks/__init__.py`. Checks hold no page script; the tool, not the Check, orders Findings and allocates crops.
+- **Reason**: ADR-0002 makes the Capture the whole contract between browser code and Checks. One generic collector lets a new Check ship as one Python module; selectors need the live DOM, which is gone by the time a Check runs.
+- **Trade-off**: Every element is serialized on every `detect_visual_bugs` call, whatever the Checks need. A Check that needs a new fact about an element adds a field to the collector and to `Element`.
+- **Scope**: `src/squint_mcp/js/collect_elements.js`, `src/squint_mcp/models.py`, `src/squint_mcp/checks/`, `src/squint_mcp/tools/detect_visual_bugs.py`.
+- **Date**: 2026-10-06
+- **Status**: active
+
 ## Handoff
+
+- **Feature**: `detect-visual-bugs-text-clipped` (roadmap slice 3) / `.specs/features/detect-visual-bugs-text-clipped/`
+- **Phase / Task**: Design written, waiting for the maintainer's approval. Tasks and Execute not started.
+- **Completed**: Specify (spec approved, 68 requirements, `validate_spec.py` clean), discuss (`context.md`), Design draft (`design.md`, AD-003). No production code written.
+- **In-progress** (file:line): `.specs/features/detect-visual-bugs-text-clipped/design.md:4` - `Status: Draft`, becomes `Approved` on the maintainer's word.
+- **Next step**: Get the design approved, then write `tasks.md` (`references/tasks.md`, then `scripts/validate_tasks.py`) and present it for approval.
+- **Blockers**: none. Before Execute: `uv` must be on `PATH` (or use `pipx run uv`), then `uv sync` and `uv run playwright install chromium`. The skills under `.claude/` are git-ignored and must be installed on each machine.
+- **Uncommitted files**: none
+- **Branch**: `feat/detect-visual-bugs-text-clipped`
