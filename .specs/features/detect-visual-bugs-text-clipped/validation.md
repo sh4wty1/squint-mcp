@@ -5,7 +5,7 @@
 **Diff range**: `389230a..9500a19` (18 commits, branch `feat/detect-visual-bugs-text-clipped`)
 **Verifier**: independent sub-agent (author ≠ verifier), verification pass 3 of 3 (the last before escalating to the maintainer)
 
-**Verdict**: ❌ FAIL
+**Verdict**: ✅ PASS (pass 3 itself was ❌ FAIL; its four survivors are killed in "Re-run of the survivors of pass 3", below)
 
 Every requirement is implemented and every assertion targets the outcome the spec defines; the gate is green. Fix 8 to Fix 15 of pass 2 all meet their "done when": the 9 mutants that survived pass 2 are now killed. No defect was found in the source in any of the three passes. The verdict is FAIL because of the rule of `validate.md` as written ("Surviving mutants are fix tasks - do not mark the feature done if the sensor found weak tests"): of 8 new mutants tried for the first time in this pass, 4 survived. Three of them break a rule the spec states with a defined outcome; the fourth breaks a rule the spec states without naming its reach (a spec-precision gap). The fixes are tests, fixtures and one line of spec wording.
 
@@ -22,11 +22,35 @@ This was the third fix→re-verify iteration, so the gaps go to the maintainer, 
 | ---- | ----- | ------- | ------------------- | --------- |
 | 1 | `389230a..c6e124c` (report in `2973d07`) | FAIL | 40 mutants, 9 survived; 2 spec-precision gaps | `148a6fa`, `bcaee50` (tests, fixtures), `f8939eb` (spec wording) |
 | 2 | `389230a..f8939eb` (report in `a260a11`) | FAIL | 10 re-runs all killed; 11 new, 9 survived | `349b31e`, `fefd0d5` (tests, fixtures), `9500a19` (spec fixture list) |
-| 3 | `389230a..9500a19` (this report) | FAIL | 11 re-runs all killed; 8 new, 4 survived | open: Fix 16 to Fix 19 |
+| 3 | `389230a..9500a19` (this report) | FAIL | 11 re-runs all killed; 8 new, 4 survived | `6ffb1c7`, `ea482ef` (tests, fixtures), `6e952a2` (spec fixture list); re-run below |
 
 No file under `src/` changed after `c6e124c` (`git diff c6e124c..9500a19 -- src` is empty, verified by running).
 
 Abbreviations: `D` = `tests/test_detect_visual_bugs.py`, `C` = `tests/test_text_clipped.py`, `S` = `tests/test_selectors.py`.
+
+---
+
+## Re-run of the survivors of pass 3
+
+**Date**: 2026-10-07, at `883b661`. **Result**: all four killed.
+
+Option (a) of "For the maintainer" was taken: Fix 16 to Fix 19 were applied by `6ffb1c7` (Fix 16, Fix 19) and `ea482ef` (Fix 17, Fix 18), with the fixture list of `spec.md` updated in `6e952a2`, and the four survivors were run again, alone. Each mutation was applied by itself to a scratch worktree of `883b661`, the named test was run against the mutated `src/`, and the worktree was restored. Unmutated, the four tests pass.
+
+| # | Mutation at `883b661` | Test | Result |
+| - | --------------------- | ---- | ------ |
+| M1 | `detect_visual_bugs.py:73`: `for name in names` → `for name in reversed(names)` | `D` `test_the_first_unknown_check_in_the_order_given_is_the_one_named` | ✅ Killed: the message names `nope`, not `zzz` |
+| M4 | `text_clipped.py:57`: `_padding_right` returns `... + element.client_width - element.box_model.padding.right` | `C` `test_the_strip_ends_at_the_padding_edge_not_at_the_content_edge` | ✅ Killed: `#padded` gets a Finding |
+| M5 | `config.py:70`: `TRANSFORM_MIN_SIZE_DIFF_PX = 1` → `2` | `C` `test_an_element_painted_at_another_size_than_laid_out_is_not_reported` | ✅ Killed: `#nudged` is reported |
+| M6 | `collect_elements.js:20`: `.replace(/[\\"]/g, "\\$&")` → `.replace(/"/g, "\\$&")` | `S` `test_a_backslash_in_an_attribute_value_is_escaped` | ✅ Killed: the selector is `[data-testid="a\b"]` |
+
+Two things differ from pass 3 and are stated so the result is not read for more than it is:
+
+- **Who ran it.** Not the Verifier of passes 1 to 3: the session that resolved F3 of the review of PR #7, which wrote none of Fix 16 to Fix 19. The checklist is `.checks/pr7-f3-status-lines.md`; its independent verification is `.checks/pr7-f3-status-lines.verified.md`.
+- **The source moved after `9500a19`.** `7910fe3`, `1827675`, `8c144c8`, `2929cbd` and `bc80575` changed `src/` to answer the review of PR #7. They are outside the range of the three passes and were verified apart, in `.checks/pr7-review-fixes.verified.md` (PASS, 9 of 9 checks). Because of `bc80575` the expression M4 mutates now lives in `_padding_right`, which feeds the strip and the own-text comparison of DVB-71; because of `8c144c8` the one M6 mutates is in `quoted`. No sensor was run on the new source beyond these four mutants.
+
+**Gate at `883b661`**: 135 passed, 0 failed, 0 skipped; pyright, ruff check and ruff format clean.
+
+With the PASS, DVB-68 is due: `docs/ROADMAP.md` shows slice 3 as `concluída` in the table and in its section.
 
 ---
 
@@ -45,7 +69,7 @@ Abbreviations: `D` = `tests/test_detect_visual_bugs.py`, `C` = `tests/test_text_
 | T9 | ✅ Done | `c6e124c` |
 | Fix 1 to Fix 7 (pass 1) | ✅ Done | `148a6fa`, `bcaee50`, `f8939eb`; judged in pass 2 |
 | Fix 8 to Fix 15 (pass 2) | ✅ Done | `349b31e`, `fefd0d5`, `9500a19` (see Fixes of pass 2, judged) |
-| Fix 16 to Fix 19 (pass 3) | ⏳ Open | see Fix Plans |
+| Fix 16 to Fix 19 (pass 3) | ✅ Done | `6ffb1c7`, `ea482ef`, `6e952a2`; judged in the re-run |
 
 `tasks.md` has 55 checked boxes and none open.
 
@@ -154,9 +178,9 @@ Verified by running: the whole suite passes (see Gate Check). The match between 
 | DVB-65 | no dependency slice 2 did not declare | `git diff 389230a..9500a19 -- pyproject.toml uv.lock` is empty (run) | ✅ PASS |
 | DVB-66 | `inspect_element` tests pass without any change to their assertions other than the exact tool list of DVB-01 | all pass; `git diff 389230a..9500a19 -- tests/test_inspect_element.py` changes one assertion, `tests/test_inspect_element.py:421`, the exact tool list, from two names to three (run) | ✅ PASS |
 | DVB-67 | `Unreleased` lists the tool and the Check; README table lists the tool | `CHANGELOG.md:14-15` under `## [Unreleased]` (`CHANGELOG.md:7`); `README.md:17` | ✅ PASS |
-| DVB-68 | ROADMAP shows slice 3 `concluída` once the Verifier reports PASS | A closing step of the orchestrator, made only after a PASS verdict. It is not a criterion this report fails on; the lines it concerns are `docs/ROADMAP.md:19,73` | ⏳ Pending on verdict (not a failure) |
+| DVB-68 | ROADMAP shows slice 3 `concluída` once the Verifier reports PASS | A closing step of the orchestrator, made only after a PASS verdict. It is not a criterion this report fails on; the lines it concerns are `docs/ROADMAP.md:19,73` | ✅ PASS after the re-run: `docs/ROADMAP.md:19,73` |
 
-**Status**: ❌ Gaps present. 69/69 testable requirements have an assertion on the spec-defined outcome (DVB-68 pending on verdict); 1 spec-precision gap flagged (M6); 4 surviving mutants, all found in pass 3.
+**Status** (as of pass 3; closed by the re-run): ❌ Gaps present. 69/69 testable requirements have an assertion on the spec-defined outcome (DVB-68 pending on verdict); 1 spec-precision gap flagged (M6); 4 surviving mutants, all found in pass 3.
 
 ### Spec-precision gaps
 
@@ -367,7 +391,8 @@ All four are tests and fixtures, plus spec wording for Fix 19. No source change 
 | DVB-19 | ❌ Needs Fix (pass 2) | ❌ Needs Fix (tests: Fix 17) |
 | DVB-50 | ❌ Needs Fix (pass 2) | ❌ Needs Fix (tests: Fix 16) |
 | DVB-69 | ✅ Verified (pass 2) | ❌ Needs Fix (tests: Fix 18) |
-| DVB-68 | In Tasks | ⏳ Pending on verdict |
+| DVB-68 | In Tasks | ✅ Verified (re-run) |
+| DVB-18, DVB-19, DVB-50, DVB-69 | as above (pass 3) | ✅ Verified (re-run: M6, M4, M1, M5 killed) |
 
 Each "Needs Fix" requirement passes on its named fixture; what is missing is the protection of an Assumptions row that backs it.
 
@@ -375,7 +400,7 @@ Each "Needs Fix" requirement passes on its named fixture; what is missing is the
 
 ## Summary
 
-**Overall**: ❌ Not Ready
+**Overall**: ✅ Ready after the re-run of the four survivors. What follows is the summary of pass 3 as written at `9500a19`.
 
 **Spec-anchored check**: 69/69 testable requirements matched the spec outcome | 1 spec-precision gap flagged | DVB-68 pending on verdict
 **Sensor**: 55/59 mutations killed, 4 survived (pass 3 ran 19: 11 re-runs all killed, 8 new with 4 survivors; 40 kills carried over from passes 1 and 2)

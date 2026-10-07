@@ -29,10 +29,10 @@
 ## Handoff
 
 - **Feature**: `detect-visual-bugs-text-clipped` (roadmap slice 3) / `.specs/features/detect-visual-bugs-text-clipped/`
-- **Phase / Task**: Tasks approved (`tasks.md`, 9 tasks in 3 phases). Execute starts at T1; no production code written yet.
-- **Completed**: Specify (70 requirements, `validate_spec.py` clean), discuss (`context.md`), Design (`design.md`, AD-003), Tasks (`tasks.md`, `validate_tasks.py` clean). Baseline: 61 tests pass.
+- **Phase / Task**: Execute done (T1 to T9) and validated. The third validation pass failed on four surviving mutants; Fix 16 to Fix 19 answer them and the re-run kills all four (`validation.md`, "Re-run of the survivors of pass 3"). PR #7 is open with both rounds of review answered.
+- **Completed**: Specify, discuss, Design (AD-003), Tasks, Execute, three validation passes and the re-run, the fixes of the review of PR #7 (`.checks/pr7-review-fixes.md`, verified), the status lines of F3 (`.checks/pr7-f3-status-lines.md`). Gate: 135 tests pass. Roadmap slice 3 is `concluída` (DVB-68).
 - **In-progress** (file:line): none.
-- **Next step**: Execute from T1, inline (the maintainer was advised against sub-agents: the second batch is one documentation task). The Verifier runs after T9.
-- **Blockers**: none. The fix of issue #5 is in `main` (PR #6, merge commit `8cf42be`) and in this branch.
+- **Next step**: the maintainer merges PR #7. Then slice 4 (`low-contrast-real`, `tlc-spec-lean`); issue #8 (document order across Checks) belongs to it.
+- **Blockers**: none. Open decision, not a blocker: text cut inside an inline child of a parent whose own text fits is no longer reported since `bc80575`; the spec does not record it.
 - **Uncommitted files**: none
 - **Branch**: `feat/detect-visual-bugs-text-clipped`

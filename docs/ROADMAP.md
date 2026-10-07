@@ -16,7 +16,7 @@ A v0.1 descrita em [`SPEC.md`](SPEC.md) é entregue em 5 fatias verticais. Cada 
 |---|---|---|---|---|
 | 1 | Fundação + `ping` | — | `tlc-spec-driven` | concluída |
 | 2 | Capture + `inspect_element` | 1 | `tlc-spec-driven` | concluída |
-| 3 | `detect_visual_bugs` + `text-clipped` | 2 | `tlc-spec-driven` | pendente |
+| 3 | `detect_visual_bugs` + `text-clipped` | 2 | `tlc-spec-driven` | concluída |
 | 4 | `low-contrast-real` | 3 | `tlc-spec-lean` | pendente |
 | 5 | Publicação no PyPI | 4 | manual (`ready-for-human`) | pendente |
 
@@ -70,8 +70,7 @@ A v0.1 descrita em [`SPEC.md`](SPEC.md) é entregue em 5 fatias verticais. Cada 
 - **Não entra:** `low-contrast-real`, demais Checks, Profile, Audit, score.
 - **Dependência:** fatia 2.
 - **Skill:** `tlc-spec-driven`.
-- **Status:** pendente (em andamento na branch `feat/detect-visual-bugs-text-clipped`).
-- **Andamento (2026-10-06):** spec aprovada e design escrito, aguardando aprovação, em [`.specs/features/detect-visual-bugs-text-clipped/`](../.specs/features/detect-visual-bugs-text-clipped/). Nenhum código ainda. Próximo passo: aprovar o design e gerar o `tasks.md`. Para retomar: `/tlc-spec-driven resume`; o ponto de parada está no Handoff de [`.specs/STATE.md`](../.specs/STATE.md).
+- **Status:** concluída. Spec, design e relatório de validação em [`.specs/features/detect-visual-bugs-text-clipped/`](../.specs/features/detect-visual-bugs-text-clipped/).
 
 ## 4. `low-contrast-real`
 

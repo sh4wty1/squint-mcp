@@ -1,0 +1,7 @@
+# F3 do PR #7: linhas de status desatualizadas
+
+**Por quê:** a rodada 2 da revisão do PR #7 deixou só o F3 aberto: roadmap, `STATE.md`, `validation.md` e a descrição do PR contradiziam o que a branch contém.
+**O quê:** os quatro mutantes sobreviventes da terceira validação (M1, M4, M5, M6) foram rodados de novo e todos morrem com os testes dos Fix 16 a 19; o `validation.md` registra a nova rodada e o veredito PASS; a fatia 3 está `concluída` no roadmap, na tabela e na seção (DVB-68); o Handoff do `STATE.md` descreve o estado real; a descrição do PR #7 foi atualizada (135 testes, validação, correções da revisão).
+**Como:** checklist em `.checks/pr7-f3-status-lines.md` (skill `tlc-implement`). Cada mutação aplicada sozinha numa worktree descartável de `883b661`, com o teste nomeado rodado contra o `src/` mutado. Arquivos: `docs/ROADMAP.md`, `.specs/STATE.md`, `.specs/features/detect-visual-bugs-text-clipped/validation.md`. Descrição do PR via `gh api` (o `gh pr edit` falha com o erro de Projects classic). Nenhuma mudança em `src/` ou `tests/`.
+**Verificação:** 4 de 4 mutantes mortos (os quatro testes passam sem mutação); `pyright`, `ruff check`, `ruff format --check` limpos e `pytest` com 135 passando em `883b661`; verificação independente em `.checks/pr7-f3-status-lines.verified.md`.
+**Pendências:** `git push` dos commits locais (precisa de autorização); merge do PR #7; registrar na spec o limite da correção do F1 (texto cortado em filho inline).
