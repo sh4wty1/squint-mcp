@@ -3,7 +3,7 @@
 from collections import Counter
 from typing import Annotated, get_args
 
-from mcp.server.mcpserver import Context
+from mcp.server.mcpserver import Context, Image
 from mcp.types import CallToolResult, TextContent
 from pydantic import BaseModel
 
@@ -11,6 +11,7 @@ from squint_mcp import config
 from squint_mcp.capture import BrowserSession, capture
 from squint_mcp.checks import CHECKS
 from squint_mcp.models import Finding, Severity, Viewport
+from squint_mcp.vision import crop_png
 
 # Most severe first.
 _SEVERITIES: tuple[Severity, ...] = get_args(Severity)
@@ -59,7 +60,9 @@ async def detect_visual_bugs(
     `captures`, one per viewport, whose `stabilized` is false when the network
     never went idle. Each Finding names its element by a `selector` that is
     unique on the page and works in `inspect_element`, and carries the styles
-    and measurements that back it.
+    and measurements that back it. The five most severe Findings also get a
+    crop of their element: `evidence.cropIndex` is the position of that image
+    among the images of the response, or null.
     """
     selected = [CHECKS[name] for name in checks or CHECKS]
     viewports = viewports or [
@@ -71,14 +74,22 @@ async def detect_visual_bugs(
     # ponytail: one viewport after another, each paying a page load and the idle
     # wait; capture them concurrently if calls get slow.
     captures = [await capture(session, url, viewport, "*") for viewport in viewports]
-    findings = [
-        finding
+    found = [
+        (finding, captured)
         for captured in captures
         for check in selected
         for finding in check(captured)
     ]
     # A stable sort: within a severity, viewport order then document order remain.
-    findings.sort(key=lambda finding: _SEVERITIES.index(finding.severity))
+    found.sort(key=lambda pair: _SEVERITIES.index(pair[0].severity))
+    # Only here is every Finding of the call known: the most severe get the crops.
+    crops = [
+        Image(data=crop_png(captured.pixels, finding.box), format="png")
+        for finding, captured in found[: config.MAX_CROPS]
+    ]
+    findings = [finding for finding, _ in found]
+    for index, finding in enumerate(findings[: config.MAX_CROPS]):
+        finding.evidence.crop_index = index
     result = DetectVisualBugsResult(
         findings=findings,
         captures=[
@@ -87,6 +98,9 @@ async def detect_visual_bugs(
         ],
     )
     return CallToolResult(
-        content=[TextContent(type="text", text=_summary(findings, len(captures)))],
+        content=[
+            TextContent(type="text", text=_summary(findings, len(captures))),
+            *(crop.to_image_content() for crop in crops),
+        ],
         structured_content=result.model_dump(mode="json", by_alias=True),
     )

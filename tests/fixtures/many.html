@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: more clipped texts than crops</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are 200px wide.
+         The 30px line leaves 5px of page background above and below them. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        font: 20px/30px Ahem;
+      }
+      /* Border box 150x30, cut by 50px. Each one has its own text colour. */
+      .clipped {
+        margin: 20px 0 0 40px;
+        width: 150px;
+        overflow-x: hidden;
+        white-space: nowrap;
+      }
+      /* First in the document, cut by 4px only. */
+      #small {
+        width: 196px;
+        color: rgb(90, 90, 90);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="small" class="clipped">XXXXXXXXXX</div>
+    <div id="m1" class="clipped" style="color: rgb(200, 0, 0)">XXXXXXXXXX</div>
+    <div id="m2" class="clipped" style="color: rgb(0, 120, 0)">XXXXXXXXXX</div>
+    <div id="m3" class="clipped" style="color: rgb(0, 0, 200)">XXXXXXXXXX</div>
+    <div id="m4" class="clipped" style="color: rgb(160, 0, 160)">XXXXXXXXXX</div>
+    <div id="m5" class="clipped" style="color: rgb(0, 130, 130)">XXXXXXXXXX</div>
+    <div id="m6" class="clipped" style="color: rgb(150, 90, 0)">XXXXXXXXXX</div>
+  </body>
+</html>

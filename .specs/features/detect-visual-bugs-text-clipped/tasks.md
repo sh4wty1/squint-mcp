@@ -190,7 +190,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (DVB-68). It is a clos
 
 ### T5: Attach at most five crops, by severity
 
-- [ ] Done
+- [x] Done
 
 **What**: After sorting, the first `MAX_CROPS` Findings get `cropIndex` and a `crop_png` image block; the rest keep `null`.
 **Where**: `src/squint_mcp/tools/detect_visual_bugs.py` (modify; fixture and tests under `tests/`)
@@ -205,12 +205,12 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (DVB-68). It is a clos
 
 **Done when**:
 
-- [ ] `many.html` exists: `#small` first, then `#m1` to `#m6`, each in its own text colour
-- [ ] `cropIndex` values on `many.html` are `0, 1, 2, 3, 4, null, null`; the response is one text block then five `image/png` blocks
-- [ ] Each image is 182×62 px and shows its own Finding's text colour at offset (20, 31)
-- [ ] The T2 assertion "no image block" on the bug fixture is replaced by the count of DVB-43
-- [ ] Gate check passes: Build
-- [ ] Test count: at least 86 tests pass (no silent deletions)
+- [x] `many.html` exists: `#small` first, then `#m1` to `#m6`, each in its own text colour
+- [x] `cropIndex` values on `many.html` are `0, 1, 2, 3, 4, null, null`; the response is one text block then five `image/png` blocks
+- [x] Each image is 182×62 px and shows its own Finding's text colour at offset (20, 31)
+- [x] The T2 assertion "no image block" on the bug fixture is replaced by the count of DVB-43
+- [x] Gate check passes: Build
+- [x] Test count: at least 86 tests pass (no silent deletions)
 
 **Tests**: integration
 **Gate**: build

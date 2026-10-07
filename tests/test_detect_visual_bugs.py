@@ -1,5 +1,7 @@
 """`detect_visual_bugs` through the MCP tool boundary, against real Chromium."""
 
+import base64
+import io
 from typing import Any
 
 import pytest
@@ -15,12 +17,14 @@ from helpers import (
 )
 from mcp import Client
 from mcp.types import TextContent, Tool
+from PIL import Image
 
 pytestmark = pytest.mark.anyio
 
 BUG = fixture_url("text-clipped-bug.html")
 RESPONSIVE = fixture_url("responsive.html")
 SELECTORS = fixture_url("selectors.html")
+MANY = fixture_url("many.html")
 
 
 async def detect_tool(client: Client) -> Tool:
@@ -193,9 +197,46 @@ async def test_a_page_that_never_goes_network_idle_is_reported_unstabilized(
     assert content["captures"][0]["stabilized"] is False
 
 
-async def test_findings_carry_no_crop_yet(client: Client) -> None:
-    result = await call(client, BUG)
+async def test_response_is_one_text_block_then_a_png_per_finding_up_to_five(
+    client: Client,
+) -> None:
+    for url, crops in ((BUG, 2), (MANY, 5)):
+        result = await call(client, url)
+        assert isinstance(result.content[0], TextContent)
+        assert result.content[1:] == images(result)
+        assert [image.mime_type for image in images(result)] == ["image/png"] * crops
+
+
+async def test_crops_go_to_the_five_most_severe_findings(client: Client) -> None:
+    findings = (await detect(client, MANY))["findings"]
+    assert [finding["evidence"]["cropIndex"] for finding in findings] == [
+        0,
+        1,
+        2,
+        3,
+        4,
+        None,
+        None,
+    ]
+    assert findings[6]["severity"] == "minor"
+    assert await findings_on(client, MANY, "#small", findings) == [findings[6]]
+
+
+async def test_each_crop_shows_the_box_of_its_own_finding(client: Client) -> None:
+    result = await call(client, MANY)
     assert result.structured_content is not None
     findings = result.structured_content["findings"]
-    assert [finding["evidence"]["cropIndex"] for finding in findings] == [None, None]
-    assert images(result) == []
+    text_colors = {
+        "#m1": (200, 0, 0),
+        "#m2": (0, 120, 0),
+        "#m3": (0, 0, 200),
+        "#m4": (160, 0, 160),
+        "#m5": (0, 130, 130),
+    }
+    for selector, text_color in text_colors.items():
+        (finding,) = await findings_on(client, MANY, selector, findings)
+        crop_index: int = finding["evidence"]["cropIndex"]
+        image = images(result)[crop_index]
+        crop = Image.open(io.BytesIO(base64.b64decode(image.data))).convert("RGB")
+        assert crop.size == (182, 62)  # the 150x30 box plus 16px on each side
+        assert crop.getpixel((20, 31)) == text_color  # inside the first glyph

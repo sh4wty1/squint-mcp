@@ -336,9 +336,9 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | DVB-40 | P1: Stable selectors | T6 | In Tasks |
 | DVB-41 | P1: Stable selectors | T6 | In Tasks |
 | DVB-42 | P1: Stable selectors | T6 | In Tasks |
-| DVB-43 | P1: Bounded crops | T5 | In Tasks |
-| DVB-44 | P1: Bounded crops | T5 | In Tasks |
-| DVB-45 | P1: Bounded crops | T5 | In Tasks |
+| DVB-43 | P1: Bounded crops | T5 | Implemented |
+| DVB-44 | P1: Bounded crops | T5 | Implemented |
+| DVB-45 | P1: Bounded crops | T5 | Implemented |
 | DVB-46 | P1: Several viewports | T2 | Implemented |
 | DVB-47 | P1: Several viewports | T2 | Implemented |
 | DVB-48 | P1: Several viewports | T7 | In Tasks |
