@@ -2,27 +2,82 @@
 
 **Date**: 2026-10-08
 **Spec**: `.specs/features/low-contrast-real/spec.md`
-**Diff range**: `9d7afb9..508657e` (13 commits, branch `feat/low-contrast-real`); pass 1 covered `9d7afb9..f97904b`
-**Verifier**: independent sub-agent (author ≠ verifier), verification pass 2 (fix→re-verify iteration 1 of 3)
+**Diff range**: `9d7afb9..a42ea01` (15 commits, branch `feat/low-contrast-real`); pass 1 covered `9d7afb9..f97904b`, pass 2 `9d7afb9..508657e`
+**Verifier**: independent sub-agent (author ≠ verifier), verification pass 3 (fix→re-verify iteration 2 of 3)
 
-**Verdict**: ❌ FAIL
+**Verdict**: ✅ PASS
 
-The verdict is that of the second pass, described in the section right below. The six survivors of pass 1 are all killed and the nine criteria checked in pass 2 match the spec. It is still FAIL because two of the new mutants of pass 2 survive against LCR-55 (V5 in the sampling code, C4 in the collector). No defect was found in the source in either pass.
+The verdict is that of the third pass, described in the section right below. Every criterion due now (61 of 61) has an assertion on the outcome the spec defines, the gate is green and no mutant that breaks a rule of the spec survives: the six survivors of pass 1 were killed in pass 2 and the two of pass 2 are killed in pass 3. Three survivors remain on record and none is a gap: F1 is equivalent inside the spec's scope, and T1 and T2 move the ink threshold inside the bracket LCR-56 and LCR-57 set. No defect was found in the source in any pass; `src/` has not changed since `f97904b`. LCR-46 (the roadmap) is due now that the verdict is PASS and is the orchestrator's step.
 
 **History**
 
 | Pass | Range | Verdict | Sensor in that pass | Closed by |
 | ---- | ----- | ------- | ------------------- | --------- |
 | 1 | `9d7afb9..f97904b` | FAIL | 46 mutants, 7 survived (6 gaps, 1 equivalent in scope) | `42201eb`, `508657e` (tests, fixture, spec wording) |
-| 2 | `9d7afb9..508657e` | FAIL | 6 re-runs all killed; 6 new, 4 survived (2 gaps, 2 inside the bracket the spec sets) | open |
+| 2 | `9d7afb9..508657e` | FAIL | 6 re-runs all killed; 6 new, 4 survived (2 gaps, 2 inside the bracket the spec sets) | `a42ea01` (tests, fixture, LCR-61 and LCR-62) |
+| 3 | `9d7afb9..a42ea01` | PASS | 3 re-runs (V3, V5, C4) all killed; no new mutant | - |
 
 Abbreviations: `L` = `tests/test_low_contrast_real.py`, `D` = `tests/test_detect_visual_bugs.py`.
 
 ---
 
+## Third pass
+
+**Date**: 2026-10-08, at `a42ea01`. **Result**: ✅ PASS.
+
+### What changed since pass 2
+
+`git diff 508657e..a42ea01 -- src` is empty. `git diff 508657e..a42ea01 -- tests` touches two files. `tests/fixtures/low-contrast-reach.html` gains `#three-lines` and `#split` with their two rules, placed after `#off-page`, the last element of the body: no earlier element moves, and `#off-page` is absolutely positioned, so the boxes LCR-54 to LCR-60 rely on are the same. `L` gains two tests (`L:374-381`); the test of the exact selector list is renamed and lists five selectors (`L:350-360`) and the count next to LCR-60 goes from 3 to 5 (`L:412`). Both follow from the two new Findings; no other assertion changed. The lines of `L` cited in the pass 2 table from `L:372` on are now 12 further down.
+
+### Spec-anchored check
+
+| Criterion | Spec-defined outcome | `file:line` + assertion | Result |
+| --------- | -------------------- | ----------------------- | ------ |
+| LCR-61 `#three-lines`, band behind the middle line | one Finding, ratio 1.6 | `L:375-376` - `(finding,) = await reach(client, "#three-lines")`, `finding["evidence"]["measured"]["contrastRatio"] == 1.6` | ✅ PASS |
+| LCR-62 `#split`, two text nodes, band behind the second | one Finding, ratio 1.6 | `L:380-381` - `(finding,) = await reach(client, "#split")`, `finding["evidence"]["measured"]["contrastRatio"] == 1.6` | ✅ PASS |
+| LCR-60 `#off-page` (count changed) | no Finding | `L:411-412` - `"#off-page" not in [finding["selector"] ...]`, `len(findings) == 5`; `L:354-360` pins the five selectors | ✅ PASS |
+
+The fixture matches both criteria: three lines of ten glyphs in a 200px box with the light band from 30px to 60px, and `XXXXX<b></b>XXXXX` with the light band from 100px to 200px.
+
+**Status**: 61 of 61 criteria due now match the spec outcome (51 in pass 1, 8 new in pass 2 with LCR-51 reworded, 2 here). LCR-46 becomes due with this verdict. The spec-precision gap of pass 2 on LCR-55 is closed by LCR-61 and LCR-62.
+
+### Sensor of pass 3
+
+Run in a temporary git worktree of `a42ea01` outside the repository, as before, against `L`.
+
+| # | File:line | Mutation | Result |
+| - | --------- | -------- | ------ |
+| V3 | `vision.py:64` | `boxes[:1]`: only the first box is sampled | ✅ Killed - `L` `test_only_five_texts_of_the_reach_fixture_are_reported` (`#split`, `#three-lines` and `#two-lines` are missing) |
+| V5 | `vision.py:64` | `boxes[-1:]`: only the last box is sampled | ✅ Killed - same test (`#three-lines` is missing); `test_a_line_between_two_others_is_judged` is the test written for it |
+| C4 | `js/collect_elements.js:139` | only the first text node of an element gets boxes | ✅ Killed - same test (`#split` is missing); `test_every_text_node_of_an_element_is_judged` is the test written for it |
+
+The test named is the first that fails with `-x`. No new mutant was added: after two passes and 58 mutants, no rule of the spec was found without a criterion and a fixture.
+
+**Result**: 3/3 killed - PASS ✅. Over the three passes: 58 distinct mutants, 55 killed, 3 on record as survivors that are not gaps (F1, T1, T2).
+
+**Isolation**: `git status --porcelain` of the real tree was empty before the sensor of pass 3 and is empty after it, apart from this report written afterwards; `HEAD` is `a42ea01` both times. The worktree was removed and `git worktree list` shows the main tree alone. `git stash` was not used.
+
+### Gate of pass 3
+
+`uv run pyright` exit 0 (0 errors, 0 warnings); `uv run ruff check` exit 0; `uv run ruff format --check` exit 0; `uv run pytest` exit 0 - 190 passed, 0 failed, 0 skipped, in 284.03s. 188 before the fix, +2; nothing removed. 135 before the feature, +55.
+
+### Summary of pass 3
+
+**Overall**: ✅ Ready
+
+**Spec-anchored check**: 61/61 criteria due now match the spec outcome; LCR-46 is the orchestrator's closing step
+**Sensor**: V3, V5 and C4 killed; no survivor that breaks a rule of the spec
+**Gate**: 190 passed, 0 failed; pyright, ruff check and ruff format clean
+
+**Left on record, not blocking**: the ink threshold is pinned to the bracket 77 to 178 (T1, T2; layers of 0.55 and 0.45 would narrow it); `tasks.md` and the traceability table of `spec.md` are the author's to update.
+
+**Next steps**: mark slice 4 `concluída` in `docs/ROADMAP.md` (LCR-46).
+
+---
+
 ## Second pass
 
-**Date**: 2026-10-08, at `508657e`. **Result**: ❌ FAIL, two new gaps, both on LCR-55.
+**Date**: 2026-10-08, at `508657e`. **Outcome of that pass**: ❌ FAIL, two new gaps, both on LCR-55.
 
 ### What changed since pass 1
 
@@ -293,7 +348,7 @@ Run in a temporary git worktree of `f97904b` outside the repository, one mutant 
 A first form of C3 (element nodes let into the own-text loop) also moved `ownTextRight`, which belongs to slice 3. It was replaced by C3b, which touches `ownTextBoxes` alone, and is not counted.
 
 **Sensor depth**: expanded (46 mutants over the Check, the sampling, the sort key, the collector, the fill script, the Capture and the thresholds)
-**Result**: 39/46 killed - FAIL ❌
+**Outcome of that pass**: 39/46 killed - FAIL ❌
 
 ### The survivors, shown not to be equivalent
 

@@ -36,11 +36,11 @@
 
 ## Handoff
 
-- **Feature**: `detect-visual-bugs-text-clipped` (roadmap slice 3) / `.specs/features/detect-visual-bugs-text-clipped/`
-- **Phase / Task**: Execute done (T1 to T9) and validated. The third validation pass failed on four surviving mutants; Fix 16 to Fix 19 answer them and the re-run kills all four (`validation.md`, "Re-run of the survivors of pass 3"). PR #7 is open with both rounds of review answered.
-- **Completed**: Specify, discuss, Design (AD-003), Tasks, Execute, three validation passes and the re-run, the fixes of the review of PR #7 (`.checks/pr7-review-fixes.md`, verified), the status lines of F3 (`.checks/pr7-f3-status-lines.md`). Gate: 135 tests pass. Roadmap slice 3 is `concluída` (DVB-68).
+- **Feature**: `low-contrast-real` (roadmap slice 4) / `.specs/features/low-contrast-real/`
+- **Phase / Task**: Execute done (T1 to T7) and validated. The Verifier's third pass is PASS (`validation.md`); passes 1 and 2 failed on surviving mutants, answered by Fix 1 to Fix 4 with tests and spec criteria, no source change.
+- **Completed**: Specify (two decisions with the maintainer), Design (AD-004, spiked), Tasks, Execute, three validation passes. Gate: 190 tests pass. Roadmap slice 4 is `concluída` (LCR-46). The sort key of `detect_visual_bugs` answers issue #8.
 - **In-progress** (file:line): none.
-- **Next step**: the maintainer merges PR #7. Then slice 4 (`low-contrast-real`, `tlc-spec-lean`); issue #8 (document order across Checks) belongs to it.
-- **Blockers**: none. Open decision, not a blocker: text cut inside an inline child of a parent whose own text fits is no longer reported since `bc80575`; the spec does not record it.
+- **Next step**: the maintainer reviews the branch and gives the go-ahead to push it and open the pull request, which closes issue #8. CI on Linux is the first run of the pixel-exact fixtures outside Windows. Then slice 5 (PyPI, manual).
+- **Blockers**: none. Not confirmed by the maintainer: the design and tasks (executed under the approval of the spec), and the assumptions marked `n` in the spec, among them the 10% worst part, the half-ink rule for text under a translucent layer and its known wrong ratio.
 - **Uncommitted files**: none
-- **Branch**: `feat/detect-visual-bugs-text-clipped`
+- **Branch**: `feat/low-contrast-real`

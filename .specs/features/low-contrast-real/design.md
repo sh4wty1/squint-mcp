@@ -1,7 +1,7 @@
 # low-contrast-real Design
 
 **Spec**: `.specs/features/low-contrast-real/spec.md`
-**Status**: Draft
+**Status**: Executed; not reviewed by the maintainer
 
 Every choice marked "spiked" was run against `playwright 1.63` and real Chromium (headless shell 153, build 1243) on 2026-10-08, on a page holding the cases of the spec. Conforms to AD-001, AD-002 and AD-003; adds AD-004.
 

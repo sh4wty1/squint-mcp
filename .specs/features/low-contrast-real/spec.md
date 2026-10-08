@@ -286,7 +286,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | LCR-43 | P2: Check contract, configuration and documents | T4 | Implemented |
 | LCR-44 | P2: Check contract, configuration and documents | T7 | Implemented |
 | LCR-45 | P2: Check contract, configuration and documents | T7 | Implemented |
-| LCR-46 | P2: Check contract, configuration and documents | - | Pending |
+| LCR-46 | P2: Check contract, configuration and documents | Closing step | Implemented |
 | LCR-47 | P1: Thresholds by text size and severity | T5 | Implemented |
 | LCR-48 | P1: Two Checks in one call | T6 | Implemented |
 | LCR-49 | P1: Two Checks in one call | T4 | Implemented |
@@ -304,7 +304,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | LCR-61 | P1: Detect text with low real contrast | Fix 4 | Implemented |
 | LCR-62 | P1: Detect text with low real contrast | Fix 4 | Implemented |
 
-**Coverage:** 62 total, 61 mapped to tasks or fixes, 1 unmapped (LCR-46, the closing step).
+**Coverage:** 62 total, all mapped to a task, a fix or the closing step.
 
 ---
 
