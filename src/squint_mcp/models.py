@@ -78,6 +78,10 @@ class Capture:
     document order."""
     pixels: Image.Image
     """The full page in RGB, one image pixel per CSS pixel."""
+    background: Image.Image
+    """The full page in RGB with no text painted."""
+    ink: Image.Image
+    """How much text ink each pixel gets, 0 to 255, in mode L."""
 
 
 Severity = Literal["critical", "major", "minor", "info"]

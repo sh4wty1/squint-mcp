@@ -8,8 +8,8 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 from mcp.server.mcpserver.exceptions import ToolError
-from PIL import Image
-from playwright.async_api import Browser, Playwright, async_playwright
+from PIL import Image, ImageChops
+from playwright.async_api import Browser, Page, Playwright, async_playwright
 from playwright.async_api import Error as PlaywrightError
 from playwright.async_api import TimeoutError as PlaywrightTimeoutError
 
@@ -19,6 +19,7 @@ from squint_mcp.models import Capture, Element, Viewport
 _JS = Path(__file__).parent / "js"
 _STABILIZE = (_JS / "stabilize.js").read_text(encoding="utf-8")
 _COLLECT_ELEMENTS = (_JS / "collect_elements.js").read_text(encoding="utf-8")
+_FILL_TEXT = (_JS / "fill_text.js").read_text(encoding="utf-8")
 
 
 class BrowserSession:
@@ -66,6 +67,16 @@ async def browser_lifespan(_: object) -> AsyncGenerator[BrowserSession]:
 def _first_line(error: PlaywrightError) -> str:
     """Playwright appends call logs and banners; the first line says what failed."""
     return error.message.splitlines()[0]
+
+
+async def _screenshot(page: Page) -> Image.Image:
+    return Image.open(io.BytesIO(await page.screenshot(full_page=True))).convert("RGB")
+
+
+async def _filled(page: Page, color: str) -> Image.Image:
+    """The page with every glyph painted in `color`."""
+    await page.evaluate(_FILL_TEXT, color)
+    return await _screenshot(page)
 
 
 async def capture(
@@ -117,7 +128,14 @@ async def capture(
                 "transformMinSizeDiffPx": config.TRANSFORM_MIN_SIZE_DIFF_PX,
             },
         )
-        screenshot = await page.screenshot(full_page=True)
+        pixels = await _screenshot(page)
+        # After the collector, which reads the page's own styles, and after the
+        # pixels: from here on the text is not painted as the page asked (AD-004).
+        # ponytail: every Capture pays for the three layers, whatever reads them;
+        # take them on request if calls get slow.
+        background = await _filled(page, "transparent")
+        black = await _filled(page, "rgb(0, 0, 0)")
+        white = await _filled(page, "rgb(255, 255, 255)")
     finally:
         # A client cancellation keeps cancelling every await: shield the close.
         await asyncio.shield(context.close())
@@ -125,5 +143,8 @@ async def capture(
         viewport=viewport,
         stabilized=stabilized,
         elements=[Element.model_validate(element) for element in collected],
-        pixels=Image.open(io.BytesIO(screenshot)).convert("RGB"),
+        pixels=pixels,
+        background=background,
+        # Only glyphs differ between the two fills, by how much they cover a pixel.
+        ink=ImageChops.difference(black, white).convert("L"),
     )

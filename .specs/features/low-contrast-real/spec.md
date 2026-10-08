@@ -265,7 +265,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | LCR-38 | P1: Two Checks in one call | - | Pending |
 | LCR-39 | P1: Two Checks in one call | - | Pending |
 | LCR-40 | P2: Check contract, configuration and documents | - | Pending |
-| LCR-41 | P2: Check contract, configuration and documents | - | Pending |
+| LCR-41 | P2: Check contract, configuration and documents | T3 | Implemented |
 | LCR-42 | P2: Check contract, configuration and documents | T1 | Implemented |
 | LCR-43 | P2: Check contract, configuration and documents | - | Pending |
 | LCR-44 | P2: Check contract, configuration and documents | - | Pending |

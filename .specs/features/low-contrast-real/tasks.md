@@ -127,7 +127,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (LCR-46) and the Hando
 
 ### T3: Capture the background and ink layers
 
-- [ ] Done
+- [x] Done
 
 **What**: `fill_text.js` forces `-webkit-text-fill-color` in the document and every open shadow root; `capture()` takes three more screenshots (fill `transparent`, black, white) after the existing one; `Capture` gains `background` and `ink` (AD-004).
 **Where**: `src/squint_mcp/capture.py` (with the new page script and the two fields in the models module)
@@ -142,11 +142,11 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (LCR-46) and the Hando
 
 **Done when**:
 
-- [ ] The collector still runs before any fill, so `computed` holds the page's own styles
-- [ ] `pixels` is still the first screenshot, taken before any fill
-- [ ] `playwright` is imported only in `capture.py`
-- [ ] Gate check passes: Build
-- [ ] Test count: 135 tests pass
+- [x] The collector still runs before any fill, so `computed` holds the page's own styles
+- [x] `pixels` is still the first screenshot, taken before any fill
+- [x] `playwright` is imported only in `capture.py`
+- [x] Gate check passes: Build
+- [x] Test count: 135 tests pass
 
 **Tests**: none
 **Gate**: build
