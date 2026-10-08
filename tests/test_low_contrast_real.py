@@ -408,6 +408,12 @@ async def test_text_in_the_shadow_tree_of_a_faded_host_is_not_reported(
     assert await reach(client, "#in-faded") == []
 
 
+async def test_slotted_text_under_a_faded_element_of_the_shadow_tree_is_not_reported(
+    client: Client,
+) -> None:
+    assert await reach(client, "#slotted") == []
+
+
 async def test_text_off_the_page_is_not_reported(client: Client) -> None:
     findings = (await detect(client, REACH, checks=ONLY))["findings"]
     assert "#off-page" not in [finding["selector"] for finding in findings]

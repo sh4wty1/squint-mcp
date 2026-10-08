@@ -88,11 +88,13 @@
   };
 
   // An element is as faded as its ancestors make it: its opacity times theirs, a
-  // shadow root continuing at its host. Kept per element so the walk stays linear.
+  // slotted element continuing at its slot and a shadow root at its host. Kept per
+  // element so the walk stays linear.
   const opacities = new Map();
   const opacityOf = (element) => {
     if (!opacities.has(element)) {
-      const parent = element.parentElement ?? element.getRootNode().host;
+      const parent =
+        element.assignedSlot ?? element.parentElement ?? element.getRootNode().host;
       const own = parseFloat(getComputedStyle(element).opacity);
       opacities.set(element, parent ? own * opacityOf(parent) : own);
     }
