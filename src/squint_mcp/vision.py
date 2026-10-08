@@ -79,10 +79,10 @@ def text_backgrounds(
     is_text = [255 if value >= config.TEXT_INK_MIN else 0 for value in range(256)]
     counts: Counter[tuple[int, int, int]] = Counter()
     regions = [_region(background, box, 0) for box in boxes]
-    # One scale for all the boxes, so that each keeps its weight in the counts.
+    # One scale for all the boxes, so that each keeps about its weight in the counts.
     # ponytail: bounded per call, that is per element. A page of many texts over
     # an image of millions of colours pays for each; share one budget across the
-    # Capture if such a page gets slow.
+    # Capture if such a page gets slow (#11).
     area = sum(region.width * region.height for region in regions)
     for box, region in zip(boxes, regions, strict=True):
         if region.width * region.height == 0:
