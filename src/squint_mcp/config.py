@@ -21,6 +21,13 @@ CROP_MAX_SIDE_PX = 512
 # are the fill, the text and the dominant anti-aliasing blend.
 SAMPLED_COLORS_MAX = 3
 
+# Source: Squint default, measured for issue #4. Counting the colours of a region
+# where every pixel has its own takes about 2 microseconds a pixel: 15s for an
+# element of 1440x5000. At 512x512 it stays under half a second, and the contrast
+# of as many colours behind a text takes about two. A larger region is sampled
+# down to that many pixels first.
+COLOR_COUNT_MAX_PIXELS = 512 * 512
+
 # Source: Squint default. Chromium resolves 350+ properties; these are the ones that
 # decide how a box and its text are painted. Margin, border and padding are reported
 # in the box model instead.

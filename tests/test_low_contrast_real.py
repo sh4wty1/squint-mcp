@@ -1,5 +1,6 @@
 """The `low-contrast-real` Check through `detect_visual_bugs`, against real Chromium."""
 
+import time
 from typing import Any
 
 import pytest
@@ -22,6 +23,7 @@ BOUNDS = fixture_url("low-contrast-bounds.html")
 CLEAN = fixture_url("low-contrast-clean.html")
 REACH = fixture_url("low-contrast-reach.html")
 FILL = fixture_url("low-contrast-fill.html")
+PIXEL_COST = fixture_url("pixel-cost.html")
 HERO = '[data-testid="hero"]'
 ONLY = ["low-contrast-real"]
 
@@ -452,3 +454,32 @@ async def test_the_finding_carries_the_fill_next_to_the_colour(client: Client) -
 
 async def test_gradient_text_is_not_reported(client: Client) -> None:
     assert await fill(client, "#gradient-text") == []
+
+
+async def test_a_text_over_the_limit_is_still_judged_on_its_worst_part(
+    client: Client,
+) -> None:
+    measured = (await finding_on(client, PIXEL_COST, "#big-text"))["evidence"][
+        "measured"
+    ]
+    assert measured["contrastRatio"] == 1.6
+    assert measured["sampledBackground"] == "#cccccc"
+
+
+async def test_text_over_millions_of_colours_adds_little_to_the_call(
+    client: Client,
+) -> None:
+    async def seconds(url: str) -> tuple[float, list[str]]:
+        started = time.monotonic()
+        findings = (await detect(client, url, checks=ONLY))["findings"]
+        elapsed = time.monotonic() - started
+        return elapsed, [finding["selector"] for finding in findings]
+
+    # The same page both times, so the capture costs the same: what differs is
+    # the text painted over the noise only when the URL targets it. The Check
+    # computes a contrast for every colour it is given, hence the seconds.
+    bare, without = await seconds(PIXEL_COST)
+    painted, with_text = await seconds(f"{PIXEL_COST}#over-noise")
+    assert "#over-noise" not in without
+    assert "#over-noise" in with_text
+    assert painted - bare < 10
