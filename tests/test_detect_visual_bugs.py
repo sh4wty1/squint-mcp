@@ -468,3 +468,21 @@ async def test_the_crops_go_to_the_first_five_findings_across_checks(
     assert [(f["selector"], f["check"]) for f in findings] == IN_DOCUMENT_ORDER
     assert len(images(result)) == 5
     assert [f["evidence"]["cropIndex"] for f in findings] == [0, 1, 2, 3, 4, None]
+
+
+async def test_findings_of_one_severity_come_viewport_by_viewport(
+    client: Client,
+) -> None:
+    url = fixture_url("low-contrast-bug.html")
+    findings = (await detect(client, url, viewports=[DESKTOP, MOBILE]))["findings"]
+    hero = '[data-testid="hero"]'
+    assert [(f["viewport"]["width"], f["selector"]) for f in findings] == [
+        (1440, hero),
+        (390, hero),
+        (1440, "#flat"),
+        (1440, "#alpha"),
+        (1440, "#almost-large"),
+        (390, "#flat"),
+        (390, "#alpha"),
+        (390, "#almost-large"),
+    ]
