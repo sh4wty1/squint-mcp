@@ -3,7 +3,7 @@
   "promote_threshold": 2,
   "window_days": 45,
   "quarantine_threshold": 2,
-  "next_id": 35,
+  "next_id": 42,
   "lessons": [
     {
       "id": "L-001",
@@ -355,17 +355,19 @@
       "text": "Assert the full order of a returned list on a fixture with several items of equal rank, not only the place of one item",
       "signal": "surviving_mutant",
       "scope": "tests,ordering",
-      "status": "candidate",
+      "status": "confirmed",
       "features": [
-        "detect-visual-bugs-text-clipped"
+        "detect-visual-bugs-text-clipped",
+        "low-contrast-real"
       ],
-      "recurrence": 1,
+      "recurrence": 2,
       "harmful": 0,
       "evidence": [
-        "mutants J09, J10, src/squint_mcp/js/collect_elements.js:41,133 (DVB-15) (tests,ordering)"
+        "mutants J09, J10, src/squint_mcp/js/collect_elements.js:41,133 (DVB-15) (tests,ordering)",
+        "mutant S3, src/squint_mcp/tools/detect_visual_bugs.py:110 (LCR-37) (tests,ordering)"
       ],
       "created": "2026-10-07T16:30:33Z",
-      "last_seen": "2026-10-07T16:30:33Z"
+      "last_seen": "2026-10-08T05:06:17Z"
     },
     {
       "id": "L-021",
@@ -618,6 +620,132 @@
       ],
       "created": "2026-10-07T17:41:29Z",
       "last_seen": "2026-10-07T17:41:29Z"
+    },
+    {
+      "id": "L-035",
+      "key": "spec_precision_gap::give every component of a sort order its own acceptance criterion whose outcome changes when that component is dropped",
+      "text": "Give every component of a sort order its own acceptance criterion whose outcome changes when that component is dropped",
+      "signal": "spec_precision_gap",
+      "scope": "spec,ordering",
+      "status": "candidate",
+      "features": [
+        "low-contrast-real"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "mutant S3; spec.md:68 against LCR-37 (spec.md:186) (spec,ordering)"
+      ],
+      "created": "2026-10-08T05:06:17Z",
+      "last_seen": "2026-10-08T05:06:17Z"
+    },
+    {
+      "id": "L-036",
+      "key": "surviving_mutant::pin a rule that judges an element on its own content with a fixture where its child s content would change the outcome",
+      "text": "Pin a rule that judges an element on its own content with a fixture where its child's content would change the outcome",
+      "signal": "surviving_mutant",
+      "scope": "tests,checks",
+      "status": "candidate",
+      "features": [
+        "low-contrast-real"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "mutant C3b, src/squint_mcp/js/collect_elements.js:132 (LCR-10) (tests,checks)"
+      ],
+      "created": "2026-10-08T05:06:18Z",
+      "last_seen": "2026-10-08T05:06:18Z"
+    },
+    {
+      "id": "L-037",
+      "key": "surviving_mutant::test a rule that reads a list of regions with an element that has more than one region and whose outcome depends on a later one",
+      "text": "Test a rule that reads a list of regions with an element that has more than one region and whose outcome depends on a later one",
+      "signal": "surviving_mutant",
+      "scope": "tests,vision",
+      "status": "candidate",
+      "features": [
+        "low-contrast-real"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "mutant V3, src/squint_mcp/vision.py:64 (tests,vision)"
+      ],
+      "created": "2026-10-08T05:06:18Z",
+      "last_seen": "2026-10-08T05:06:18Z"
+    },
+    {
+      "id": "L-038",
+      "key": "surviving_mutant::pin a pixel intensity threshold with fixture pixels just on each side of it not only with pixels at the two ends of the range",
+      "text": "Pin a pixel-intensity threshold with fixture pixels just on each side of it, not only with pixels at the two ends of the range",
+      "signal": "surviving_mutant",
+      "scope": "tests,thresholds",
+      "status": "candidate",
+      "features": [
+        "low-contrast-real"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "mutants G8, G8b, src/squint_mcp/config.py:98 (tests,thresholds)"
+      ],
+      "created": "2026-10-08T05:06:18Z",
+      "last_seen": "2026-10-08T05:06:18Z"
+    },
+    {
+      "id": "L-039",
+      "key": "spec_precision_gap::give every squint default threshold in config an acceptance criterion whose outcome changes when the value changes",
+      "text": "Give every Squint default threshold in config an acceptance criterion whose outcome changes when the value changes",
+      "signal": "spec_precision_gap",
+      "scope": "spec,config",
+      "status": "candidate",
+      "features": [
+        "low-contrast-real"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "LCR-21 (spec.md:130), Terms: Text pixels (spec.md:23); mutants G8, G8b (spec,config)"
+      ],
+      "created": "2026-10-08T05:06:18Z",
+      "last_seen": "2026-10-08T05:06:18Z"
+    },
+    {
+      "id": "L-040",
+      "key": "spec_precision_gap::state in the spec whether a rule reaches open shadow trees with a fixture that has a shadow root whenever the code walks them",
+      "text": "State in the spec whether a rule reaches open shadow trees, with a fixture that has a shadow root, whenever the code walks them",
+      "signal": "spec_precision_gap",
+      "scope": "spec,shadow-dom",
+      "status": "candidate",
+      "features": [
+        "low-contrast-real"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "mutant C2, src/squint_mcp/js/collect_elements.js:95; design.md:101 (spec,shadow-dom)"
+      ],
+      "created": "2026-10-08T05:06:18Z",
+      "last_seen": "2026-10-08T05:06:18Z"
+    },
+    {
+      "id": "L-041",
+      "key": "spec_precision_gap::give each instance a criterion lists in parentheses its own fixture or name only the instance the test pins",
+      "text": "Give each instance a criterion lists in parentheses its own fixture, or name only the instance the test pins",
+      "signal": "spec_precision_gap",
+      "scope": "spec",
+      "status": "candidate",
+      "features": [
+        "low-contrast-real"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "LCR-51 (spec.md:219), tests/test_low_contrast_real.py:299 (spec)"
+      ],
+      "created": "2026-10-08T05:06:18Z",
+      "last_seen": "2026-10-08T05:06:18Z"
     }
   ]
 }

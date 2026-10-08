@@ -14,6 +14,12 @@ Corroborated across multiple features. Safe to apply as guidance.
 - evidence: spec.md:49, spec.md:53 (mutants N1, N7, N8; CAP-14, CAP-20) (spec,geometry) (+1 more)
 - last seen: 2026-10-07T16:30:33Z
 
+### L-020 - Assert the full order of a returned list on a fixture with several items of equal rank, not only the place of one item
+- signal: `surviving_mutant` · recurrence: 2 feature(s) · scope: `tests,ordering` · harmful: 0
+- features: detect-visual-bugs-text-clipped, low-contrast-real
+- evidence: mutants J09, J10, src/squint_mcp/js/collect_elements.js:41,133 (DVB-15) (tests,ordering) (+1 more)
+- last seen: 2026-10-08T05:06:17Z
+
 ## Candidates (under observation - do NOT load as guidance yet)
 
 Seen once or not yet corroborated. Tracked, not trusted.
@@ -126,12 +132,6 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: mutant C11, src/squint_mcp/checks/text_clipped.py:50 (DVB-69) (tests,checks)
 - last seen: 2026-10-07T16:30:33Z
 
-### L-020 - Assert the full order of a returned list on a fixture with several items of equal rank, not only the place of one item
-- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,ordering` · harmful: 0
-- features: detect-visual-bugs-text-clipped
-- evidence: mutants J09, J10, src/squint_mcp/js/collect_elements.js:41,133 (DVB-15) (tests,ordering)
-- last seen: 2026-10-07T16:30:33Z
-
 ### L-021 - Pin a count threshold with a case exactly at it and a case one past it, not only with a case far past it
 - signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,thresholds` · harmful: 0
 - features: detect-visual-bugs-text-clipped
@@ -215,6 +215,48 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - features: detect-visual-bugs-text-clipped
 - evidence: mutant M6 (collect_elements.js:17); Assumptions: selector quoting (spec)
 - last seen: 2026-10-07T17:41:29Z
+
+### L-035 - Give every component of a sort order its own acceptance criterion whose outcome changes when that component is dropped
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `spec,ordering` · harmful: 0
+- features: low-contrast-real
+- evidence: mutant S3; spec.md:68 against LCR-37 (spec.md:186) (spec,ordering)
+- last seen: 2026-10-08T05:06:17Z
+
+### L-036 - Pin a rule that judges an element on its own content with a fixture where its child's content would change the outcome
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,checks` · harmful: 0
+- features: low-contrast-real
+- evidence: mutant C3b, src/squint_mcp/js/collect_elements.js:132 (LCR-10) (tests,checks)
+- last seen: 2026-10-08T05:06:18Z
+
+### L-037 - Test a rule that reads a list of regions with an element that has more than one region and whose outcome depends on a later one
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,vision` · harmful: 0
+- features: low-contrast-real
+- evidence: mutant V3, src/squint_mcp/vision.py:64 (tests,vision)
+- last seen: 2026-10-08T05:06:18Z
+
+### L-038 - Pin a pixel-intensity threshold with fixture pixels just on each side of it, not only with pixels at the two ends of the range
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,thresholds` · harmful: 0
+- features: low-contrast-real
+- evidence: mutants G8, G8b, src/squint_mcp/config.py:98 (tests,thresholds)
+- last seen: 2026-10-08T05:06:18Z
+
+### L-039 - Give every Squint default threshold in config an acceptance criterion whose outcome changes when the value changes
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `spec,config` · harmful: 0
+- features: low-contrast-real
+- evidence: LCR-21 (spec.md:130), Terms: Text pixels (spec.md:23); mutants G8, G8b (spec,config)
+- last seen: 2026-10-08T05:06:18Z
+
+### L-040 - State in the spec whether a rule reaches open shadow trees, with a fixture that has a shadow root, whenever the code walks them
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `spec,shadow-dom` · harmful: 0
+- features: low-contrast-real
+- evidence: mutant C2, src/squint_mcp/js/collect_elements.js:95; design.md:101 (spec,shadow-dom)
+- last seen: 2026-10-08T05:06:18Z
+
+### L-041 - Give each instance a criterion lists in parentheses its own fixture, or name only the instance the test pins
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `spec` · harmful: 0
+- features: low-contrast-real
+- evidence: LCR-51 (spec.md:219), tests/test_low_contrast_real.py:299 (spec)
+- last seen: 2026-10-08T05:06:18Z
 
 ## Quarantined (failed when applied - ignore)
 
