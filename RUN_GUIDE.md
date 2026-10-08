@@ -10,7 +10,7 @@
 | 2 | Capture + `inspect_element` | 1 | `tlc-spec-driven` | concluída |
 | 3 | `detect_visual_bugs` + text-clipped | 2 | `tlc-spec-driven` | concluída |
 | 4 | low-contrast-real | 3 | `tlc-spec-lean` | concluída |
-| 5 | Publicação no PyPI | 4 | manual (`ready-for-human`) | pendente |
+| 5 | Publicação no PyPI | 4 | manual (`ready-for-human`) | concluída |
 
 ## Ritual por fatia
 
@@ -27,11 +27,11 @@ Uma sessão por fatia, começando com `/clear`.
 7. **Revisar (rodada 2):** `/the-judge` de novo sobre os commits de correção. Se voltar com findings, repete o passo 6.
 8. **Fechar:** merge, status `concluída` na tabela e na seção do roadmap, registro em `docs/tasks/`.
 
-## Exceção: fatia 5 (PyPI)
+## Release
 
-É manual, porque envolve suas credenciais.
+Sem credenciais: o PyPI confia no workflow `publish.yml` deste repositório (trusted publishing).
 
-- **O agente prepara:** o README, o CHANGELOG da 0.1.0 e a versão, no fluxo acima.
-- **Você faz:** o release em si.
+1. Versão nova no `pyproject.toml` e seção datada no CHANGELOG, por PR.
+2. Tag `vX.Y.Z` na `main` e `git push origin vX.Y.Z`. O workflow confere que a tag é a versão do pacote, constrói e publica.
 
-Quando ela fechar, cria-se o roadmap pós-v0.1 no mesmo formato e o ritual recomeça.
+A 0.1.0 saiu assim em 2026-10-08. As fatias da v0.2 estão em `docs/ROADMAP.md`.
