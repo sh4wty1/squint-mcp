@@ -2,6 +2,7 @@
 
 import asyncio
 import io
+import sys
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -43,7 +44,10 @@ class BrowserSession:
                 except PlaywrightError as error:
                     raise ToolError(
                         f"Could not launch Chromium: {_first_line(error)}. "
-                        "If it is not installed, run: playwright install chromium"
+                        # This interpreter, so the fix reaches the environment
+                        # the server runs in, uvx cache or checkout alike.
+                        "If it is not installed, run: "
+                        f'"{sys.executable}" -m playwright install chromium'
                     ) from error
             return self._browser
 
