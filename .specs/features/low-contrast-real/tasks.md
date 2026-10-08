@@ -68,7 +68,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (LCR-46) and the Hando
 
 ### T1: Add the contrast thresholds to config
 
-- [ ] Done
+- [x] Done
 
 **What**: `CONTRAST_MIN_RATIO`, `CONTRAST_MIN_RATIO_LARGE`, `LARGE_TEXT_MIN_PX`, `LARGE_BOLD_TEXT_MIN_PX`, `BOLD_MIN_WEIGHT`, `LOW_CONTRAST_MAJOR_BELOW_RATIO`, `LOW_CONTRAST_WORST_PART_PERCENT` and `TEXT_INK_MIN`, with the values of the design and the source of each in a comment.
 **Where**: `src/squint_mcp/config.py`
@@ -83,10 +83,10 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (LCR-46) and the Hando
 
 **Done when**:
 
-- [ ] The eight names exist with the values of the design's config table
-- [ ] Each has a comment starting with `# Source:` that cites WCAG 2.2 SC 1.4.3, CSS, or "Squint default" with the reason
-- [ ] Gate check passes: Build
-- [ ] Test count: 135 tests pass
+- [x] The eight names exist with the values of the design's config table
+- [x] Each has a comment starting with `# Source:` that cites WCAG 2.2 SC 1.4.3, CSS, or "Squint default" with the reason
+- [x] Gate check passes: Build
+- [x] Test count: 135 tests pass
 
 **Tests**: none
 **Gate**: build
