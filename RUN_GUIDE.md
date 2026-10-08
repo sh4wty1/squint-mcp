@@ -9,7 +9,7 @@
 | 1 | Fundação + ping | — | `tlc-spec-driven` | concluída |
 | 2 | Capture + `inspect_element` | 1 | `tlc-spec-driven` | concluída |
 | 3 | `detect_visual_bugs` + text-clipped | 2 | `tlc-spec-driven` | concluída |
-| 4 | low-contrast-real | 3 | `tlc-spec-lean` | pendente |
+| 4 | low-contrast-real | 3 | `tlc-spec-lean` | concluída |
 | 5 | Publicação no PyPI | 4 | manual (`ready-for-human`) | pendente |
 
 ## Ritual por fatia
