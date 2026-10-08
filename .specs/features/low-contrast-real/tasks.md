@@ -254,7 +254,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (LCR-46) and the Hando
 
 ### T7: Document the Check
 
-- [ ] Done
+- [x] Done
 
 **What**: `CHANGELOG.md` lists the Check, the string values of `evidence.measured` and the order of Findings across Checks under the unreleased version; `README.md` names `low-contrast-real` as a Check that `detect_visual_bugs` runs.
 **Where**: `CHANGELOG.md` (with the Checks sentence of the README)
@@ -269,10 +269,10 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (LCR-46) and the Hando
 
 **Done when**:
 
-- [ ] The three CHANGELOG entries exist under the unreleased version
-- [ ] The README no longer says `low-contrast-real` is next
-- [ ] Gate check passes: Build
-- [ ] Test count: same as after T6
+- [x] The three CHANGELOG entries exist under the unreleased version
+- [x] The README no longer says `low-contrast-real` is next
+- [x] Gate check passes: Build
+- [x] Test count: same as after T6
 
 **Tests**: none
 **Gate**: build

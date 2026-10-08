@@ -268,8 +268,8 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | LCR-41 | P2: Check contract, configuration and documents | T3 | Implemented |
 | LCR-42 | P2: Check contract, configuration and documents | T1 | Implemented |
 | LCR-43 | P2: Check contract, configuration and documents | T4 | Implemented |
-| LCR-44 | P2: Check contract, configuration and documents | - | Pending |
-| LCR-45 | P2: Check contract, configuration and documents | - | Pending |
+| LCR-44 | P2: Check contract, configuration and documents | T7 | Implemented |
+| LCR-45 | P2: Check contract, configuration and documents | T7 | Implemented |
 | LCR-46 | P2: Check contract, configuration and documents | - | Pending |
 | LCR-47 | P1: Thresholds by text size and severity | T5 | Implemented |
 | LCR-48 | P1: Two Checks in one call | T6 | Implemented |
