@@ -20,6 +20,7 @@ pytestmark = pytest.mark.anyio
 BUG = fixture_url("low-contrast-bug.html")
 BOUNDS = fixture_url("low-contrast-bounds.html")
 CLEAN = fixture_url("low-contrast-clean.html")
+REACH = fixture_url("low-contrast-reach.html")
 HERO = '[data-testid="hero"]'
 ONLY = ["low-contrast-real"]
 
@@ -338,3 +339,62 @@ async def test_a_ratio_under_3_is_major_and_one_from_3_up_is_minor(
     above = await finding_on(client, BUG, "#almost-large")
     assert above["evidence"]["measured"]["contrastRatio"] == 3.03
     assert above["severity"] == "minor"
+
+
+async def reach(client: Client, selector: str) -> list[dict[str, Any]]:
+    """The Findings of the Check on one element of the reach fixture."""
+    findings = (await detect(client, REACH, checks=ONLY))["findings"]
+    return await findings_on(client, REACH, selector, findings)
+
+
+async def test_only_three_texts_of_the_reach_fixture_are_reported(
+    client: Client,
+) -> None:
+    findings = (await detect(client, REACH, checks=ONLY))["findings"]
+    assert sorted(finding["selector"] for finding in findings) == [
+        "#in-plain",
+        "#two-lines",
+        "#veiled-little",
+    ]
+
+
+async def test_a_parent_is_not_judged_on_the_text_of_its_child(client: Client) -> None:
+    assert await reach(client, "#parent") == []
+    assert await reach(client, "#badge") == []
+
+
+async def test_every_line_of_a_text_is_judged(client: Client) -> None:
+    (finding,) = await reach(client, "#two-lines")
+    assert finding["evidence"]["measured"]["contrastRatio"] == 1.6
+    assert finding["evidence"]["measured"]["sampledBackground"] == "#cccccc"
+
+
+async def test_text_mostly_hidden_by_a_translucent_layer_is_not_reported(
+    client: Client,
+) -> None:
+    assert await reach(client, "#veiled-most") == []
+
+
+async def test_text_mostly_seen_through_a_translucent_layer_is_reported(
+    client: Client,
+) -> None:
+    (finding,) = await reach(client, "#veiled-little")
+    assert finding["evidence"]["measured"]["textColor"] == "#777777"
+    assert finding["evidence"]["measured"]["contrastRatio"] == 4.47
+
+
+async def test_text_in_a_shadow_tree_is_judged(client: Client) -> None:
+    (finding,) = await reach(client, "#in-plain")
+    assert finding["evidence"]["measured"]["contrastRatio"] == 4.47
+
+
+async def test_text_in_the_shadow_tree_of_a_faded_host_is_not_reported(
+    client: Client,
+) -> None:
+    assert await reach(client, "#in-faded") == []
+
+
+async def test_text_off_the_page_is_not_reported(client: Client) -> None:
+    findings = (await detect(client, REACH, checks=ONLY))["findings"]
+    assert "#off-page" not in [finding["selector"] for finding in findings]
+    assert len(findings) == 3

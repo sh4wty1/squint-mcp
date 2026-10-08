@@ -9,7 +9,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ---
 
 **Design**: `.specs/features/low-contrast-real/design.md`
-**Status**: In Progress
+**Status**: Done; fixes of the first validation pass below
 
 ---
 
@@ -278,6 +278,16 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (LCR-46) and the Hando
 **Gate**: build
 
 **Commit**: `docs: document the low-contrast-real check`
+
+---
+
+## Fixes of the first validation pass
+
+The Verifier's first pass failed on six surviving mutants (`validation.md`). No source defect: each fix adds the criterion the spec lacked and the test that kills the mutant. Fixture: `low-contrast-reach.html`.
+
+- [x] **Fix 1** (S3, LCR-53): the order of Findings of one severity across two viewports. `test_findings_of_one_severity_come_viewport_by_viewport`.
+- [x] **Fix 2** (C3b, V3, LCR-51; LCR-54, LCR-55, LCR-60): a parent is not judged on its child's text; every line of a wrapped text is judged; text off the page; LCR-51 reworded to the one case it pins.
+- [x] **Fix 3** (G8, G8b, C2; LCR-56 to LCR-59): text under a translucent layer on each side of half the ink, with the limit on its ratio recorded under Out of Scope; opacity across a shadow root.
 
 ---
 

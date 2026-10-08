@@ -20,7 +20,7 @@ Text over an image or a gradient can be unreadable while every DOM-only tool cal
 Used by the criteria below; each is defined once here.
 
 - **Own text**: the text nodes that are direct children of an element (same reach as `text-clipped`).
-- **Text pixels** of an element: the page pixels where its own text paints ink that is seen on the page, that is, not clipped away and not covered by something painted above it.
+- **Text pixels** of an element: the page pixels where its own text paints ink that is seen on the page, that is, not clipped away and not covered by something painted above it. Under a translucent layer, a pixel is a text pixel when at least half of the ink shows through.
 - **Background** of a text pixel: the colour the page paints at that pixel when the text is not painted.
 - **Text colour** at a text pixel: the element's computed `color`; when its alpha is below 1, that colour composited over the Background of the pixel.
 - **Pixel contrast**: the WCAG 2.2 contrast ratio between the Text colour and the Background of one text pixel.
@@ -38,6 +38,7 @@ Explicitly excluded. Documented to prevent scope creep.
 | Any other Check, Profile, Audit, score | Not in this slice |
 | Text of an element with `opacity` below 1, on itself or on an ancestor | The colour that reaches the screen depends on the group's own background, which the Capture does not hold. Staying silent costs a missed Finding; guessing costs a false one. Known limit of this Check |
 | Text painted through `mix-blend-mode`, `filter`, `background-clip: text`, `-webkit-text-fill-color` or a gradient fill | The computed `color` is not the painted colour there. Not detected; a Finding on such text can carry a wrong ratio. Known limit of this Check |
+| The real colour of text seen through a translucent layer painted above it | Such text is judged, when at least half of its ink shows through, with its computed `color`, which the layer has in fact lightened or darkened; the reported ratio is then off. Found at the first validation pass. Known limit of this Check |
 | Text inside form controls (`input`, `textarea`, `select`), placeholders, `::before` / `::after` content | They hold no text node of the element |
 | The WCAG exemptions of SC 1.4.3 (inactive controls, decoration, logotypes) | Not decidable from a Capture |
 | A Finding per text node or per line | A Finding is one element × one viewport × one Check (`docs/SPEC.md`) |
@@ -67,6 +68,8 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | Reach | Each element with own text is judged on its own text pixels with its own `color`; an element whose text is all inside children yields nothing itself | Same reach as `text-clipped`; one Finding per element | n |
 | Order of Findings (supersedes the tie-break of DVB-15) | Severity, then the order the viewports were requested, then the document order of the element whatever the Check, then the Check name in alphabetical order | Issue #8. Alphabetical order makes the result independent of the order of `checks` | n |
 | Unknown-Check message (supersedes the literal of DVB-50) | `Valid checks: low-contrast-real, text-clipped.` | Same rule as DVB-50, alphabetical; the list grew | n |
+| Text under a translucent layer | A text pixel needs at least half of the ink to show through (LCR-56, LCR-57); the ratio still comes from the computed `color` | Added after the first validation pass: the value of the ink threshold was pinned by no criterion. Half is where an anti-aliased edge stops reading as text | n |
+| Opacity across a shadow root | The opacity of a shadow host and of its ancestors counts for the elements of its shadow tree (LCR-58, LCR-59) | Added after the first validation pass: the design did it and the spec did not say it | n |
 | Bold | `font-weight` of 700 or more | CSS: `bold` computes to 700 | n |
 | Fixtures | Ahem at `font-size: 20px` and `line-height: 30px` unless a criterion gives another size, as in slice 3: ten glyphs are a block of 200 × 20 text pixels with no anti-aliasing. Bands of background are hard-stop gradients, so every share of pixels is exact | Exact ratios need exact pixels | n |
 | New dependencies (`numpy`, `coloraide`) | Decided at Design | `docs/SPEC.md` names both; whether this Check needs them is not a requirement | n |
@@ -76,7 +79,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 
 **Implicit-requirement dimensions:**
 
-- Concurrency / ordering: LCR-30 to LCR-33.
+- Concurrency / ordering: LCR-37 to LCR-39, LCR-48, LCR-53.
 - Idempotency / retry: LCR-04.
 - Failure / partial-failure states: N/A because the Check adds no failure of its own; a Capture that fails still fails the call (AD-002, DVB-56 to DVB-59).
 - Input validation & bounds: LCR-34 to LCR-36; no new parameter.
@@ -105,6 +108,10 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 9. WHEN text has the same colour as its Background and is not hidden by any rule of the next story (`#same` in `low-contrast-bounds.html`, `rgb(255, 255, 255)` on white) THEN the Check SHALL return one Finding for it with `severity` equal to `major` and `evidence.measured.contrastRatio` equal to 1. <!-- LCR-09 -->
 10. WHEN a parent and its child both hold own text and only the child's text is below its Required ratio (`#nested` in `low-contrast-bounds.html`) THEN the Check SHALL return one Finding, on the child. <!-- LCR-10 -->
 
+11. WHEN the own text of an element paints several boxes, as when it wraps, THEN the Check SHALL judge the text pixels of all of them; `#two-lines` in `low-contrast-reach.html`, two lines of ten glyphs with the low-contrast Background behind the second line only, SHALL get one Finding with `evidence.measured.contrastRatio` equal to 1.6. <!-- LCR-55 -->
+12. WHEN text of `rgb(119, 119, 119)` on white lies under a layer of `rgba(255, 255, 255, 0.3)` (`#veiled-little` in `low-contrast-reach.html`) THEN the Check SHALL return one Finding for it with `evidence.measured.textColor` equal to `#777777` and `evidence.measured.contrastRatio` equal to 4.47. <!-- LCR-57 -->
+13. WHEN text of `rgb(119, 119, 119)` on white is in the open shadow tree of a host with no opacity set (`#in-plain` in `low-contrast-reach.html`) THEN the Check SHALL return one Finding for it with `evidence.measured.contrastRatio` equal to 4.47. <!-- LCR-58 -->
+
 **Independent Test**: Call `detect_visual_bugs` on `low-contrast-bug.html` and see the gradient case reported with the colour sampled from the gradient.
 
 ---
@@ -130,6 +137,11 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 11. IF all the own text of an element is covered by an opaque element painted above it (`#covered` in `low-contrast-bounds.html`) THEN the Check SHALL return no Finding for it. <!-- LCR-21 -->
 12. WHEN part of the own text of an element is clipped away and the low-contrast Background lies only behind the clipped part (`#clipped-part` in `low-contrast-bounds.html`) THEN the Check SHALL return no Finding for it. <!-- LCR-22 -->
 13. WHEN `detect_visual_bugs` is called with `checks` equal to `["low-contrast-real"]` on `text-clipped-bug.html` THEN `findings` SHALL equal `[]`. <!-- LCR-23 -->
+
+14. WHEN a child paints its own text and background inside a parent whose own text is readable, and the parent's `color` would be below the Required ratio on the child's background (`#parent` and `#badge` in `low-contrast-reach.html`) THEN the Check SHALL return no Finding for the parent and none for the child. <!-- LCR-54 -->
+15. IF less than half of the ink of a text shows through a translucent layer painted above it (`#veiled-most` in `low-contrast-reach.html`: a layer of `rgba(255, 255, 255, 0.7)`) THEN the Check SHALL return no Finding for it. <!-- LCR-56 -->
+16. IF the host of the shadow tree an element is in has a computed `opacity` below 1 (`#in-faded` in `low-contrast-reach.html`) THEN the Check SHALL return no Finding for the element. <!-- LCR-59 -->
+17. IF all the own text of an element lies off the page (`#off-page` in `low-contrast-reach.html`) THEN the Check SHALL return no Finding for it. <!-- LCR-60 -->
 
 **Independent Test**: Call `detect_visual_bugs` on `low-contrast-clean.html` and get an empty list.
 
@@ -190,6 +202,8 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 8. WHEN the tools are listed THEN the description of `detect_visual_bugs` SHALL name both `text-clipped` and `low-contrast-real`. <!-- LCR-49 -->
 9. WHEN the test suite of slice 3 runs after this slice THEN every test SHALL pass with no change other than the literal of LCR-35. <!-- LCR-50 -->
 
+10. WHEN Findings of the same severity come from several viewports THEN all those of one viewport SHALL come before any of the next, in the order the viewports were requested; on `low-contrast-bug.html` at 1440 × 900 then 390 × 844 the `(viewport width, selector)` pairs of `findings` SHALL be `(1440, hero)`, `(390, hero)`, `(1440, #flat)`, `(1440, #alpha)`, `(1440, #almost-large)`, `(390, #flat)`, `(390, #alpha)`, `(390, #almost-large)`, where `hero` is `[data-testid="hero"]`. <!-- LCR-53 -->
+
 **Independent Test**: Call `detect_visual_bugs` on `checks-order.html` and read the six pairs in order.
 
 ---
@@ -216,7 +230,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 
 ## Edge Cases
 
-- IF an element has own text but no text pixels (zero-size box, off the page, `display: none`) THEN the Check SHALL return no Finding for it. <!-- LCR-51 -->
+- IF an element with own text has `display: none` (`#no-box` in `low-contrast-bounds.html`) THEN the Check SHALL return no Finding for it. <!-- LCR-51 -->
 - WHEN `detect_visual_bugs` is called on `low-contrast-bug.html` with two viewports THEN each Finding of the first viewport SHALL have a Finding of the same `selector` and `check` in the second. <!-- LCR-52 -->
 
 ---
@@ -277,13 +291,21 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | LCR-50 | P1: Two Checks in one call | T4 | Implemented |
 | LCR-51 | Edge cases | T5 | Implemented |
 | LCR-52 | Edge cases | T4 | Implemented |
+| LCR-53 | P1: Two Checks in one call | Fix 1 | Implemented |
+| LCR-54 | P1: Stay silent when the text can be read | Fix 2 | Implemented |
+| LCR-55 | P1: Detect text with low real contrast | Fix 2 | Implemented |
+| LCR-56 | P1: Stay silent when the text can be read | Fix 3 | Implemented |
+| LCR-57 | P1: Detect text with low real contrast | Fix 3 | Implemented |
+| LCR-58 | P1: Detect text with low real contrast | Fix 3 | Implemented |
+| LCR-59 | P1: Stay silent when the text can be read | Fix 3 | Implemented |
+| LCR-60 | P1: Stay silent when the text can be read | Fix 2 | Implemented |
 
-**Coverage:** 52 total, 0 mapped to tasks, 52 unmapped (Tasks has not run).
+**Coverage:** 60 total, 59 mapped to tasks or fixes, 1 unmapped (LCR-46, the closing step).
 
 ---
 
 ## Success Criteria
 
-- [ ] All 52 requirements verified by the Verifier, LCR-40 to LCR-46 from file evidence.
+- [ ] All 60 requirements verified by the Verifier, LCR-40 to LCR-46 from file evidence.
 - [ ] The gate passes: typecheck, lint, format check and the whole test suite.
 - [ ] The discrimination sensor leaves no surviving mutant in the Check, the sampling code and the ordering of Findings.
