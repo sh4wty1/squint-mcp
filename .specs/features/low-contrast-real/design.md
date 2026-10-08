@@ -150,6 +150,7 @@ class Element(BaseModel):
     opacity: float
     """The element's opacity multiplied by that of every ancestor."""
 
+
 @dataclass(frozen=True)
 class Capture:
     ...
@@ -157,6 +158,7 @@ class Capture:
     """The full page in RGB with no text painted."""
     ink: Image.Image
     """How much text ink each pixel gets, 0 to 255, in mode L."""
+
 
 class Evidence(BaseModel):
     measured: dict[str, int | float | str]
