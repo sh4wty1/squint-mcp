@@ -22,6 +22,7 @@ FIXTURES = Path(__file__).parent / "fixtures"
 BOX = (FIXTURES / "box.html").as_uri()
 MOTION = (FIXTURES / "motion.html").as_uri()
 VISIT = (FIXTURES / "visit.html").as_uri()
+PIXEL_COST = (FIXTURES / "pixel-cost.html").as_uri()
 
 COMPUTED_PROPERTIES = {
     "display",
@@ -313,6 +314,32 @@ async def test_sampled_color_is_the_painted_one_not_the_computed_one(
     content = await inspect(client, BOX, "#over-image")
     assert content["computed"]["background-color"] == "rgb(255, 255, 255)"
     assert content["sampledColors"][0]["hex"] == "#000000"
+
+
+async def test_a_region_over_the_limit_keeps_its_painted_colours_and_shares(
+    client: Client,
+) -> None:
+    content = await inspect(client, PIXEL_COST, "#halves")
+    assert content["sampledColors"] == [
+        {"hex": "#0000ff", "share": 0.502},
+        {"hex": "#ff0000", "share": 0.498},
+    ]
+
+
+async def test_an_element_of_millions_of_colours_adds_little_to_the_call(
+    client: Client,
+) -> None:
+    async def seconds(selector: str, height: int) -> float:
+        started = time.monotonic()
+        content = await inspect(client, PIXEL_COST, selector)
+        elapsed = time.monotonic() - started
+        assert content["box"]["h"] == height
+        return elapsed
+
+    # The same page both times, so the capture costs the same: what differs is
+    # the work on the pixels of the element.
+    small = await seconds("#big-text", 600)
+    assert await seconds("#noise", 10000) - small < 3
 
 
 async def test_success_carries_a_summary_and_one_png_crop(client: Client) -> None:

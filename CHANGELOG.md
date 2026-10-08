@@ -19,3 +19,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Changed
 
 - Findings of the same severity and viewport come in document order whatever the Check that reported them, and two Findings on one element in the order of their Check names. The order of `checks` does not change the result.
+
+### Fixed
+
+- `inspect_element` and the `low-contrast-real` Check no longer take tens of seconds, past the 30s total timeout, on a large element painted in millions of colours, such as a long photo-heavy page. An element, or the text of an element, of more than 262,144 pixels (512x512) is sampled down to that many before its colours are counted, so `sampledColors` and the contrast of such an element come from the sample. Smaller ones are counted whole, as before ([#4](https://github.com/sh4wty1/squint-mcp/issues/4)).

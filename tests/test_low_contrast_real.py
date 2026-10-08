@@ -1,5 +1,6 @@
 """The `low-contrast-real` Check through `detect_visual_bugs`, against real Chromium."""
 
+import time
 from typing import Any
 
 import pytest
@@ -22,6 +23,7 @@ BOUNDS = fixture_url("low-contrast-bounds.html")
 CLEAN = fixture_url("low-contrast-clean.html")
 REACH = fixture_url("low-contrast-reach.html")
 FILL = fixture_url("low-contrast-fill.html")
+PIXEL_COST = fixture_url("pixel-cost.html")
 HERO = '[data-testid="hero"]'
 ONLY = ["low-contrast-real"]
 
@@ -452,3 +454,47 @@ async def test_the_finding_carries_the_fill_next_to_the_colour(client: Client) -
 
 async def test_gradient_text_is_not_reported(client: Client) -> None:
     assert await fill(client, "#gradient-text") == []
+
+
+async def test_a_text_over_the_limit_is_still_judged_on_its_worst_part(
+    client: Client,
+) -> None:
+    measured = (await finding_on(client, PIXEL_COST, "#big-text"))["evidence"][
+        "measured"
+    ]
+    assert measured["contrastRatio"] == 1.6
+    assert measured["sampledBackground"] == "#cccccc"
+
+
+async def seconds_added_by(client: Client, selector: str) -> float:
+    """How much longer the Check takes with the text `selector` painted over the
+    noise of the pixel-cost fixture, which reports it, than without it."""
+
+    async def seconds(url: str) -> tuple[float, list[str]]:
+        started = time.monotonic()
+        findings = (await detect(client, url, checks=ONLY))["findings"]
+        elapsed = time.monotonic() - started
+        return elapsed, [finding["selector"] for finding in findings]
+
+    # The same page both times, so the capture costs the same: what differs is
+    # the text painted over the noise only when the URL targets it.
+    bare, without = await seconds(PIXEL_COST)
+    painted, with_text = await seconds(f"{PIXEL_COST}{selector}")
+    assert selector not in without
+    assert selector in with_text
+    return painted - bare
+
+
+async def test_text_over_millions_of_colours_adds_little_to_the_call(
+    client: Client,
+) -> None:
+    # The Check computes a contrast for every colour it is given, hence the seconds.
+    assert await seconds_added_by(client, "#over-noise") < 10
+
+
+async def test_the_lines_of_a_text_are_under_the_limit_together(
+    client: Client,
+) -> None:
+    # No line is over the limit on its own: counted one by one, they are 6,220,800
+    # pixels of noise.
+    assert await seconds_added_by(client, "#lines-over-noise") < 10
