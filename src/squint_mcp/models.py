@@ -89,12 +89,12 @@ Category = Literal["visual-bug", "a11y", "consistency", "ux", "responsive"]
 
 
 class Evidence(BaseModel):
-    """What backs a Finding: the styles that explain it and the numbers measured."""
+    """What backs a Finding: the styles that explain it and what was measured."""
 
     model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
 
     computed: dict[str, str]
-    measured: dict[str, int | float]
+    measured: dict[str, int | float | str]
     crop_index: int | None = None
     """Index of the Finding's crop among the images of the response, if it has one."""
 

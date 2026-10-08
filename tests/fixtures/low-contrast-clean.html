@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: adequate contrast</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are a block of
+         200 x 20 text pixels, 5px under the top of their 30px line. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      .text {
+        margin: 20px 0 0 40px;
+        width: 260px;
+      }
+      /* 4.54:1 on white, over 4.5:1. */
+      #flat {
+        color: rgb(118, 118, 118);
+      }
+      /* The background-color alone gives 1:1. The gradient paints black behind all
+         of the text: 21:1. */
+      #gradient {
+        color: rgb(255, 255, 255);
+        background-color: rgb(255, 255, 255);
+        background-image: linear-gradient(rgb(0, 0, 0), rgb(0, 0, 0));
+      }
+      /* 3.03:1 is enough for large text: 24px, or 18.66px bold. */
+      #large {
+        font-size: 24px;
+        color: rgb(148, 148, 148);
+      }
+      #large-bold {
+        font-size: 18.66px;
+        font-weight: 700;
+        color: rgb(148, 148, 148);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="flat" class="text">XXXXXXXXXX</div>
+    <div id="gradient" class="text">XXXXXXXXXX</div>
+    <div id="large" class="text">XXXXXXXXXX</div>
+    <div id="large-bold" class="text">XXXXXXXXXX</div>
+  </body>
+</html>

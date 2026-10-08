@@ -159,9 +159,9 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (LCR-46) and the Hando
 
 ### T4: Add the low-contrast-real Check
 
-- [ ] Done
+- [x] Done
 
-**What**: `vision.text_backgrounds`; the Check module with design rules 1 (own text only), 3 (colour parsing and alpha compositing, without the alpha-0 guard), 4, 5, 6, 7 and 8 and its Finding; its entry in `CHECKS`; `Evidence.measured` accepting strings; the tool docstring naming both Checks; the literal of the unknown-Check message in the four assertions of slice 3.
+**What**: `vision.text_backgrounds`; the Check module with design rules 1 (own text only), 3, 4, 5, 6, 7 and 8 and its Finding; its entry in `CHECKS`; `Evidence.measured` accepting strings; the tool docstring naming both Checks; the literal of the unknown-Check message in the four assertions of slice 3.
 **Where**: `src/squint_mcp/checks/low_contrast_real.py` (with the sampling function in the vision module, the registry, the `measured` type in the models module, the docstring of the detect tool, fixtures and tests under `tests/`)
 **Depends on**: T3
 **Reuses**: the shape of `text_clipped.py`; `_region`; `tests/helpers.py`
@@ -174,12 +174,13 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (LCR-46) and the Hando
 
 **Done when**:
 
-- [ ] Fixtures exist: `low-contrast-bug.html` (`#flat` at `40,20 200x30`, `#alpha`, `[data-testid="hero"]`, `#almost-large`, in that document order) and `low-contrast-clean.html` (`#flat`, `#gradient`, `#large`, `#large-bold`)
-- [ ] `tests/test_low_contrast_real.py` holds one test per requirement above that is observable through the tool, asserting the literal values of the spec (the whole Finding of LCR-30; `1.6` and `#cccccc` for the hero; `#808080` and `3.94` for `#alpha`; the summary line of LCR-03)
-- [ ] The four `Valid checks:` assertions of `tests/test_detect_visual_bugs.py` carry the literal of LCR-35 and no other existing assertion changes
-- [ ] The Check module holds no threshold literal and does not import `playwright`
-- [ ] Gate check passes: Build
-- [ ] Test count: at least 150 tests pass (no silent deletions)
+- [x] Fixtures exist: `low-contrast-bug.html` (`#flat` at `40,20 200x30`, `#alpha`, `[data-testid="hero"]`, `#almost-large`, in that document order) and `low-contrast-clean.html` (`#flat`, `#gradient`, `#large`, `#large-bold`)
+- [x] `tests/test_low_contrast_real.py` holds one test per requirement above that is observable through the tool, asserting the literal values of the spec (the whole Finding of LCR-30; `1.6` and `#cccccc` for the hero; `#808080` and `3.94` for `#alpha`; the summary line of LCR-03)
+- [x] The alpha-0 guard of rule 3 is in from this task: `#two-colours` of `text-clipped-strip.html`, whose `color` is `transparent`, would otherwise get a Finding and break a test of slice 3 (LCR-50); LCR-17 gets its own test in T5
+- [x] The four `Valid checks:` assertions of `tests/test_detect_visual_bugs.py` carry the literal of LCR-35 and no other existing assertion changes
+- [x] The Check module holds no threshold literal and does not import `playwright`
+- [x] Gate check passes: Build
+- [x] Test count: at least 150 tests pass (no silent deletions)
 
 **Tests**: integration
 **Gate**: build
@@ -192,7 +193,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (LCR-46) and the Hando
 
 - [ ] Done
 
-**What**: Design rules 1 (visibility), 2 (opacity) and the alpha-0 guard of rule 3, with the fixture that holds every boundary of the spec: the 10% share on each edge, the hiding rules, the text sizes and the severity floor.
+**What**: Design rules 1 (visibility) and 2 (opacity), with the fixture that holds every boundary of the spec: the 10% share on each edge, the hiding rules, the text sizes and the severity floor.
 **Where**: `src/squint_mcp/checks/low_contrast_real.py` (with the bounds fixture and its tests under `tests/`)
 **Depends on**: T4
 **Reuses**: `findings_on` of `tests/helpers.py`

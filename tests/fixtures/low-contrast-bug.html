@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: low contrast</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are a block of
+         200 x 20 text pixels, 5px under the top of their 30px line. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      .text {
+        margin: 20px 0 0 40px;
+        width: 200px;
+      }
+      /* Border box: 40,20 200x30. 4.47:1 on white, under 4.5:1. */
+      #flat {
+        color: rgb(119, 119, 119);
+      }
+      /* Half black over white is rgb(128, 128, 128): 3.94:1. */
+      #alpha {
+        color: rgba(0, 0, 0, 0.5);
+      }
+      /* The background-color alone gives 21:1. The gradient paints a light band
+         behind the last 40px of the text, a fifth of it: 1.6:1 there. */
+      [data-testid="hero"] {
+        color: rgb(255, 255, 255);
+        background-color: rgb(0, 0, 0);
+        background-image: linear-gradient(
+          to right,
+          rgb(0, 0, 0) 0 160px,
+          rgb(204, 204, 204) 160px 200px
+        );
+      }
+      /* 3.03:1 passes as large text from 24px on; this is 23px. */
+      #almost-large {
+        width: 230px;
+        font-size: 23px;
+        color: rgb(148, 148, 148);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="flat" class="text">XXXXXXXXXX</div>
+    <div id="alpha" class="text">XXXXXXXXXX</div>
+    <div data-testid="hero" class="text">XXXXXXXXXX</div>
+    <div id="almost-large" class="text">XXXXXXXXXX</div>
+  </body>
+</html>

@@ -225,19 +225,19 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 
 | Requirement ID | Story | Phase | Status |
 | --- | --- | --- | --- |
-| LCR-01 | P1: Detect text with low real contrast | - | Pending |
-| LCR-02 | P1: Detect text with low real contrast | - | Pending |
-| LCR-03 | P1: Detect text with low real contrast | - | Pending |
-| LCR-04 | P1: Detect text with low real contrast | - | Pending |
-| LCR-05 | P1: Detect text with low real contrast | - | Pending |
-| LCR-06 | P1: Detect text with low real contrast | - | Pending |
+| LCR-01 | P1: Detect text with low real contrast | T4 | Implemented |
+| LCR-02 | P1: Detect text with low real contrast | T4 | Implemented |
+| LCR-03 | P1: Detect text with low real contrast | T4 | Implemented |
+| LCR-04 | P1: Detect text with low real contrast | T4 | Implemented |
+| LCR-05 | P1: Detect text with low real contrast | T4 | Implemented |
+| LCR-06 | P1: Detect text with low real contrast | T4 | Implemented |
 | LCR-07 | P1: Detect text with low real contrast | - | Pending |
 | LCR-08 | P1: Detect text with low real contrast | - | Pending |
 | LCR-09 | P1: Detect text with low real contrast | - | Pending |
 | LCR-10 | P1: Detect text with low real contrast | - | Pending |
-| LCR-11 | P1: Stay silent when the text can be read | - | Pending |
-| LCR-12 | P1: Stay silent when the text can be read | - | Pending |
-| LCR-13 | P1: Stay silent when the text can be read | - | Pending |
+| LCR-11 | P1: Stay silent when the text can be read | T4 | Implemented |
+| LCR-12 | P1: Stay silent when the text can be read | T4 | Implemented |
+| LCR-13 | P1: Stay silent when the text can be read | T4 | Implemented |
 | LCR-14 | P1: Stay silent when the text can be read | - | Pending |
 | LCR-15 | P1: Stay silent when the text can be read | - | Pending |
 | LCR-16 | P1: Stay silent when the text can be read | - | Pending |
@@ -247,36 +247,36 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | LCR-20 | P1: Stay silent when the text can be read | - | Pending |
 | LCR-21 | P1: Stay silent when the text can be read | - | Pending |
 | LCR-22 | P1: Stay silent when the text can be read | - | Pending |
-| LCR-23 | P1: Stay silent when the text can be read | - | Pending |
-| LCR-24 | P1: Thresholds by text size and severity | - | Pending |
-| LCR-25 | P1: Thresholds by text size and severity | - | Pending |
-| LCR-26 | P1: Thresholds by text size and severity | - | Pending |
+| LCR-23 | P1: Stay silent when the text can be read | T4 | Implemented |
+| LCR-24 | P1: Thresholds by text size and severity | T4 | Implemented |
+| LCR-25 | P1: Thresholds by text size and severity | T4 | Implemented |
+| LCR-26 | P1: Thresholds by text size and severity | T4 | Implemented |
 | LCR-27 | P1: Thresholds by text size and severity | - | Pending |
 | LCR-28 | P1: Thresholds by text size and severity | - | Pending |
 | LCR-29 | P1: Thresholds by text size and severity | - | Pending |
-| LCR-30 | P1: Read the Finding | - | Pending |
+| LCR-30 | P1: Read the Finding | T4 | Implemented |
 | LCR-31 | P1: Read the Finding | - | Pending |
-| LCR-32 | P1: Read the Finding | - | Pending |
-| LCR-33 | P1: Read the Finding | - | Pending |
-| LCR-34 | P1: Two Checks in one call | - | Pending |
-| LCR-35 | P1: Two Checks in one call | - | Pending |
-| LCR-36 | P1: Two Checks in one call | - | Pending |
+| LCR-32 | P1: Read the Finding | T4 | Implemented |
+| LCR-33 | P1: Read the Finding | T4 | Implemented |
+| LCR-34 | P1: Two Checks in one call | T4 | Implemented |
+| LCR-35 | P1: Two Checks in one call | T4 | Implemented |
+| LCR-36 | P1: Two Checks in one call | T4 | Implemented |
 | LCR-37 | P1: Two Checks in one call | - | Pending |
 | LCR-38 | P1: Two Checks in one call | - | Pending |
 | LCR-39 | P1: Two Checks in one call | - | Pending |
-| LCR-40 | P2: Check contract, configuration and documents | - | Pending |
+| LCR-40 | P2: Check contract, configuration and documents | T4 | Implemented |
 | LCR-41 | P2: Check contract, configuration and documents | T3 | Implemented |
 | LCR-42 | P2: Check contract, configuration and documents | T1 | Implemented |
-| LCR-43 | P2: Check contract, configuration and documents | - | Pending |
+| LCR-43 | P2: Check contract, configuration and documents | T4 | Implemented |
 | LCR-44 | P2: Check contract, configuration and documents | - | Pending |
 | LCR-45 | P2: Check contract, configuration and documents | - | Pending |
 | LCR-46 | P2: Check contract, configuration and documents | - | Pending |
 | LCR-47 | P1: Thresholds by text size and severity | - | Pending |
 | LCR-48 | P1: Two Checks in one call | - | Pending |
-| LCR-49 | P1: Two Checks in one call | - | Pending |
-| LCR-50 | P1: Two Checks in one call | - | Pending |
+| LCR-49 | P1: Two Checks in one call | T4 | Implemented |
+| LCR-50 | P1: Two Checks in one call | T4 | Implemented |
 | LCR-51 | Edge cases | - | Pending |
-| LCR-52 | Edge cases | - | Pending |
+| LCR-52 | Edge cases | T4 | Implemented |
 
 **Coverage:** 52 total, 0 mapped to tasks, 52 unmapped (Tasks has not run).
 
