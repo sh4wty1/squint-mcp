@@ -97,7 +97,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (LCR-46) and the Hando
 
 ### T2: Collect the own-text boxes and the opacity of each element
 
-- [ ] Done
+- [x] Done
 
 **What**: The collector emits `ownTextBoxes` (every client rect of the text nodes that are direct children, page coordinates, zero-area rects left out) and `opacity` (the element's computed opacity times that of every ancestor, a shadow root continuing at its host, memoized); `Element` gains `own_text_boxes` and `opacity`.
 **Where**: `src/squint_mcp/js/collect_elements.js` (with the two fields in the models module)
@@ -112,11 +112,11 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (LCR-46) and the Hando
 
 **Done when**:
 
-- [ ] `ownTextRight` is computed as before
-- [ ] The header comment of the collector names the two new facts
-- [ ] No output of `inspect_element` or `detect_visual_bugs` changes
-- [ ] Gate check passes: Build
-- [ ] Test count: 135 tests pass
+- [x] `ownTextRight` is computed as before
+- [x] The header comment of the collector names the two new facts
+- [x] No output of `inspect_element` or `detect_visual_bugs` changes
+- [x] Gate check passes: Build
+- [x] Test count: 135 tests pass
 
 **Tests**: none
 **Gate**: build
