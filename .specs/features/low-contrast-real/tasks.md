@@ -222,7 +222,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (LCR-46) and the Hando
 
 ### T6: Order Findings by document position across Checks
 
-- [ ] Done
+- [x] Done
 
 **What**: The sort key of `detect_visual_bugs` becomes (severity, viewport, position of the element in the Capture, Check name); the comment and the docstring say so (issue #8).
 **Where**: `src/squint_mcp/tools/detect_visual_bugs.py` (with the order fixture and its tests under `tests/`)
@@ -237,11 +237,11 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (LCR-46) and the Hando
 
 **Done when**:
 
-- [ ] `checks-order.html` holds `#a` to `#e` as in LCR-37, every Finding `minor`
-- [ ] Tests assert the six `(selector, check)` pairs in order, the equality of LCR-39, five images and `cropIndex` 0 to 4 then `null`
-- [ ] The test of LCR-37 fails on the sort key of before this task (run once against it and recorded in the commit body)
-- [ ] Gate check passes: Build
-- [ ] Test count: at least 172 tests pass (no silent deletions)
+- [x] `checks-order.html` holds `#a` to `#e` as in LCR-37, every Finding `minor`
+- [x] Tests assert the six `(selector, check)` pairs in order, the equality of LCR-39, five images and `cropIndex` 0 to 4 then `null`
+- [x] The test of LCR-37 fails on the sort key of before this task (run once against it and recorded in the commit body)
+- [x] Gate check passes: Build
+- [x] Test count: at least 172 tests pass (no silent deletions)
 
 **Tests**: integration
 **Gate**: build

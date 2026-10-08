@@ -12,7 +12,7 @@ from pydantic import BaseModel, Field
 from squint_mcp import config
 from squint_mcp.capture import BrowserSession, capture
 from squint_mcp.checks import CHECKS
-from squint_mcp.models import Finding, Severity, Viewport
+from squint_mcp.models import Capture, Finding, Severity, Viewport
 from squint_mcp.vision import crop_png
 
 # Most severe first.
@@ -60,9 +60,9 @@ async def detect_visual_bugs(
     to run and defaults to all of them: `text-clipped` (text cut off
     horizontally by its own box) and `low-contrast-real` (text whose contrast
     against the background painted behind it, sampled from the pixels, is below
-    WCAG 2.2 SC 1.4.3). Returns `findings`, most severe first, and
-    `captures`, one per viewport, whose `stabilized` is false when the network
-    never went idle. Each Finding names its element by a `selector` that is
+    WCAG 2.2 SC 1.4.3). Returns `findings`, most severe first and then in the
+    order of the page, and `captures`, one per viewport, whose `stabilized` is
+    false when the network never went idle. Each Finding names its element by a `selector` that is
     unique on the page and works in `inspect_element`, and carries the styles
     and measurements that back it. The five most severe Findings also get a
     crop of their element: `evidence.cropIndex` is the position of that image
@@ -94,20 +94,31 @@ async def detect_visual_bugs(
             ]
     except TimeoutError as error:
         raise ToolError(f"Timed out after {config.TOTAL_TIMEOUT_S:g}s.") from error
-    found = [
-        (finding, captured)
-        for captured in captures
-        for name in names
-        for finding in CHECKS[name](captured)
-    ]
-    # A stable sort: within a severity, viewport order then document order remain.
-    found.sort(key=lambda pair: _SEVERITIES.index(pair[0].severity))
+    # Each Finding with its place in the result: severity, then the viewport, then
+    # where its element stands in the document whatever the Check, then the Check
+    # name, so that the order of `checks` changes nothing.
+    found: list[tuple[tuple[int, int, int, str], Finding, Capture]] = []
+    for index, captured in enumerate(captures):
+        # A Finding names its element by a selector that is unique on the page.
+        position = {
+            element.selector: place for place, element in enumerate(captured.elements)
+        }
+        for name in names:
+            for finding in CHECKS[name](captured):
+                place = (
+                    _SEVERITIES.index(finding.severity),
+                    index,
+                    position[finding.selector],
+                    name,
+                )
+                found.append((place, finding, captured))
+    found.sort(key=lambda entry: entry[0])
     # Only here is every Finding of the call known: the most severe get the crops.
     crops = [
         Image(data=crop_png(captured.pixels, finding.box), format="png")
-        for finding, captured in found[: config.MAX_CROPS]
+        for _, finding, captured in found[: config.MAX_CROPS]
     ]
-    findings = [finding for finding, _ in found]
+    findings = [finding for _, finding, _ in found]
     for index, finding in enumerate(findings[: config.MAX_CROPS]):
         finding.evidence.crop_index = index
     result = DetectVisualBugsResult(
