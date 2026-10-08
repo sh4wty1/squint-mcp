@@ -4,11 +4,37 @@ Squint is an MCP server that examines a rendered web page by crossing what the b
 
 It is built for coding agents that have just produced UI and need to know whether the page actually looks right: which element is broken, and what the evidence is.
 
-## Status
+## Install
 
-Pre-release. Squint is **not on PyPI yet**, so `uvx squint-mcp` does not work today. For now it runs from a checkout.
+Requires [uv](https://docs.astral.sh/uv/). uv installs Python 3.12 for you if it is missing. Two steps:
 
-The server currently exposes three tools:
+```bash
+uvx --from squint-mcp playwright install chromium   # the browser Squint drives
+uvx squint-mcp                                       # the server
+```
+
+The first step goes through `squint-mcp` so the Chromium downloaded is the one its Playwright expects; uv warns that `playwright` comes from a dependency, which is expected. On Linux, add `--with-deps` to also install the system libraries Chromium needs.
+
+The server speaks MCP over stdio, so started by hand it just waits for a client. Register it in your MCP client instead:
+
+```json
+{
+  "mcpServers": {
+    "squint": {
+      "command": "uvx",
+      "args": ["squint-mcp"]
+    }
+  }
+}
+```
+
+In Claude Code: `claude mcp add squint -- uvx squint-mcp`.
+
+Then call `ping` to confirm the connection.
+
+## Tools
+
+The server exposes three tools:
 
 | Tool | Input | Output |
 | --- | --- | --- |
@@ -16,38 +42,23 @@ The server currently exposes three tools:
 | `inspect_element` | `url`, `selector`, `viewport` (optional) | one element's computed styles, box model, sampled colours, `stabilized`, and a crop |
 | `detect_visual_bugs` | `url`, `viewports` (optional), `checks` (optional) | Findings ordered by severity, `stabilized` per viewport, and up to five crops |
 
-`detect_visual_bugs` runs two Checks: `text-clipped` (text cut off by its own box) and `low-contrast-real` (text whose contrast against the background sampled from the pixels is below WCAG 2.2 SC 1.4.3, so it is right over images and gradients). See [`docs/ROADMAP.md`](docs/ROADMAP.md) for the delivery slices and [`docs/SPEC.md`](docs/SPEC.md) for what v0.1 will contain.
+`detect_visual_bugs` runs two Checks: `text-clipped` (text cut off by its own box) and `low-contrast-real` (text whose contrast against the background sampled from the pixels is below WCAG 2.2 SC 1.4.3, so it is right over images and gradients). See [`docs/SPEC.md`](https://github.com/sh4wty1/squint-mcp/blob/main/docs/SPEC.md) for the v0.1 specification and [`CHANGELOG.md`](https://github.com/sh4wty1/squint-mcp/blob/main/CHANGELOG.md) for what each release contains.
 
-## Run from a checkout
+## Development
 
-Requires [uv](https://docs.astral.sh/uv/). uv installs Python 3.12 for you if it is missing.
+Run from a checkout:
 
 ```bash
 git clone https://github.com/sh4wty1/squint-mcp.git
 cd squint-mcp
 uv sync
-uv run playwright install chromium   # the browser inspect_element drives
+uv run playwright install chromium   # the tests drive a real Chromium
 uv run squint-mcp
 ```
 
-The server speaks MCP over stdio, so started by hand it just waits for a client. To use it from an MCP client, register the command with the path to your checkout:
+To point an MCP client at the checkout, use `"command": "uv"` with `"args": ["run", "--directory", "/path/to/squint-mcp", "squint-mcp"]`.
 
-```json
-{
-  "mcpServers": {
-    "squint": {
-      "command": "uv",
-      "args": ["run", "--directory", "/path/to/squint-mcp", "squint-mcp"]
-    }
-  }
-}
-```
-
-Then call `ping` to confirm the connection.
-
-## Development
-
-One command each. The tests drive a real Chromium, installed once with `uv run playwright install chromium`.
+One command each:
 
 ```bash
 uv run pyright              # typecheck (strict)
@@ -56,14 +67,14 @@ uv run ruff format --check  # format check
 uv run pytest               # tests
 ```
 
-Tests drive the server through an in-memory MCP client, the same surface a real client uses. See [`CONTRIBUTING.md`](CONTRIBUTING.md).
+Tests drive the server through an in-memory MCP client, the same surface a real client uses. See [`CONTRIBUTING.md`](https://github.com/sh4wty1/squint-mcp/blob/main/CONTRIBUTING.md).
 
 ## Documentation
 
-- [`CONTEXT.md`](CONTEXT.md): domain glossary (Capture, Check, Finding, Profile, Audit)
-- [`docs/SPEC.md`](docs/SPEC.md): v0.1 specification
-- [`docs/adr/`](docs/adr/): architecture decision records
+- [`CONTEXT.md`](https://github.com/sh4wty1/squint-mcp/blob/main/CONTEXT.md): domain glossary (Capture, Check, Finding, Profile, Audit)
+- [`docs/SPEC.md`](https://github.com/sh4wty1/squint-mcp/blob/main/docs/SPEC.md): v0.1 specification
+- [`docs/adr/`](https://github.com/sh4wty1/squint-mcp/tree/main/docs/adr): architecture decision records
 
 ## License
 
-[MIT](LICENSE)
+[MIT](https://github.com/sh4wty1/squint-mcp/blob/main/LICENSE)

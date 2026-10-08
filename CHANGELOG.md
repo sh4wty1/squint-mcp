@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-10-08
+
+First release, on PyPI as `squint-mcp`.
+
 ### Added
 
 - MCP server over stdio, started with the `squint-mcp` command.
@@ -15,11 +19,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `text-clipped` Check: reports text cut off horizontally by its own box (`overflow-x: hidden` or `clip`), confirmed in the pixels. A cut of 8px or more is `major`, a smaller one `minor`; a cut of 1px is not reported.
 - `low-contrast-real` Check (WCAG 2.2 SC 1.4.3): reports text whose contrast is below 4.5:1, or 3:1 for large text (24px, or 18.66px bold), against the background painted behind it. The background is sampled from the pixels, so it is right over an image or a gradient; where it varies, the worst tenth of the text decides. A ratio under 3:1 is `major`, any other `minor`. Text with an `opacity` below 1, on itself or on an ancestor, is not judged.
 - `evidence.measured` of a Finding can hold strings besides numbers: `low-contrast-real` reports `textColor` and `sampledBackground` as `#rrggbb`.
-
-### Changed
-
 - Findings of the same severity and viewport come in document order whatever the Check that reported them, and two Findings on one element in the order of their Check names. The order of `checks` does not change the result.
-
-### Fixed
-
-- `inspect_element` and the `low-contrast-real` Check no longer take tens of seconds, past the 30s total timeout, on a large element painted in millions of colours, such as a long photo-heavy page. An element, or the text of an element, of more than 262,144 pixels (512x512) is sampled down to that many before its colours are counted, so `sampledColors` and the contrast of such an element come from the sample. Smaller ones are counted whole, as before ([#4](https://github.com/sh4wty1/squint-mcp/issues/4)).
+- `inspect_element` and the `low-contrast-real` Check stay fast on a large element painted in millions of colours, such as a long photo-heavy page: an element, or the text of an element, of more than 262,144 pixels (512x512) is sampled down to that many before its colours are counted, so `sampledColors` and the contrast of such an element come from the sample. Smaller ones are counted whole, as before ([#4](https://github.com/sh4wty1/squint-mcp/issues/4)).
