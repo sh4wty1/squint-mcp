@@ -14,9 +14,11 @@ from squint_mcp.vision import text_backgrounds
 type Rgb = tuple[int, int, int]
 
 # The styles that explain the contrast. `background-color` is what a tool that
-# reads only the DOM would have compared the text with.
+# reads only the DOM would have compared the text with, and `color` is what it
+# would have taken for the text where the fill paints the glyphs in another colour.
 _EVIDENCE_PROPERTIES = (
     "color",
+    "-webkit-text-fill-color",
     "background-color",
     "background-image",
     "font-size",
@@ -72,7 +74,7 @@ def _worst_part(element: Element, capture: Capture) -> tuple[float, Rgb, Rgb] | 
     # Capture does not hold: its real colour is not known.
     if element.opacity < 1:
         return None
-    color = _COLOR.fullmatch(element.computed["color"])
+    color = _COLOR.fullmatch(element.computed["-webkit-text-fill-color"])
     if color is None:
         return None
     text: Rgb = (int(color[1]), int(color[2]), int(color[3]))

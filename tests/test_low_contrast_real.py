@@ -21,6 +21,7 @@ BUG = fixture_url("low-contrast-bug.html")
 BOUNDS = fixture_url("low-contrast-bounds.html")
 CLEAN = fixture_url("low-contrast-clean.html")
 REACH = fixture_url("low-contrast-reach.html")
+FILL = fixture_url("low-contrast-fill.html")
 HERO = '[data-testid="hero"]'
 ONLY = ["low-contrast-real"]
 
@@ -102,6 +103,7 @@ async def test_the_finding_carries_the_ratio_the_threshold_and_both_colours(
         "evidence": {
             "computed": {
                 "color": "rgb(119, 119, 119)",
+                "-webkit-text-fill-color": "rgb(119, 119, 119)",
                 "background-color": "rgba(0, 0, 0, 0)",
                 "background-image": "none",
                 "font-size": "20px",
@@ -410,3 +412,37 @@ async def test_text_off_the_page_is_not_reported(client: Client) -> None:
     findings = (await detect(client, REACH, checks=ONLY))["findings"]
     assert "#off-page" not in [finding["selector"] for finding in findings]
     assert len(findings) == 5
+
+
+async def fill(client: Client, selector: str) -> list[dict[str, Any]]:
+    """The Findings of the Check on one element of the fill fixture."""
+    findings = (await detect(client, FILL, checks=ONLY))["findings"]
+    return await findings_on(client, FILL, selector, findings)
+
+
+async def test_text_filled_with_a_readable_colour_is_not_reported(
+    client: Client,
+) -> None:
+    assert await fill(client, "#fill-dark") == []
+
+
+async def test_text_is_judged_on_the_fill_that_paints_its_glyphs(
+    client: Client,
+) -> None:
+    (finding,) = await fill(client, "#fill-light")
+    assert finding["severity"] == "major"
+    assert finding["evidence"]["measured"]["contrastRatio"] == 1.6
+    assert finding["evidence"]["measured"]["textColor"] == "#cccccc"
+
+
+async def test_the_finding_carries_the_fill_next_to_the_colour(client: Client) -> None:
+    (finding,) = await fill(client, "#fill-light")
+    assert finding["evidence"]["computed"]["color"] == "rgb(0, 0, 0)"
+    assert (
+        finding["evidence"]["computed"]["-webkit-text-fill-color"]
+        == "rgb(204, 204, 204)"
+    )
+
+
+async def test_gradient_text_is_not_reported(client: Client) -> None:
+    assert await fill(client, "#gradient-text") == []
