@@ -62,7 +62,7 @@ Proof: `git diff b26d672..HEAD -- tests/test_inspect_element.py` shows added lin
 
 ### S2 - `low-contrast-real` on a large text · 3 files · 24 KB · ~6k
 
-**C4** - `detect_visual_bugs` with `low-contrast-real` on the page with `#over-noise` painted (three glyphs of 1440x1440 over the noise) succeeds and takes less than 3s longer than on the same page without it
+**C4** - `detect_visual_bugs` with `low-contrast-real` on the page with `#over-noise` painted (three glyphs of 1440x1440 over the noise) succeeds and takes less than 10s longer than on the same page without it
 Proof: `uv run pytest "tests/test_low_contrast_real.py::test_text_over_millions_of_colours_adds_little_to_the_call" -v`
 
 **C5** - `#big-text` (one glyph of 600x600, more than the limit, with a light band behind its last fifth) is reported with `contrastRatio == 1.6` and `sampledBackground == "#cccccc"`
@@ -107,3 +107,6 @@ Proof: `uv run pytest`
 ## Handoff
 
 S1-S4 = ~15k of reading, one surface (`vision.py`). One agent, no handoff.
+
+- What the user settled mid-build: C4 was written as "less than 3s longer". With the fix the call takes 2.3s longer, not the fraction of a second the count itself takes: for each distinct colour behind a text the Check computes a contrast, about 2s for 262,144 of them, and the measurement moves by about 1s between runs. Offered the choice between lowering the limit to 256x256 (measured +0.1s, but every element over 256x256 would be sampled) and keeping 512x512 with C4 at 10s, the user chose the second. Without the fix the same call takes 45s longer, so the test still fails without it.
+- So the worst case of one text element, at the limit and over noise, is about 2s on the event loop, not half a second.
