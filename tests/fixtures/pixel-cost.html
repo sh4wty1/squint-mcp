@@ -20,19 +20,32 @@
       #noise {
         display: block;
       }
-      /* Three glyphs of 1440x1440 over the noise. Painted only when the URL targets
-         it, so that the noise can also be inspected bare. */
-      #over-noise {
+      /* Texts over the noise. Each is painted only when the URL targets it, so that
+         the noise can also be inspected bare. */
+      .over-noise {
         position: absolute;
         top: 0;
         left: 0;
-        font: 1440px/1 Ahem;
         color: rgb(0, 0, 0);
       }
-      #over-noise:not(:target) {
+      .over-noise:not(:target) {
         display: none;
       }
-      /* 1,048,576 pixels, four times what is counted: red above, blue below. */
+      /* Three glyphs of 1440x1440, each more than is counted. */
+      #over-noise {
+        font: 1440px/1 Ahem;
+      }
+      /* 24 lines of 1440x180: each 259,200 pixels, under what is counted, and
+         6,220,800 together. */
+      #lines-over-noise {
+        width: 1440px;
+        font: 180px/1 Ahem;
+        word-break: break-all;
+      }
+      /* 1,048,576 pixels, four times what is counted: red above, blue below. The
+         edge is on an odd row, so that halving the rows by averaging pairs of them
+         would blend the two colours on one row. Picking every other row takes 255
+         red rows and 257 blue ones. */
       #halves {
         position: absolute;
         top: 10000px;
@@ -40,8 +53,8 @@
         width: 1024px;
         height: 1024px;
         background: linear-gradient(
-          rgb(255, 0, 0) 0 512px,
-          rgb(0, 0, 255) 512px 1024px
+          rgb(255, 0, 0) 0 511px,
+          rgb(0, 0, 255) 511px 1024px
         );
       }
       /* One glyph of 600x600, more than is counted. The background-color alone
@@ -63,7 +76,8 @@
   </head>
   <body>
     <canvas id="noise" width="1440" height="10000"></canvas>
-    <div id="over-noise">X<br />X<br />X</div>
+    <div id="over-noise" class="over-noise">X<br />X<br />X</div>
+    <div id="lines-over-noise" class="over-noise"></div>
     <div id="halves"></div>
     <div id="big-text">X</div>
     <script>
@@ -74,6 +88,8 @@
       const colors = new Uint32Array(image.data.buffer);
       for (let i = 0; i < colors.length; i++) colors[i] = 0xff000000 | i;
       context.putImageData(image, 0, 0);
+      // Eight glyphs fill a line: one text node, 24 line boxes.
+      document.getElementById("lines-over-noise").textContent = "X".repeat(192);
     </script>
   </body>
 </html>

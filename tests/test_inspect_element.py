@@ -321,8 +321,8 @@ async def test_a_region_over_the_limit_keeps_its_painted_colours_and_shares(
 ) -> None:
     content = await inspect(client, PIXEL_COST, "#halves")
     assert content["sampledColors"] == [
-        {"hex": "#ff0000", "share": 0.5},
-        {"hex": "#0000ff", "share": 0.5},
+        {"hex": "#0000ff", "share": 0.502},
+        {"hex": "#ff0000", "share": 0.498},
     ]
 
 

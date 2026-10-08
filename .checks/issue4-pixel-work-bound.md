@@ -51,7 +51,7 @@ Touches `vision.py` (one helper that both counting functions call on their regio
 **C1** - `inspect_element` on `#noise` (1440x10000, every pixel its own colour) succeeds and takes less than 3s longer than the same call on `#big-text`, a small element of the same page
 Proof: `uv run pytest "tests/test_inspect_element.py::test_an_element_of_millions_of_colours_adds_little_to_the_call" -v`
 
-**C2** - `#halves` (1024x1024, four times the limit: red above, blue below) reports `sampledColors == [{"hex": "#ff0000", "share": 0.5}, {"hex": "#0000ff", "share": 0.5}]`: the painted colours and no blend of them
+**C2** - `#halves` (1024x1024, four times the limit: red above row 511, blue from it down) reports `sampledColors == [{"hex": "#0000ff", "share": 0.502}, {"hex": "#ff0000", "share": 0.498}]`: the painted colours, in the shares of every other row, and no blend of them
 Proof: `uv run pytest "tests/test_inspect_element.py::test_a_region_over_the_limit_keeps_its_painted_colours_and_shares" -v`
 
 **C3** - The colours sampled from the existing fixtures are unchanged, with the tests unedited
@@ -67,6 +67,9 @@ Proof: `uv run pytest "tests/test_low_contrast_real.py::test_text_over_millions_
 
 **C5** - `#big-text` (one glyph of 600x600, more than the limit, with a light band behind its last fifth) is reported with `contrastRatio == 1.6` and `sampledBackground == "#cccccc"`
 Proof: `uv run pytest "tests/test_low_contrast_real.py::test_a_text_over_the_limit_is_still_judged_on_its_worst_part" -v`
+
+**C11** - `detect_visual_bugs` with `low-contrast-real` on the page with `#lines-over-noise` painted (one text of 24 lines of 1440x180 over the noise, each line under the limit, 6,220,800 pixels together) succeeds and takes less than 10s longer than on the same page without it
+Proof: `uv run pytest "tests/test_low_contrast_real.py::test_the_lines_of_a_text_are_under_the_limit_together" -v`
 
 **C6** - Every existing test of `low-contrast-real` passes unedited
 Proof: `uv run pytest tests/test_low_contrast_real.py -v`
@@ -109,4 +112,5 @@ Proof: `uv run pytest`
 S1-S4 = ~15k of reading, one surface (`vision.py`). One agent, no handoff.
 
 - What the user settled mid-build: C4 was written as "less than 3s longer". With the fix the call takes 2.3s longer, not the fraction of a second the count itself takes: for each distinct colour behind a text the Check computes a contrast, about 2s for 262,144 of them, and the measurement moves by about 1s between runs. Offered the choice between lowering the limit to 256x256 (measured +0.1s, but every element over 256x256 would be sampled) and keeping 512x512 with C4 at 10s, the user chose the second. Without the fix the same call takes 45s longer, so the test still fails without it.
+- After the verification at `989a6cb`, the user asked for two of its gaps to be closed in the same PR. C2 was tightened: the edge of `#halves` moved from row 512 to row 511, so the test now fails under a box filter, which it did not. C11 was added: the limit applies to the boxes of an element together. The third gap, each box's reduced size being truncated, stays as a known limit, by the user's decision. Both were made to fail once by the author, not by the independent Verifier, which was not run again: with `Image.Resampling.BOX` C2 reports a third colour `#800080`, and with the limit applied to each box C11 takes 27s longer.
 - So the worst case of one text element, at the limit and over noise, is about 2s on the event loop, not half a second.

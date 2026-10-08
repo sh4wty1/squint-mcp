@@ -466,9 +466,10 @@ async def test_a_text_over_the_limit_is_still_judged_on_its_worst_part(
     assert measured["sampledBackground"] == "#cccccc"
 
 
-async def test_text_over_millions_of_colours_adds_little_to_the_call(
-    client: Client,
-) -> None:
+async def seconds_added_by(client: Client, selector: str) -> float:
+    """How much longer the Check takes with the text `selector` painted over the
+    noise of the pixel-cost fixture, which reports it, than without it."""
+
     async def seconds(url: str) -> tuple[float, list[str]]:
         started = time.monotonic()
         findings = (await detect(client, url, checks=ONLY))["findings"]
@@ -476,10 +477,24 @@ async def test_text_over_millions_of_colours_adds_little_to_the_call(
         return elapsed, [finding["selector"] for finding in findings]
 
     # The same page both times, so the capture costs the same: what differs is
-    # the text painted over the noise only when the URL targets it. The Check
-    # computes a contrast for every colour it is given, hence the seconds.
+    # the text painted over the noise only when the URL targets it.
     bare, without = await seconds(PIXEL_COST)
-    painted, with_text = await seconds(f"{PIXEL_COST}#over-noise")
-    assert "#over-noise" not in without
-    assert "#over-noise" in with_text
-    assert painted - bare < 10
+    painted, with_text = await seconds(f"{PIXEL_COST}{selector}")
+    assert selector not in without
+    assert selector in with_text
+    return painted - bare
+
+
+async def test_text_over_millions_of_colours_adds_little_to_the_call(
+    client: Client,
+) -> None:
+    # The Check computes a contrast for every colour it is given, hence the seconds.
+    assert await seconds_added_by(client, "#over-noise") < 10
+
+
+async def test_the_lines_of_a_text_are_under_the_limit_together(
+    client: Client,
+) -> None:
+    # No line is over the limit on its own: counted one by one, they are 6,220,800
+    # pixels of noise.
+    assert await seconds_added_by(client, "#lines-over-noise") < 10
