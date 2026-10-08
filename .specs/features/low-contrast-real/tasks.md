@@ -191,9 +191,9 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (LCR-46) and the Hando
 
 ### T5: Keep the Check silent on hidden text and pin its bounds
 
-- [ ] Done
+- [x] Done
 
-**What**: Design rules 1 (visibility) and 2 (opacity), with the fixture that holds every boundary of the spec: the 10% share on each edge, the hiding rules, the text sizes and the severity floor.
+**What**: Design rule 2 (opacity), with the fixture that holds every boundary of the spec: the 10% share on each edge, the hiding rules, the text sizes and the severity floor.
 **Where**: `src/squint_mcp/checks/low_contrast_real.py` (with the bounds fixture and its tests under `tests/`)
 **Depends on**: T4
 **Reuses**: `findings_on` of `tests/helpers.py`
@@ -206,12 +206,12 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (LCR-46) and the Hando
 
 **Done when**:
 
-- [ ] `low-contrast-bounds.html` holds `#right`, `#bottom`, `#left`, `#top`, `#same`, `#nested`, `#hidden`, `#transparent`, `#faded`, `#faded-child`, `#clipped-away`, `#covered`, `#clipped-part`, `#small-bold`, `#semibold`, `#large-low`, `#below-floor` and one element with own text and no box for LCR-51
-- [ ] One test per requirement above, each locating its element with `findings_on` and asserting the outcome of the spec (one Finding with the named values, or none)
-- [ ] One test asserts the exact set of elements of the fixture that get a Finding, so a Finding on any other element fails
-- [ ] LCR-33 is extended to the Findings of this fixture
-- [ ] Gate check passes: Build
-- [ ] Test count: at least 169 tests pass (no silent deletions)
+- [x] `low-contrast-bounds.html` holds `#right`, `#bottom`, `#left`, `#top`, `#same`, `#nested`, `#hidden`, `#transparent`, `#faded`, `#faded-child`, `#clipped-away`, `#covered`, `#clipped-part`, `#small-bold`, `#semibold`, `#large-low`, `#below-floor` and one element with own text and no box for LCR-51
+- [x] One test per requirement above, each locating its element with `findings_on` and asserting the outcome of the spec (one Finding with the named values, or none)
+- [x] One test asserts the exact set of elements of the fixture that get a Finding, so a Finding on any other element fails
+- [x] LCR-33 is extended to the Findings of this fixture
+- [x] Gate check passes: Build
+- [x] Test count: at least 169 tests pass (no silent deletions)
 
 **Tests**: integration
 **Gate**: build

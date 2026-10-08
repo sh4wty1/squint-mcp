@@ -18,6 +18,7 @@ from mcp import Client
 pytestmark = pytest.mark.anyio
 
 BUG = fixture_url("low-contrast-bug.html")
+BOUNDS = fixture_url("low-contrast-bounds.html")
 CLEAN = fixture_url("low-contrast-clean.html")
 HERO = '[data-testid="hero"]'
 ONLY = ["low-contrast-real"]
@@ -130,14 +131,19 @@ async def test_text_just_under_the_large_size_needs_the_full_ratio(
 
 
 async def test_a_finding_selector_works_in_inspect_element(client: Client) -> None:
-    findings = (await detect(client, BUG, checks=ONLY))["findings"]
-    assert len(findings) == 4
-    for finding in findings:
-        arguments = {"url": BUG, "selector": finding["selector"], "viewport": DESKTOP}
-        result = await client.call_tool("inspect_element", arguments)
-        assert result.is_error is False, texts(result)
-        assert result.structured_content is not None
-        assert result.structured_content["box"] == finding["box"]
+    for url, count in ((BUG, 4), (BOUNDS, 8)):
+        findings = (await detect(client, url, checks=ONLY))["findings"]
+        assert len(findings) == count
+        for finding in findings:
+            arguments = {
+                "url": url,
+                "selector": finding["selector"],
+                "viewport": DESKTOP,
+            }
+            result = await client.call_tool("inspect_element", arguments)
+            assert result.is_error is False, texts(result)
+            assert result.structured_content is not None
+            assert result.structured_content["box"] == finding["box"]
 
 
 async def test_each_viewport_gets_the_same_findings(client: Client) -> None:
@@ -203,3 +209,132 @@ async def test_the_tool_description_names_both_checks(client: Client) -> None:
     assert tool.description is not None
     assert "`text-clipped`" in tool.description
     assert "`low-contrast-real`" in tool.description
+
+
+async def bounds(client: Client, selector: str) -> list[dict[str, Any]]:
+    """The Findings of the Check on one element of the bounds fixture."""
+    findings = (await detect(client, BOUNDS, checks=ONLY))["findings"]
+    return await findings_on(client, BOUNDS, selector, findings)
+
+
+async def test_only_the_low_contrast_texts_of_the_bounds_fixture_are_reported(
+    client: Client,
+) -> None:
+    findings = (await detect(client, BOUNDS, checks=ONLY))["findings"]
+    assert sorted(finding["selector"] for finding in findings) == [
+        "#below-floor",
+        "#bottom",
+        "#large-low",
+        "#nested-child",
+        "#right",
+        "#same",
+        "#semibold",
+        "#small-bold",
+    ]
+
+
+async def test_a_tenth_of_the_text_at_its_right_edge_is_enough(client: Client) -> None:
+    (finding,) = await bounds(client, "#right")
+    assert finding["evidence"]["measured"]["contrastRatio"] == 1.6
+
+
+async def test_a_tenth_of_the_text_at_its_bottom_edge_is_enough(client: Client) -> None:
+    (finding,) = await bounds(client, "#bottom")
+    assert finding["evidence"]["measured"]["contrastRatio"] == 1.6
+
+
+async def test_under_a_tenth_of_the_text_at_its_left_edge_is_not_reported(
+    client: Client,
+) -> None:
+    assert await bounds(client, "#left") == []
+
+
+async def test_under_a_tenth_of_the_text_at_its_top_edge_is_not_reported(
+    client: Client,
+) -> None:
+    assert await bounds(client, "#top") == []
+
+
+async def test_text_of_the_colour_of_its_background_is_major(client: Client) -> None:
+    (finding,) = await bounds(client, "#same")
+    assert finding["severity"] == "major"
+    assert finding["evidence"]["measured"]["contrastRatio"] == 1
+
+
+async def test_each_element_is_judged_on_its_own_text(client: Client) -> None:
+    assert await bounds(client, "#nested") == []
+    assert len(await bounds(client, "#nested-child")) == 1
+
+
+async def test_hidden_text_is_not_reported(client: Client) -> None:
+    assert await bounds(client, "#hidden") == []
+
+
+async def test_transparent_text_is_not_reported(client: Client) -> None:
+    assert await bounds(client, "#transparent") == []
+
+
+async def test_faded_text_is_not_reported(client: Client) -> None:
+    assert await bounds(client, "#faded") == []
+
+
+async def test_text_of_a_faded_ancestor_is_not_reported(client: Client) -> None:
+    assert await bounds(client, "#faded-child") == []
+
+
+async def test_text_clipped_away_is_not_reported(client: Client) -> None:
+    assert await bounds(client, "#clipped-away") == []
+
+
+async def test_covered_text_is_not_reported(client: Client) -> None:
+    assert await bounds(client, "#covered") == []
+
+
+async def test_a_band_behind_the_clipped_part_of_a_text_is_not_reported(
+    client: Client,
+) -> None:
+    assert await bounds(client, "#clipped-part") == []
+
+
+async def test_text_without_a_box_is_not_reported(client: Client) -> None:
+    findings = (await detect(client, BOUNDS, checks=ONLY))["findings"]
+    assert "#no-box" not in [finding["selector"] for finding in findings]
+    assert len(findings) == 8
+
+
+async def test_bold_text_of_18px_needs_the_full_ratio(client: Client) -> None:
+    (finding,) = await bounds(client, "#small-bold")
+    assert finding["evidence"]["measured"]["requiredRatio"] == 4.5
+
+
+async def test_semibold_text_of_20px_needs_the_full_ratio(client: Client) -> None:
+    (finding,) = await bounds(client, "#semibold")
+    assert finding["evidence"]["measured"]["requiredRatio"] == 4.5
+
+
+async def test_large_text_under_3_to_1_is_major(client: Client) -> None:
+    (finding,) = await bounds(client, "#large-low")
+    assert finding["evidence"]["measured"]["requiredRatio"] == 3
+    assert finding["severity"] == "major"
+
+
+async def test_the_message_and_the_suggestion_name_the_large_ratio(
+    client: Client,
+) -> None:
+    (finding,) = await bounds(client, "#large-low")
+    assert finding["message"] == (
+        "Text contrast 2.84:1 against the painted background #ffffff "
+        "is below the 3:1 minimum"
+    )
+    assert finding["suggestion"].endswith("to reach 3:1")
+
+
+async def test_a_ratio_under_3_is_major_and_one_from_3_up_is_minor(
+    client: Client,
+) -> None:
+    (below,) = await bounds(client, "#below-floor")
+    assert below["evidence"]["measured"]["contrastRatio"] == 2.99
+    assert below["severity"] == "major"
+    above = await finding_on(client, BUG, "#almost-large")
+    assert above["evidence"]["measured"]["contrastRatio"] == 3.03
+    assert above["severity"] == "minor"

@@ -121,7 +121,7 @@ Cost of A, spiked on a 1440 × 900 page: 0.12s for the three screenshots togethe
 
 - **Purpose**: `Capture -> list[Finding]` for SC 1.4.3.
 - **Rules**, in order, for each element:
-  1. `own_text` and `computed["visibility"] == "visible"` (LCR-16).
+  1. `own_text`. Hidden text needs no rule of its own: it has no ink, so rule 4 drops it (LCR-16; spiked, and a visible child of a hidden parent is still judged).
   2. `opacity` is 1 (LCR-18, LCR-19).
   3. `computed["color"]` parses as `rgb(r, g, b)` or `rgba(r, g, b, a)` and `a` is above 0 (LCR-17). Any other serialization yields no Finding (see Risks).
   4. `text_backgrounds` over `own_text_boxes` is not empty (LCR-20, LCR-21, LCR-51).

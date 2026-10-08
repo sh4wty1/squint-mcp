@@ -231,31 +231,31 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | LCR-04 | P1: Detect text with low real contrast | T4 | Implemented |
 | LCR-05 | P1: Detect text with low real contrast | T4 | Implemented |
 | LCR-06 | P1: Detect text with low real contrast | T4 | Implemented |
-| LCR-07 | P1: Detect text with low real contrast | - | Pending |
-| LCR-08 | P1: Detect text with low real contrast | - | Pending |
-| LCR-09 | P1: Detect text with low real contrast | - | Pending |
-| LCR-10 | P1: Detect text with low real contrast | - | Pending |
+| LCR-07 | P1: Detect text with low real contrast | T5 | Implemented |
+| LCR-08 | P1: Detect text with low real contrast | T5 | Implemented |
+| LCR-09 | P1: Detect text with low real contrast | T5 | Implemented |
+| LCR-10 | P1: Detect text with low real contrast | T5 | Implemented |
 | LCR-11 | P1: Stay silent when the text can be read | T4 | Implemented |
 | LCR-12 | P1: Stay silent when the text can be read | T4 | Implemented |
 | LCR-13 | P1: Stay silent when the text can be read | T4 | Implemented |
-| LCR-14 | P1: Stay silent when the text can be read | - | Pending |
-| LCR-15 | P1: Stay silent when the text can be read | - | Pending |
-| LCR-16 | P1: Stay silent when the text can be read | - | Pending |
-| LCR-17 | P1: Stay silent when the text can be read | - | Pending |
-| LCR-18 | P1: Stay silent when the text can be read | - | Pending |
-| LCR-19 | P1: Stay silent when the text can be read | - | Pending |
-| LCR-20 | P1: Stay silent when the text can be read | - | Pending |
-| LCR-21 | P1: Stay silent when the text can be read | - | Pending |
-| LCR-22 | P1: Stay silent when the text can be read | - | Pending |
+| LCR-14 | P1: Stay silent when the text can be read | T5 | Implemented |
+| LCR-15 | P1: Stay silent when the text can be read | T5 | Implemented |
+| LCR-16 | P1: Stay silent when the text can be read | T5 | Implemented |
+| LCR-17 | P1: Stay silent when the text can be read | T5 | Implemented |
+| LCR-18 | P1: Stay silent when the text can be read | T5 | Implemented |
+| LCR-19 | P1: Stay silent when the text can be read | T5 | Implemented |
+| LCR-20 | P1: Stay silent when the text can be read | T5 | Implemented |
+| LCR-21 | P1: Stay silent when the text can be read | T5 | Implemented |
+| LCR-22 | P1: Stay silent when the text can be read | T5 | Implemented |
 | LCR-23 | P1: Stay silent when the text can be read | T4 | Implemented |
 | LCR-24 | P1: Thresholds by text size and severity | T4 | Implemented |
 | LCR-25 | P1: Thresholds by text size and severity | T4 | Implemented |
 | LCR-26 | P1: Thresholds by text size and severity | T4 | Implemented |
-| LCR-27 | P1: Thresholds by text size and severity | - | Pending |
-| LCR-28 | P1: Thresholds by text size and severity | - | Pending |
-| LCR-29 | P1: Thresholds by text size and severity | - | Pending |
+| LCR-27 | P1: Thresholds by text size and severity | T5 | Implemented |
+| LCR-28 | P1: Thresholds by text size and severity | T5 | Implemented |
+| LCR-29 | P1: Thresholds by text size and severity | T5 | Implemented |
 | LCR-30 | P1: Read the Finding | T4 | Implemented |
-| LCR-31 | P1: Read the Finding | - | Pending |
+| LCR-31 | P1: Read the Finding | T5 | Implemented |
 | LCR-32 | P1: Read the Finding | T4 | Implemented |
 | LCR-33 | P1: Read the Finding | T4 | Implemented |
 | LCR-34 | P1: Two Checks in one call | T4 | Implemented |
@@ -271,11 +271,11 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | LCR-44 | P2: Check contract, configuration and documents | - | Pending |
 | LCR-45 | P2: Check contract, configuration and documents | - | Pending |
 | LCR-46 | P2: Check contract, configuration and documents | - | Pending |
-| LCR-47 | P1: Thresholds by text size and severity | - | Pending |
+| LCR-47 | P1: Thresholds by text size and severity | T5 | Implemented |
 | LCR-48 | P1: Two Checks in one call | - | Pending |
 | LCR-49 | P1: Two Checks in one call | T4 | Implemented |
 | LCR-50 | P1: Two Checks in one call | T4 | Implemented |
-| LCR-51 | Edge cases | - | Pending |
+| LCR-51 | Edge cases | T5 | Implemented |
 | LCR-52 | Edge cases | T4 | Implemented |
 
 **Coverage:** 52 total, 0 mapped to tasks, 52 unmapped (Tasks has not run).

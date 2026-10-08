@@ -68,6 +68,10 @@ def _worst_part(element: Element, capture: Capture) -> tuple[float, Rgb, Rgb] | 
     """
     if not element.own_text:
         return None
+    # A faded text is blended with what is behind its faded ancestor, which the
+    # Capture does not hold: its real colour is not known.
+    if element.opacity < 1:
+        return None
     color = _COLOR.fullmatch(element.computed["color"])
     if color is None:
         return None
