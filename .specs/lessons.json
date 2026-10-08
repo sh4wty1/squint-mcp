@@ -3,7 +3,7 @@
   "promote_threshold": 2,
   "window_days": 45,
   "quarantine_threshold": 2,
-  "next_id": 42,
+  "next_id": 45,
   "lessons": [
     {
       "id": "L-001",
@@ -746,6 +746,60 @@
       ],
       "created": "2026-10-08T05:06:18Z",
       "last_seen": "2026-10-08T05:06:18Z"
+    },
+    {
+      "id": "L-042",
+      "key": "surviving_mutant::pin a rule that pools a list of regions with a fixture whose outcome depends on a region that is neither the first nor the last",
+      "text": "Pin a rule that pools a list of regions with a fixture whose outcome depends on a region that is neither the first nor the last",
+      "signal": "surviving_mutant",
+      "scope": "tests,vision",
+      "status": "candidate",
+      "features": [
+        "low-contrast-real"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "mutant V5, src/squint_mcp/vision.py:64 (LCR-55) (tests,vision)"
+      ],
+      "created": "2026-10-08T05:47:06Z",
+      "last_seen": "2026-10-08T05:47:06Z"
+    },
+    {
+      "id": "L-043",
+      "key": "surviving_mutant::test a rule over the own text of an element with text that a child splits into several text nodes not only with one text node",
+      "text": "Test a rule over the own text of an element with text that a child splits into several text nodes, not only with one text node",
+      "signal": "surviving_mutant",
+      "scope": "tests,checks",
+      "status": "candidate",
+      "features": [
+        "low-contrast-real"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "mutant C4, src/squint_mcp/js/collect_elements.js:139 (LCR-55) (tests,checks)"
+      ],
+      "created": "2026-10-08T05:47:06Z",
+      "last_seen": "2026-10-08T05:47:06Z"
+    },
+    {
+      "id": "L-044",
+      "key": "spec_precision_gap::when a criterion says all of a set give it a fixture where each member alone decides the outcome or name the members it pins",
+      "text": "When a criterion says all of a set, give it a fixture where each member alone decides the outcome, or name the members it pins",
+      "signal": "spec_precision_gap",
+      "scope": "spec",
+      "status": "candidate",
+      "features": [
+        "low-contrast-real"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "LCR-55 (spec.md:111); mutants V5, C4 (spec)"
+      ],
+      "created": "2026-10-08T05:47:06Z",
+      "last_seen": "2026-10-08T05:47:06Z"
     }
   ]
 }

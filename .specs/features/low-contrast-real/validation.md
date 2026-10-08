@@ -2,10 +2,110 @@
 
 **Date**: 2026-10-08
 **Spec**: `.specs/features/low-contrast-real/spec.md`
-**Diff range**: `9d7afb9..f97904b` (10 commits, branch `feat/low-contrast-real`)
-**Verifier**: independent sub-agent (author ≠ verifier), verification pass 1
+**Diff range**: `9d7afb9..508657e` (13 commits, branch `feat/low-contrast-real`); pass 1 covered `9d7afb9..f97904b`
+**Verifier**: independent sub-agent (author ≠ verifier), verification pass 2 (fix→re-verify iteration 1 of 3)
 
 **Verdict**: ❌ FAIL
+
+The verdict is that of the second pass, described in the section right below. The six survivors of pass 1 are all killed and the nine criteria checked in pass 2 match the spec. It is still FAIL because two of the new mutants of pass 2 survive against LCR-55 (V5 in the sampling code, C4 in the collector). No defect was found in the source in either pass.
+
+**History**
+
+| Pass | Range | Verdict | Sensor in that pass | Closed by |
+| ---- | ----- | ------- | ------------------- | --------- |
+| 1 | `9d7afb9..f97904b` | FAIL | 46 mutants, 7 survived (6 gaps, 1 equivalent in scope) | `42201eb`, `508657e` (tests, fixture, spec wording) |
+| 2 | `9d7afb9..508657e` | FAIL | 6 re-runs all killed; 6 new, 4 survived (2 gaps, 2 inside the bracket the spec sets) | open |
+
+Abbreviations: `L` = `tests/test_low_contrast_real.py`, `D` = `tests/test_detect_visual_bugs.py`.
+
+---
+
+## Second pass
+
+**Date**: 2026-10-08, at `508657e`. **Result**: ❌ FAIL, two new gaps, both on LCR-55.
+
+### What changed since pass 1
+
+`git diff f97904b..508657e -- src` is empty. `git diff f97904b..508657e -- tests` only adds: the fixture `tests/fixtures/low-contrast-reach.html`, nine tests at the end of `L` (`L:344-400`) and one at the end of `D` (`D:473-488`). No test or assertion of pass 1 was touched, so the 51 criteria verified there stand. The spec gained LCR-53 to LCR-60, narrowed LCR-51 to `display: none`, and names the translucent layer in Terms, Out of Scope and Assumptions.
+
+### Spec-anchored check of the new and reworded criteria
+
+| Criterion | Spec-defined outcome | `file:line` + assertion | Result |
+| --------- | -------------------- | ----------------------- | ------ |
+| LCR-51 `display: none` (`#no-box`) | no Finding | `L:302-303` - `"#no-box" not in [finding["selector"] ...]`, `len(findings) == 8` | ✅ PASS; the wording now names the one case the test pins |
+| LCR-53 one severity, viewport by viewport | the eight `(viewport width, selector)` pairs, in order | `D:479-488` - `[(f["viewport"]["width"], f["selector"]) for f in findings] == [(1440, hero), (390, hero), (1440, "#flat"), (1440, "#alpha"), (1440, "#almost-large"), (390, "#flat"), (390, "#alpha"), (390, "#almost-large")]`, equal to the spec's list | ✅ PASS |
+| LCR-54 `#parent` and `#badge` | no Finding for either | `L:362-363` - `await reach(client, "#parent") == []`, `await reach(client, "#badge") == []` | ✅ PASS |
+| LCR-55 `#two-lines` | one Finding, ratio 1.6; "the text pixels of all" the boxes | `L:367-369` - `(finding,) = await reach(client, "#two-lines")`, `["contrastRatio"] == 1.6`, `["sampledBackground"] == "#cccccc"` | ✅ PASS for the fixture named; ⚠️ "all of them" is pinned for a later box of one text node only (V5, C4) |
+| LCR-56 `#veiled-most`, layer of 0.7 | no Finding | `L:375` - `await reach(client, "#veiled-most") == []` | ✅ PASS |
+| LCR-57 `#veiled-little`, layer of 0.3 | one Finding, `textColor` `#777777`, ratio 4.47 | `L:381-383` - `(finding,) = ...`, `["textColor"] == "#777777"`, `["contrastRatio"] == 4.47` | ✅ PASS |
+| LCR-58 `#in-plain`, shadow tree | one Finding, ratio 4.47 | `L:387-388` - `(finding,) = await reach(client, "#in-plain")`, `["contrastRatio"] == 4.47` | ✅ PASS |
+| LCR-59 `#in-faded`, faded shadow host | no Finding | `L:394` - `await reach(client, "#in-faded") == []` | ✅ PASS |
+| LCR-60 `#off-page` | no Finding | `L:399-400` - `"#off-page" not in [finding["selector"] ...]`, `len(findings) == 3`; `L:354-358` pins the three selectors of the fixture | ✅ PASS |
+
+The line of LCR-51 moved from `L:301-302` to `L:302-303` (one constant was added at `L:23`); every `L` line cited in the tables of pass 1 from `L:24` on is now one further down.
+
+**Status**: 9 of 9 match the spec outcome. With pass 1: 59 of 59 criteria due now; LCR-46 still waits for the verdict, by design. One spec-precision gap (LCR-55).
+
+### Sensor of pass 2
+
+Run in a temporary git worktree of `508657e` outside the repository, as in pass 1.
+
+| # | File:line | Mutation | Result |
+| - | --------- | -------- | ------ |
+| S3 | `tools/detect_visual_bugs.py:110` | viewport index dropped from the sort key | ✅ Killed - `D` `test_findings_of_one_severity_come_viewport_by_viewport` |
+| C3b | `js/collect_elements.js:132` | `ownTextBoxes` also gets the boxes of everything inside the element | ✅ Killed - `L` `test_only_three_texts_of_the_reach_fixture_are_reported` (`#parent` is reported) |
+| V3 | `vision.py:64` | `boxes[:1]` | ✅ Killed - same test (`#two-lines` is missing) |
+| G8 | `config.py:98` | `TEXT_INK_MIN` 128 → 1 | ✅ Killed - same test (`#veiled-most` is reported) |
+| G8b | `config.py:98` | `TEXT_INK_MIN` 128 → 200 | ✅ Killed - same test (`#veiled-little` is missing) |
+| C2 | `collect_elements.js:95` | opacity stops at a shadow root | ✅ Killed - same test (`#in-faded` is reported) |
+| S7 (new) | `detect_visual_bugs.py:110` | viewport index negated | ✅ Killed - `D` `test_several_viewports_are_captured_and_reported_in_the_order_given` |
+| C5 (new) | `collect_elements.js:141` | the `x` of an own-text box clamped to 0, so text left of the page is read at the page's edge | ✅ Killed - `L` `test_only_three_texts_of_the_reach_fixture_are_reported` (`#off-page` is reported) |
+| V5 (new) | `vision.py:64` | `boxes[-1:]`: only the last box is sampled | ❌ Survived - the whole suite passes (188 passed) |
+| C4 (new) | `collect_elements.js:139` | only the first text node of an element gets boxes | ❌ Survived - the whole suite passes (188 passed) |
+| T1 (new) | `config.py:98` | `TEXT_INK_MIN` 128 → 100 | ⚠️ Survived on `L` and `D` - inside the bracket the spec sets, not a gap |
+| T2 (new) | `config.py:98` | `TEXT_INK_MIN` 128 → 160 | ⚠️ Survived on `L` and `D` - inside the bracket the spec sets, not a gap |
+
+The test named for C3b, V3, G8, G8b, C2 and C5 is the first that fails with `-x`; it pins the exact list of selectors of the fixture and runs before the test written for each criterion.
+
+**Result**: 8/12 killed. 2 gaps (V5, C4), 2 survivors inside the specified bracket (T1, T2). F1 stays as classified in pass 1: equivalent inside the spec's scope.
+
+**The two gaps, shown not to be equivalent.** On a probe fixture in the scratch worktree, the unmutated code reports `#three-lines` (three lines of ten glyphs, light band behind the middle one) and `#split` (`XXXXX<b></b>XXXXX`, light band behind the second half), both at 1.6. Under V5, `#three-lines` is gone. Under C4, `#split` is gone. Under V3 both are gone, so the two probe elements also keep V3 dead.
+
+- **V5** is what a `counts` reset inside the loop would do. `#two-lines` has its band behind the last line, so sampling the last box alone gives the same Finding.
+- **C4**: `#two-lines` and `#parent` each have one text node. Own text that a child splits in two (`Text <b>x</b> more text`) has no fixture, although the Terms define own text as "the text nodes", in the plural.
+
+**T1 and T2.** LCR-56 and LCR-57 pin the threshold from both sides with layers of 0.7 and 0.3, which give ink of 76 and 178; any value from 77 to 178 passes. The Term says "at least half". A layer of exactly half gives ink of 127 or 128 depending on rounding, so the exact bound cannot be a stable fixture; the bracket is the spec's own choice and both criteria hold. If the maintainer wants it tighter, layers of 0.55 and 0.45 (ink of about 115 and 140) narrow it without touching the rounding. Not counted as a gap.
+
+**Isolation**: `git status --porcelain` of the real tree was empty before the sensor of pass 2 and is empty after it, apart from this report and the lessons store written afterwards; `HEAD` is `508657e` both times. The worktree was removed and `git worktree list` shows the main tree alone. `git stash` was not used.
+
+### Gate of pass 2
+
+`uv run pyright` exit 0 (0 errors, 0 warnings); `uv run ruff check` exit 0; `uv run ruff format --check` exit 0; `uv run pytest` exit 0 - 188 passed, 0 failed, 0 skipped, in 281.87s. 179 before the fixes, +9 (8 in `L`, 1 in `D`); nothing removed.
+
+### Fix plan of pass 2
+
+#### Fix 7: "all of them" of LCR-55 is pinned for one box order and one text node (V5, C4)
+
+- **Root cause**: the one fixture of LCR-55 has a single text node whose low-contrast part is its last box.
+- **Fix task**: in `low-contrast-reach.html`, either turn `#two-lines` into three lines with the light band behind the middle one, or add such an element; add an element whose own text is split by an empty child, white on black, with the light band behind the second half (`XXXXX<b></b>XXXXX`, band from 100px to 200px). State both in LCR-55 or in a new criterion, each with one Finding at 1.6, and adjust the list of `L:354-358` and the count of `L:400`.
+- **Done when**: the tests fail with `boxes[-1:]` and with `boxes[:1]` at `vision.py:64`, and with the boxes of the first text node alone at `collect_elements.js:139`.
+- **Priority**: Major (text split by an inline child is in most paragraphs)
+
+### Summary of pass 2
+
+**Overall**: ❌ Not Ready
+
+**Spec-anchored check**: 59/59 criteria due now match the spec outcome; LCR-46 pending the verdict; 1 spec-precision gap (LCR-55)
+**Sensor**: the 6 survivors of pass 1 killed; 6 new mutants, 2 killed, 2 gaps (V5, C4), 2 inside the specified bracket (T1, T2)
+**Gate**: 188 passed, 0 failed; pyright, ruff check and ruff format clean
+
+**Next steps**: route Fix 7 to an implementer, then re-verify (iteration 2 of 3).
+
+---
+
+## First pass (as written at `f97904b`)
+
+**Verdict of pass 1**: FAIL
 
 Every requirement is implemented, every assertion targets the outcome the spec defines and the gate is green. No defect was found in the source. The verdict is FAIL because the discrimination sensor left survivors, and the spec's own third success criterion asks for none "in the Check, the sampling code and the ordering of Findings": of 46 mutants, 39 were killed and 7 survived. One survivor changes nothing inside the scope of the spec (F1). The other six break a behaviour the code has on purpose and no test protects: one in the ordering of Findings (S3), four in the sampling code and the collector (C3b, V3, G8, G8b) and one in the opacity rule across a shadow root (C2). Each of the six was shown to change the tool's output on a probe fixture, so none is an equivalent mutant. The fixes are tests, fixtures and a few lines of spec wording.
 

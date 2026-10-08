@@ -258,6 +258,24 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: LCR-51 (spec.md:219), tests/test_low_contrast_real.py:299 (spec)
 - last seen: 2026-10-08T05:06:18Z
 
+### L-042 - Pin a rule that pools a list of regions with a fixture whose outcome depends on a region that is neither the first nor the last
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,vision` · harmful: 0
+- features: low-contrast-real
+- evidence: mutant V5, src/squint_mcp/vision.py:64 (LCR-55) (tests,vision)
+- last seen: 2026-10-08T05:47:06Z
+
+### L-043 - Test a rule over the own text of an element with text that a child splits into several text nodes, not only with one text node
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,checks` · harmful: 0
+- features: low-contrast-real
+- evidence: mutant C4, src/squint_mcp/js/collect_elements.js:139 (LCR-55) (tests,checks)
+- last seen: 2026-10-08T05:47:06Z
+
+### L-044 - When a criterion says all of a set, give it a fixture where each member alone decides the outcome, or name the members it pins
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `spec` · harmful: 0
+- features: low-contrast-real
+- evidence: LCR-55 (spec.md:111); mutants V5, C4 (spec)
+- last seen: 2026-10-08T05:47:06Z
+
 ## Quarantined (failed when applied - ignore)
 
 A confirmed lesson that recurred alongside failure. Kept for the maintainer to review.
