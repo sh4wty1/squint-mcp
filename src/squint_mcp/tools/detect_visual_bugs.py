@@ -62,12 +62,12 @@ async def detect_visual_bugs(
     against the background painted behind it, sampled from the pixels, is below
     WCAG 2.2 SC 1.4.3). Returns `findings`, most severe first and then in the
     order of the page, and `captures`, one per viewport, whose `stabilized` is
-    false when the network never went idle. Each Finding names its element by a `selector` that is
-    unique on the page and works in `inspect_element`, and carries the styles
-    and measurements that back it. The five most severe Findings also get a
-    crop of their element: `evidence.cropIndex` is the position of that image
-    among the images of the response, or null. A call that takes longer than
-    30s, all viewports together, fails.
+    false when the network never went idle. Each Finding names its element by a
+    `selector` that is unique on the page and works in `inspect_element`, and
+    carries the styles and measurements that back it. The five most severe
+    Findings also get a crop of their element: `evidence.cropIndex` is the
+    position of that image among the images of the response, or null. A call
+    that takes longer than 30s, all viewports together, fails.
     """
     # A repeated Check name or viewport counts once, at its first place.
     names = list(dict.fromkeys(checks or CHECKS))
