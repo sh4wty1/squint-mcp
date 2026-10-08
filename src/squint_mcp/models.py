@@ -53,9 +53,14 @@ class Element(BaseModel):
     """An excerpt of the text content, whitespace collapsed."""
     own_text: bool
     """Whether a non-whitespace text node is a direct child."""
+    own_text_boxes: list[Box]
+    """The boxes, as painted and in page coordinates, of the text nodes that are
+    direct children."""
     own_text_right: float | None
     """The right edge, as painted and in page coordinates, of the text nodes that
     are direct children; None when they paint no box."""
+    opacity: float
+    """The element's opacity multiplied by that of every ancestor."""
     scroll_width: int
     client_width: int
     selector: str
@@ -73,6 +78,10 @@ class Capture:
     document order."""
     pixels: Image.Image
     """The full page in RGB, one image pixel per CSS pixel."""
+    background: Image.Image
+    """The full page in RGB with no text painted."""
+    ink: Image.Image
+    """How much text ink each pixel gets, 0 to 255, in mode L."""
 
 
 Severity = Literal["critical", "major", "minor", "info"]
@@ -80,12 +89,12 @@ Category = Literal["visual-bug", "a11y", "consistency", "ux", "responsive"]
 
 
 class Evidence(BaseModel):
-    """What backs a Finding: the styles that explain it and the numbers measured."""
+    """What backs a Finding: the styles that explain it and what was measured."""
 
     model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
 
     computed: dict[str, str]
-    measured: dict[str, int | float]
+    measured: dict[str, int | float | str]
     crop_index: int | None = None
     """Index of the Finding's crop among the images of the response, if it has one."""
 

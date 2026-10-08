@@ -337,21 +337,25 @@ async def test_a_page_with_one_very_large_text_node_is_checked(client: Client) -
 
 async def test_unknown_check_is_an_error_listing_the_valid_ones(client: Client) -> None:
     text = await error_text(client, {"url": BUG, "checks": ["nope"]})
-    assert 'Unknown check "nope". Valid checks: text-clipped.' in text
+    assert (
+        'Unknown check "nope". Valid checks: low-contrast-real, text-clipped.' in text
+    )
 
 
 async def test_unknown_check_after_a_valid_one_is_still_an_error(
     client: Client,
 ) -> None:
     text = await error_text(client, {"url": BUG, "checks": ["text-clipped", "nope"]})
-    assert 'Unknown check "nope". Valid checks: text-clipped.' in text
+    assert (
+        'Unknown check "nope". Valid checks: low-contrast-real, text-clipped.' in text
+    )
 
 
 async def test_the_first_unknown_check_in_the_order_given_is_the_one_named(
     client: Client,
 ) -> None:
     text = await error_text(client, {"url": BUG, "checks": ["zzz", "nope"]})
-    assert 'Unknown check "zzz". Valid checks: text-clipped.' in text
+    assert 'Unknown check "zzz". Valid checks: low-contrast-real, text-clipped.' in text
 
 
 async def test_unknown_check_is_reported_before_any_browser_work(
@@ -359,7 +363,9 @@ async def test_unknown_check_is_reported_before_any_browser_work(
 ) -> None:
     arguments = {"url": BUG, "checks": ["nope"]}
     text = await error_text(client_without_chromium, arguments)
-    assert 'Unknown check "nope". Valid checks: text-clipped.' in text
+    assert (
+        'Unknown check "nope". Valid checks: low-contrast-real, text-clipped.' in text
+    )
     assert "Could not launch Chromium" not in text
 
 
@@ -417,3 +423,66 @@ async def test_total_timeout_covers_all_viewports_together_and_server_recovers(
     assert "Timed out after 4s" in text
     assert 4 <= elapsed < 5
     assert len((await detect(client, BUG))["findings"]) == 2
+
+
+ORDER = fixture_url("checks-order.html")
+IN_DOCUMENT_ORDER = [
+    ("#a", "low-contrast-real"),
+    ("#b", "text-clipped"),
+    ("#c", "low-contrast-real"),
+    ("#c", "text-clipped"),
+    ("#d", "text-clipped"),
+    ("#e", "low-contrast-real"),
+]
+
+
+async def test_findings_of_two_checks_come_in_document_order(client: Client) -> None:
+    findings = (await detect(client, ORDER))["findings"]
+    assert {finding["severity"] for finding in findings} == {"minor"}
+    assert [(f["selector"], f["check"]) for f in findings] == IN_DOCUMENT_ORDER
+
+
+async def test_two_findings_on_one_element_come_in_check_name_order(
+    client: Client,
+) -> None:
+    findings = (await detect(client, ORDER))["findings"]
+    on_c = await findings_on(client, ORDER, "#c", findings)
+    assert [finding["check"] for finding in on_c] == [
+        "low-contrast-real",
+        "text-clipped",
+    ]
+
+
+async def test_the_order_of_the_checks_argument_changes_nothing(client: Client) -> None:
+    named = await detect(client, ORDER, checks=["text-clipped", "low-contrast-real"])
+    assert named == await detect(client, ORDER)
+    assert len(named["findings"]) == 6
+
+
+async def test_the_crops_go_to_the_first_five_findings_across_checks(
+    client: Client,
+) -> None:
+    result = await call(client, ORDER)
+    assert result.structured_content is not None
+    findings = result.structured_content["findings"]
+    assert [(f["selector"], f["check"]) for f in findings] == IN_DOCUMENT_ORDER
+    assert len(images(result)) == 5
+    assert [f["evidence"]["cropIndex"] for f in findings] == [0, 1, 2, 3, 4, None]
+
+
+async def test_findings_of_one_severity_come_viewport_by_viewport(
+    client: Client,
+) -> None:
+    url = fixture_url("low-contrast-bug.html")
+    findings = (await detect(client, url, viewports=[DESKTOP, MOBILE]))["findings"]
+    hero = '[data-testid="hero"]'
+    assert [(f["viewport"]["width"], f["selector"]) for f in findings] == [
+        (1440, hero),
+        (390, hero),
+        (1440, "#flat"),
+        (1440, "#alpha"),
+        (1440, "#almost-large"),
+        (390, "#flat"),
+        (390, "#alpha"),
+        (390, "#almost-large"),
+    ]

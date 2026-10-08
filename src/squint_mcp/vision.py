@@ -2,6 +2,7 @@
 
 import io
 import math
+from collections import Counter
 from typing import cast
 
 from PIL import Image
@@ -47,6 +48,37 @@ def is_flat(pixels: Image.Image, box: Box) -> bool:
     return (
         region.width * region.height == 0 or region.getcolors(maxcolors=1) is not None
     )
+
+
+def text_backgrounds(
+    background: Image.Image, ink: Image.Image, boxes: list[Box]
+) -> list[tuple[int, tuple[int, int, int]]]:
+    """The colours painted behind the text inside `boxes`, each with how many text
+    pixels it lies behind.
+
+    `background` is the page without its text and `ink` how much text ink each
+    pixel gets (AD-004). Empty when no pixel of the boxes is text.
+    """
+    is_text = [255 if value >= config.TEXT_INK_MIN else 0 for value in range(256)]
+    counts: Counter[tuple[int, int, int]] = Counter()
+    for box in boxes:
+        behind = _region(background, box, 0)
+        area = behind.width * behind.height
+        if area == 0:
+            continue
+        # With the text pixels as its opaque ones, the region counts its colours
+        # apart for text and for the rest.
+        # Pillow types `point` for every kind of table it takes, some of them untyped.
+        text = _region(ink, box, 0).point(is_text)  # pyright: ignore[reportUnknownMemberType]
+        behind.putalpha(text)
+        colors = cast(
+            "list[tuple[int, tuple[int, int, int, int]]]",
+            behind.getcolors(maxcolors=area),
+        )
+        for count, (red, green, blue, alpha) in colors:
+            if alpha:
+                counts[red, green, blue] += count
+    return [(count, color) for color, count in counts.items()]
 
 
 def sample_colors(pixels: Image.Image, box: Box) -> list[SampledColor]:

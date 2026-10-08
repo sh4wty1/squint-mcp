@@ -1,8 +1,8 @@
 // Runs in the page over the elements matched by the selector and returns them in
 // document order. For each one: its border box as painted, in page coordinates, its
 // box model as laid out, the requested computed styles, an excerpt of its text, the
-// right edge of its own text, its scroll and client width and a selector that is
-// unique on the page.
+// boxes and the right edge of its own text, its opacity with that of its ancestors,
+// its scroll and client width and a selector that is unique on the page.
 (elements, { properties, textLimit, transformMinSizeDiffPx }) => {
   // Document order, an open shadow tree right after its host. Playwright lists the
   // matches inside shadow trees after the whole light tree, so its order is not used.
@@ -87,6 +87,20 @@
     return flat.length > textLimit ? `${flat.slice(0, textLimit - 1)}…` : flat;
   };
 
+  // An element is as faded as its ancestors make it: its opacity times theirs, a
+  // slotted element continuing at its slot and a shadow root at its host. Kept per
+  // element so the walk stays linear.
+  const opacities = new Map();
+  const opacityOf = (element) => {
+    if (!opacities.has(element)) {
+      const parent =
+        element.assignedSlot ?? element.parentElement ?? element.getRootNode().host;
+      const own = parseFloat(getComputedStyle(element).opacity);
+      opacities.set(element, parent ? own * opacityOf(parent) : own);
+    }
+    return opacities.get(element);
+  };
+
   const describe = (element) => {
     const rect = element.getBoundingClientRect();
     const style = getComputedStyle(element);
@@ -111,10 +125,12 @@
         : offset;
     const layoutWidth = layout(element.offsetWidth, rect.width);
     const layoutHeight = layout(element.offsetHeight, rect.height);
-    // Where the element's own text ends, as painted: a Range over each text node that
-    // is a direct child. scrollWidth cannot tell it from an overflowing child.
-    // A running maximum: one text node can paint more rects than a call takes arguments.
+    // Where the element's own text is and where it ends, as painted: a Range over each
+    // text node that is a direct child. scrollWidth cannot tell it from an overflowing
+    // child. A running maximum: one text node can paint more rects than a call takes
+    // arguments.
     const range = document.createRange();
+    const ownTextBoxes = [];
     let ownTextRight = null;
     for (const node of element.childNodes) {
       if (node.nodeType !== Node.TEXT_NODE) continue;
@@ -122,6 +138,14 @@
       for (const textRect of range.getClientRects()) {
         const right = textRect.right + window.scrollX;
         if (ownTextRight === null || right > ownTextRight) ownTextRight = right;
+        if (textRect.width > 0 && textRect.height > 0) {
+          ownTextBoxes.push({
+            x: textRect.x + window.scrollX,
+            y: textRect.y + window.scrollY,
+            w: textRect.width,
+            h: textRect.height,
+          });
+        }
       }
     }
     return {
@@ -147,7 +171,9 @@
       ownText: [...element.childNodes].some(
         (node) => node.nodeType === Node.TEXT_NODE && node.nodeValue.trim() !== "",
       ),
+      ownTextBoxes,
       ownTextRight,
+      opacity: opacityOf(element),
       scrollWidth: element.scrollWidth,
       clientWidth: element.clientWidth,
       selector: selectorOf(element),

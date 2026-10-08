@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: which pixels are an element's text</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are a block of
+         200 x 20 text pixels, 5px under the top of their 30px line. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      .text {
+        margin: 20px 0 0 40px;
+        width: 200px;
+      }
+      /* 4.47:1 on white, under 4.5:1. */
+      .grey {
+        color: rgb(119, 119, 119);
+      }
+      /* Both readable, 21:1 each. The parent's black text would be 1:1 on the
+         badge's background, where it paints nothing. */
+      #badge {
+        color: rgb(255, 255, 255);
+        background: rgb(0, 0, 0);
+      }
+      /* Two lines of 10 glyphs. The first is 21:1, the second 1.6:1. */
+      #two-lines {
+        color: rgb(255, 255, 255);
+        background-color: rgb(0, 0, 0);
+        background-image: linear-gradient(
+          to bottom,
+          rgb(0, 0, 0) 0 30px,
+          rgb(204, 204, 204) 30px 60px
+        );
+      }
+      /* Three lines. Only the middle one is 1.6:1. */
+      #three-lines {
+        color: rgb(255, 255, 255);
+        background-color: rgb(0, 0, 0);
+        background-image: linear-gradient(
+          to bottom,
+          rgb(0, 0, 0) 0 30px,
+          rgb(204, 204, 204) 30px 60px,
+          rgb(0, 0, 0) 60px 90px
+        );
+      }
+      /* Two text nodes with an empty element between them. Only the second is
+         1.6:1. */
+      #split {
+        color: rgb(255, 255, 255);
+        background-color: rgb(0, 0, 0);
+        background-image: linear-gradient(
+          to right,
+          rgb(0, 0, 0) 0 100px,
+          rgb(204, 204, 204) 100px 200px
+        );
+      }
+      .veiled {
+        position: relative;
+      }
+      .veil {
+        position: absolute;
+        inset: 0;
+      }
+      /* Under 7 parts of white in 10, less than half of the ink shows. */
+      #veiled-most + .veil {
+        background: rgba(255, 255, 255, 0.7);
+      }
+      /* Under 3 parts in 10, more than half does. */
+      #veiled-little + .veil {
+        background: rgba(255, 255, 255, 0.3);
+      }
+      #faded-host {
+        opacity: 0.6;
+      }
+      /* 2.04:1 on the faded black its slot sits on, painted rgb(101, 101, 101). */
+      #slotted {
+        color: rgb(153, 153, 153);
+      }
+      /* Its text lies left of the page. */
+      #off-page {
+        position: absolute;
+        top: 20px;
+        left: -500px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="parent" class="text">XXXX <span id="badge">XXXXX</span></div>
+    <div id="two-lines" class="text">XXXXXXXXXX XXXXXXXXXX</div>
+    <div class="text veiled">
+      <div id="veiled-most" class="grey">XXXXXXXXXX</div>
+      <div class="veil"></div>
+    </div>
+    <div class="text veiled">
+      <div id="veiled-little" class="grey">XXXXXXXXXX</div>
+      <div class="veil"></div>
+    </div>
+    <div id="plain-host" class="text"></div>
+    <div id="faded-host" class="text"></div>
+    <div id="off-page" class="grey">XXXXXXXXXX</div>
+    <div id="three-lines" class="text">XXXXXXXXXX XXXXXXXXXX XXXXXXXXXX</div>
+    <div id="split" class="text">XXXXX<b></b>XXXXX</div>
+    <div id="slot-host" class="text"><div id="slotted">XXXXXXXXXX</div></div>
+    <script>
+      // Grey text in an open shadow tree: the page's font is inherited through the host.
+      for (const [host, id] of [
+        ["plain-host", "in-plain"],
+        ["faded-host", "in-faded"],
+      ]) {
+        document.getElementById(host).attachShadow({ mode: "open" }).innerHTML =
+          `<div id="${id}" style="color: rgb(119, 119, 119)">XXXXXXXXXX</div>`;
+      }
+      // Slotted text: its parent in the page is the host, but it is painted inside
+      // the faded element of the shadow tree that holds its slot.
+      document.getElementById("slot-host").attachShadow({ mode: "open" }).innerHTML =
+        `<div style="opacity: 0.6; background: rgb(0, 0, 0)"><slot></slot></div>`;
+    </script>
+  </body>
+</html>

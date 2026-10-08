@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: the bounds of low contrast</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are a block of
+         200 x 20 text pixels, 5px under the top of their 30px line: 4000 pixels, of
+         which a tenth is 400. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      .text {
+        margin: 20px 0 0 40px;
+        width: 200px;
+      }
+      /* White text on black, 21:1, but for a light band where it is 1.6:1. */
+      .banded {
+        color: rgb(255, 255, 255);
+        background-color: rgb(0, 0, 0);
+      }
+      /* The last 20 columns of 200: 400 pixels, a tenth. */
+      #right {
+        background-image: linear-gradient(
+          to right,
+          rgb(0, 0, 0) 0 180px,
+          rgb(204, 204, 204) 180px 200px
+        );
+      }
+      /* The first 19 columns: 380 pixels, under a tenth. */
+      #left {
+        background-image: linear-gradient(
+          to right,
+          rgb(204, 204, 204) 0 19px,
+          rgb(0, 0, 0) 19px 200px
+        );
+      }
+      /* The glyphs take rows 5 to 24 of the line. The last 2 rows: 400 pixels. */
+      #bottom {
+        background-image: linear-gradient(
+          to bottom,
+          rgb(0, 0, 0) 0 23px,
+          rgb(204, 204, 204) 23px 30px
+        );
+      }
+      /* The first row: 200 pixels, under a tenth. */
+      #top {
+        background-image: linear-gradient(
+          to bottom,
+          rgb(204, 204, 204) 0 6px,
+          rgb(0, 0, 0) 6px 30px
+        );
+      }
+      /* 1:1, and still painted. */
+      #same {
+        color: rgb(255, 255, 255);
+      }
+      /* 4.47:1 on white wherever it is used below. */
+      .grey,
+      #nested-child {
+        color: rgb(119, 119, 119);
+      }
+      #hidden {
+        visibility: hidden;
+      }
+      /* Would be 1:1. */
+      #transparent {
+        color: transparent;
+      }
+      /* Faded, with enough ink left to count as text. */
+      .faded {
+        opacity: 0.6;
+      }
+      /* A box of one pixel whose text starts 50px to its right. */
+      #clipped-away {
+        position: absolute;
+        top: 20px;
+        left: 400px;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        text-indent: 50px;
+        white-space: nowrap;
+      }
+      .covering {
+        position: relative;
+      }
+      .cover {
+        position: absolute;
+        inset: 0;
+        background: rgb(255, 255, 255);
+      }
+      /* The light band lies behind the last 50px, which the parent cuts off. */
+      .window {
+        width: 150px;
+        overflow: hidden;
+      }
+      #clipped-part {
+        width: 200px;
+        background-image: linear-gradient(
+          to right,
+          rgb(0, 0, 0) 0 150px,
+          rgb(204, 204, 204) 150px 200px
+        );
+      }
+      /* 3.03:1 is enough only for large text: from 24px, or 18.66px in bold. */
+      #small-bold,
+      #semibold {
+        color: rgb(148, 148, 148);
+      }
+      #small-bold {
+        font-size: 18px;
+        font-weight: 700;
+      }
+      #semibold {
+        font-weight: 600;
+      }
+      /* Large text at 2.84:1, under its 3:1. */
+      #large-low {
+        width: 240px;
+        font-size: 24px;
+        color: rgb(153, 153, 153);
+      }
+      /* 2.99:1, just under the 3:1 where a Finding turns major. */
+      #below-floor {
+        color: rgb(149, 149, 149);
+      }
+      #no-box {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="right" class="text banded">XXXXXXXXXX</div>
+    <div id="left" class="text banded">XXXXXXXXXX</div>
+    <div id="bottom" class="text banded">XXXXXXXXXX</div>
+    <div id="top" class="text banded">XXXXXXXXXX</div>
+    <div id="same" class="text">XXXXXXXXXX</div>
+    <div id="nested" class="text">XXXX <span id="nested-child">XXXXX</span></div>
+    <div id="hidden" class="text grey">XXXXXXXXXX</div>
+    <div id="transparent" class="text">XXXXXXXXXX</div>
+    <div id="faded" class="text grey faded">XXXXXXXXXX</div>
+    <div class="text faded"><span id="faded-child" class="grey">XXXXXXXXXX</span></div>
+    <div id="clipped-away" class="grey">XXXXXXXXXX</div>
+    <div class="text covering">
+      <div id="covered" class="grey">XXXXXXXXXX</div>
+      <div class="cover"></div>
+    </div>
+    <div class="text window"><div id="clipped-part" class="banded">XXXXXXXXXX</div></div>
+    <div id="small-bold" class="text">XXXXXXXXXX</div>
+    <div id="semibold" class="text">XXXXXXXXXX</div>
+    <div id="large-low" class="text">XXXXXXXXXX</div>
+    <div id="below-floor" class="text">XXXXXXXXXX</div>
+    <div id="no-box" class="text grey">XXXXXXXXXX</div>
+  </body>
+</html>

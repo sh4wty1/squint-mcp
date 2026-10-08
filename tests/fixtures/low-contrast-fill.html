@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: text painted by its fill, not by its colour</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are a block of
+         200 x 20 text pixels, 5px under the top of their 30px line. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      .text {
+        margin: 20px 0 0 40px;
+        width: 200px;
+      }
+      /* Painted black, 21:1. Its colour alone would give 1.6:1. */
+      #fill-dark {
+        color: rgb(204, 204, 204);
+        -webkit-text-fill-color: rgb(0, 0, 0);
+      }
+      /* Painted at 1.6:1. Its colour alone would give 21:1. */
+      #fill-light {
+        color: rgb(0, 0, 0);
+        -webkit-text-fill-color: rgb(204, 204, 204);
+      }
+      /* Gradient text: the glyphs show the background, the fill paints nothing. */
+      #gradient-text {
+        color: rgb(255, 255, 255);
+        background-image: linear-gradient(to right, rgb(0, 0, 0), rgb(51, 51, 51));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="fill-dark" class="text">XXXXXXXXXX</div>
+    <div id="fill-light" class="text">XXXXXXXXXX</div>
+    <div id="gradient-text" class="text">XXXXXXXXXX</div>
+  </body>
+</html>

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: the order of Findings across Checks</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are 200px wide.
+         Six Findings, all minor, from two Checks that alternate down the page. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      .text {
+        margin: 20px 0 0 40px;
+        width: 200px;
+      }
+      /* 4.47:1 on white, under 4.5:1. */
+      .grey {
+        color: rgb(119, 119, 119);
+      }
+      /* Cut by 4px. */
+      .clipped {
+        width: 196px;
+        overflow-x: hidden;
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="a" class="text grey">XXXXXXXXXX</div>
+    <div id="b" class="text clipped">XXXXXXXXXX</div>
+    <div id="c" class="text grey clipped">XXXXXXXXXX</div>
+    <div id="d" class="text clipped">XXXXXXXXXX</div>
+    <div id="e" class="text grey">XXXXXXXXXX</div>
+  </body>
+</html>

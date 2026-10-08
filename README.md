@@ -16,7 +16,7 @@ The server currently exposes three tools:
 | `inspect_element` | `url`, `selector`, `viewport` (optional) | one element's computed styles, box model, sampled colours, `stabilized`, and a crop |
 | `detect_visual_bugs` | `url`, `viewports` (optional), `checks` (optional) | Findings ordered by severity, `stabilized` per viewport, and up to five crops |
 
-`detect_visual_bugs` runs one Check today, `text-clipped`; `low-contrast-real` is next. See [`docs/ROADMAP.md`](docs/ROADMAP.md) for the delivery slices and [`docs/SPEC.md`](docs/SPEC.md) for what v0.1 will contain.
+`detect_visual_bugs` runs two Checks: `text-clipped` (text cut off by its own box) and `low-contrast-real` (text whose contrast against the background sampled from the pixels is below WCAG 2.2 SC 1.4.3, so it is right over images and gradients). See [`docs/ROADMAP.md`](docs/ROADMAP.md) for the delivery slices and [`docs/SPEC.md`](docs/SPEC.md) for what v0.1 will contain.
 
 ## Run from a checkout
 

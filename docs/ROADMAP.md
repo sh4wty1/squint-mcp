@@ -17,7 +17,7 @@ A v0.1 descrita em [`SPEC.md`](SPEC.md) é entregue em 5 fatias verticais. Cada 
 | 1 | Fundação + `ping` | — | `tlc-spec-driven` | concluída |
 | 2 | Capture + `inspect_element` | 1 | `tlc-spec-driven` | concluída |
 | 3 | `detect_visual_bugs` + `text-clipped` | 2 | `tlc-spec-driven` | concluída |
-| 4 | `low-contrast-real` | 3 | `tlc-spec-lean` | pendente |
+| 4 | `low-contrast-real` | 3 | `tlc-spec-lean` | concluída |
 | 5 | Publicação no PyPI | 4 | manual (`ready-for-human`) | pendente |
 
 ---
@@ -83,7 +83,7 @@ A v0.1 descrita em [`SPEC.md`](SPEC.md) é entregue em 5 fatias verticais. Cada 
 - **Não entra:** mudanças no Capture, no Finding ou nas tools além do que o Check exigir; axe-core; outras regras WCAG.
 - **Dependência:** fatia 3.
 - **Skill:** `tlc-spec-lean`.
-- **Status:** pendente.
+- **Status:** concluída. Spec, design e relatório de validação em [`.specs/features/low-contrast-real/`](../.specs/features/low-contrast-real/).
 
 ## 5. Publicação no PyPI
 

@@ -48,8 +48,14 @@ INSPECT_COMPUTED_PROPERTIES = (
 )
 
 # Source: Squint default. What a Capture collects for every element: the inspect
-# properties plus `direction`, which tells a Check on which edge text is cut.
-CAPTURE_COMPUTED_PROPERTIES = (*INSPECT_COMPUTED_PROPERTIES, "direction")
+# properties plus `direction`, which tells a Check on which edge text is cut, and
+# `-webkit-text-fill-color`, the colour that paints the glyphs: that of `color`
+# unless the page sets it.
+CAPTURE_COMPUTED_PROPERTIES = (
+    *INSPECT_COMPUTED_PROPERTIES,
+    "direction",
+    "-webkit-text-fill-color",
+)
 
 # Source: docs/SPEC.md, Images: "At most five crops per call".
 MAX_CROPS = 5
@@ -68,3 +74,31 @@ TEXT_CLIPPED_MAJOR_OVERFLOW_PX = 8
 # Source: docs/adr/0003. An element whose painted size differs from its layout size
 # by this much is under a transform. The collector is passed the same value.
 TRANSFORM_MIN_SIZE_DIFF_PX = 1
+
+# Source: WCAG 2.2 SC 1.4.3 Contrast (Minimum): "a contrast ratio of at least 4.5:1".
+CONTRAST_MIN_RATIO = 4.5
+
+# Source: WCAG 2.2 SC 1.4.3: "Large-scale text [has] a contrast ratio of at least 3:1".
+CONTRAST_MIN_RATIO_LARGE = 3.0
+
+# Source: WCAG 2.2, "large scale": at least 18 point, which is 24 CSS pixels.
+LARGE_TEXT_MIN_PX = 24.0
+
+# Source: WCAG 2.2, "large scale": at least 14 point bold, "typically 18.66px".
+LARGE_BOLD_TEXT_MIN_PX = 18.66
+
+# Source: CSS Fonts: the `bold` keyword computes to a font-weight of 700.
+BOLD_MIN_WEIGHT = 700
+
+# Source: Squint default. 3:1 is the lowest ratio WCAG accepts for any text: under
+# it the Finding is `major`, from it up to the required ratio it is `minor`.
+LOW_CONTRAST_MAJOR_BELOW_RATIO = 3.0
+
+# Source: Squint default. Over a background that varies, the worst tenth of the
+# text decides: one glyph in a word of ten. A title that half disappears is caught
+# and a few stray pixels of a photo are not.
+LOW_CONTRAST_WORST_PART_PERCENT = 10
+
+# Source: Squint default. Ink runs from 0 to 255: a pixel at least half covered by
+# a glyph is text, a fainter anti-aliased edge is background.
+TEXT_INK_MIN = 128
