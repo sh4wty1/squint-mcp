@@ -111,6 +111,8 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 11. WHEN the own text of an element paints several boxes, as when it wraps, THEN the Check SHALL judge the text pixels of all of them; `#two-lines` in `low-contrast-reach.html`, two lines of ten glyphs with the low-contrast Background behind the second line only, SHALL get one Finding with `evidence.measured.contrastRatio` equal to 1.6. <!-- LCR-55 -->
 12. WHEN text of `rgb(119, 119, 119)` on white lies under a layer of `rgba(255, 255, 255, 0.3)` (`#veiled-little` in `low-contrast-reach.html`) THEN the Check SHALL return one Finding for it with `evidence.measured.textColor` equal to `#777777` and `evidence.measured.contrastRatio` equal to 4.47. <!-- LCR-57 -->
 13. WHEN text of `rgb(119, 119, 119)` on white is in the open shadow tree of a host with no opacity set (`#in-plain` in `low-contrast-reach.html`) THEN the Check SHALL return one Finding for it with `evidence.measured.contrastRatio` equal to 4.47. <!-- LCR-58 -->
+14. WHEN the low-contrast Background lies only behind a box of the own text that is neither the first nor the last (`#three-lines` in `low-contrast-reach.html`: three lines, the band behind the middle one) THEN the Check SHALL return one Finding for the element with `evidence.measured.contrastRatio` equal to 1.6. <!-- LCR-61 -->
+15. WHEN the own text of an element is several text nodes and the low-contrast Background lies only behind one that is not the first (`#split` in `low-contrast-reach.html`: `XXXXX`, an empty `b`, `XXXXX`, the band behind the second half) THEN the Check SHALL return one Finding for the element with `evidence.measured.contrastRatio` equal to 1.6. <!-- LCR-62 -->
 
 **Independent Test**: Call `detect_visual_bugs` on `low-contrast-bug.html` and see the gradient case reported with the colour sampled from the gradient.
 
@@ -299,13 +301,15 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | LCR-58 | P1: Detect text with low real contrast | Fix 3 | Implemented |
 | LCR-59 | P1: Stay silent when the text can be read | Fix 3 | Implemented |
 | LCR-60 | P1: Stay silent when the text can be read | Fix 2 | Implemented |
+| LCR-61 | P1: Detect text with low real contrast | Fix 4 | Implemented |
+| LCR-62 | P1: Detect text with low real contrast | Fix 4 | Implemented |
 
-**Coverage:** 60 total, 59 mapped to tasks or fixes, 1 unmapped (LCR-46, the closing step).
+**Coverage:** 62 total, 61 mapped to tasks or fixes, 1 unmapped (LCR-46, the closing step).
 
 ---
 
 ## Success Criteria
 
-- [ ] All 60 requirements verified by the Verifier, LCR-40 to LCR-46 from file evidence.
+- [ ] All 62 requirements verified by the Verifier, LCR-40 to LCR-46 from file evidence.
 - [ ] The gate passes: typecheck, lint, format check and the whole test suite.
 - [ ] The discrimination sensor leaves no surviving mutant in the Check, the sampling code and the ordering of Findings.

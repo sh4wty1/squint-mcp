@@ -289,6 +289,12 @@ The Verifier's first pass failed on six surviving mutants (`validation.md`). No 
 - [x] **Fix 2** (C3b, V3, LCR-51; LCR-54, LCR-55, LCR-60): a parent is not judged on its child's text; every line of a wrapped text is judged; text off the page; LCR-51 reworded to the one case it pins.
 - [x] **Fix 3** (G8, G8b, C2; LCR-56 to LCR-59): text under a translucent layer on each side of half the ink, with the limit on its ratio recorded under Out of Scope; opacity across a shadow root.
 
+## Fix of the second validation pass
+
+The six survivors of pass 1 are killed. Two new mutants survived against LCR-55: only the last box sampled, and only the first text node collected.
+
+- [x] **Fix 4** (V5, C4; LCR-61, LCR-62): `#three-lines`, with the band behind the middle line, and `#split`, two text nodes with the band behind the second.
+
 ---
 
 ## Phase Execution Map

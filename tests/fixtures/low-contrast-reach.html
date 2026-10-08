@@ -43,6 +43,28 @@
           rgb(204, 204, 204) 30px 60px
         );
       }
+      /* Three lines. Only the middle one is 1.6:1. */
+      #three-lines {
+        color: rgb(255, 255, 255);
+        background-color: rgb(0, 0, 0);
+        background-image: linear-gradient(
+          to bottom,
+          rgb(0, 0, 0) 0 30px,
+          rgb(204, 204, 204) 30px 60px,
+          rgb(0, 0, 0) 60px 90px
+        );
+      }
+      /* Two text nodes with an empty element between them. Only the second is
+         1.6:1. */
+      #split {
+        color: rgb(255, 255, 255);
+        background-color: rgb(0, 0, 0);
+        background-image: linear-gradient(
+          to right,
+          rgb(0, 0, 0) 0 100px,
+          rgb(204, 204, 204) 100px 200px
+        );
+      }
       .veiled {
         position: relative;
       }
@@ -83,6 +105,8 @@
     <div id="plain-host" class="text"></div>
     <div id="faded-host" class="text"></div>
     <div id="off-page" class="grey">XXXXXXXXXX</div>
+    <div id="three-lines" class="text">XXXXXXXXXX XXXXXXXXXX XXXXXXXXXX</div>
+    <div id="split" class="text">XXXXX<b></b>XXXXX</div>
     <script>
       // Grey text in an open shadow tree: the page's font is inherited through the host.
       for (const [host, id] of [

@@ -347,12 +347,14 @@ async def reach(client: Client, selector: str) -> list[dict[str, Any]]:
     return await findings_on(client, REACH, selector, findings)
 
 
-async def test_only_three_texts_of_the_reach_fixture_are_reported(
+async def test_only_five_texts_of_the_reach_fixture_are_reported(
     client: Client,
 ) -> None:
     findings = (await detect(client, REACH, checks=ONLY))["findings"]
     assert sorted(finding["selector"] for finding in findings) == [
         "#in-plain",
+        "#split",
+        "#three-lines",
         "#two-lines",
         "#veiled-little",
     ]
@@ -367,6 +369,16 @@ async def test_every_line_of_a_text_is_judged(client: Client) -> None:
     (finding,) = await reach(client, "#two-lines")
     assert finding["evidence"]["measured"]["contrastRatio"] == 1.6
     assert finding["evidence"]["measured"]["sampledBackground"] == "#cccccc"
+
+
+async def test_a_line_between_two_others_is_judged(client: Client) -> None:
+    (finding,) = await reach(client, "#three-lines")
+    assert finding["evidence"]["measured"]["contrastRatio"] == 1.6
+
+
+async def test_every_text_node_of_an_element_is_judged(client: Client) -> None:
+    (finding,) = await reach(client, "#split")
+    assert finding["evidence"]["measured"]["contrastRatio"] == 1.6
 
 
 async def test_text_mostly_hidden_by_a_translucent_layer_is_not_reported(
@@ -397,4 +409,4 @@ async def test_text_in_the_shadow_tree_of_a_faded_host_is_not_reported(
 async def test_text_off_the_page_is_not_reported(client: Client) -> None:
     findings = (await detect(client, REACH, checks=ONLY))["findings"]
     assert "#off-page" not in [finding["selector"] for finding in findings]
-    assert len(findings) == 3
+    assert len(findings) == 5
