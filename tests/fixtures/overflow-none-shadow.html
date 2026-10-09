@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: a shadow past the right edge</title>
+    <style>
+      /* A shadow is painted past the edge and does not widen the page. */
+      html,
+      body {
+        margin: 0;
+      }
+      div {
+        height: 30px;
+      }
+      #shadow {
+        box-shadow: 300px 0 rgb(0, 0, 0);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="shadow"></div>
+  </body>
+</html>

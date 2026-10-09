@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: a wide body under an html that scrolls</title>
+    <style>
+      /* The overflow-x of html is not visible, so that of body is its own:
+         the page still scrolls, by the width of body. */
+      html,
+      body {
+        margin: 0;
+      }
+      html {
+        overflow-x: auto;
+      }
+      body {
+        width: 1640px;
+        height: 30px;
+        overflow-x: hidden;
+      }
+    </style>
+  </head>
+  <body>
+  </body>
+</html>

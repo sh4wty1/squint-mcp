@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: a right margin past the right edge</title>
+    <style>
+      /* The box fits; only its right margin passes the edge. */
+      html,
+      body {
+        margin: 0;
+      }
+      div {
+        height: 30px;
+      }
+      #margin {
+        width: 90%;
+        margin-right: 600px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="margin"></div>
+  </body>
+</html>

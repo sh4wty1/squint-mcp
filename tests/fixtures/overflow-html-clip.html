@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: overflow-x: clip on html</title>
+    <style>
+      /* The page hides its horizontal overflow: it does not scroll sideways. */
+      html,
+      body {
+        margin: 0;
+      }
+      div {
+        height: 30px;
+      }
+      html {
+        overflow-x: clip;
+      }
+      #wide {
+        width: 1640px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="wide"></div>
+  </body>
+</html>

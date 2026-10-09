@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: a clipped text and a wide element</title>
+    <style>
+      /* Ahem: 10 glyphs at 20px are 200px wide, cut by 4px. Then an element of 1640px. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      #clipped {
+        width: 196px;
+        overflow-x: hidden;
+        white-space: nowrap;
+      }
+      #wide {
+        width: 1640px;
+        height: 30px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="clipped">XXXXXXXXXX</div>
+    <div id="wide"></div>
+  </body>
+</html>

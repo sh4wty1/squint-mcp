@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: an element under 1px short of the page's edge</title>
+    <style>
+      /* The page scrolls whole pixels: 1639.6px make it 1640px wide. */
+      html,
+      body {
+        margin: 0;
+      }
+      div {
+        height: 30px;
+      }
+      #fraction {
+        width: 1639.6px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="fraction"></div>
+  </body>
+</html>

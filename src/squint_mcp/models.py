@@ -46,6 +46,8 @@ class Element(BaseModel):
 
     model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
 
+    tag: str
+    """The tag name, in lower case for an HTML element."""
     box: Box
     box_model: BoxModel
     computed: dict[str, str]

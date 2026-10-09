@@ -110,3 +110,8 @@ LOW_CONTRAST_WORST_PART_PERCENT = 10
 # Source: Squint default. Ink runs from 0 to 255: a pixel at least half covered by
 # a glyph is text, a fainter anti-aliased edge is background.
 TEXT_INK_MIN = 128
+
+# Source: Squint default. A page scrolls whole pixels and a box ends on a fraction
+# of one: an element of 1639.6px makes a page of 1640px. Under 1px from the page's
+# right edge is on it.
+OFFSCREEN_OVERFLOW_EDGE_TOLERANCE_PX = 1

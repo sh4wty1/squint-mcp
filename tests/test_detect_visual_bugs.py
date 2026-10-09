@@ -335,27 +335,26 @@ async def test_a_page_with_one_very_large_text_node_is_checked(client: Client) -
     assert (await detect(client, HUGE))["findings"] == []
 
 
+VALID_CHECKS = "Valid checks: low-contrast-real, offscreen-overflow, text-clipped."
+
+
 async def test_unknown_check_is_an_error_listing_the_valid_ones(client: Client) -> None:
     text = await error_text(client, {"url": BUG, "checks": ["nope"]})
-    assert (
-        'Unknown check "nope". Valid checks: low-contrast-real, text-clipped.' in text
-    )
+    assert f'Unknown check "nope". {VALID_CHECKS}' in text
 
 
 async def test_unknown_check_after_a_valid_one_is_still_an_error(
     client: Client,
 ) -> None:
     text = await error_text(client, {"url": BUG, "checks": ["text-clipped", "nope"]})
-    assert (
-        'Unknown check "nope". Valid checks: low-contrast-real, text-clipped.' in text
-    )
+    assert f'Unknown check "nope". {VALID_CHECKS}' in text
 
 
 async def test_the_first_unknown_check_in_the_order_given_is_the_one_named(
     client: Client,
 ) -> None:
     text = await error_text(client, {"url": BUG, "checks": ["zzz", "nope"]})
-    assert 'Unknown check "zzz". Valid checks: low-contrast-real, text-clipped.' in text
+    assert f'Unknown check "zzz". {VALID_CHECKS}' in text
 
 
 async def test_unknown_check_is_reported_before_any_browser_work(
@@ -363,9 +362,7 @@ async def test_unknown_check_is_reported_before_any_browser_work(
 ) -> None:
     arguments = {"url": BUG, "checks": ["nope"]}
     text = await error_text(client_without_chromium, arguments)
-    assert (
-        'Unknown check "nope". Valid checks: low-contrast-real, text-clipped.' in text
-    )
+    assert f'Unknown check "nope". {VALID_CHECKS}' in text
     assert "Could not launch Chromium" not in text
 
 

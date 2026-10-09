@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: a page widened by a pseudo-element</title>
+    <style>
+      /* No element reaches the page's right edge: a pseudo-element has no selector. */
+      html,
+      body {
+        margin: 0;
+      }
+      body::after {
+        content: "";
+        display: block;
+        width: 1640px;
+        height: 30px;
+      }
+    </style>
+  </head>
+  <body>
+  </body>
+</html>

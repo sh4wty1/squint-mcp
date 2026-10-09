@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: an element 1px short of the page's edge</title>
+    <style>
+      /* The first ends 1px before the page's right edge, the second on it. */
+      html,
+      body {
+        margin: 0;
+      }
+      div {
+        height: 30px;
+      }
+      #near {
+        width: 1639px;
+      }
+      #edge {
+        width: 1640px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="near"></div>
+    <div id="edge"></div>
+  </body>
+</html>

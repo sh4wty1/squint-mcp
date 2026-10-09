@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: a right-to-left page</title>
+    <style>
+      /* A right-to-left page scrolls to the left: the wide element starts at -200px
+         and the page is 1640px wide. What passes the right edge cannot be scrolled
+         to, and the second element ends at 1640px by coincidence. */
+      html,
+      body {
+        margin: 0;
+      }
+      div {
+        height: 30px;
+      }
+      body {
+        direction: rtl;
+      }
+      #wide {
+        width: 1640px;
+      }
+      #right {
+        position: absolute;
+        left: 1240px;
+        width: 400px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="wide"></div>
+    <div id="right"></div>
+  </body>
+</html>

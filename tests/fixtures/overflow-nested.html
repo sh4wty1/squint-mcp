@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: a wide element with a child as wide</title>
+    <style>
+      /* The child fills its parent: both end at 1640px. */
+      html,
+      body {
+        margin: 0;
+      }
+      div {
+        height: 30px;
+      }
+      #parent {
+        width: 1640px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="parent"><div id="child"></div></div>
+  </body>
+</html>

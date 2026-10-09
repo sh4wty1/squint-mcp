@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: a fixed element past the right edge</title>
+    <style>
+      /* A fixed element does not widen the page. */
+      html,
+      body {
+        margin: 0;
+      }
+      div {
+        height: 30px;
+      }
+      #fixed {
+        position: fixed;
+        left: 90%;
+        width: 400px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="fixed"></div>
+  </body>
+</html>

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: an element that sticks out to the left</title>
+    <style>
+      /* What is left of the page cannot be scrolled to: the page stays as wide as the viewport. */
+      html,
+      body {
+        margin: 0;
+      }
+      div {
+        height: 30px;
+      }
+      #left {
+        width: 400px;
+        margin-left: -200px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="left"></div>
+  </body>
+</html>
