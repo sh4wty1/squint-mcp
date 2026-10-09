@@ -36,11 +36,11 @@
 
 ## Handoff
 
-- **Feature**: `low-contrast-real` (roadmap slice 4) / `.specs/features/low-contrast-real/`
-- **Phase / Task**: Execute done (T1 to T7) and validated. The Verifier's third pass is PASS (`validation.md`); passes 1 and 2 failed on surviving mutants, answered by Fix 1 to Fix 4 with tests and spec criteria, no source change.
-- **Completed**: Specify (two decisions with the maintainer), Design (AD-004, spiked), Tasks, Execute, three validation passes. Gate: 190 tests pass. Roadmap slice 4 is `concluída` (LCR-46). The sort key of `detect_visual_bugs` answers issue #8.
+- **Feature**: `capture-pixel-budget` (roadmap slice 6, issue #11) / `.specs/features/capture-pixel-budget/`
+- **Phase / Task**: Verified, with `tlc-spec-lean` at profile `light`. Round 2 of the Verifier is PASS on C1 to C15 at `70fd50b`; `validate_verification.py capture-pixel-budget` exits 0.
+- **Completed**: plan, checks, build, the fix of C14 (`70fd50b`), `verification.md`, roadmap slice 6 at `concluída`, the task record.
 - **In-progress** (file:line): none.
-- **Next step**: the maintainer reviews the branch and gives the go-ahead to push it and open the pull request, which closes issue #8. CI on Linux is the first run of the pixel-exact fixtures outside Windows. Then slice 5 (PyPI, manual).
-- **Blockers**: none. Not confirmed by the maintainer: the design and tasks (executed under the approval of the spec), and the assumptions marked `n` in the spec, among them the 10% worst part, the half-ink rule for text under a translucent layer and its known wrong ratio.
+- **Next step**: the next roadmap slice, 7 (`offscreen-overflow`, `tlc-spec-lean`).
+- **Blockers**: none.
 - **Uncommitted files**: none
-- **Branch**: `feat/low-contrast-real`
+- **Branch**: `feat/capture-pixel-budget`

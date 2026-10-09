@@ -24,6 +24,8 @@ CLEAN = fixture_url("low-contrast-clean.html")
 REACH = fixture_url("low-contrast-reach.html")
 FILL = fixture_url("low-contrast-fill.html")
 PIXEL_COST = fixture_url("pixel-cost.html")
+PIXEL_BUDGET = fixture_url("pixel-budget.html")
+PATTERNS = fixture_url("sampled-patterns.html")
 HERO = '[data-testid="hero"]'
 ONLY = ["low-contrast-real"]
 
@@ -498,3 +500,54 @@ async def test_the_lines_of_a_text_are_under_the_limit_together(
     # No line is over the limit on its own: counted one by one, they are 6,220,800
     # pixels of noise.
     assert await seconds_added_by(client, "#lines-over-noise") < 10
+
+
+async def test_many_texts_over_millions_of_colours_add_little_to_the_call(
+    client: Client,
+) -> None:
+    async def seconds(url: str) -> tuple[float, int]:
+        started = time.monotonic()
+        findings = (await detect(client, url, checks=ONLY))["findings"]
+        return time.monotonic() - started, len(findings)
+
+    # The same page both times, so the capture costs the same: what differs is
+    # the 55 texts painted over the noise only when the URL targets them. None is
+    # over the limit on its own: counted one by one, they are 14,256,000 pixels.
+    bare, without = await seconds(PIXEL_BUDGET)
+    painted, with_texts = await seconds(f"{PIXEL_BUDGET}#texts")
+    assert with_texts == without + 55
+    assert painted - bare < 10
+
+
+async def test_a_small_text_among_many_large_ones_keeps_its_ratio(
+    client: Client,
+) -> None:
+    finding = await finding_on(client, f"{PIXEL_BUDGET}#texts", "#small")
+    assert finding["box"]["w"] == 100
+    assert finding["box"]["h"] == 40
+    assert finding["evidence"]["measured"]["contrastRatio"] == 2.84
+    assert finding["evidence"]["measured"]["sampledBackground"] == "#ffffff"
+
+
+async def test_a_text_over_the_limit_next_to_another_is_still_judged_on_its_worst_part(
+    client: Client,
+) -> None:
+    finding = await finding_on(client, f"{PIXEL_COST}#over-noise", "#big-text")
+    assert finding["evidence"]["measured"]["contrastRatio"] == 1.6
+    assert finding["evidence"]["measured"]["sampledBackground"] == "#cccccc"
+
+
+async def test_the_same_call_on_many_texts_returns_the_same_content(
+    client: Client,
+) -> None:
+    first = await detect(client, f"{PIXEL_BUDGET}#texts", checks=ONLY)
+    assert await detect(client, f"{PIXEL_BUDGET}#texts", checks=ONLY) == first
+
+
+@pytest.mark.parametrize("selector", ["#text-dark-first", "#text-light-first"])
+async def test_text_over_one_pixel_rows_is_judged_on_both_colours(
+    client: Client, selector: str
+) -> None:
+    measured = (await finding_on(client, PATTERNS, selector))["evidence"]["measured"]
+    assert measured["contrastRatio"] == 1.6
+    assert measured["sampledBackground"] == "#cccccc"

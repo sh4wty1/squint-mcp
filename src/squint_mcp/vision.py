@@ -2,6 +2,7 @@
 
 import io
 import math
+import random
 from collections import Counter
 from typing import cast
 
@@ -18,33 +19,86 @@ class SampledColor(BaseModel):
     """Fraction of the element's pixels painted in this colour."""
 
 
-def _region(pixels: Image.Image, box: Box, margin: int) -> Image.Image:
-    """The pixels of `box` grown by `margin`, clamped to the page.
+def _bounds(pixels: Image.Image, box: Box, margin: int) -> tuple[int, int, int, int]:
+    """The left, top, right and bottom of `box` grown by `margin`, clamped to the page.
 
     Boxes can be fractional (text spans are): round outwards so nothing is cut.
-    A box entirely outside the page yields an empty region.
+    A box entirely outside the page has no width or no height.
     """
     left = max(0, math.floor(box.x) - margin)
     top = max(0, math.floor(box.y) - margin)
     right = max(left, min(pixels.width, math.ceil(box.x + box.w) + margin))
     bottom = max(top, min(pixels.height, math.ceil(box.y + box.h) + margin))
-    return pixels.crop((left, top, right, bottom))
+    return left, top, right, bottom
 
 
-def _countable(region: Image.Image, area: int) -> Image.Image:
-    """`region` at the scale that brings `area` pixels down to as many as are counted.
+def _region(pixels: Image.Image, box: Box, margin: int) -> Image.Image:
+    """The pixels of `box` grown by `margin`, clamped to the page."""
+    return pixels.crop(_bounds(pixels, box, margin))
 
-    `area` is that of everything counted together, of which `region` is a part.
-    Counting colours costs the most where every pixel has its own (issue #4).
+
+def area(pixels: Image.Image, boxes: list[Box]) -> int:
+    """How many pixels of the page `boxes` hold together."""
+    total = 0
+    for box in boxes:
+        left, top, right, bottom = _bounds(pixels, box, 0)
+        total += (right - left) * (bottom - top)
+    return total
+
+
+def count_limit(areas: list[int]) -> float:
+    """The most pixels counted of any one of the things of `areas` pixels, so that
+    no more than `COLOR_COUNT_MAX_PIXELS` are counted of all of them together.
+
+    One of fewer pixels is counted whole and each larger one is sampled down to
+    the limit, whatever the order they come in.
     """
-    if area <= config.COLOR_COUNT_MAX_PIXELS:
+    left = config.COLOR_COUNT_MAX_PIXELS
+    for index, pixels in enumerate(sorted(areas)):
+        larger = len(areas) - index
+        if pixels * larger > left:
+            return left / larger
+        left -= pixels
+    return math.inf
+
+
+def _rows(image: Image.Image, count: int) -> Image.Image:
+    """`count` rows of `image`, one from each of as many bands of equal height."""
+    # A fixed seed: the same rows on every call. At an offset of its own in each
+    # band, because rows picked at a regular step all land on one colour of a
+    # pattern whose period divides the step.
+    offsets = random.Random(0)
+    stride = image.width * len(image.getbands())
+    data = image.tobytes()
+    picked = (
+        int((index + offsets.random()) * image.height / count) for index in range(count)
+    )
+    return Image.frombytes(
+        image.mode,
+        (image.width, count),
+        b"".join(data[row * stride : (row + 1) * stride] for row in picked),
+    )
+
+
+def _countable(region: Image.Image, together: int, limit: float) -> Image.Image:
+    """`region` at the scale that brings `together` pixels down to `limit`.
+
+    `together` is the area of everything counted together, of which `region` is
+    a part. Counting colours costs the most where every pixel has its own (issue #4).
+    """
+    if together <= limit:
         return region
-    scale = math.sqrt(config.COLOR_COUNT_MAX_PIXELS / area)
-    size = (max(1, int(region.width * scale)), max(1, int(region.height * scale)))
-    # NEAREST picks pixels: any other filter blends neighbours into colours, and
-    # into amounts of ink, that the page never painted.
-    # Pillow types `resize` for every kind of size it takes, some of them untyped.
-    return region.resize(size, Image.Resampling.NEAREST)  # pyright: ignore[reportUnknownMemberType]
+    scale = math.sqrt(limit / together)
+    # ponytail: a part keeps at least one pixel, so more parts than the limit
+    # has pixels are counted past it.
+    width = max(1, int(region.width * scale))
+    height = max(1, int(region.height * scale))
+    # Pixels are picked, never blended: a filter would make colours, and amounts
+    # of ink, that the page never painted.
+    rows = _rows(region, height)
+    return _rows(rows.transpose(Image.Transpose.TRANSPOSE), width).transpose(
+        Image.Transpose.TRANSPOSE
+    )
 
 
 def crop_png(pixels: Image.Image, box: Box) -> bytes:
@@ -67,31 +121,28 @@ def is_flat(pixels: Image.Image, box: Box) -> bool:
 
 
 def text_backgrounds(
-    background: Image.Image, ink: Image.Image, boxes: list[Box]
+    background: Image.Image, ink: Image.Image, boxes: list[Box], limit: float
 ) -> list[tuple[int, tuple[int, int, int]]]:
     """The colours painted behind the text inside `boxes`, each with how many text
     pixels it lies behind.
 
     `background` is the page without its text and `ink` how much text ink each
     pixel gets (AD-004). Empty when no pixel of the boxes is text. Boxes of more
-    pixels together than are counted are sampled, so the counts are of the sample.
+    pixels together than `limit` are sampled, so the counts are of the sample.
     """
     is_text = [255 if value >= config.TEXT_INK_MIN else 0 for value in range(256)]
     counts: Counter[tuple[int, int, int]] = Counter()
     regions = [_region(background, box, 0) for box in boxes]
     # One scale for all the boxes, so that each keeps about its weight in the counts.
-    # ponytail: bounded per call, that is per element. A page of many texts over
-    # an image of millions of colours pays for each; share one budget across the
-    # Capture if such a page gets slow (#11).
-    area = sum(region.width * region.height for region in regions)
+    together = area(background, boxes)
     for box, region in zip(boxes, regions, strict=True):
         if region.width * region.height == 0:
             continue
-        behind = _countable(region, area)
+        behind = _countable(region, together, limit)
         # With the text pixels as its opaque ones, the region counts its colours
         # apart for text and for the rest.
         # Pillow types `point` for every kind of table it takes, some of them untyped.
-        text = _countable(_region(ink, box, 0), area).point(is_text)  # pyright: ignore[reportUnknownMemberType]
+        text = _countable(_region(ink, box, 0), together, limit).point(is_text)  # pyright: ignore[reportUnknownMemberType]
         behind.putalpha(text)
         colors = cast(
             "list[tuple[int, tuple[int, int, int, int]]]",
@@ -112,7 +163,9 @@ def sample_colors(pixels: Image.Image, box: Box) -> list[SampledColor]:
     region = _region(pixels, box, 0)
     if region.width * region.height == 0:
         return []
-    region = _countable(region, region.width * region.height)
+    region = _countable(
+        region, region.width * region.height, config.COLOR_COUNT_MAX_PIXELS
+    )
     total = region.width * region.height
     # ponytail: exact colour counts, so a gradient or a photo reports thin bands.
     # Cluster the colours when a Check needs perceptual ones.

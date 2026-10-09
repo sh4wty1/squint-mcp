@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: fine patterns in regions that are sampled</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+      }
+      canvas,
+      .text {
+        position: absolute;
+        left: 0;
+      }
+      /* 1,048,576 pixels each, four times what is counted, half red and half blue
+         at a period of 2px: picking every other row or column takes one colour. */
+      #rows {
+        top: 0;
+      }
+      #columns {
+        top: 1100px;
+      }
+      #checker {
+        top: 2200px;
+      }
+      /* One glyph of 600x600, more than is counted, over 1px rows of black, 21:1,
+         and of a light grey, 1.6:1. */
+      .text {
+        font: 600px/1 Ahem;
+        color: rgb(255, 255, 255);
+      }
+      #behind-dark-first,
+      #text-dark-first {
+        top: 3300px;
+      }
+      #behind-light-first,
+      #text-light-first {
+        top: 4000px;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="rows" width="1024" height="1024"></canvas>
+    <canvas id="columns" width="1024" height="1024"></canvas>
+    <canvas id="checker" width="1024" height="1024"></canvas>
+    <canvas id="behind-dark-first" width="600" height="600"></canvas>
+    <div id="text-dark-first" class="text">X</div>
+    <canvas id="behind-light-first" width="600" height="600"></canvas>
+    <div id="text-light-first" class="text">X</div>
+    <script>
+      // Colours as the bytes of a pixel, alpha first: 0xAABBGGRR.
+      const RED = 0xff0000ff;
+      const BLUE = 0xffff0000;
+      const BLACK = 0xff000000;
+      const LIGHT = 0xffcccccc;
+      // A canvas paints each pixel as told: a gradient may blend at its stops.
+      function paint(id, color) {
+        const canvas = document.getElementById(id);
+        const context = canvas.getContext("2d");
+        const image = context.createImageData(canvas.width, canvas.height);
+        const pixels = new Uint32Array(image.data.buffer);
+        for (let y = 0; y < canvas.height; y++)
+          for (let x = 0; x < canvas.width; x++)
+            pixels[y * canvas.width + x] = color(x, y);
+        context.putImageData(image, 0, 0);
+      }
+      paint("rows", (x, y) => (y % 2 ? BLUE : RED));
+      paint("columns", (x, y) => (x % 2 ? BLUE : RED));
+      paint("checker", (x, y) => ((x + y) % 2 ? BLUE : RED));
+      paint("behind-dark-first", (x, y) => (y % 2 ? LIGHT : BLACK));
+      paint("behind-light-first", (x, y) => (y % 2 ? BLACK : LIGHT));
+    </script>
+  </body>
+</html>

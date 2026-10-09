@@ -105,7 +105,7 @@ A v0.2 fecha a fase 2 da especificação inicial ([`.docs/START.md`](../.docs/ST
 
 | # | Fatia | Depende de | Skill | Status |
 |---|---|---|---|---|
-| 6 | Orçamento de pixels por Capture | — | `tlc-spec-lean` | pendente |
+| 6 | Orçamento de pixels por Capture | — | `tlc-spec-lean` | concluída |
 | 7 | `offscreen-overflow` | — | `tlc-spec-lean` | pendente |
 | 8 | `overlap` | — | `tlc-spec-driven` | pendente |
 | 9 | `font-fallback` | — | `tlc-spec-driven` | pendente |
@@ -122,7 +122,7 @@ A v0.2 fecha a fase 2 da especificação inicial ([`.docs/START.md`](../.docs/ST
 - **Não entra:** tornar o trabalho de pixels cancelável; pool de browsers; mudanças no Finding.
 - **Dependência:** nenhuma.
 - **Skill:** `tlc-spec-lean`.
-- **Status:** pendente.
+- **Status:** concluída. Plano, checks e relatório de verificação em [`.specs/features/capture-pixel-budget/`](../.specs/features/capture-pixel-budget/).
 
 ## 7. `offscreen-overflow`
 

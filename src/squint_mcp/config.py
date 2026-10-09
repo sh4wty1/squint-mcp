@@ -25,7 +25,8 @@ SAMPLED_COLORS_MAX = 3
 # where every pixel has its own takes about 2 microseconds a pixel: 15s for an
 # element of 1440x5000. At 512x512 it stays under half a second, and the contrast
 # of as many colours behind a text takes about two. A larger region is sampled
-# down to that many pixels first.
+# down to that many pixels first. For text the limit is per Capture: the texts a
+# Check judges share it (issue #11).
 COLOR_COUNT_MAX_PIXELS = 512 * 512
 
 # Source: Squint default. Chromium resolves 350+ properties; these are the ones that
