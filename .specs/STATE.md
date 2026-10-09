@@ -36,11 +36,11 @@
 
 ## Handoff
 
-- **Feature**: `capture-pixel-budget` (roadmap slice 6, issue #11) / `.specs/features/capture-pixel-budget/`
-- **Phase / Task**: Verified, with `tlc-spec-lean` at profile `light`. Round 2 of the Verifier is PASS on C1 to C15 at `70fd50b`; `validate_verification.py capture-pixel-budget` exits 0.
-- **Completed**: plan, checks, build, the fix of C14 (`70fd50b`), `verification.md`, roadmap slice 6 at `concluída`, the task record.
+- **Feature**: `offscreen-overflow` (roadmap slice 7) / `.specs/features/offscreen-overflow/`
+- **Phase / Task**: Plan, with `tlc-spec-lean` at profile `light`. `plan.md` was approved by the user on 2026-10-09, defaults included; no checks and no code yet. Slice 6 is merged (PR #16, `9923762`).
+- **Completed**: the plan, grounded on a throwaway spike against Chromium (not in the repo).
 - **In-progress** (file:line): none.
-- **Next step**: the next roadmap slice, 7 (`offscreen-overflow`, `tlc-spec-lean`).
+- **Next step**: derive `checks.md` from the plan and run `validate_checks.py offscreen-overflow`.
 - **Blockers**: none.
 - **Uncommitted files**: none
-- **Branch**: `feat/capture-pixel-budget`
+- **Branch**: `feat/offscreen-overflow`, from `origin/main` at `9923762`. Pushed with the plan at the user's request; any later push needs its own go-ahead.
