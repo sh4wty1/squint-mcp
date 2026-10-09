@@ -40,7 +40,7 @@
 - **Phase / Task**: Verified, with `tlc-spec-lean` at profile `light`. Round 2 of the Verifier is PASS on C1 to C15 at `70fd50b`; `validate_verification.py capture-pixel-budget` exits 0.
 - **Completed**: plan, checks, build, the fix of C14 (`70fd50b`), `verification.md`, roadmap slice 6 at `concluída`, the task record.
 - **In-progress** (file:line): none.
-- **Next step**: push the branch and open the pull request that closes issue #11, once the maintainer says so. Then the next roadmap slice, 7 (`offscreen-overflow`, `tlc-spec-lean`).
-- **Blockers**: the push waits for the maintainer. Open question for them: whether to close precision gap 1 of `verification.md` (no test asserts the cap of `vision.count_limit`) in this slice; it changes an approved check.
+- **Next step**: the next roadmap slice, 7 (`offscreen-overflow`, `tlc-spec-lean`).
+- **Blockers**: none.
 - **Uncommitted files**: none
 - **Branch**: `feat/capture-pixel-budget`
