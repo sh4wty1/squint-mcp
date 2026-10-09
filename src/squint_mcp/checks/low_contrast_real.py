@@ -9,7 +9,7 @@ import re
 
 from squint_mcp import config
 from squint_mcp.models import Capture, Element, Evidence, Finding, Viewport
-from squint_mcp.vision import text_backgrounds
+from squint_mcp.vision import area, count_limit, text_backgrounds
 
 type Rgb = tuple[int, int, int]
 
@@ -61,13 +61,9 @@ def _hex(color: Rgb) -> str:
     return "#{:02x}{:02x}{:02x}".format(*color)
 
 
-def _worst_part(element: Element, capture: Capture) -> tuple[float, Rgb, Rgb] | None:
-    """The contrast of the least readable part of the element's own text, with the
-    text colour and the background there; None when the element has no text to judge.
-
-    Text covered by another element's text is judged on that text's ink: the ink
-    layer does not say whose glyph a pixel belongs to.
-    """
+def _text_color(element: Element) -> tuple[Rgb, float] | None:
+    """The colour and the alpha of the element's own text; None when the element
+    has no text to judge."""
     if not element.own_text:
         return None
     # A faded text is blended with what is behind its faded ancestor, which the
@@ -82,7 +78,22 @@ def _worst_part(element: Element, capture: Capture) -> tuple[float, Rgb, Rgb] | 
     # Text made transparent is hidden on purpose, as when an image replaces it.
     if alpha == 0:
         return None
-    behind = text_backgrounds(capture.background, capture.ink, element.own_text_boxes)
+    return text, alpha
+
+
+def _worst_part(
+    element: Element, capture: Capture, text: Rgb, alpha: float, limit: float
+) -> tuple[float, Rgb, Rgb] | None:
+    """The contrast of the least readable part of the element's own text, painted
+    in `text` at `alpha`, with the text colour and the background there; None when
+    no pixel of it is text. At most `limit` of its pixels are counted.
+
+    Text covered by another element's text is judged on that text's ink: the ink
+    layer does not say whose glyph a pixel belongs to.
+    """
+    behind = text_backgrounds(
+        capture.background, capture.ink, element.own_text_boxes, limit
+    )
     if not behind:
         return None
     # A translucent text is as dark as what shows through it.
@@ -153,8 +164,18 @@ def _finding(
 
 def check(capture: Capture) -> list[Finding]:
     findings: list[Finding] = []
-    for element in capture.elements:
-        worst = _worst_part(element, capture)
+    judged = [
+        (element, color)
+        for element in capture.elements
+        if (color := _text_color(element)) is not None
+    ]
+    # The texts of a Capture share what is counted: a page of many texts, each
+    # over millions of colours, costs no more than one of them (issue #11).
+    limit = count_limit(
+        [area(capture.background, element.own_text_boxes) for element, _ in judged]
+    )
+    for element, (color, alpha) in judged:
+        worst = _worst_part(element, capture, color, alpha, limit)
         if worst is None:
             continue
         ratio, text, background = worst

@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- The `low-contrast-real` Check stays fast on a page of many texts painted over millions of colours: it counts at most 262,144 pixels (512x512) across the texts of a page at one viewport, where the limit was per element. A text small enough is still counted whole; the larger ones share what is left equally, so on a page with more text than that their contrast comes from a sample ([#11](https://github.com/sh4wty1/squint-mcp/issues/11)).
+- A sampled region no longer loses a colour of a 1px or 2px pattern, such as stripes or a checkerboard: `inspect_element` and `low-contrast-real` pick its pixels at varying offsets instead of at a regular step. The offsets are the same on every call, so the result of a call does not change from one run to the next; the `sampledColors` shares and the contrast of a sampled region differ slightly from 0.1.0 ([#11](https://github.com/sh4wty1/squint-mcp/issues/11)).
+
 ## [0.1.0] - 2026-10-08
 
 First release, on PyPI as `squint-mcp`.

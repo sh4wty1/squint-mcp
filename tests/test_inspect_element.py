@@ -23,6 +23,7 @@ BOX = (FIXTURES / "box.html").as_uri()
 MOTION = (FIXTURES / "motion.html").as_uri()
 VISIT = (FIXTURES / "visit.html").as_uri()
 PIXEL_COST = (FIXTURES / "pixel-cost.html").as_uri()
+PATTERNS = (FIXTURES / "sampled-patterns.html").as_uri()
 
 COMPUTED_PROPERTIES = {
     "display",
@@ -319,11 +320,26 @@ async def test_sampled_color_is_the_painted_one_not_the_computed_one(
 async def test_a_region_over_the_limit_keeps_its_painted_colours_and_shares(
     client: Client,
 ) -> None:
-    content = await inspect(client, PIXEL_COST, "#halves")
-    assert content["sampledColors"] == [
-        {"hex": "#0000ff", "share": 0.502},
-        {"hex": "#ff0000", "share": 0.498},
-    ]
+    colors = (await inspect(client, PIXEL_COST, "#halves"))["sampledColors"]
+    assert len(colors) == 2
+    assert {color["hex"]: color["share"] for color in colors} == {
+        "#ff0000": pytest.approx(0.499, abs=0.01),
+        "#0000ff": pytest.approx(0.501, abs=0.01),
+    }
+
+
+@pytest.mark.parametrize("selector", ["#rows", "#columns", "#checker"])
+async def test_a_sampled_pattern_keeps_both_its_colours(
+    client: Client, selector: str
+) -> None:
+    colors = (await inspect(client, PATTERNS, selector))["sampledColors"]
+    assert sorted(color["hex"] for color in colors) == ["#0000ff", "#ff0000"]
+    assert all(0.4 <= color["share"] <= 0.6 for color in colors)
+
+
+async def test_a_sampled_pattern_is_the_same_on_every_call(client: Client) -> None:
+    first = await inspect(client, PATTERNS, "#rows")
+    assert await inspect(client, PATTERNS, "#rows") == first
 
 
 async def test_an_element_of_millions_of_colours_adds_little_to_the_call(
