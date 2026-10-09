@@ -37,10 +37,10 @@
 ## Handoff
 
 - **Feature**: `offscreen-overflow` (roadmap slice 7) / `.specs/features/offscreen-overflow/`
-- **Phase / Task**: Plan, with `tlc-spec-lean` at profile `light`. `plan.md` was approved by the user on 2026-10-09, defaults included; no checks and no code yet. Slice 6 is merged (PR #16, `9923762`).
-- **Completed**: the plan, grounded on a throwaway spike against Chromium (not in the repo).
+- **Phase / Task**: Checks, with `tlc-spec-lean` at profile `light`. `checks.md` has C1 to C23, derived from the plan approved on 2026-10-09; `validate_checks.py offscreen-overflow` exits 0. No code yet. Slice 6 is merged (PR #16, `9923762`).
+- **Completed**: the plan and the checks.
 - **In-progress** (file:line): none.
-- **Next step**: derive `checks.md` from the plan and run `validate_checks.py offscreen-overflow`.
+- **Next step**: build - the tests of `tests/test_offscreen_overflow.py` from the checks, then `checks/offscreen_overflow.py`; one builder, then the Verifier.
 - **Blockers**: none.
 - **Uncommitted files**: none
 - **Branch**: `feat/offscreen-overflow`, from `origin/main` at `9923762`. Pushed with the plan at the user's request; any later push needs its own go-ahead.
