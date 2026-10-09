@@ -3,7 +3,7 @@
   "promote_threshold": 2,
   "window_days": 45,
   "quarantine_threshold": 2,
-  "next_id": 45,
+  "next_id": 47,
   "lessons": [
     {
       "id": "L-001",
@@ -800,6 +800,42 @@
       ],
       "created": "2026-10-08T05:47:06Z",
       "last_seen": "2026-10-08T05:47:06Z"
+    },
+    {
+      "id": "L-045",
+      "key": "ac_gap::run the grep proofs of the checks after the last edit of a file since a new comment can bring back the reference a check forbids",
+      "text": "Run the grep proofs of the checks after the last edit of a file, since a new comment can bring back the reference a check forbids",
+      "signal": "ac_gap",
+      "scope": "checks,comments",
+      "status": "candidate",
+      "features": [
+        "capture-pixel-budget"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "C14 - src/squint_mcp/vision.py:69 (checks,comments)"
+      ],
+      "created": "2026-10-09T14:40:32Z",
+      "last_seen": "2026-10-09T14:40:32Z"
+    },
+    {
+      "id": "L-046",
+      "key": "spec_precision_gap::prove a limit on a fixture whose result differs on each side of the limit not on one that reads the same either way",
+      "text": "Prove a limit on a fixture whose result differs on each side of the limit, not on one that reads the same either way",
+      "signal": "spec_precision_gap",
+      "scope": "tests,limits",
+      "status": "candidate",
+      "features": [
+        "capture-pixel-budget"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "C3 - src/squint_mcp/vision.py:49 (tests,limits)"
+      ],
+      "created": "2026-10-09T14:40:32Z",
+      "last_seen": "2026-10-09T14:40:32Z"
     }
   ]
 }

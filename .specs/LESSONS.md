@@ -4,7 +4,7 @@
 > Canonical state lives in `.specs/lessons.json`. Edit lessons only via the script.
 > promote_threshold=2 distinct features · window_days=45 · quarantine_threshold=2
 
-## Confirmed (load these at Specify/Design)
+## Confirmed (load these at Plan/Checks)
 
 Corroborated across multiple features. Safe to apply as guidance.
 
@@ -275,6 +275,18 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - features: low-contrast-real
 - evidence: LCR-55 (spec.md:111); mutants V5, C4 (spec)
 - last seen: 2026-10-08T05:47:06Z
+
+### L-045 - Run the grep proofs of the checks after the last edit of a file, since a new comment can bring back the reference a check forbids
+- signal: `ac_gap` · recurrence: 1 feature(s) · scope: `checks,comments` · harmful: 0
+- features: capture-pixel-budget
+- evidence: C14 - src/squint_mcp/vision.py:69 (checks,comments)
+- last seen: 2026-10-09T14:40:32Z
+
+### L-046 - Prove a limit on a fixture whose result differs on each side of the limit, not on one that reads the same either way
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `tests,limits` · harmful: 0
+- features: capture-pixel-budget
+- evidence: C3 - src/squint_mcp/vision.py:49 (tests,limits)
+- last seen: 2026-10-09T14:40:32Z
 
 ## Quarantined (failed when applied - ignore)
 

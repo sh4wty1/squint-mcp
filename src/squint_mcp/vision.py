@@ -66,7 +66,7 @@ def _rows(image: Image.Image, count: int) -> Image.Image:
     """`count` rows of `image`, one from each of as many bands of equal height."""
     # A fixed seed: the same rows on every call. At an offset of its own in each
     # band, because rows picked at a regular step all land on one colour of a
-    # pattern whose period divides the step (issue #11).
+    # pattern whose period divides the step.
     offsets = random.Random(0)
     stride = image.width * len(image.getbands())
     data = image.tobytes()
