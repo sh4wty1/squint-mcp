@@ -37,10 +37,10 @@
 ## Handoff
 
 - **Feature**: `offscreen-overflow` (roadmap slice 7) / `.specs/features/offscreen-overflow/`
-- **Phase / Task**: Built, with `tlc-spec-lean` at profile `light`. C1 to C23 closed at `2533dd2`; waiting for the report of the independent Verifier.
+- **Phase / Task**: Built, with `tlc-spec-lean` at profile `light`. C1 to C23 closed at `2533dd2`. The independent Verifier was dispatched and the session ended before it reported: there is no `verification.md`.
 - **Completed**: the plan, the checks, the build (`129f83f`, `2533dd2`).
 - **In-progress** (file:line): none.
-- **Next step**: the Verifier's `verification.md`, then `validate_verification.py offscreen-overflow`, then roadmap slice 7 at `concluída`.
+- **Next step**: dispatch a fresh Verifier over `9923762..HEAD` with every check, then `validate_verification.py offscreen-overflow`, then roadmap slice 7 at `concluída`.
 - **Blockers**: none.
 - **Uncommitted files**: none
 - **Branch**: `feat/offscreen-overflow`, from `origin/main` at `9923762`. Pushed with the plan at the user's request; any later push needs its own go-ahead.
