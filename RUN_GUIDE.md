@@ -27,6 +27,8 @@ Uma sessão por fatia, começando com `/clear`.
 7. **Revisar (rodada 2):** `/the-judge` de novo sobre os commits de correção. Se voltar com findings, repete o passo 6.
 8. **Fechar:** merge, status `concluída` na tabela e na seção do roadmap, registro em `docs/tasks/`.
 
+**Retomar uma sessão interrompida** (desligou a máquina, caiu a sessão, `/clear` no meio): `/tlc-spec-driven resume work`. A skill lê o Handoff de `.specs/STATE.md`, confere com o git (branch, arquivos soltos, commits) e segue do próximo passo. Antes de parar de propósito, diga "pause work" para o Handoff ser gravado.
+
 ## Release
 
 Sem credenciais: o PyPI confia no workflow `publish.yml` deste repositório (trusted publishing).
