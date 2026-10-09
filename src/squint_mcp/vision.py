@@ -80,15 +80,15 @@ def _rows(image: Image.Image, count: int) -> Image.Image:
     )
 
 
-def _countable(region: Image.Image, area: int, limit: float) -> Image.Image:
-    """`region` at the scale that brings `area` pixels down to `limit`.
+def _countable(region: Image.Image, together: int, limit: float) -> Image.Image:
+    """`region` at the scale that brings `together` pixels down to `limit`.
 
-    `area` is that of everything counted together, of which `region` is a part.
-    Counting colours costs the most where every pixel has its own (issue #4).
+    `together` is the area of everything counted together, of which `region` is
+    a part. Counting colours costs the most where every pixel has its own (issue #4).
     """
-    if area <= limit:
+    if together <= limit:
         return region
-    scale = math.sqrt(limit / area)
+    scale = math.sqrt(limit / together)
     # ponytail: a part keeps at least one pixel, so more parts than the limit
     # has pixels are counted past it.
     width = max(1, int(region.width * scale))
@@ -134,7 +134,7 @@ def text_backgrounds(
     counts: Counter[tuple[int, int, int]] = Counter()
     regions = [_region(background, box, 0) for box in boxes]
     # One scale for all the boxes, so that each keeps about its weight in the counts.
-    together = sum(region.width * region.height for region in regions)
+    together = area(background, boxes)
     for box, region in zip(boxes, regions, strict=True):
         if region.width * region.height == 0:
             continue
