@@ -37,10 +37,10 @@
 ## Handoff
 
 - **Feature**: `capture-pixel-budget` (roadmap slice 6, issue #11) / `.specs/features/capture-pixel-budget/`
-- **Phase / Task**: Build, with `tlc-spec-lean` at profile `light`. The plan is approved by the maintainer; `checks.md` has C1 to C15.
-- **Completed**: plan, checks, the two fixtures, the tests of C1 to C11 written from the checks, the implementation (`vision.py`, `checks/low_contrast_real.py`, `config.py`), the CHANGELOG entry. `pyright`, `ruff check` and `ruff format --check` are green.
-- **In-progress** (file:line): the whole suite (C15) was started after the implementation and had not finished when the session was paused. Before the implementation the new tests of C1 and C7 failed and the others passed.
-- **Next step**: run `uv run pytest`; fix what is red without touching an assertion; then dispatch a fresh Verifier over `f2c6213..HEAD` with every check (`references/verify.md` of the skill), and run `validate_verification.py capture-pixel-budget`. After that: roadmap slice 6 to `concluída`, the task record, and the pull request, which closes issue #11.
-- **Blockers**: none. The branch is local until the maintainer says to push it.
+- **Phase / Task**: Verified, with `tlc-spec-lean` at profile `light`. Round 2 of the Verifier is PASS on C1 to C15 at `70fd50b`; `validate_verification.py capture-pixel-budget` exits 0.
+- **Completed**: plan, checks, build, the fix of C14 (`70fd50b`), `verification.md`, roadmap slice 6 at `concluída`, the task record.
+- **In-progress** (file:line): none.
+- **Next step**: push the branch and open the pull request that closes issue #11, once the maintainer says so. Then the next roadmap slice, 7 (`offscreen-overflow`, `tlc-spec-lean`).
+- **Blockers**: the push waits for the maintainer. Open question for them: whether to close precision gap 1 of `verification.md` (no test asserts the cap of `vision.count_limit`) in this slice; it changes an approved check.
 - **Uncommitted files**: none
 - **Branch**: `feat/capture-pixel-budget`
