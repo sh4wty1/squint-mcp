@@ -137,3 +137,7 @@ Proof: `uv run pytest`
 ## Handoff
 
 - S1-S3 = 71 KB of reading, ~18k tokens, one surface (a new Check module, one field of the collector, the tool's description) - one builder
+
+- **Boundary:** C1-C23 closed at `2533dd2`
+- **Settled mid-build:** the maintainer dropped the token budget of the skill from this line; one builder either way
+- **Abandoned:** quoting the longer list of valid Checks in each of the four assertions - the line passes the 88 columns of `ruff check`, so the list is one constant, `VALID_CHECKS`, in `tests/test_detect_visual_bugs.py`

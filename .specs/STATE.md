@@ -37,10 +37,10 @@
 ## Handoff
 
 - **Feature**: `offscreen-overflow` (roadmap slice 7) / `.specs/features/offscreen-overflow/`
-- **Phase / Task**: Checks, with `tlc-spec-lean` at profile `light`. `checks.md` has C1 to C23, derived from the plan approved on 2026-10-09; `validate_checks.py offscreen-overflow` exits 0. No code yet. Slice 6 is merged (PR #16, `9923762`).
-- **Completed**: the plan and the checks.
+- **Phase / Task**: Built, with `tlc-spec-lean` at profile `light`. C1 to C23 closed at `2533dd2`; waiting for the report of the independent Verifier.
+- **Completed**: the plan, the checks, the build (`129f83f`, `2533dd2`).
 - **In-progress** (file:line): none.
-- **Next step**: build - the tests of `tests/test_offscreen_overflow.py` from the checks, then `checks/offscreen_overflow.py`; one builder, then the Verifier.
+- **Next step**: the Verifier's `verification.md`, then `validate_verification.py offscreen-overflow`, then roadmap slice 7 at `concluída`.
 - **Blockers**: none.
 - **Uncommitted files**: none
 - **Branch**: `feat/offscreen-overflow`, from `origin/main` at `9923762`. Pushed with the plan at the user's request; any later push needs its own go-ahead.
