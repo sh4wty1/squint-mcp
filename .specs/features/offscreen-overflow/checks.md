@@ -127,3 +127,6 @@ Proof: `uv run pytest`
 ## Handoff
 
 - S1-S3 = 84 KB of reading, ~21k tokens, one surface (a Check module, the collector field it needs and the tool that lists it), under the 150k budget - one builder
+- **Boundary:** C1-C21 closed at `2bd6d5d`
+- **Settled mid-build:** nothing - the user gave no clarification during the build
+- **Abandoned:** nothing
