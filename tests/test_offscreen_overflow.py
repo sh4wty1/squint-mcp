@@ -1,13 +1,10 @@
 """`offscreen-overflow` through `detect_visual_bugs`, against real Chromium."""
 
-import base64
-import io
 from typing import Any
 
 import pytest
-from helpers import DESKTOP, detect, fixture_url, images, texts
+from helpers import DESKTOP, decode, detect, fixture_url, images, texts
 from mcp import Client
-from PIL import Image
 
 pytestmark = pytest.mark.anyio
 
@@ -41,7 +38,7 @@ async def crop_width(
     result = await client.call_tool("inspect_element", arguments)
     assert result.is_error is False, texts(result)
     (image,) = images(result)
-    return Image.open(io.BytesIO(base64.b64decode(image.data))).width
+    return decode(image).width
 
 
 async def test_a_page_wider_than_its_viewport_yields_one_finding(
