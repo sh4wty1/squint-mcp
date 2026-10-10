@@ -10,11 +10,11 @@ When this ships: for each viewport where the page scrolls horizontally, `detect_
 
 ## Flow
 
-Reuses the Capture as it is: the width of the page is the scroll width of `html`, which every Capture already holds, so the Check needs no new page script, no new screenshot and no change to the tools. Measured on `9923762` with a throwaway spike (29 small pages at 400x300): the width of the full-page screenshot equals `document.documentElement.scrollWidth` in every one of them. The review of PR #17 found the page where the two differ: a `body` that is its own scroll container clips what the screenshot still counts, so the width is no longer read from `pixels`.
+The width of the page is the scroll width of the element that scrolls the viewport, which the Capture reads in the page with a one-line script; there is no new screenshot and no change to the tools. Measured on `9923762` with a throwaway spike (29 small pages at 400x300): the width of the full-page screenshot equals `document.documentElement.scrollWidth` in every one of them. The review of PR #17 found the page where the two differ: a `body` that is its own scroll container clips what the screenshot still counts, so the width is no longer read from `pixels`. Nor from `html` alone: in quirks mode it is `body` that scrolls the viewport.
 
-1. a page -> `capture.py` (exists) and `js/collect_elements.js` (exists) - unchanged but for one generic fact per element, its tag name, so that a Check can tell `html` and `body` from the rest
+1. a page -> `capture.py` (exists) and `js/collect_elements.js` (exists) - unchanged but for one generic fact per element, its tag name, so that a Check can tell `html` and `body` from the rest, and for the width the page scrolls, read by `js/scroll_width.js` (new, no door - one page script per file, as the others)
 2. `detect_visual_bugs` (exists) - unchanged, runs every Check of `checks.CHECKS` (exists) on each Capture
-3. `checks/offscreen_overflow.py` (new, no door - placement per conventions, one module per Check as AD-003 says) - compares the scroll width of `html` with the viewport's width, and when the page is wider picks the element whose right edge is the page's right edge, within the tolerance of 1px held in `config.py` (exists)
+3. `checks/offscreen_overflow.py` (new, no door - placement per conventions, one module per Check as AD-003 says) - compares the width the page scrolls with the viewport's width, and when the page is wider picks the element whose right edge is the page's right edge, within the tolerance of 1px held in `config.py` (exists)
 4. out: a `Finding` (exists, door 1 for its values) in the `findings` of `detect_visual_bugs`, ordered and given a crop by the tool as any other
 
 ## Impact
@@ -24,7 +24,7 @@ Reuses the Capture as it is: the width of the page is the scroll width of `html`
 | domain | no new term. A new Check name, `offscreen-overflow`, accepted in `checks` of `detect_visual_bugs`, and the first use of the category `responsive`, which the Finding schema already lists |
 | results | a call with no `checks` now runs three Checks, so a page that scrolls sideways gets one more Finding per viewport. Its severity is `major`, so it can take one of the five crops from a `minor` Finding |
 | existing tests | four assertions in `tests/test_detect_visual_bugs.py` quote `Valid checks: low-contrast-real, text-clipped.`; the list gains the new name. They are the only existing assertions edited. Measured: no existing fixture scrolls sideways at 1440, and the five that do at 390 (`box`, `low-contrast-bounds`, `pixel-budget`, `pixel-cost`, `sampled-patterns`) are never called there with the default Checks |
-| Capture | `Element` gains `tag`. `inspect_element` builds its result field by field, so its output does not change |
+| Capture | `Element` gains `tag` and the Capture gains `scroll_width`, the width the page scrolls. `inspect_element` builds its result field by field, so its output does not change |
 | stored data | nothing to migrate - nothing is persisted |
 
 ## Relations

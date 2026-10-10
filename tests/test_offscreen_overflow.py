@@ -188,6 +188,21 @@ async def test_a_page_in_quirks_mode_is_measured_like_any_other(
     }
 
 
+@pytest.mark.parametrize("name", ["absolute", "quirks-absolute"])
+async def test_an_element_out_of_the_flow_is_named_with_or_without_a_doctype(
+    client: Client, name: str
+) -> None:
+    # Which of `html` and `body` holds `#out` in its scroll width depends on the
+    # doctype; the page scrolls by 200px either way.
+    (finding,) = await small(client, name)
+    assert finding["selector"] == "#out"
+    assert finding["evidence"]["measured"] == {
+        "overflowPx": 200,
+        "pageWidth": 600,
+        "viewportWidth": 400,
+    }
+
+
 async def test_a_right_to_left_page_yields_no_finding(client: Client) -> None:
     assert await small(client, "rtl") == []
     # The pixels end at 600px, with `#pinned`: 16px of margin and its 100px.

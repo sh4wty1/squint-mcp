@@ -67,16 +67,12 @@ def _finding(element: Element, capture: Capture, page_width: int) -> Finding:
 
 
 def check(capture: Capture) -> list[Finding]:
-    html = _first(capture, "html")
-    # A document with no `html`, such as an SVG image, is not a page that scrolls.
-    if html is None:
-        return []
-    # How wide the page scrolls. The full-page pixels can be wider: they also
-    # hold what a `body` that is its own scroll container clips.
-    page_width = html.scroll_width
+    page_width = capture.scroll_width
     if page_width <= capture.viewport.width:
         return []
-    if not _scrolls_right(html, _first(capture, "body")):
+    html = _first(capture, "html")
+    # A document with no `html`, such as an SVG image, has no page styles to read.
+    if html is None or not _scrolls_right(html, _first(capture, "body")):
         return []
     # One Finding: the first element in document order that ends on the page's
     # right edge is the one that sets the width, not the children that fill it.

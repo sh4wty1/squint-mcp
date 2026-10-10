@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: an element out of the flow, past the viewport</title>
+    <style>
+      /* At 400x300 the page is 600px wide: #out, out of the flow, ends at 600px. Only
+         html holds it in its scroll width; body, which fits, does not. */
+      html,
+      body {
+        margin: 0;
+      }
+      #out {
+        position: absolute;
+        top: 0;
+        left: 500px;
+        width: 100px;
+        height: 20px;
+        background: rgb(200, 200, 200);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="out"></div>
+  </body>
+</html>

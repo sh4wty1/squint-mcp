@@ -78,6 +78,9 @@ class Capture:
     elements: list[Element]
     """The elements matched by the selector the Capture was taken for, in
     document order."""
+    scroll_width: int
+    """How wide the page scrolls, in CSS pixels. The pixels can be wider: they
+    also hold what a `body` that is its own scroll container clips."""
     pixels: Image.Image
     """The full page in RGB, one image pixel per CSS pixel."""
     background: Image.Image
