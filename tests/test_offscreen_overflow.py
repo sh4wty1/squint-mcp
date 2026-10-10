@@ -167,6 +167,27 @@ async def test_a_body_that_hides_its_overflow_under_a_scrolling_html_is_named(
     assert [finding["selector"] for finding in findings] == ["body"]
 
 
+async def test_a_body_that_clips_its_own_overflow_yields_no_finding(
+    client: Client,
+) -> None:
+    # The page does not scroll: `body` keeps its overflow and clips `#wide`.
+    assert await small(client, "own-scroller") == []
+    # The pixels end at 480px all the same, with `#wide`, past the viewport.
+    assert await crop_width(client, "own-scroller", "#wide") == 480
+
+
+async def test_a_page_in_quirks_mode_is_measured_like_any_other(
+    client: Client,
+) -> None:
+    (finding,) = await small(client, "quirks")
+    assert finding["selector"] == "#wide"
+    assert finding["evidence"]["measured"] == {
+        "overflowPx": 200,
+        "pageWidth": 600,
+        "viewportWidth": 400,
+    }
+
+
 async def test_a_right_to_left_page_yields_no_finding(client: Client) -> None:
     assert await small(client, "rtl") == []
     # The pixels end at 600px, with `#pinned`: 16px of margin and its 100px.

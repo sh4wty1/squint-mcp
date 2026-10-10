@@ -10,11 +10,11 @@ When this ships: for each viewport where the page scrolls horizontally, `detect_
 
 ## Flow
 
-Reuses the Capture as it is: the full-page `pixels` are already as wide as the page scrolls, so the Check reads the page's width from them and needs no new page script, no new screenshot and no change to the tools. Measured on `9923762` with a throwaway spike (29 small pages at 400x300): the width of the full-page screenshot equals `document.documentElement.scrollWidth` in every one of them.
+Reuses the Capture as it is: the width of the page is the scroll width of `html`, which every Capture already holds, so the Check needs no new page script, no new screenshot and no change to the tools. Measured on `9923762` with a throwaway spike (29 small pages at 400x300): the width of the full-page screenshot equals `document.documentElement.scrollWidth` in every one of them. The review of PR #17 found the page where the two differ: a `body` that is its own scroll container clips what the screenshot still counts, so the width is no longer read from `pixels`.
 
 1. a page -> `capture.py` (exists) and `js/collect_elements.js` (exists) - unchanged but for one generic fact per element, its tag name, so that a Check can tell `html` and `body` from the rest
 2. `detect_visual_bugs` (exists) - unchanged, runs every Check of `checks.CHECKS` (exists) on each Capture
-3. `checks/offscreen_overflow.py` (new, no door - placement per conventions, one module per Check as AD-003 says) - compares the width of `pixels` with the viewport's, and when the page is wider picks the element whose right edge is the page's right edge, within the tolerance of 1px held in `config.py` (exists)
+3. `checks/offscreen_overflow.py` (new, no door - placement per conventions, one module per Check as AD-003 says) - compares the scroll width of `html` with the viewport's width, and when the page is wider picks the element whose right edge is the page's right edge, within the tolerance of 1px held in `config.py` (exists)
 4. out: a `Finding` (exists, door 1 for its values) in the `findings` of `detect_visual_bugs`, ordered and given a crop by the tool as any other
 
 ## Impact

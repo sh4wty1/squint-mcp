@@ -7,28 +7,26 @@ from squint_mcp.models import Capture, Element, Evidence, Finding
 _EVIDENCE_PROPERTIES = ("display", "position", "width", "white-space")
 
 
-def _styles(capture: Capture, tag: str) -> dict[str, str]:
-    """The computed styles of the first `tag` element; none where the page has none."""
+def _first(capture: Capture, tag: str) -> Element | None:
     for element in capture.elements:
         if element.tag == tag:
-            return element.computed
-    return {}
+            return element
+    return None
 
 
-def _scrolls_right(capture: Capture) -> bool:
+def _scrolls_right(html: Element, body: Element | None) -> bool:
     """Whether what passes the right edge of the viewport is reached by scrolling."""
     # The viewport takes the overflow of `html`, or that of `body` while `html`
     # leaves its own `visible`.
-    overflow_x = _styles(capture, "html").get("overflow-x", "visible")
-    body = _styles(capture, "body")
-    if overflow_x == "visible":
-        overflow_x = body.get("overflow-x", "visible")
+    overflow_x = html.computed["overflow-x"]
+    if overflow_x == "visible" and body is not None:
+        overflow_x = body.computed["overflow-x"]
     return (
-        # The full-page pixels are as wide as the content even when the page hides
-        # it. Off-canvas menus are built that way on purpose.
+        # The scroll width counts the content even when the page hides it.
+        # Off-canvas menus are built that way on purpose.
         overflow_x not in ("hidden", "clip")
-        # A right-to-left page scrolls to the left, where the pixels do not reach.
-        and body.get("direction") != "rtl"
+        # A right-to-left page scrolls to the left, and its boxes start below 0.
+        and (body is None or body.computed["direction"] != "rtl")
     )
 
 
@@ -40,8 +38,7 @@ def _reach(element: Element) -> float:
     return max(right, element.own_text_right)
 
 
-def _finding(element: Element, capture: Capture) -> Finding:
-    page_width = capture.pixels.width
+def _finding(element: Element, capture: Capture, page_width: int) -> Finding:
     viewport_width = capture.viewport.width
     overflow_px = page_width - viewport_width
     return Finding(
@@ -70,9 +67,16 @@ def _finding(element: Element, capture: Capture) -> Finding:
 
 
 def check(capture: Capture) -> list[Finding]:
-    # The full-page pixels are as wide as the page scrolls.
-    page_width = capture.pixels.width
-    if page_width <= capture.viewport.width or not _scrolls_right(capture):
+    html = _first(capture, "html")
+    # A document with no `html`, such as an SVG image, is not a page that scrolls.
+    if html is None:
+        return []
+    # How wide the page scrolls. The full-page pixels can be wider: they also
+    # hold what a `body` that is its own scroll container clips.
+    page_width = html.scroll_width
+    if page_width <= capture.viewport.width:
+        return []
+    if not _scrolls_right(html, _first(capture, "body")):
         return []
     # One Finding: the first element in document order that ends on the page's
     # right edge is the one that sets the width, not the children that fill it.
@@ -82,5 +86,5 @@ def check(capture: Capture) -> list[Finding]:
     for element in capture.elements:
         distance = abs(page_width - _reach(element))
         if distance < config.OFFSCREEN_OVERFLOW_EDGE_TOLERANCE_PX:
-            return [_finding(element, capture)]
+            return [_finding(element, capture, page_width)]
     return []
