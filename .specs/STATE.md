@@ -41,6 +41,6 @@
 - **Completed**: plan, checks, build, the closing of precision gap 1 (`47c6163`), `verification.md`, roadmap slice 7 at `concluída`, the task record.
 - **In-progress** (file:line): none.
 - **Next step**: push and open the pull request once the user gives the go-ahead, then `/the-judge`. After the merge, the next roadmap slice is 8 (`overlap`, `tlc-spec-driven`).
-- **Blockers**: none. Precision gaps 1a, 2 and 3 fail no check and stay recorded by the user's decision of 2026-10-10 (see `docs/tasks/2026-10-09-offscreen-overflow.md`).
+- **Blockers**: none. Precision gaps 1a, 2 and 3 fail no check and stay recorded: 2 and 3 by the user's decision of 2026-10-10, 1a new in round 2 and not yet decided (see `docs/tasks/2026-10-09-offscreen-overflow.md`).
 - **Uncommitted files**: none
 - **Branch**: `feat/offscreen-overflow`, from `origin/main` at `9923762`. Only the plan commit (`a5013d4`) is pushed; every later commit is local.

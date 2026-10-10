@@ -8,7 +8,7 @@
 
 **Verificação:** `validate_checks.py` saiu com 0 erros. Antes da implementação, os testes novos falharam como esperado (`Unknown check "offscreen-overflow"`). O Verifier independente deu PASS na rodada 1 em `d84cce9`, 21 de 21 checks com evidência, e deixou três lacunas de precisão. O mantenedor decidiu fechar a primeira antes do PR: em `47c6163` os quatro testes de "nenhum Finding" (C10 a C13) passaram a afirmar onde os pixels da página terminam, pela largura do crop do `inspect_element`, e as páginas do `overflow-x` foram de 600px para 480px. A rodada 2 deu PASS em `47c6163`: 21 de 21 checks, `uv run pytest` com 233 passando, `pyright`, `ruff check` e `ruff format --check` verdes, e `validate_verification.py` saiu com 0. Relatório em `.specs/features/offscreen-overflow/verification.md`.
 
-**Pendências:** push e pull request, quando o mantenedor autorizar. Três lacunas de precisão ficam registradas, sem falhar nenhum check, por decisão do mantenedor em 2026-10-10:
+**Pendências:** push e pull request, quando o mantenedor autorizar. Três lacunas de precisão ficam registradas, sem falhar nenhum check. A 2 e a 3 ficam abertas por decisão do mantenedor em 2026-10-10; a 1 é nova, da rodada 2, e ainda não foi decidida:
 
 1. (1a, da rodada 2) A largura do crop prende a largura da página, mas não a posição do elemento: "onde `#wide` ou `#pinned` termina" fica preso à margem de 16px do crop, não ao 1px do Check. Só uma edição de fixture que mova dois valores juntos passaria.
 2. O critério 16 diz que o erro termina com a lista de Checks válidos; as quatro asserções testam só que o texto contém a lista.
