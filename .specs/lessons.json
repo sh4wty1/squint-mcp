@@ -3,7 +3,7 @@
   "promote_threshold": 2,
   "window_days": 45,
   "quarantine_threshold": 2,
-  "next_id": 49,
+  "next_id": 50,
   "lessons": [
     {
       "id": "L-001",
@@ -872,6 +872,24 @@
       ],
       "created": "2026-10-10T02:52:15Z",
       "last_seen": "2026-10-10T02:52:15Z"
+    },
+    {
+      "id": "L-049",
+      "key": "spec_precision_gap::when a test infers a value from a measurement that also depends on a second value assert the second value in the same test",
+      "text": "When a test infers a value from a measurement that also depends on a second value, assert the second value in the same test",
+      "signal": "spec_precision_gap",
+      "scope": "tests,measurement",
+      "status": "candidate",
+      "features": [
+        "offscreen-overflow"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "C12 - tests/test_offscreen_overflow.py:176 (verification.md precision gap 1a) (tests,measurement)"
+      ],
+      "created": "2026-10-10T03:17:44Z",
+      "last_seen": "2026-10-10T03:17:44Z"
     }
   ]
 }

@@ -300,6 +300,12 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: C16 - tests/test_detect_visual_bugs.py:341 (verification.md precision gap 2) (tests,messages)
 - last seen: 2026-10-10T02:52:15Z
 
+### L-049 - When a test infers a value from a measurement that also depends on a second value, assert the second value in the same test
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `tests,measurement` · harmful: 0
+- features: offscreen-overflow
+- evidence: C12 - tests/test_offscreen_overflow.py:176 (verification.md precision gap 1a) (tests,measurement)
+- last seen: 2026-10-10T03:17:44Z
+
 ## Quarantined (failed when applied - ignore)
 
 A confirmed lesson that recurred alongside failure. Kept for the maintainer to review.
