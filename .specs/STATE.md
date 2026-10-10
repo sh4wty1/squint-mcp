@@ -36,11 +36,11 @@
 
 ## Handoff
 
-- **Feature**: `offscreen-overflow` (roadmap slice 7) / `.specs/features/offscreen-overflow/`
-- **Phase / Task**: Verified, with `tlc-spec-lean` at profile `light`. Round 2 of the Verifier is PASS on C1 to C21 at `47c6163`; `validate_verification.py offscreen-overflow` exits 0.
-- **Completed**: plan, checks, build, the closing of precision gap 1 (`47c6163`), `verification.md`, roadmap slice 7 at `concluída`, the task record.
+- **Feature**: `offscreen-overflow` (roadmap slice 7, pull request #17) / `.specs/features/offscreen-overflow/`
+- **Phase / Task**: Verified, with `tlc-spec-lean` at profile `light`: round 2 of the Verifier is PASS on C1 to C21 at `47c6163`. Reviewed by `the-judge` (round 1, COMMENT) and fixed with `tlc-implement`: `.checks/pr17-review-fixes.md`.
+- **Completed**: plan, checks, build, `verification.md`, roadmap slice 7 at `concluída`, the task record, the review fixes F1 to F4 of pull request #17.
 - **In-progress** (file:line): none.
-- **Next step**: push and open the pull request once the user gives the go-ahead, then `/the-judge`. After the merge, the next roadmap slice is 8 (`overlap`, `tlc-spec-driven`).
+- **Next step**: the next roadmap slice, 8 (`overlap`, `tlc-spec-driven`).
 - **Blockers**: none. Precision gaps 1a, 2 and 3 fail no check and stay recorded: 2 and 3 by the user's decision of 2026-10-10, 1a new in round 2 and not yet decided (see `docs/tasks/2026-10-09-offscreen-overflow.md`).
 - **Uncommitted files**: none
-- **Branch**: `feat/offscreen-overflow`, from `origin/main` at `9923762`. Only the plan commit (`a5013d4`) is pushed; every later commit is local.
+- **Branch**: `feat/offscreen-overflow`, from `origin/main` at `9923762`, in pull request #17.
