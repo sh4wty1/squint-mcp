@@ -82,7 +82,9 @@ def check(capture: Capture) -> list[Finding]:
     # right edge is the one that sets the width, not the children that fill it.
     # ponytail: an element clipped by an ancestor or fixed to the viewport that
     # happens to end there, before the real one, is named instead; the Capture
-    # would need the clip chain of each element to tell them apart.
+    # would need the clip chain of each element to tell them apart. A line that
+    # ends in an inline child names that child, whose text it is, and not the
+    # block that keeps the line from wrapping.
     for element in capture.elements:
         distance = abs(page_width - _reach(element))
         if distance < config.OFFSCREEN_OVERFLOW_EDGE_TOLERANCE_PX:
