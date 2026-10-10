@@ -288,6 +288,18 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: C3 - src/squint_mcp/vision.py:49 (tests,limits)
 - last seen: 2026-10-09T14:40:32Z
 
+### L-047 - Back every design claim about what a browser or library API covers with a test that fails when the claim is false
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `design, external-apis` · harmful: 0
+- features: offscreen-overflow
+- evidence: C11 - tests/test_offscreen_overflow.py:140 (verification.md precision gap 1) (design, external-apis)
+- last seen: 2026-10-10T02:52:15Z
+
+### L-048 - Assert where a criterion places a text in a message, such as at its end, with an assertion of that place, not with substring membership
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `tests,messages` · harmful: 0
+- features: offscreen-overflow
+- evidence: C16 - tests/test_detect_visual_bugs.py:341 (verification.md precision gap 2) (tests,messages)
+- last seen: 2026-10-10T02:52:15Z
+
 ## Quarantined (failed when applied - ignore)
 
 A confirmed lesson that recurred alongside failure. Kept for the maintainer to review.

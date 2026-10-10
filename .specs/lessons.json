@@ -3,7 +3,7 @@
   "promote_threshold": 2,
   "window_days": 45,
   "quarantine_threshold": 2,
-  "next_id": 47,
+  "next_id": 49,
   "lessons": [
     {
       "id": "L-001",
@@ -836,6 +836,42 @@
       ],
       "created": "2026-10-09T14:40:32Z",
       "last_seen": "2026-10-09T14:40:32Z"
+    },
+    {
+      "id": "L-047",
+      "key": "spec_precision_gap::back every design claim about what a browser or library api covers with a test that fails when the claim is false",
+      "text": "Back every design claim about what a browser or library API covers with a test that fails when the claim is false",
+      "signal": "spec_precision_gap",
+      "scope": "design, external-apis",
+      "status": "candidate",
+      "features": [
+        "offscreen-overflow"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "C11 - tests/test_offscreen_overflow.py:140 (verification.md precision gap 1) (design, external-apis)"
+      ],
+      "created": "2026-10-10T02:52:15Z",
+      "last_seen": "2026-10-10T02:52:15Z"
+    },
+    {
+      "id": "L-048",
+      "key": "spec_precision_gap::assert where a criterion places a text in a message such as at its end with an assertion of that place not with substring membership",
+      "text": "Assert where a criterion places a text in a message, such as at its end, with an assertion of that place, not with substring membership",
+      "signal": "spec_precision_gap",
+      "scope": "tests,messages",
+      "status": "candidate",
+      "features": [
+        "offscreen-overflow"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "C16 - tests/test_detect_visual_bugs.py:341 (verification.md precision gap 2) (tests,messages)"
+      ],
+      "created": "2026-10-10T02:52:15Z",
+      "last_seen": "2026-10-10T02:52:15Z"
     }
   ]
 }
