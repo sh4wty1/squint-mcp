@@ -9,6 +9,8 @@ The proofs are the commands of `.github/workflows/ci.yml`. Where `uv` is not on 
 
 Every fixture is `tests/fixtures/offscreen-overflow-<name>.html`, named below by `<name>`. The widths were measured against Chromium on `a5013d4` before these checks were written: the pages of C3 to C8 and C11 to C13 are captured at 400x300, and each of them is wider than that in the full-page `pixels`.
 
+C10 to C13 were rewritten on 2026-10-10, at the user's request, to close precision gap 1 of round 1 of the verification: each now names where the pixels of its page end, and its proof asserts it. The width is read from the crop `inspect_element` cuts of an element, the box and 16px on each side, clamped to the pixels of the page (`tests/test_inspect_element.py::test_crop_margin_is_clamped_to_the_page`). The pages of C11 went from 600px to 480px so that the crop is not downscaled.
+
 ## Checks
 
 ### S1 - the element that makes the page scroll is named · 10 files · 53 KB · ~13k
@@ -40,16 +42,16 @@ Proof: `uv run pytest "tests/test_offscreen_overflow.py::test_an_element_moved_b
 **C9** - One call on `one` (`#box` of 400px) at 399x300 and at 400x300 returns exactly one Finding, at the viewport of 399, with `measured == {"overflowPx": 1, "pageWidth": 400, "viewportWidth": 399}` (AC 9)
 Proof: `uv run pytest "tests/test_offscreen_overflow.py::test_one_pixel_past_the_viewport_is_reported_and_none_is_not" -v`
 
-**C10** - `detect_visual_bugs` on `clean` at 1440x900 returns no Finding. The page is 1440px wide and holds an element 200px out to the left, one `position: fixed` that ends at 1640px, one of 1640px inside `overflow: hidden`, one of 1640px inside `overflow-x: auto`, a shadow 200px past the right edge, a right margin 200px past it, and an element 2000px tall (AC 10)
+**C10** - `detect_visual_bugs` on `clean` at 1440x900 returns no Finding, and the pixels of the page end at 1440px: the crop of `#fixed`, which starts at 1340px, is 116px wide. The page holds an element 200px out to the left, `#fixed`, which is `position: fixed` and ends at 1640px, one of 1640px inside `overflow: hidden`, one of 1640px inside `overflow-x: auto`, a shadow 200px past the right edge, a right margin 200px past it, and an element 2000px tall (AC 10)
 Proof: `uv run pytest "tests/test_offscreen_overflow.py::test_a_page_as_wide_as_its_viewport_yields_no_finding" -v`
 
-**C11** - A page of 600px in `pixels` whose `#wide` ends at its right edge yields no Finding when `overflow-x` is `hidden` or `clip` on `html`, or on `body` with `html` left `visible`: `hidden-html`, `clip-html`, `hidden-body`, `clip-body` (AC 11)
+**C11** - A page whose pixels end at 480px, where its `#wide` ends (the crop of `#wide` is 480px wide, with no margin to its right), yields no Finding at 400x300 when `overflow-x` is `hidden` or `clip` on `html`, or on `body` with `html` left `visible`: `hidden-html`, `clip-html`, `hidden-body`, `clip-body` (AC 11)
 Proof: `uv run pytest "tests/test_offscreen_overflow.py::test_a_page_that_hides_its_horizontal_overflow_yields_no_finding" -v` runs 4 cases
 
-**C12** - On `rtl` (`direction: rtl` on `body`, a page of 600px in `pixels`, and a `#pinned` that ends at 600px) there is no Finding (AC 12)
+**C12** - On `rtl` (`direction: rtl` on `body`) the pixels of the page end at 600px, where `#pinned` ends (its crop, which starts at 484px, is 116px wide), and there is no Finding (AC 12)
 Proof: `uv run pytest "tests/test_offscreen_overflow.py::test_a_right_to_left_page_yields_no_finding" -v`
 
-**C13** - On `pseudo` (a `#host::after` of 600px, no element past 400px) there is no Finding (AC 13)
+**C13** - On `pseudo` (a `#host::after` of 600px) the pixels of the page go on past `#host`, which is 400px wide as the viewport (its crop is 416px wide, with the whole margin to its right), and there is no Finding (AC 13)
 Proof: `uv run pytest "tests/test_offscreen_overflow.py::test_a_page_widened_by_a_pseudo_element_yields_no_finding" -v`
 
 ### S2 - the Check is reachable through the tool · 2 files · 24 KB · ~6k
@@ -130,3 +132,4 @@ Proof: `uv run pytest`
 - **Boundary:** C1-C21 closed at `2bd6d5d`
 - **Settled mid-build:** nothing - the user gave no clarification during the build
 - **Abandoned:** nothing
+- **Settled after round 1:** on 2026-10-10 the user chose to close precision gap 1 before the pull request and to leave gaps 2 and 3 recorded. C10 to C13 were rewritten and their four tests gained the assertion of where the pixels end, in the commit that adds this line

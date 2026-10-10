@@ -1,10 +1,13 @@
 """`offscreen-overflow` through `detect_visual_bugs`, against real Chromium."""
 
+import base64
+import io
 from typing import Any
 
 import pytest
-from helpers import detect, fixture_url
+from helpers import DESKTOP, detect, fixture_url, images, texts
 from mcp import Client
+from PIL import Image
 
 pytestmark = pytest.mark.anyio
 
@@ -24,6 +27,21 @@ async def small(client: Client, name: str) -> list[dict[str, Any]]:
     """The Findings of the Check on one of its fixtures, at 400x300."""
     content = await detect(client, page(name), viewports=[SMALL], checks=ONLY)
     return content["findings"]
+
+
+async def crop_width(
+    client: Client, name: str, selector: str, viewport: dict[str, int] = SMALL
+) -> int:
+    """How wide the crop of one element is: its box and 16px on each side.
+
+    The crop stops where the pixels of the page do, so its width tells where
+    they end.
+    """
+    arguments = {"url": page(name), "selector": selector, "viewport": viewport}
+    result = await client.call_tool("inspect_element", arguments)
+    assert result.is_error is False, texts(result)
+    (image,) = images(result)
+    return Image.open(io.BytesIO(base64.b64decode(image.data))).width
 
 
 async def test_a_page_wider_than_its_viewport_yields_one_finding(
@@ -129,6 +147,8 @@ async def test_one_pixel_past_the_viewport_is_reported_and_none_is_not(
 
 async def test_a_page_as_wide_as_its_viewport_yields_no_finding(client: Client) -> None:
     assert (await detect(client, page("clean")))["findings"] == []
+    # The pixels end at 1440px, 100px into `#fixed`: 16px of margin and those.
+    assert await crop_width(client, "clean", "#fixed", DESKTOP) == 116
 
 
 @pytest.mark.parametrize(
@@ -138,6 +158,8 @@ async def test_a_page_that_hides_its_horizontal_overflow_yields_no_finding(
     client: Client, name: str
 ) -> None:
     assert await small(client, name) == []
+    # The pixels end at 480px, with `#wide`: no margin on either side of it.
+    assert await crop_width(client, name, "#wide") == 480
 
 
 async def test_a_body_that_hides_its_overflow_under_a_scrolling_html_is_named(
@@ -150,12 +172,16 @@ async def test_a_body_that_hides_its_overflow_under_a_scrolling_html_is_named(
 
 async def test_a_right_to_left_page_yields_no_finding(client: Client) -> None:
     assert await small(client, "rtl") == []
+    # The pixels end at 600px, with `#pinned`: 16px of margin and its 100px.
+    assert await crop_width(client, "rtl", "#pinned") == 116
 
 
 async def test_a_page_widened_by_a_pseudo_element_yields_no_finding(
     client: Client,
 ) -> None:
     assert await small(client, "pseudo") == []
+    # The pixels go on past `#host`, 400px wide: its 400px and 16px of margin.
+    assert await crop_width(client, "pseudo", "#host") == 416
 
 
 async def test_naming_the_check_returns_its_finding_alone(client: Client) -> None:
