@@ -1,8 +1,9 @@
 // Runs in the page over the elements matched by the selector and returns them in
-// document order. For each one: its border box as painted, in page coordinates, its
-// box model as laid out, the requested computed styles, an excerpt of its text, the
-// boxes and the right edge of its own text, its opacity with that of its ancestors,
-// its scroll and client width and a selector that is unique on the page.
+// document order. For each one: its tag name, its border box as painted, in page
+// coordinates, its box model as laid out, the requested computed styles, an excerpt
+// of its text, the boxes and the right edge of its own text, its opacity with that
+// of its ancestors, its scroll and client width and a selector that is unique on
+// the page.
 (elements, { properties, textLimit, transformMinSizeDiffPx }) => {
   // Document order, an open shadow tree right after its host. Playwright lists the
   // matches inside shadow trees after the whole light tree, so its order is not used.
@@ -149,6 +150,7 @@
       }
     }
     return {
+      tag: element.localName,
       box: {
         x: rect.x + window.scrollX,
         y: rect.y + window.scrollY,
