@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: a page that scrolls horizontally</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are 200px wide. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      /* 200px wider than a viewport of 1440px: the page is 1640px wide. */
+      #wide {
+        width: 1640px;
+        height: 40px;
+        background: rgb(200, 200, 200);
+      }
+      /* Cut by 50px, far from the right edge: a Finding of another Check. */
+      #clipped {
+        margin: 20px 0 0 40px;
+        width: 150px;
+        overflow-x: hidden;
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="wide"></div>
+    <div id="clipped">XXXXXXXXXX</div>
+  </body>
+</html>

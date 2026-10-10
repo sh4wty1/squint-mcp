@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: an element one pixel short of the right edge of the page</title>
+    <style>
+      /* At 400x300 the page is 600px wide: the first ends at 599px. */
+      html,
+      body {
+        margin: 0;
+      }
+      div {
+        height: 20px;
+        background: rgb(200, 200, 200);
+      }
+      #near {
+        width: 599px;
+      }
+      #edge {
+        width: 600px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="near"></div>
+    <div id="edge"></div>
+  </body>
+</html>

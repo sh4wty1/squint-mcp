@@ -14,7 +14,7 @@ Reuses the Capture as it is: the full-page `pixels` are already as wide as the p
 
 1. a page -> `capture.py` (exists) and `js/collect_elements.js` (exists) - unchanged but for one generic fact per element, its tag name, so that a Check can tell `html` and `body` from the rest
 2. `detect_visual_bugs` (exists) - unchanged, runs every Check of `checks.CHECKS` (exists) on each Capture
-3. `checks/offscreen_overflow.py` (new, no door - placement per conventions, one module per Check as AD-003 says) - compares the width of `pixels` with the viewport's, and when the page is wider picks the element whose right edge is the page's right edge
+3. `checks/offscreen_overflow.py` (new, no door - placement per conventions, one module per Check as AD-003 says) - compares the width of `pixels` with the viewport's, and when the page is wider picks the element whose right edge is the page's right edge, within the tolerance of 1px held in `config.py` (exists)
 4. out: a `Finding` (exists, door 1 for its values) in the `findings` of `detect_visual_bugs`, ordered and given a crop by the tool as any other
 
 ## Impact

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: a word that cannot break, out of a box that fits the viewport</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are 200px wide. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      /* At 400x300 the page is 600px wide: the box ends at 200px and its one word,
+         of 30 glyphs, at 600px. */
+      #word {
+        width: 200px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="word">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</div>
+  </body>
+</html>

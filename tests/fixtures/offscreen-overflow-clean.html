@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: elements past the viewport on a page that does not scroll horizontally</title>
+    <style>
+      /* At 1440x900 the page is 1440px wide: none of these widens it. */
+      html,
+      body {
+        margin: 0;
+      }
+      div {
+        height: 20px;
+        background: rgb(200, 200, 200);
+      }
+      /* 200px out to the left: a page does not scroll that way. */
+      #left {
+        width: 400px;
+        margin-left: -200px;
+      }
+      /* Ends at 1640px, fixed to the viewport. */
+      #fixed {
+        position: fixed;
+        top: 40px;
+        left: 1340px;
+        width: 300px;
+      }
+      /* 1640px wide, cut by its parent. */
+      #clipper {
+        overflow: hidden;
+      }
+      #cut {
+        width: 1640px;
+      }
+      /* 1640px wide, scrolled by its parent. */
+      #scroller {
+        overflow-x: auto;
+      }
+      #scrolled {
+        width: 1640px;
+      }
+      /* A shadow 200px past the right edge. */
+      #shadow {
+        box-shadow: 200px 0 rgb(0, 0, 0);
+      }
+      /* A right margin 200px past the right edge. */
+      #margin {
+        width: 1440px;
+        margin-right: 200px;
+      }
+      /* Taller than the viewport: the page scrolls down. */
+      #tall {
+        width: 100px;
+        height: 2000px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="left"></div>
+    <div id="fixed"></div>
+    <div id="clipper"><div id="cut"></div></div>
+    <div id="scroller"><div id="scrolled"></div></div>
+    <div id="shadow"></div>
+    <div id="margin"></div>
+    <div id="tall"></div>
+  </body>
+</html>

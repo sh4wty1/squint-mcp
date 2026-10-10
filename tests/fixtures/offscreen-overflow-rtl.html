@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: a right-to-left page that scrolls to the left</title>
+    <style>
+      /* At 400x300 the full-page pixels are 600px wide: #wide runs from -200px to
+         400px, and #pinned ends at 600px, where a page in this direction does not
+         scroll. */
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        direction: rtl;
+      }
+      div {
+        height: 20px;
+        background: rgb(200, 200, 200);
+      }
+      #wide {
+        width: 600px;
+      }
+      #pinned {
+        position: absolute;
+        top: 40px;
+        left: 500px;
+        width: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="wide"></div>
+    <div id="pinned"></div>
+  </body>
+</html>

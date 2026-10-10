@@ -6,7 +6,7 @@ Adding a Check is one module in this package and one entry in `CHECKS`.
 
 from collections.abc import Callable
 
-from squint_mcp.checks import low_contrast_real, text_clipped
+from squint_mcp.checks import low_contrast_real, offscreen_overflow, text_clipped
 from squint_mcp.models import Capture, Finding
 
 Check = Callable[[Capture], list[Finding]]
@@ -14,4 +14,5 @@ Check = Callable[[Capture], list[Finding]]
 CHECKS: dict[str, Check] = {
     "text-clipped": text_clipped.check,
     "low-contrast-real": low_contrast_real.check,
+    "offscreen-overflow": offscreen_overflow.check,
 }

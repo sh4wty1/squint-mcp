@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: an element and its child at the right edge of the page</title>
+    <style>
+      /* At 400x300 the page is 600px wide. Both end at 600px; the padding keeps
+         their boxes apart. */
+      html,
+      body {
+        margin: 0;
+      }
+      #outer {
+        width: 600px;
+        padding-bottom: 10px;
+      }
+      #inner {
+        height: 20px;
+        background: rgb(200, 200, 200);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="outer"><div id="inner"></div></div>
+  </body>
+</html>

@@ -83,6 +83,11 @@ TEXT_CLIPPED_MAJOR_OVERFLOW_PX = 8
 # by this much is under a transform. The collector is passed the same value.
 TRANSFORM_MIN_SIZE_DIFF_PX = 1
 
+# Source: Squint default. A page scrolls by whole pixels and a box can end on a
+# fraction of one, so the element that sets the width of a page ends less than
+# 1px from the page's right edge.
+OFFSCREEN_OVERFLOW_EDGE_TOLERANCE_PX = 1
+
 # Source: WCAG 2.2 SC 1.4.3 Contrast (Minimum): "a contrast ratio of at least 4.5:1".
 CONTRAST_MIN_RATIO = 4.5
 
