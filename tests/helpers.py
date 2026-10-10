@@ -1,10 +1,13 @@
 """Shared by the `detect_visual_bugs` test modules."""
 
+import base64
+import io
 from pathlib import Path
 from typing import Any
 
 from mcp import Client
 from mcp.types import CallToolResult, ImageContent, TextContent
+from PIL import Image
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
@@ -22,6 +25,11 @@ def texts(result: CallToolResult) -> list[str]:
 
 def images(result: CallToolResult) -> list[ImageContent]:
     return [block for block in result.content if isinstance(block, ImageContent)]
+
+
+def decode(image: ImageContent) -> Image.Image:
+    """The picture an image block of a response carries, in RGB."""
+    return Image.open(io.BytesIO(base64.b64decode(image.data))).convert("RGB")
 
 
 async def call(client: Client, url: str, **extra: Any) -> CallToolResult:

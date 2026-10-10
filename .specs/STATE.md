@@ -36,11 +36,11 @@
 
 ## Handoff
 
-- **Feature**: `capture-pixel-budget` (roadmap slice 6, issue #11) / `.specs/features/capture-pixel-budget/`
-- **Phase / Task**: Verified, with `tlc-spec-lean` at profile `light`. Round 2 of the Verifier is PASS on C1 to C15 at `70fd50b`; `validate_verification.py capture-pixel-budget` exits 0.
-- **Completed**: plan, checks, build, the fix of C14 (`70fd50b`), `verification.md`, roadmap slice 6 at `concluída`, the task record.
+- **Feature**: `offscreen-overflow` (roadmap slice 7, pull request #17) / `.specs/features/offscreen-overflow/`
+- **Phase / Task**: Verified, with `tlc-spec-lean` at profile `light`: round 2 of the Verifier is PASS on C1 to C21 at `47c6163`. Reviewed by `the-judge` (round 1, COMMENT) and fixed with `tlc-implement`: `.checks/pr17-review-fixes.md`.
+- **Completed**: plan, checks, build, `verification.md`, roadmap slice 7 at `concluída`, the task record, the review fixes of pull request #17: F1, F2 and F4, and F3 in part (the three older copies of the crop decode stay, by the user's decision of 2026-10-10).
 - **In-progress** (file:line): none.
-- **Next step**: the next roadmap slice, 7 (`offscreen-overflow`, `tlc-spec-lean`).
-- **Blockers**: none.
+- **Next step**: the next roadmap slice, 8 (`overlap`, `tlc-spec-driven`).
+- **Blockers**: none. Precision gaps 1a, 2 and 3 fail no check and stay recorded: 2 and 3 by the user's decision of 2026-10-10, 1a new in round 2 and not yet decided (see `docs/tasks/2026-10-09-offscreen-overflow.md`).
 - **Uncommitted files**: none
-- **Branch**: `feat/capture-pixel-budget`
+- **Branch**: `feat/offscreen-overflow`, from `origin/main` at `9923762`, in pull request #17.

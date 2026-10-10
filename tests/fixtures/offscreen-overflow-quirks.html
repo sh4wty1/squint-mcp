@@ -1,0 +1,22 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: a page that scrolls horizontally, with no doctype</title>
+    <style>
+      /* No doctype: quirks mode, where body scrolls the viewport. At 400x300 the
+         page is 600px wide. */
+      html,
+      body {
+        margin: 0;
+      }
+      #wide {
+        width: 600px;
+        height: 20px;
+        background: rgb(200, 200, 200);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="wide"></div>
+  </body>
+</html>

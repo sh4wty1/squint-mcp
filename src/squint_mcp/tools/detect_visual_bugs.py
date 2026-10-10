@@ -58,16 +58,18 @@ async def detect_visual_bugs(
     page to settle and runs Checks that cross what the DOM reports with what is
     painted. `viewports` defaults to one of 1440x900. `checks` names the Checks
     to run and defaults to all of them: `text-clipped` (text cut off
-    horizontally by its own box) and `low-contrast-real` (text whose contrast
+    horizontally by its own box), `low-contrast-real` (text whose contrast
     against the background painted behind it, sampled from the pixels, is below
-    WCAG 2.2 SC 1.4.3). Returns `findings`, most severe first and then in the
-    order of the page, and `captures`, one per viewport, whose `stabilized` is
-    false when the network never went idle. Each Finding names its element by a
-    `selector` that is unique on the page and works in `inspect_element`, and
-    carries the styles and measurements that back it. The five most severe
-    Findings also get a crop of their element: `evidence.cropIndex` is the
-    position of that image among the images of the response, or null. A call
-    that takes longer than 30s, all viewports together, fails.
+    WCAG 2.2 SC 1.4.3) and `offscreen-overflow` (the element that sets the width
+    of a page that scrolls horizontally, one per viewport). Returns `findings`,
+    most severe first and then in the order of the page, and `captures`, one per
+    viewport, whose `stabilized` is false when the network never went idle. Each
+    Finding names its element by a `selector` that is unique on the page and
+    works in `inspect_element`, and carries the styles and measurements that
+    back it. The five most severe Findings also get a crop of their element:
+    `evidence.cropIndex` is the position of that image among the images of the
+    response, or null. A call that takes longer than 30s, all viewports
+    together, fails.
     """
     # A repeated Check name or viewport counts once, at its first place.
     names = list(dict.fromkeys(checks or CHECKS))

@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: a child at the right edge of the page, out of a parent that fits</title>
+    <style>
+      /* At 400x300 the page is 600px wide: the parent ends at 300px, its child at
+         600px. */
+      html,
+      body {
+        margin: 0;
+      }
+      #parent {
+        width: 300px;
+      }
+      #child {
+        width: 600px;
+        height: 20px;
+        background: rgb(200, 200, 200);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="parent"><div id="child"></div></div>
+  </body>
+</html>

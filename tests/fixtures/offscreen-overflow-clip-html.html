@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: a wide element on a page with overflow-x: clip on html</title>
+    <style>
+      /* At 400x300 the full-page pixels are 480px wide, and the page does not
+         scroll: the viewport takes the overflow-x of html. */
+      html,
+      body {
+        margin: 0;
+      }
+      html {
+        overflow-x: clip;
+      }
+      #wide {
+        width: 480px;
+        height: 20px;
+        background: rgb(200, 200, 200);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="wide"></div>
+  </body>
+</html>

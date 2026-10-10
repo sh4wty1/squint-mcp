@@ -46,6 +46,8 @@ class Element(BaseModel):
 
     model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
 
+    tag: str
+    """The local name of the element, in lower case for an HTML one."""
     box: Box
     box_model: BoxModel
     computed: dict[str, str]
@@ -76,6 +78,9 @@ class Capture:
     elements: list[Element]
     """The elements matched by the selector the Capture was taken for, in
     document order."""
+    scroll_width: int
+    """How wide the page scrolls, in CSS pixels. The pixels can be wider: they
+    also hold what a `body` that is its own scroll container clips."""
     pixels: Image.Image
     """The full page in RGB, one image pixel per CSS pixel."""
     background: Image.Image

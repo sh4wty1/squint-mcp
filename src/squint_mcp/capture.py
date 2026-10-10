@@ -21,6 +21,7 @@ _JS = Path(__file__).parent / "js"
 _STABILIZE = (_JS / "stabilize.js").read_text(encoding="utf-8")
 _COLLECT_ELEMENTS = (_JS / "collect_elements.js").read_text(encoding="utf-8")
 _FILL_TEXT = (_JS / "fill_text.js").read_text(encoding="utf-8")
+_SCROLL_WIDTH = (_JS / "scroll_width.js").read_text(encoding="utf-8")
 
 
 class BrowserSession:
@@ -132,6 +133,7 @@ async def capture(
                 "transformMinSizeDiffPx": config.TRANSFORM_MIN_SIZE_DIFF_PX,
             },
         )
+        scroll_width = await page.evaluate(_SCROLL_WIDTH)
         pixels = await _screenshot(page)
         # After the collector, which reads the page's own styles, and after the
         # pixels: from here on the text is not painted as the page asked (AD-004).
@@ -147,6 +149,7 @@ async def capture(
         viewport=viewport,
         stabilized=stabilized,
         elements=[Element.model_validate(element) for element in collected],
+        scroll_width=scroll_width,
         pixels=pixels,
         background=background,
         # Only glyphs differ between the two fills, by how much they cover a pixel.

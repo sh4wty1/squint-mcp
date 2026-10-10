@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: an element that ends under a pixel short of the right edge of the page</title>
+    <style>
+      /* At 400x300 the page is 601px wide: a page scrolls by whole pixels, and
+         600.6px rounds up. The element ends 0.4px before the edge. */
+      html,
+      body {
+        margin: 0;
+      }
+      #fraction {
+        width: 600.6px;
+        height: 20px;
+        background: rgb(200, 200, 200);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="fraction"></div>
+  </body>
+</html>

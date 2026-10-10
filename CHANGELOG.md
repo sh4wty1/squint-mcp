@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- `offscreen-overflow` Check: on a page that scrolls horizontally, reports the element that sets the width of the page, one per viewport, with by how many pixels the page passes the viewport. Its severity is always `major`. It reports nothing while the page hides its horizontal overflow (`overflow-x: hidden` or `clip` on `html` or `body`), and nothing on a right-to-left page.
+
 ### Changed
 
 - The `low-contrast-real` Check stays fast on a page of many texts painted over millions of colours: it counts at most 262,144 pixels (512x512) across the texts of a page at one viewport, where the limit was per element. A text small enough is still counted whole; the larger ones share what is left equally, so on a page with more text than that their contrast comes from a sample, and a text of very little ink may not be judged on such a page ([#11](https://github.com/sh4wty1/squint-mcp/issues/11)).

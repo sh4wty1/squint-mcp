@@ -42,7 +42,7 @@ The server exposes three tools:
 | `inspect_element` | `url`, `selector`, `viewport` (optional) | one element's computed styles, box model, sampled colours, `stabilized`, and a crop |
 | `detect_visual_bugs` | `url`, `viewports` (optional), `checks` (optional) | Findings ordered by severity, `stabilized` per viewport, and up to five crops |
 
-`detect_visual_bugs` runs two Checks: `text-clipped` (text cut off by its own box) and `low-contrast-real` (text whose contrast against the background sampled from the pixels is below WCAG 2.2 SC 1.4.3, so it is right over images and gradients). See [`docs/SPEC.md`](https://github.com/sh4wty1/squint-mcp/blob/main/docs/SPEC.md) for the v0.1 specification and [`CHANGELOG.md`](https://github.com/sh4wty1/squint-mcp/blob/main/CHANGELOG.md) for what each release contains.
+`detect_visual_bugs` runs three Checks: `text-clipped` (text cut off by its own box), `low-contrast-real` (text whose contrast against the background sampled from the pixels is below WCAG 2.2 SC 1.4.3, so it is right over images and gradients) and `offscreen-overflow` (the element that makes the page scroll horizontally). See [`docs/SPEC.md`](https://github.com/sh4wty1/squint-mcp/blob/main/docs/SPEC.md) for the v0.1 specification and [`CHANGELOG.md`](https://github.com/sh4wty1/squint-mcp/blob/main/CHANGELOG.md) for what each release contains.
 
 ## Development
 

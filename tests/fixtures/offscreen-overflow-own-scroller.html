@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: a wide element clipped by a body that is its own scroll container</title>
+    <style>
+      /* At 400x300 the page is 400px wide and does not scroll: the overflow of html
+         is not visible, so body keeps its own and clips #wide. The full-page pixels
+         are 480px wide all the same. */
+      html {
+        margin: 0;
+        overflow-y: scroll;
+      }
+      body {
+        margin: 0;
+        overflow-x: hidden;
+      }
+      #wide {
+        width: 480px;
+        height: 20px;
+        background: rgb(200, 200, 200);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="wide"></div>
+  </body>
+</html>

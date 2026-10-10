@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: a wide body that hides its overflow on a page that scrolls</title>
+    <style>
+      /* At 400x300 the page is 600px wide and scrolls: the overflow-x of html is
+         not visible, so the viewport does not take that of body. */
+      html {
+        margin: 0;
+        overflow-x: auto;
+      }
+      body {
+        margin: 0;
+        width: 600px;
+        overflow-x: hidden;
+      }
+      #inside {
+        height: 20px;
+        background: rgb(200, 200, 200);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="inside"></div>
+  </body>
+</html>

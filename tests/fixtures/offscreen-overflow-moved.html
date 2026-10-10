@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: an element moved past the viewport by a transform</title>
+    <style>
+      /* At 400x300 the page is 550px wide: laid out at 0, painted from 450px to
+         550px. */
+      html,
+      body {
+        margin: 0;
+      }
+      #moved {
+        width: 100px;
+        height: 20px;
+        background: rgb(200, 200, 200);
+        transform: translateX(450px);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="moved"></div>
+  </body>
+</html>
