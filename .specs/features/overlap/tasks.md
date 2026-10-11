@@ -224,7 +224,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (OVL-67), remove `.spe
 
 ### T6: Add the cover page script
 
-- [ ] Done
+- [x] Done
 
 **What**: `covered_text.js`: installs `globalThis.__squintCovered` and returns the texts (`index`, `ancestors`, `region`, `layers`); `mark`, `ink`, `show` and `hit` as in the design, with the Silent layer and Raised layer rules.
 **Where**: `src/squint_mcp/js/covered_text.js`
@@ -239,12 +239,12 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (OVL-67), remove `.spe
 
 **Done when**:
 
-- [ ] It speaks of elements only by their index in `__squintElements`
-- [ ] The highlight colours are red and blue at 255 and green at 64, with the reason in a comment
-- [ ] Only elements that were `visible` before are ever shown
-- [ ] `hit` restores the scroll position and tests each text at least once
-- [ ] Gate check passes: Build
-- [ ] Test count: 237 tests pass
+- [x] It speaks of elements only by their index in `__squintElements`
+- [x] The highlight colours are red and blue at 255 and green at 64, with the reason in a comment
+- [x] Only elements that were `visible` before are ever shown
+- [x] `hit` restores the scroll position and tests each text at least once
+- [x] Gate check passes: Build
+- [x] Test count: 237 tests pass
 
 **Tests**: none
 **Gate**: build
