@@ -8,11 +8,17 @@
 
 Corroborated across multiple features. Safe to apply as guidance.
 
+### L-005 - Test page-coordinate values on a page that is scrolled when they are read, not only at scroll zero
+- signal: `surviving_mutant` · recurrence: 2 feature(s) · scope: `tests,capture` · harmful: 0
+- features: capture-inspect-element, overlap
+- evidence: src/squint_mcp/js/collect_elements.js:19 (mutant M27, CAP-20) (tests,capture) (+1 more)
+- last seen: 2026-10-11T12:46:50Z
+
 ### L-012 - Give a geometric rule an outcome in the spec for every axis and every edge it applies to, not for one corner
-- signal: `spec_precision_gap` · recurrence: 2 feature(s) · scope: `spec,geometry` · harmful: 0
-- features: capture-inspect-element, detect-visual-bugs-text-clipped
-- evidence: spec.md:49, spec.md:53 (mutants N1, N7, N8; CAP-14, CAP-20) (spec,geometry) (+1 more)
-- last seen: 2026-10-07T16:30:33Z
+- signal: `spec_precision_gap` · recurrence: 3 feature(s) · scope: `spec,geometry` · harmful: 0
+- features: capture-inspect-element, detect-visual-bugs-text-clipped, overlap
+- evidence: spec.md:49, spec.md:53 (mutants N1, N7, N8; CAP-14, CAP-20) (spec,geometry) (+2 more)
+- last seen: 2026-10-11T12:46:49Z
 
 ### L-019 - Give each clause of an or-condition a fixture that only that clause catches
 - signal: `surviving_mutant` · recurrence: 2 feature(s) · scope: `tests,checks` · harmful: 0
@@ -26,6 +32,12 @@ Corroborated across multiple features. Safe to apply as guidance.
 - evidence: mutants J09, J10, src/squint_mcp/js/collect_elements.js:41,133 (DVB-15) (tests,ordering) (+1 more)
 - last seen: 2026-10-08T05:06:17Z
 
+### L-036 - Pin a rule that judges an element on its own content with a fixture where its child's content would change the outcome
+- signal: `surviving_mutant` · recurrence: 2 feature(s) · scope: `tests,checks` · harmful: 0
+- features: low-contrast-real, overlap
+- evidence: mutant C3b, src/squint_mcp/js/collect_elements.js:132 (LCR-10) (tests,checks) (+1 more)
+- last seen: 2026-10-11T12:46:49Z
+
 ### L-038 - Pin a pixel-intensity threshold with fixture pixels just on each side of it, not only with pixels at the two ends of the range
 - signal: `surviving_mutant` · recurrence: 2 feature(s) · scope: `tests,thresholds` · harmful: 0
 - features: low-contrast-real, overlap
@@ -35,8 +47,8 @@ Corroborated across multiple features. Safe to apply as guidance.
 ### L-046 - Prove a limit on a fixture whose result differs on each side of the limit, not on one that reads the same either way
 - signal: `spec_precision_gap` · recurrence: 2 feature(s) · scope: `tests,limits` · harmful: 0
 - features: capture-pixel-budget, overlap
-- evidence: C3 - src/squint_mcp/vision.py:49 (tests,limits) (+1 more)
-- last seen: 2026-10-11T10:40:26Z
+- evidence: C3 - src/squint_mcp/vision.py:49 (tests,limits) (+2 more)
+- last seen: 2026-10-11T12:46:50Z
 
 ## Candidates (under observation - do NOT load as guidance yet)
 
@@ -64,12 +76,6 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,vision` · harmful: 0
 - features: capture-inspect-element
 - evidence: tests/test_inspect_element.py:76 (mutant M07, CAP-13) (tests,vision)
-- last seen: 2026-10-06T16:48:46Z
-
-### L-005 - Test page-coordinate values on a page that is scrolled when they are read, not only at scroll zero
-- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,capture` · harmful: 0
-- features: capture-inspect-element
-- evidence: src/squint_mcp/js/collect_elements.js:19 (mutant M27, CAP-20) (tests,capture)
 - last seen: 2026-10-06T16:48:46Z
 
 ### L-006 - Assert the elapsed time of a timeout test, not only that the timeout error is returned
@@ -234,12 +240,6 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: mutant S3; spec.md:68 against LCR-37 (spec.md:186) (spec,ordering)
 - last seen: 2026-10-08T05:06:17Z
 
-### L-036 - Pin a rule that judges an element on its own content with a fixture where its child's content would change the outcome
-- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,checks` · harmful: 0
-- features: low-contrast-real
-- evidence: mutant C3b, src/squint_mcp/js/collect_elements.js:132 (LCR-10) (tests,checks)
-- last seen: 2026-10-08T05:06:18Z
-
 ### L-037 - Test a rule that reads a list of regions with an element that has more than one region and whose outcome depends on a later one
 - signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,vision` · harmful: 0
 - features: low-contrast-real
@@ -329,6 +329,54 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - features: overlap
 - evidence: mutants C5, C11, src/squint_mcp/covered.py:242, src/squint_mcp/capture.py:205 (tests,vision)
 - last seen: 2026-10-11T10:40:26Z
+
+### L-054 - Test code that hands items out in slots and batches with more items in one place than one batch holds
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,capture` · harmful: 0
+- features: overlap
+- evidence: mutants N2, N3 - src/squint_mcp/capture.py:205, src/squint_mcp/js/covered_text.js:143 (tests,capture)
+- last seen: 2026-10-11T12:46:49Z
+
+### L-055 - Place the measured items of a fixture at different offsets on each axis, so that reading one item at the place of another changes the outcome
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,fixtures` · harmful: 0
+- features: overlap
+- evidence: mutant N1b - src/squint_mcp/covered.py:116 (tests,fixtures)
+- last seen: 2026-10-11T12:46:49Z
+
+### L-056 - Test a rule that keeps two items apart by their extent with a fixture where the extents cross and the contents do not
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,geometry` · harmful: 0
+- features: overlap
+- evidence: mutant N9 - src/squint_mcp/js/covered_text.js:101 (tests,geometry)
+- last seen: 2026-10-11T12:46:49Z
+
+### L-057 - Pin a rule that fires on one exact value of a style with a fixture just off that value, not only with a value far from it
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,thresholds` · harmful: 0
+- features: overlap
+- evidence: mutant N10 - src/squint_mcp/checks/overlap.py:31 (OVL-38) (tests,thresholds)
+- last seen: 2026-10-11T12:46:50Z
+
+### L-058 - Pin which of two style properties a rule reads with a fixture where the two differ
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,checks` · harmful: 0
+- features: overlap
+- evidence: mutant N22 - src/squint_mcp/checks/overlap.py:30 (OVL-38) (tests,checks)
+- last seen: 2026-10-11T12:46:50Z
+
+### L-059 - Give a rule that leaves hidden elements out a fixture with a hidden element placed where painting it would change the outcome
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,capture` · harmful: 0
+- features: overlap
+- evidence: mutant N11 - src/squint_mcp/js/covered_text.js:152 (tests,capture)
+- last seen: 2026-10-11T12:46:50Z
+
+### L-060 - State in the spec which items count towards a cap when only some of them are processed
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `spec,limits` · harmful: 0
+- features: overlap
+- evidence: mutant N14 - src/squint_mcp/capture.py:212 (spec.md:29) (spec,limits)
+- last seen: 2026-10-11T12:46:50Z
+
+### L-061 - List in the spec's Out of Scope every limit the design accepts, so that no criterion promises what the code does not do
+- signal: `ac_gap` · recurrence: 1 feature(s) · scope: `spec,design` · harmful: 0
+- features: overlap
+- evidence: OVL-01, probe p2b - .specs/features/overlap/design.md:259 (spec,design)
+- last seen: 2026-10-11T12:46:51Z
 
 ## Quarantined (failed when applied - ignore)
 
