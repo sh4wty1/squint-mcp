@@ -36,11 +36,12 @@
 
 ## Handoff
 
-- **Feature**: `offscreen-overflow` (roadmap slice 7, pull request #17) / `.specs/features/offscreen-overflow/`
-- **Phase / Task**: Verified, with `tlc-spec-lean` at profile `light`: round 2 of the Verifier is PASS on C1 to C21 at `47c6163`. Reviewed by `the-judge` (round 1, COMMENT) and fixed with `tlc-implement`: `.checks/pr17-review-fixes.md`.
-- **Completed**: plan, checks, build, `verification.md`, roadmap slice 7 at `concluída`, the task record, the review fixes of pull request #17: F1, F2 and F4, and F3 in part (the three older copies of the crop decode stay, by the user's decision of 2026-10-10).
-- **In-progress** (file:line): none.
-- **Next step**: the next roadmap slice, 8 (`overlap`, `tlc-spec-driven`).
-- **Blockers**: none. Precision gaps 1a, 2 and 3 fail no check and stay recorded: 2 and 3 by the user's decision of 2026-10-10, 1a new in round 2 and not yet decided (see `docs/tasks/2026-10-09-offscreen-overflow.md`).
-- **Uncommitted files**: none
-- **Branch**: `feat/offscreen-overflow`, from `origin/main` at `9923762`, in pull request #17.
+- **Feature**: `overlap` (roadmap slice 8) / `.specs/features/overlap/`
+- **Phase / Task**: Design, under `tlc-spec-driven`, scope Complex. Stopped in the middle of the spike; nothing of Design is written.
+- **Completed**: Specify (`spec.md`, OVL-01 to OVL-69, and `context.md`; `validate_spec.py --strict` passes). A spike in real Chromium of how the Capture learns Text ink, Hidden ink and the Coverer: one mechanism gives the Terms on every case measured, and the 100 covered texts of OVL-60 take 3.8s to 10.8s against the limit of 30s. Mechanism, results, costs and what is open are in `context.md`, "Design spike".
+- **In-progress** (file:line): none in the repository.
+- **Next step**: settle the four points listed as open in `context.md` (text painted over text in the cheaper shape, a dark root background, a cap on hit tests, layers on every call or on request), run the existing suite with Chromium launched with `--disable-lcd-text`, then record AD-005 and write `design.md`.
+- **Blockers**: the maintainer has not said whether the spec is approved as it stands: the message of 2026-10-10 left "Decisão sobre a spec" unfilled. The spike asks for three additions to the Terms, for the maintainer to accept or change: "seen" relative to the ink of the pixel alone, text rasterized in grayscale (`--disable-lcd-text`, which touches every Capture), and hit testing below the first viewport done with the page scrolled. The five unconfirmed choices of the Assumptions table stand as before.
+- **Uncommitted files**: none.
+- **Branch**: `feat/overlap`, local only, from `origin/main` at `8aa017c`. Not pushed; no pull request.
+- **Spike**: throwaway, outside the repository, in the scratchpad of the session of 2026-10-10, under `%LOCALAPPDATA%/Temp/claude/E--projetos-fassi-squint-mcp/bbc2085e-9df4-4743-8b8f-48d8dee3565a/scratchpad/overlap-spike/` (`build.py`, `page.js`, `spike.py`, `spike2.py`, `probe*.py`). The files may be gone; `context.md` holds what they showed.
