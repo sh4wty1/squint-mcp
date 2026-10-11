@@ -76,7 +76,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (OVL-67), remove `.spe
 
 ### T1: Launch Chromium with grayscale text
 
-- [ ] Done
+- [x] Done
 
 **What**: `CHROMIUM_ARGS = ("--disable-lcd-text",)` in config, with its source in a comment (AD-006), passed to `chromium.launch` by `BrowserSession`.
 **Where**: `src/squint_mcp/capture.py` (with the constant in the config module)
@@ -91,10 +91,10 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (OVL-67), remove `.spe
 
 **Done when**:
 
-- [ ] Every launch of the session passes the arguments, the relaunch after a crash included
-- [ ] No existing test changes
-- [ ] Gate check passes: Build
-- [ ] Test count: 237 tests pass
+- [x] Every launch of the session passes the arguments, the relaunch after a crash included
+- [x] No existing test changes
+- [x] Gate check passes: Build
+- [x] Test count: 237 tests pass
 
 **Tests**: none
 **Gate**: build

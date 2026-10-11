@@ -41,7 +41,9 @@ class BrowserSession:
                     self._playwright = (
                         self._playwright or await async_playwright().start()
                     )
-                    self._browser = await self._playwright.chromium.launch()
+                    self._browser = await self._playwright.chromium.launch(
+                        args=list(config.CHROMIUM_ARGS)
+                    )
                 except PlaywrightError as error:
                     raise ToolError(
                         f"Could not launch Chromium: {_first_line(error)}. "

@@ -10,6 +10,11 @@ TOTAL_TIMEOUT_S = 30.0
 # Source: docs/SPEC.md, Stabilization: "networkidle with a timeout of about 3s".
 NETWORK_IDLE_TIMEOUT_S = 3.0
 
+# Source: Squint default (AD-006). Text is anti-aliased in grayscale: with subpixel
+# text Chromium rasterizes the same glyph differently over different backdrops, and
+# ink measured in two renders of a page cannot be compared.
+CHROMIUM_ARGS = ("--disable-lcd-text",)
+
 # Source: Squint default. docs/SPEC.md asks for "a margin around the element";
 # 16px shows the surroundings without doubling the size of a small crop.
 CROP_MARGIN_PX = 16
