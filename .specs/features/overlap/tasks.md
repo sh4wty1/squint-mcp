@@ -255,7 +255,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (OVL-67), remove `.spe
 
 ### T7: Add the covered-text arithmetic
 
-- [ ] Done
+- [x] Done
 
 **What**: `covered.py`: `assign_channels`, `ink_layers`, `may_be_covered`, `groups`, `hidden_ink`, `runs` and `hit_step` as in the design, on Pillow only.
 **Where**: `src/squint_mcp/covered.py` (with `_bounds` of the vision module made public)
@@ -270,12 +270,12 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (OVL-67), remove `.spe
 
 **Done when**:
 
-- [ ] The module imports neither `playwright` nor `capture`
-- [ ] "Seen" is in integers: twice the ink that shows is at least the ink alone
-- [ ] No literal of the thresholds or of the cap: they come from `config`
-- [ ] The two limits of the design are marked `ponytail:` (a positioned pseudo-element in a group; a text with a very large region)
-- [ ] Gate check passes: Build
-- [ ] Test count: 237 tests pass
+- [x] The module imports neither `playwright` nor `capture`
+- [x] "Seen" is in integers: twice the ink that shows is at least the ink alone
+- [x] No literal of the thresholds or of the cap: they come from `config`
+- [x] The two limits of the design are marked `ponytail:` (a positioned pseudo-element in a group; a text with a very large region)
+- [x] Gate check passes: Build
+- [x] Test count: 237 tests pass
 
 **Tests**: none
 **Gate**: build

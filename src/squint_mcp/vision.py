@@ -19,7 +19,7 @@ class SampledColor(BaseModel):
     """Fraction of the element's pixels painted in this colour."""
 
 
-def _bounds(pixels: Image.Image, box: Box, margin: int) -> tuple[int, int, int, int]:
+def bounds(pixels: Image.Image, box: Box, margin: int) -> tuple[int, int, int, int]:
     """The left, top, right and bottom of `box` grown by `margin`, clamped to the page.
 
     Boxes can be fractional (text spans are): round outwards so nothing is cut.
@@ -34,14 +34,14 @@ def _bounds(pixels: Image.Image, box: Box, margin: int) -> tuple[int, int, int, 
 
 def _region(pixels: Image.Image, box: Box, margin: int) -> Image.Image:
     """The pixels of `box` grown by `margin`, clamped to the page."""
-    return pixels.crop(_bounds(pixels, box, margin))
+    return pixels.crop(bounds(pixels, box, margin))
 
 
 def area(pixels: Image.Image, boxes: list[Box]) -> int:
     """How many pixels of the page `boxes` hold together."""
     total = 0
     for box in boxes:
-        left, top, right, bottom = _bounds(pixels, box, 0)
+        left, top, right, bottom = bounds(pixels, box, 0)
         total += (right - left) * (bottom - top)
     return total
 
