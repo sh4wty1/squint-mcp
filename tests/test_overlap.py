@@ -19,9 +19,13 @@ pytestmark = pytest.mark.anyio
 
 BUG = fixture_url("overlap-bug.html")
 CLEAN = fixture_url("overlap-clean.html")
+BOUNDS = fixture_url("overlap-bounds.html")
 ONLY = ["overlap"]
 # The colour of the covers of the fixtures.
 COVER = "#c80000"
+# A text and its cover in one open shadow tree of the bounds fixture.
+SHADOW_TEXT = '[data-testid="shadow-text"]'
+SHADOW_COVER = '[data-testid="shadow-cover"]'
 
 
 def covered(findings: list[dict[str, Any]]) -> list[tuple[str, str, int, str]]:
@@ -338,3 +342,199 @@ async def test_covered_text_painted_transparent_is_not_reported(
 async def test_covered_text_that_is_faded_out_is_not_reported(client: Client) -> None:
     # `#faded-text` would be reported at 50% if text faded out had ink.
     assert await clean(client, "#faded-text") == (0.5, [])
+
+
+async def bounds(client: Client, selector: str) -> dict[str, Any]:
+    """The one Finding of the Check on one element of the bounds fixture."""
+    return await finding_on(client, BOUNDS, selector)
+
+
+async def test_only_the_covered_texts_of_the_bounds_fixture_are_reported(
+    client: Client,
+) -> None:
+    findings = (await detect(client, BOUNDS, checks=ONLY))["findings"]
+    assert sorted(finding["selector"] for finding in findings) == [
+        "#almost-quarter",
+        "#bottom",
+        "#in-dialog",
+        "#in-fixed",
+        "#layer-ancestor",
+        "#layered-corner",
+        "#layered-half",
+        "#left",
+        "#mixed",
+        "#shared-layer",
+        "#split",
+        "#three-lines",
+        "#tie",
+        "#top",
+        "#two-covers",
+        "#veil-55",
+        "#z-static",
+        "#z-zero",
+        SHADOW_TEXT,
+    ]
+
+
+@pytest.mark.parametrize("selector", ["#left", "#top", "#bottom"])
+async def test_a_tenth_of_the_text_hidden_at_one_of_its_edges_is_enough(
+    client: Client, selector: str
+) -> None:
+    finding = await bounds(client, selector)
+    assert finding["evidence"]["measured"]["hiddenPercent"] == 10
+
+
+async def test_a_line_between_two_others_is_measured(client: Client) -> None:
+    finding = await bounds(client, "#three-lines")
+    assert finding["evidence"]["measured"]["hiddenPercent"] == 10
+
+
+async def test_every_text_node_of_an_element_is_measured(client: Client) -> None:
+    finding = await bounds(client, "#split")
+    assert finding["evidence"]["measured"]["hiddenPercent"] == 10
+
+
+async def test_text_mostly_hidden_by_a_veil_is_hidden_whole(client: Client) -> None:
+    finding = await bounds(client, "#veil-55")
+    assert finding["evidence"]["measured"]["hiddenPercent"] == 100
+    assert finding["severity"] == "major"
+
+
+async def test_text_covered_inside_its_shadow_tree_names_the_cover_of_that_tree(
+    client: Client,
+) -> None:
+    finding = await bounds(client, SHADOW_TEXT)
+    assert finding["evidence"]["measured"] == {
+        "hiddenPercent": 50,
+        "coveredBy": SHADOW_COVER,
+    }
+
+
+async def test_text_covered_by_its_neighbour_inside_one_dialog_is_reported(
+    client: Client,
+) -> None:
+    assert (await bounds(client, "#in-dialog"))["severity"] == "major"
+
+
+async def test_text_covered_by_its_neighbour_inside_one_fixed_element_is_reported(
+    client: Client,
+) -> None:
+    assert (await bounds(client, "#in-fixed"))["severity"] == "major"
+
+
+async def test_text_under_an_element_in_the_shadow_tree_of_a_menu_is_not_reported(
+    client: Client,
+) -> None:
+    # `#under-shadow-menu` would be reported at 50%, covered by an element whose
+    # only ancestor of a layer role is the host of its tree.
+    inspected = await inspect(client, BOUNDS, "#under-shadow-menu")
+    assert painted(inspected)[COVER] == 0.5
+    findings = (await detect(client, BOUNDS, checks=ONLY))["findings"]
+    assert [f for f in findings if f["box"] == inspected["box"]] == []
+
+
+async def test_a_quarter_hidden_is_major_and_just_under_it_is_minor(
+    client: Client,
+) -> None:
+    quarter = await finding_on(client, BUG, "#quarter")
+    assert quarter["evidence"]["measured"]["hiddenPercent"] == 25
+    assert quarter["severity"] == "major"
+    almost = await bounds(client, "#almost-quarter")
+    assert almost["severity"] == "minor"
+
+
+async def test_the_hidden_share_is_truncated_to_whole_percents(client: Client) -> None:
+    # 49px of 200px: 24.5%.
+    finding = await bounds(client, "#almost-quarter")
+    assert finding["evidence"]["measured"]["hiddenPercent"] == 24
+    assert finding["message"] == "24% of the text is covered by another element"
+
+
+def share_and_severity(finding: dict[str, Any]) -> tuple[int, str]:
+    return finding["evidence"]["measured"]["hiddenPercent"], finding["severity"]
+
+
+async def test_half_hidden_by_a_positioned_cover_with_a_z_index_is_minor(
+    client: Client,
+) -> None:
+    assert share_and_severity(await bounds(client, "#layered-half")) == (50, "minor")
+
+
+async def test_a_tenth_hidden_by_a_positioned_cover_with_a_z_index_is_info(
+    client: Client,
+) -> None:
+    assert share_and_severity(await bounds(client, "#layered-corner")) == (10, "info")
+
+
+async def test_a_cover_inside_a_positioned_element_with_a_z_index_is_one_level_lower(
+    client: Client,
+) -> None:
+    finding = await bounds(client, "#layer-ancestor")
+    assert finding["evidence"]["measured"]["coveredBy"] == "#layer-cover"
+    assert share_and_severity(finding) == (50, "minor")
+
+
+async def test_a_z_index_on_an_ancestor_of_both_does_not_lower_the_severity(
+    client: Client,
+) -> None:
+    assert share_and_severity(await bounds(client, "#shared-layer")) == (50, "major")
+
+
+async def test_a_z_index_of_zero_does_not_lower_the_severity(client: Client) -> None:
+    assert share_and_severity(await bounds(client, "#z-zero")) == (50, "major")
+
+
+async def test_a_z_index_on_a_static_cover_does_not_lower_the_severity(
+    client: Client,
+) -> None:
+    finding = await bounds(client, "#z-static")
+    assert finding["evidence"]["measured"]["coveredBy"] == "#z-static-next"
+    assert share_and_severity(finding) == (50, "major")
+
+
+async def test_what_a_silent_layer_hides_is_left_out_of_the_share_and_the_coverer(
+    client: Client,
+) -> None:
+    # `#mixed-menu` lies over 100px of the text and `#mixed-card` over 40px.
+    finding = await bounds(client, "#mixed")
+    assert finding["evidence"]["measured"] == {
+        "hiddenPercent": 20,
+        "coveredBy": "#mixed-card",
+    }
+    assert finding["severity"] == "minor"
+
+
+async def test_the_cover_over_most_of_the_hidden_ink_is_the_one_named(
+    client: Client,
+) -> None:
+    # `#small-cover` comes first in the document and hides half as much.
+    finding = await bounds(client, "#two-covers")
+    assert finding["evidence"]["measured"] == {
+        "hiddenPercent": 60,
+        "coveredBy": "#large-cover",
+    }
+
+
+async def test_of_two_covers_that_hide_as_much_the_first_in_the_document_is_named(
+    client: Client,
+) -> None:
+    # `#tie-first` is over the end of the text: a scan from the left meets
+    # `#tie-second` first.
+    finding = await bounds(client, "#tie")
+    assert finding["evidence"]["measured"] == {
+        "hiddenPercent": 40,
+        "coveredBy": "#tie-first",
+    }
+
+
+async def test_the_selectors_of_a_finding_work_in_inspect_element(
+    client: Client,
+) -> None:
+    for url, count in ((BUG, 4), (BOUNDS, 19)):
+        findings = (await detect(client, url, checks=ONLY))["findings"]
+        assert len(findings) == count
+        for finding in findings:
+            inspected = await inspect(client, url, finding["selector"])
+            assert inspected["box"] == finding["box"]
+            # `inspect` fails on a selector that does not match one element.
+            await inspect(client, url, finding["evidence"]["measured"]["coveredBy"])

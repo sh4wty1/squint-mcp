@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: the bounds of overlap</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are a block of
+         200 x 20 text pixels, 5px under the top of their 30px line: 4000 pixels, of
+         which a tenth is 400 and a quarter 1000. A cover is an opaque box as high
+         as the line unless its comment says otherwise.
+
+         The page holds some 29,000 pixels of hidden ink, more than are hit tested:
+         every second pixel of every second row is, counted from the corner of the
+         page. What covers a text is still the element found at most of them. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      /* A row holds one text, from 40px to 240px, and what is painted over it,
+         placed from the left of the row. */
+      .row {
+        position: relative;
+        margin-top: 20px;
+        height: 30px;
+      }
+      .text {
+        margin-left: 40px;
+        width: 200px;
+      }
+      .cover {
+        position: absolute;
+        top: 0;
+        height: 30px;
+        background: rgb(200, 0, 0);
+      }
+      /* Over the last 100px of the text: 50%. */
+      .half {
+        left: 140px;
+        width: 100px;
+      }
+
+      /* 50%, the text and its cover inside one fixed element. It is placed from
+         the viewport: the rows start under it. */
+      #fixed-box {
+        position: fixed;
+        top: 20px;
+        left: 0;
+        width: 240px;
+        height: 30px;
+      }
+      #fixed-box + .row {
+        margin-top: 70px;
+      }
+      /* The first 20 columns of 200: 400 pixels, 10%. */
+      #left-cover {
+        left: 40px;
+        width: 20px;
+      }
+      /* The glyphs take rows 5 to 24 of the line. The first 2 of the 20: 10%. */
+      #top-cover {
+        left: 40px;
+        width: 200px;
+        height: 7px;
+      }
+      /* The last 2 rows: 10%. */
+      #bottom-cover {
+        top: 23px;
+        left: 40px;
+        width: 200px;
+        height: 7px;
+      }
+      /* Three lines of ten glyphs, 12,000 pixels. 60 columns of the middle one:
+         1200 pixels, 10%. */
+      #three-lines-row {
+        height: 90px;
+      }
+      #lines-cover {
+        top: 30px;
+        left: 40px;
+        width: 60px;
+      }
+      /* Two text nodes with an empty element between them. The last 20 columns
+         of the second: 10%. */
+      #split-cover {
+        left: 220px;
+        width: 20px;
+      }
+      /* All of the text, of which 45 parts in 100 show: less than half. */
+      #veil {
+        left: 40px;
+        width: 200px;
+        background: rgba(255, 255, 255, 0.55);
+      }
+      /* 50%, by an element in the shadow tree of a menu. */
+      #menu-host {
+        background: none;
+      }
+      /* The last 49px: 980 pixels, 24.5%. */
+      #almost-cover {
+        left: 191px;
+        width: 49px;
+      }
+      /* 50% and 10%, by a positioned element with a `z-index` above 0. */
+      #layered-half-cover {
+        z-index: 1;
+      }
+      #layered-corner-cover {
+        left: 220px;
+        width: 20px;
+        z-index: 1;
+      }
+      /* 50%, by an element of no `z-index` inside one that is positioned with a
+         `z-index` above 0, which comes after the text in the flow and is pulled
+         back over it. */
+      #layer {
+        position: relative;
+        z-index: 2;
+        margin: -30px 0 0 140px;
+        width: 100px;
+      }
+      #layer-cover {
+        height: 30px;
+        background: rgb(200, 0, 0);
+      }
+      /* 50%. The `z-index` above 0 is on the row, which holds the text too. */
+      #shared-row {
+        z-index: 3;
+      }
+      /* 50%, by a positioned element with a `z-index` of 0. */
+      #zero-cover {
+        z-index: 0;
+      }
+      /* 50%, by the five glyphs of the next block, pulled back over the last five
+         of the text. Its `z-index` does not apply: it is not positioned. */
+      #z-static-next {
+        margin: -30px 0 0 140px;
+        z-index: 5;
+      }
+      /* A menu over the first 100px, which is not reported, and a card over the
+         last 40px: 20%. */
+      #mixed-menu {
+        left: 40px;
+        width: 100px;
+      }
+      #mixed-card {
+        left: 200px;
+        width: 40px;
+      }
+      /* The first 40px and the last 80px: 60%, most of it by the second cover. */
+      #small-cover {
+        left: 40px;
+        width: 40px;
+      }
+      #large-cover {
+        left: 160px;
+        width: 80px;
+      }
+      /* The last 40px and the first 40px: 40%, half of it by each. The two covers
+         are of one size, on the same rows, and both start on an even column, so
+         each is found at as many of the pixels hit tested as the other. */
+      #tie-first {
+        left: 200px;
+        width: 40px;
+      }
+      #tie-second {
+        left: 40px;
+        width: 40px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="fixed-box">
+      <div id="in-fixed" class="text">XXXXXXXXXX</div>
+      <div id="in-fixed-cover" class="cover half"></div>
+    </div>
+    <div class="row">
+      <div id="left" class="text">XXXXXXXXXX</div>
+      <div id="left-cover" class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="top" class="text">XXXXXXXXXX</div>
+      <div id="top-cover" class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="bottom" class="text">XXXXXXXXXX</div>
+      <div id="bottom-cover" class="cover"></div>
+    </div>
+    <div id="three-lines-row" class="row">
+      <div id="three-lines" class="text">XXXXXXXXXX XXXXXXXXXX XXXXXXXXXX</div>
+      <div id="lines-cover" class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="split" class="text">XXXXX<b></b>XXXXX</div>
+      <div id="split-cover" class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="veil-55" class="text">XXXXXXXXXX</div>
+      <div id="veil" class="cover"></div>
+    </div>
+    <div id="host" class="row"></div>
+    <div class="row">
+      <div id="under-shadow-menu" class="text">XXXXXXXXXX</div>
+      <div id="menu-host" role="menu" class="cover half"></div>
+    </div>
+    <div class="row" role="dialog">
+      <div id="in-dialog" class="text">XXXXXXXXXX</div>
+      <div id="in-dialog-cover" class="cover half"></div>
+    </div>
+    <div class="row">
+      <div id="almost-quarter" class="text">XXXXXXXXXX</div>
+      <div id="almost-cover" class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="layered-half" class="text">XXXXXXXXXX</div>
+      <div id="layered-half-cover" class="cover half"></div>
+    </div>
+    <div class="row">
+      <div id="layered-corner" class="text">XXXXXXXXXX</div>
+      <div id="layered-corner-cover" class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="layer-ancestor" class="text">XXXXXXXXXX</div>
+      <div id="layer"><div id="layer-cover"></div></div>
+    </div>
+    <div id="shared-row" class="row">
+      <div id="shared-layer" class="text">XXXXXXXXXX</div>
+      <div id="shared-cover" class="cover half"></div>
+    </div>
+    <div class="row">
+      <div id="z-zero" class="text">XXXXXXXXXX</div>
+      <div id="zero-cover" class="cover half"></div>
+    </div>
+    <div class="row">
+      <div id="z-static" class="text">XXXXXXXXXX</div>
+      <div id="z-static-next">XXXXX</div>
+    </div>
+    <div class="row">
+      <div id="mixed" class="text">XXXXXXXXXX</div>
+      <div id="mixed-menu" role="menu" class="cover"></div>
+      <div id="mixed-card" class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="two-covers" class="text">XXXXXXXXXX</div>
+      <div id="small-cover" class="cover"></div>
+      <div id="large-cover" class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="tie" class="text">XXXXXXXXXX</div>
+      <div id="tie-first" class="cover"></div>
+      <div id="tie-second" class="cover"></div>
+    </div>
+    <script>
+      // A style does not cross into a shadow tree, so these carry their own. The
+      // host is a row: what is positioned inside it is placed from its left.
+      const cover = "height: 30px; background: rgb(200, 0, 0)";
+      // The last 100px of the text: 50%, the text and its cover in one tree.
+      document.getElementById("host").attachShadow({ mode: "open" }).innerHTML =
+        `<div data-testid="shadow-text" style="margin-left: 40px; width: 200px">` +
+        `XXXXXXXXXX</div>` +
+        `<div data-testid="shadow-cover" style="position: absolute; top: 0;` +
+        ` left: 140px; width: 100px; ${cover}"></div>`;
+      // What covers `#under-shadow-menu` is inside the menu.
+      document.getElementById("menu-host").attachShadow({ mode: "open" }).innerHTML =
+        `<div data-testid="shadow-item" style="${cover}"></div>`;
+    </script>
+  </body>
+</html>

@@ -380,7 +380,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (OVL-67), remove `.spe
 
 ### T11: Pin the bounds, the severity and the Coverer
 
-- [ ] Done
+- [x] Done
 
 **What**: The fixture `overlap-bounds.html` with the cases of the edges, the veil, the shadow trees, the shared layers, the severity rules and the several covers, and its tests.
 **Where**: `tests/test_overlap.py` (with `tests/fixtures/overlap-bounds.html`)
@@ -395,11 +395,11 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (OVL-67), remove `.spe
 
 **Done when**:
 
-- [ ] The threshold of 10% is pinned at the left, the top and the bottom edge, in a middle line and in a second text node (L-012)
-- [ ] `#tie` and `#two-covers` name their Coverer at the hit-test step the fixture gets: it holds more than 20,000 pixels of Hidden ink
-- [ ] The test of OVL-53 passes every `selector` and every `coveredBy` of the bug and bounds fixtures to `inspect_element`
-- [ ] Gate check passes: Build
-- [ ] Test count: the count after T10 plus the tests of this task; none deleted
+- [x] The threshold of 10% is pinned at the left, the top and the bottom edge, in a middle line and in a second text node (L-012)
+- [x] `#tie` and `#two-covers` name their Coverer at the hit-test step the fixture gets: it holds more than 20,000 pixels of Hidden ink
+- [x] The test of OVL-53 passes every `selector` and every `coveredBy` of the bug and bounds fixtures to `inspect_element`
+- [x] Gate check passes: Build
+- [x] Test count: the count after T10 plus the tests of this task; none deleted
 
 **Tests**: integration
 **Gate**: build

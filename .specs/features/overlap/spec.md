@@ -270,16 +270,16 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 | OVL-04 | P1: Report text that another element covers | T9 | Implemented |
 | OVL-05 | P1: Report text that another element covers | T9 | Implemented |
 | OVL-06 | P1: Report text that another element covers | T9 | Implemented |
-| OVL-07 | P1: Report text that another element covers | T11 | Pending |
-| OVL-08 | P1: Report text that another element covers | T11 | Pending |
-| OVL-09 | P1: Report text that another element covers | T11 | Pending |
-| OVL-10 | P1: Report text that another element covers | T11 | Pending |
-| OVL-11 | P1: Report text that another element covers | T11 | Pending |
-| OVL-12 | P1: Report text that another element covers | T11 | Pending |
-| OVL-13 | P1: Report text that another element covers | T11 | Pending |
+| OVL-07 | P1: Report text that another element covers | T11 | Implemented |
+| OVL-08 | P1: Report text that another element covers | T11 | Implemented |
+| OVL-09 | P1: Report text that another element covers | T11 | Implemented |
+| OVL-10 | P1: Report text that another element covers | T11 | Implemented |
+| OVL-11 | P1: Report text that another element covers | T11 | Implemented |
+| OVL-12 | P1: Report text that another element covers | T11 | Implemented |
+| OVL-13 | P1: Report text that another element covers | T11 | Implemented |
 | OVL-14 | P1: Report text that another element covers | T9 | Implemented |
-| OVL-15 | P1: Report text that another element covers | T11 | Pending |
-| OVL-16 | P1: Report text that another element covers | T11 | Pending |
+| OVL-15 | P1: Report text that another element covers | T11 | Implemented |
+| OVL-16 | P1: Report text that another element covers | T11 | Implemented |
 | OVL-17 | P1: Report text that another element covers | T12 | Pending |
 | OVL-18 | P1: Report text that another element covers | T12 | Pending |
 | OVL-19 | P1: Stay silent on overlaps that are meant | T10 | Implemented |
@@ -293,7 +293,7 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 | OVL-27 | P1: Stay silent on overlaps that are meant | T10 | Implemented |
 | OVL-28 | P1: Stay silent on overlaps that are meant | T10 | Implemented |
 | OVL-29 | P1: Stay silent on overlaps that are meant | T10 | Implemented |
-| OVL-30 | P1: Stay silent on overlaps that are meant | T11 | Pending |
+| OVL-30 | P1: Stay silent on overlaps that are meant | T11 | Implemented |
 | OVL-31 | P1: Stay silent on overlaps that are meant | T10 | Implemented |
 | OVL-32 | P1: Stay silent on overlaps that are meant | T10 | Implemented |
 | OVL-33 | P1: Stay silent on overlaps that are meant | T10 | Implemented |
@@ -303,20 +303,20 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 | OVL-37 | P1: Stay silent on overlaps that are meant | T10 | Implemented |
 | OVL-38 | P1: Stay silent on overlaps that are meant | T10 | Implemented |
 | OVL-39 | P1: Stay silent on overlaps that are meant | T10 | Implemented |
-| OVL-40 | P1: Severity | T11 | Pending |
-| OVL-41 | P1: Severity | T11 | Pending |
-| OVL-42 | P1: Severity | T11 | Pending |
-| OVL-43 | P1: Severity | T11 | Pending |
-| OVL-44 | P1: Severity | T11 | Pending |
-| OVL-45 | P1: Severity | T11 | Pending |
-| OVL-46 | P1: Severity | T11 | Pending |
+| OVL-40 | P1: Severity | T11 | Implemented |
+| OVL-41 | P1: Severity | T11 | Implemented |
+| OVL-42 | P1: Severity | T11 | Implemented |
+| OVL-43 | P1: Severity | T11 | Implemented |
+| OVL-44 | P1: Severity | T11 | Implemented |
+| OVL-45 | P1: Severity | T11 | Implemented |
+| OVL-46 | P1: Severity | T11 | Implemented |
 | OVL-47 | P1: Read the Finding | T9 | Implemented |
 | OVL-48 | P1: Read the Finding | T9 | Implemented |
-| OVL-49 | P1: Read the Finding | T11 | Pending |
-| OVL-50 | P1: Read the Finding | T11 | Pending |
-| OVL-51 | P1: Read the Finding | T11 | Pending |
-| OVL-52 | P1: Read the Finding | T11 | Pending |
-| OVL-53 | P1: Read the Finding | T11 | Pending |
+| OVL-49 | P1: Read the Finding | T11 | Implemented |
+| OVL-50 | P1: Read the Finding | T11 | Implemented |
+| OVL-51 | P1: Read the Finding | T11 | Implemented |
+| OVL-52 | P1: Read the Finding | T11 | Implemented |
+| OVL-53 | P1: Read the Finding | T11 | Implemented |
 | OVL-54 | P1: With the other Checks | T9 | Implemented |
 | OVL-55 | P1: With the other Checks | T9 | Implemented |
 | OVL-56 | P1: With the other Checks | T9 | Implemented |
