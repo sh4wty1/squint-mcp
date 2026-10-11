@@ -319,7 +319,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (OVL-67), remove `.spe
 
 ### T9: Add the overlap Check
 
-- [ ] Done
+- [x] Done
 
 **What**: `checks/overlap.py` with the five rules of the design, its entry in `CHECKS`, `COVERED_TEXT_CHECKS`, the tool asking for covered text and naming the Check in its description, the fixture `overlap-bug.html` and the tests of what it reports.
 **Where**: `src/squint_mcp/checks/overlap.py` (with the registry, the tool, `tests/fixtures/overlap-bug.html` and `tests/test_overlap.py`)
@@ -334,12 +334,12 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (OVL-67), remove `.spe
 
 **Done when**:
 
-- [ ] The test of OVL-02 asserts the whole list of `(selector, severity, hiddenPercent, coveredBy)` in order (L-020)
-- [ ] The test of OVL-47 compares the Finding of `#half` with the literal of the spec
-- [ ] The four assertions of `tests/test_detect_visual_bugs.py` that hold the list of valid Checks carry the literal of OVL-55, and nothing else of that file changes
-- [ ] `overlap.py` holds no literal of a threshold or of a role
-- [ ] Gate check passes: Build
-- [ ] Test count: 237 plus the tests of this task; none deleted
+- [x] The test of OVL-02 asserts the whole list of `(selector, severity, hiddenPercent, coveredBy)` in order (L-020)
+- [x] The test of OVL-47 compares the Finding of `#half` with the literal of the spec
+- [x] The four assertions of `tests/test_detect_visual_bugs.py` that hold the list of valid Checks carry the literal of OVL-55, and nothing else of that file changes
+- [x] `overlap.py` holds no literal of a threshold or of a role
+- [x] Gate check passes: Build
+- [x] Test count: 237 plus the tests of this task; none deleted
 
 **Tests**: integration
 **Gate**: build

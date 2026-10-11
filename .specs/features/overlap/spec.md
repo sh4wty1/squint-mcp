@@ -264,12 +264,12 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 
 | Requirement ID | Story | Phase | Status |
 | --- | --- | --- | --- |
-| OVL-01 | P1: Report text that another element covers | T9 | Pending |
-| OVL-02 | P1: Report text that another element covers | T9 | Pending |
-| OVL-03 | P1: Report text that another element covers | T9 | Pending |
-| OVL-04 | P1: Report text that another element covers | T9 | Pending |
-| OVL-05 | P1: Report text that another element covers | T9 | Pending |
-| OVL-06 | P1: Report text that another element covers | T9 | Pending |
+| OVL-01 | P1: Report text that another element covers | T9 | Implemented |
+| OVL-02 | P1: Report text that another element covers | T9 | Implemented |
+| OVL-03 | P1: Report text that another element covers | T9 | Implemented |
+| OVL-04 | P1: Report text that another element covers | T9 | Implemented |
+| OVL-05 | P1: Report text that another element covers | T9 | Implemented |
+| OVL-06 | P1: Report text that another element covers | T9 | Implemented |
 | OVL-07 | P1: Report text that another element covers | T11 | Pending |
 | OVL-08 | P1: Report text that another element covers | T11 | Pending |
 | OVL-09 | P1: Report text that another element covers | T11 | Pending |
@@ -277,7 +277,7 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 | OVL-11 | P1: Report text that another element covers | T11 | Pending |
 | OVL-12 | P1: Report text that another element covers | T11 | Pending |
 | OVL-13 | P1: Report text that another element covers | T11 | Pending |
-| OVL-14 | P1: Report text that another element covers | T9 | Pending |
+| OVL-14 | P1: Report text that another element covers | T9 | Implemented |
 | OVL-15 | P1: Report text that another element covers | T11 | Pending |
 | OVL-16 | P1: Report text that another element covers | T11 | Pending |
 | OVL-17 | P1: Report text that another element covers | T12 | Pending |
@@ -310,28 +310,28 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 | OVL-44 | P1: Severity | T11 | Pending |
 | OVL-45 | P1: Severity | T11 | Pending |
 | OVL-46 | P1: Severity | T11 | Pending |
-| OVL-47 | P1: Read the Finding | T9 | Pending |
-| OVL-48 | P1: Read the Finding | T9 | Pending |
+| OVL-47 | P1: Read the Finding | T9 | Implemented |
+| OVL-48 | P1: Read the Finding | T9 | Implemented |
 | OVL-49 | P1: Read the Finding | T11 | Pending |
 | OVL-50 | P1: Read the Finding | T11 | Pending |
 | OVL-51 | P1: Read the Finding | T11 | Pending |
 | OVL-52 | P1: Read the Finding | T11 | Pending |
 | OVL-53 | P1: Read the Finding | T11 | Pending |
-| OVL-54 | P1: With the other Checks | T9 | Pending |
-| OVL-55 | P1: With the other Checks | T9 | Pending |
-| OVL-56 | P1: With the other Checks | T9 | Pending |
+| OVL-54 | P1: With the other Checks | T9 | Implemented |
+| OVL-55 | P1: With the other Checks | T9 | Implemented |
+| OVL-56 | P1: With the other Checks | T9 | Implemented |
 | OVL-57 | P1: With the other Checks | T12 | Pending |
-| OVL-58 | P1: With the other Checks | T9 | Pending |
+| OVL-58 | P1: With the other Checks | T9 | Implemented |
 | OVL-59 | P1: With the other Checks | T12 | Pending |
 | OVL-60 | P1: With the other Checks | T12 | Pending |
-| OVL-61 | P2: Check contract, configuration and documents | T9 | Pending |
-| OVL-62 | P2: Check contract, configuration and documents | T7, T9 | Pending |
-| OVL-63 | P2: Check contract, configuration and documents | T3 | Pending |
-| OVL-64 | P2: Check contract, configuration and documents | T9 | Pending |
+| OVL-61 | P2: Check contract, configuration and documents | T9 | Implemented |
+| OVL-62 | P2: Check contract, configuration and documents | T7, T9 | Implemented |
+| OVL-63 | P2: Check contract, configuration and documents | T3 | Implemented |
+| OVL-64 | P2: Check contract, configuration and documents | T9 | Implemented |
 | OVL-65 | P2: Check contract, configuration and documents | T13 | Pending |
 | OVL-66 | P2: Check contract, configuration and documents | T13 | Pending |
 | OVL-67 | P2: Check contract, configuration and documents | closing step | Pending |
-| OVL-68 | Edge cases | T9 | Pending |
+| OVL-68 | Edge cases | T9 | Implemented |
 | OVL-69 | Edge cases | T12 | Pending |
 
 **Coverage:** 69 total, 69 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
