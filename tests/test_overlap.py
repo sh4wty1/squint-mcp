@@ -346,6 +346,38 @@ async def test_covered_text_that_is_faded_out_is_not_reported(client: Client) ->
     assert await clean(client, "#faded-text") == (0.5, [])
 
 
+async def test_text_under_a_role_written_with_spaces_and_a_capital_is_not_reported(
+    client: Client,
+) -> None:
+    # `#under-spaced-role` would be reported at 50%, covered by `#spaced-role`, if
+    # its `role` of " Menu " were compared as it is written.
+    assert await clean(client, "#under-spaced-role") == (0.5, [])
+
+
+async def test_text_under_what_one_of_its_ancestors_paints_is_not_reported(
+    client: Client,
+) -> None:
+    # `#under-own-row` is 50% hidden by the `::after` of `#decorated-row`, which
+    # is what hit testing gives there: it would be reported, covered by its row.
+    assert await clean(client, "#under-own-row") == (0.5, [])
+
+
+async def test_text_whose_own_descendant_is_what_hit_testing_gives_is_not_reported(
+    client: Client,
+) -> None:
+    # `#own-link-text` is 50% hidden by `#linked-cover`, and hit testing gives
+    # `#own-link` there, above the cover: it would be reported, covered by its
+    # own link.
+    assert await clean(client, "#own-link-text") == (0.5, [])
+
+
+async def test_covered_text_faded_to_under_half_of_its_ink_is_not_reported(
+    client: Client,
+) -> None:
+    # `#opacity-40` would be reported at 50% if ink fainter than half made text.
+    assert await clean(client, "#opacity-40") == (0.5, [])
+
+
 async def bounds(client: Client, selector: str) -> dict[str, Any]:
     """The one Finding of the Check on one element of the bounds fixture."""
     return await finding_on(client, BOUNDS, selector)

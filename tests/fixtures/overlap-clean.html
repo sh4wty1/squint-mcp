@@ -180,6 +180,33 @@
       #faded-text {
         opacity: 0;
       }
+      /* 50%, by a box the row of the text paints itself: an ancestor of it. */
+      #decorated-row::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 140px;
+        width: 100px;
+        height: 30px;
+        background: rgb(200, 0, 0);
+      }
+      /* 50% in the pixels, by a cover with a `z-index` of 1. Hit testing gives
+         the link of the text itself there: it is stretched over the row above
+         the cover and paints nothing. */
+      #linked-cover {
+        z-index: 1;
+      }
+      #own-link::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+      }
+      /* 50% of a text that shows 40 parts in 100 of its ink: under half, so it
+         is not there to be read either. */
+      #opacity-40 {
+        opacity: 0.4;
+      }
     </style>
   </head>
   <body>
@@ -272,6 +299,23 @@
     </div>
     <div class="row">
       <div id="faded-text" class="text">XXXXXXXXXX</div>
+      <div class="cover half"></div>
+    </div>
+    <!-- 50%. A role is read without the spaces around it and in lower case: this
+         one is `menu`. -->
+    <div class="row">
+      <div id="under-spaced-role" class="text">XXXXXXXXXX</div>
+      <div id="spaced-role" role=" Menu " class="cover half"></div>
+    </div>
+    <div id="decorated-row" class="row">
+      <div id="under-own-row" class="text">XXXXXXXXXX</div>
+    </div>
+    <div class="row">
+      <div id="own-link-text" class="text">XXXXXXXXXX<a id="own-link" href="#"></a></div>
+      <div id="linked-cover" class="cover half"></div>
+    </div>
+    <div class="row">
+      <div id="opacity-40" class="text">XXXXXXXXXX</div>
       <div class="cover half"></div>
     </div>
     <script>

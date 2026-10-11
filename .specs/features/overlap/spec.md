@@ -168,6 +168,10 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 19. IF a covered text has `visibility: hidden` (`#hidden-text` in `overlap-clean.html`, half under a cover) THEN the Check SHALL return no Finding for it. <!-- OVL-37 -->
 20. IF the glyphs of a covered text are painted with a colour of alpha 0 (`#transparent-text` in `overlap-clean.html`, `color: transparent`, half under a cover) THEN the Check SHALL return no Finding for it. <!-- OVL-38 -->
 21. IF a covered text has a computed `opacity` of 0 (`#faded-text` in `overlap-clean.html`, half under a cover) THEN the Check SHALL return no Finding for it. <!-- OVL-39 -->
+22. IF the only element that hides ink of a text has a `role` attribute that is one of those roles written with spaces around it or with capitals (`#under-spaced-role` in `overlap-clean.html`, half covered by `#spaced-role`, whose `role` attribute is `" Menu "`) THEN the Check SHALL return no Finding for the text. <!-- OVL-70 -->
+23. IF the only thing painted over the own text of an element is painted by one of its ancestors (`#under-own-row` in `overlap-clean.html`, the last 100px of its 200px of text under an opaque box painted by the `::after` of its row, `#decorated-row`) THEN the Check SHALL return no Finding for the element. <!-- OVL-72 -->
+24. IF hit testing gives a descendant of an element at all of its Hidden ink (`#own-link-text` in `overlap-clean.html`, half under `#linked-cover`, an Other element of `z-index: 1`, with the `::after` of its own link, `#own-link`, stretched over all of it above that cover by `position: absolute`, `inset: 0` and `z-index: 2`) THEN the Check SHALL return no Finding for the element. <!-- OVL-73 -->
+25. IF a covered text is faded below half by `opacity` (`#opacity-40` in `overlap-clean.html`, of `opacity: 0.4`, half under a cover) THEN the Check SHALL return no Finding for it: it has no Text ink. <!-- OVL-74 -->
 
 **Independent Test**: Call `detect_visual_bugs` on `overlap-clean.html` and get an empty list.
 
@@ -333,13 +337,17 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 | OVL-67 | P2: Check contract, configuration and documents | closing step | Pending |
 | OVL-68 | Edge cases | T9 | Implemented |
 | OVL-69 | Edge cases | T12 | Implemented |
+| OVL-70 | P1: Stay silent on overlaps that are meant | F1 | Implemented |
+| OVL-72 | P1: Stay silent on overlaps that are meant | F1 | Implemented |
+| OVL-73 | P1: Stay silent on overlaps that are meant | F1 | Implemented |
+| OVL-74 | P1: Stay silent on overlaps that are meant | F1 | Implemented |
 
-**Coverage:** 69 total, 69 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
+**Coverage:** 73 total, 73 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
 
 ---
 
 ## Success Criteria
 
-- [ ] All 69 requirements verified by the Verifier, OVL-61 to OVL-67 from file evidence.
+- [ ] All 73 requirements verified by the Verifier, OVL-61 to OVL-67 from file evidence.
 - [ ] The gate passes: typecheck, lint, format check and the whole test suite.
 - [ ] The discrimination sensor leaves no surviving mutant in the Check, in what the Capture gains for it and in the rules of Silent and Raised layers.
