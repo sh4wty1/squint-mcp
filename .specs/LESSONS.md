@@ -23,8 +23,8 @@ Corroborated across multiple features. Safe to apply as guidance.
 ### L-019 - Give each clause of an or-condition a fixture that only that clause catches
 - signal: `surviving_mutant` · recurrence: 2 feature(s) · scope: `tests,checks` · harmful: 0
 - features: detect-visual-bugs-text-clipped, overlap
-- evidence: mutant C11, src/squint_mcp/checks/text_clipped.py:50 (DVB-69) (tests,checks) (+1 more)
-- last seen: 2026-10-11T10:40:25Z
+- evidence: mutant C11, src/squint_mcp/checks/text_clipped.py:50 (DVB-69) (tests,checks) (+2 more)
+- last seen: 2026-10-11T14:57:12Z
 
 ### L-020 - Assert the full order of a returned list on a fixture with several items of equal rank, not only the place of one item
 - signal: `surviving_mutant` · recurrence: 2 feature(s) · scope: `tests,ordering` · harmful: 0
@@ -35,8 +35,8 @@ Corroborated across multiple features. Safe to apply as guidance.
 ### L-036 - Pin a rule that judges an element on its own content with a fixture where its child's content would change the outcome
 - signal: `surviving_mutant` · recurrence: 2 feature(s) · scope: `tests,checks` · harmful: 0
 - features: low-contrast-real, overlap
-- evidence: mutant C3b, src/squint_mcp/js/collect_elements.js:132 (LCR-10) (tests,checks) (+1 more)
-- last seen: 2026-10-11T12:46:49Z
+- evidence: mutant C3b, src/squint_mcp/js/collect_elements.js:132 (LCR-10) (tests,checks) (+2 more)
+- last seen: 2026-10-11T14:57:11Z
 
 ### L-038 - Pin a pixel-intensity threshold with fixture pixels just on each side of it, not only with pixels at the two ends of the range
 - signal: `surviving_mutant` · recurrence: 2 feature(s) · scope: `tests,thresholds` · harmful: 0
@@ -309,8 +309,8 @@ Seen once or not yet corroborated. Tracked, not trusted.
 ### L-050 - Give every rule the Terms or the Assumptions table of a spec define an acceptance criterion with a fixture whose outcome changes when the rule is dropped
 - signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `spec` · harmful: 0
 - features: overlap
-- evidence: spec.md:29, spec.md:75 (Terms: Coverer; Assumptions: the role attribute); mutants J4, J5, J8, J10 (spec)
-- last seen: 2026-10-11T10:40:26Z
+- evidence: spec.md:29, spec.md:75 (Terms: Coverer; Assumptions: the role attribute); mutants J4, J5, J8, J10 (spec) (+1 more)
+- last seen: 2026-10-11T14:57:13Z
 
 ### L-051 - Test a rule that normalizes a string before matching it with a value in another case, with surrounding spaces and with several tokens
 - signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,checks` · harmful: 0
@@ -375,8 +375,68 @@ Seen once or not yet corroborated. Tracked, not trusted.
 ### L-061 - List in the spec's Out of Scope every limit the design accepts, so that no criterion promises what the code does not do
 - signal: `ac_gap` · recurrence: 1 feature(s) · scope: `spec,design` · harmful: 0
 - features: overlap
-- evidence: OVL-01, probe p2b - .specs/features/overlap/design.md:259 (spec,design)
-- last seen: 2026-10-11T12:46:51Z
+- evidence: OVL-01, probe p2b - .specs/features/overlap/design.md:259 (spec,design) (+1 more)
+- last seen: 2026-10-11T14:57:13Z
+
+### L-062 - Test a pixel measurement on a font with anti-aliased edges too, not only on a font whose glyphs fill whole pixels
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,vision` · harmful: 0
+- features: overlap
+- evidence: V6 src/squint_mcp/covered.py:272 (tests,vision)
+- last seen: 2026-10-11T14:57:11Z
+
+### L-063 - Test code that scrolls a page or reads its scroll offset along both axes, not only down the page
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,capture` · harmful: 0
+- features: overlap
+- evidence: V3 src/squint_mcp/js/covered_text.js:282; V17 src/squint_mcp/js/covered_text.js:15 (tests,capture)
+- last seen: 2026-10-11T14:57:12Z
+
+### L-064 - Give each condition of an and-rule a fixture that meets every other condition and not that one
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,checks` · harmful: 0
+- features: overlap
+- evidence: V10 src/squint_mcp/js/covered_text.js:55 (tests,checks)
+- last seen: 2026-10-11T14:57:12Z
+
+### L-065 - Pin a rule that reads one chosen item of a list with a fixture where another item of the list would give another outcome
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,checks` · harmful: 0
+- features: overlap
+- evidence: V1 src/squint_mcp/checks/overlap.py:63 (tests,checks)
+- last seen: 2026-10-11T14:57:12Z
+
+### L-066 - Give a value a feature is the first to produce an outcome in every order and message that ranks or counts by it
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `spec,ordering` · harmful: 0
+- features: overlap
+- evidence: V13 src/squint_mcp/tools/detect_visual_bugs.py:116 (spec,ordering)
+- last seen: 2026-10-11T14:57:12Z
+
+### L-067 - Give every outcome an Out of Scope row promises an acceptance criterion, as for any other rule
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `spec` · harmful: 0
+- features: overlap
+- evidence: V4 src/squint_mcp/js/covered_text.js:221 (spec)
+- last seen: 2026-10-11T14:57:12Z
+
+### L-068 - Assert a field that copies a style on an element where that style is not the default value
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,checks` · harmful: 0
+- features: overlap
+- evidence: V14 src/squint_mcp/checks/overlap.py:77 (tests,checks)
+- last seen: 2026-10-11T14:57:13Z
+
+### L-069 - Pin a formula with an input on which a simpler formula gives another answer
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,limits` · harmful: 0
+- features: overlap
+- evidence: V16 src/squint_mcp/covered.py:303 (tests,limits)
+- last seen: 2026-10-11T14:57:13Z
+
+### L-070 - Read the alpha of a computed colour from every notation the browser serializes, not only from rgb()
+- signal: `ac_gap` · recurrence: 1 feature(s) · scope: `checks,colours` · harmful: 0
+- features: overlap
+- evidence: OVL-38 src/squint_mcp/checks/overlap.py:25 (checks,colours)
+- last seen: 2026-10-11T14:57:13Z
+
+### L-071 - State an Out of Scope limit by the condition the code decides on, not by the example that showed it
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `spec` · harmful: 0
+- features: overlap
+- evidence: OVL-01, probes q4d and q4f - .specs/features/overlap/spec.md:44 (spec)
+- last seen: 2026-10-11T14:57:13Z
 
 ## Quarantined (failed when applied - ignore)
 

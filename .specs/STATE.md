@@ -53,11 +53,11 @@
 ## Handoff
 
 - **Feature**: `overlap` (roadmap slice 8) / `.specs/features/overlap/`
-- **Phase / Task**: Execute, under `tlc-spec-driven`, scope Complex. `tasks.md` (T1 to T13, four phases) is approved; T1 is next.
-- **Completed**: Specify (the maintainer accepted the spec on 2026-10-11, with three changes the design asked for; `validate_spec.py --strict` passes). Design (`design.md`, approved; AD-005 and AD-006 recorded). Issue #18 opened for the fault of the Capture the spike found. Tasks (`tasks.md`, approved on 2026-10-11; `validate_tasks.py` passes with warnings only).
+- **Phase / Task**: Execute, under `tlc-spec-driven`, scope Complex. T1 to T13 and the fixes F1 to F8 are done and committed; the third validation pass is FAIL and the loop is escalated to the maintainer.
+- **Completed**: T1 to T13 (`89385b0` to `cb8d81b`), the first validation pass (`aef0799`, FAIL on eleven untested rules), F1 to F4 (`7c32a5b` to `f5f190b`), the second pass (`0a25cca`, FAIL on eleven more), F5 to F8 (`c6dd9f1` to `a11b13e`), the third pass (`validation.md`, FAIL on twelve). The gate passes: 325 tests, pyright and ruff clean. The spec has 91 criteria.
 - **In-progress** (file:line): none.
-- **Next step**: T1. The maintainer chose two batches of sub-agents, one after the other: phases 1 and 2 (T1 to T8), then phases 3 and 4 (T9 to T13); the Verifier runs after T13.
-- **Blockers**: none.
+- **Next step**: the maintainer decides, on the third report's "Fix Plans": (1) text under a colour-changing `filter` gets no Finding (`design.md:263` accepts it; neither Out of Scope nor the CHANGELOG lists it): a row and a line, or a change to the Capture; (2) a glyph colour of alpha 0 that Chromium does not compute to `rgb()` is reported (`src/squint_mcp/checks/overlap.py:25-31`, against the rule of OVL-38): fix the parse, or a row in Out of Scope; (3) a third fix round for the ten rules that are right today and that no test holds, asked per side, axis and order of each rule, or accept them as a listed residual. Then a Verifier pass, and only on PASS the closing step of `tasks.md` (roadmap, the spike and its `extend-exclude` removed, issue #18 through the pull request).
+- **Blockers**: the three decisions above.
 - **Uncommitted files**: none.
 - **Branch**: `feat/overlap`, local only, from `origin/main` at `8aa017c`. Not pushed; no pull request.
-- **Spike**: in `.specs/features/overlap/spike/` until the slice closes. `uv run python .specs/features/overlap/spike/cases.py` builds the page of cases and checks the mechanism against it (24 of 24).
+- **Spike**: in `.specs/features/overlap/spike/` until the slice closes.
