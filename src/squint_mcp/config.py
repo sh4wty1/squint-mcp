@@ -61,13 +61,15 @@ INSPECT_COMPUTED_PROPERTIES = (
 )
 
 # Source: Squint default. What a Capture collects for every element: the inspect
-# properties plus `direction`, which tells a Check on which edge text is cut, and
+# properties plus `direction`, which tells a Check on which edge text is cut,
 # `-webkit-text-fill-color`, the colour that paints the glyphs: that of `color`
-# unless the page sets it.
+# unless the page sets it, and `z-index`, which with `position` decides what is
+# painted above an element.
 CAPTURE_COMPUTED_PROPERTIES = (
     *INSPECT_COMPUTED_PROPERTIES,
     "direction",
     "-webkit-text-fill-color",
+    "z-index",
 )
 
 # Source: docs/SPEC.md, Images: "At most five crops per call".
@@ -120,3 +122,22 @@ LOW_CONTRAST_WORST_PART_PERCENT = 10
 # Source: Squint default. Ink runs from 0 to 255: a pixel at least half covered by
 # a glyph is text, a fainter anti-aliased edge is background.
 TEXT_INK_MIN = 128
+
+# Source: Squint default. A text is reported as covered from a tenth of its ink
+# hidden: one glyph in a word of ten, the share `low-contrast-real` takes as its
+# worst part. The smallest real bug measured for slice 8 hid 13%, a badge none.
+OVERLAP_MIN_HIDDEN_PERCENT = 10
+
+# Source: Squint default. A quarter of a text gone leaves a sentence or a price
+# unreadable and is `major`; less than that costs a word and is `minor`.
+OVERLAP_MAJOR_HIDDEN_PERCENT = 25
+
+# Source: WAI-ARIA 1.2, the roles of the widgets that open over a page: `menu`,
+# `listbox`, `tooltip`, `dialog` and `alertdialog`. What an element of one of
+# them covers is meant to be covered (decided with the maintainer for slice 8).
+SILENT_LAYER_ROLES = ("menu", "listbox", "tooltip", "dialog", "alertdialog")
+
+# Source: Squint default, measured for slice 8. A hit test takes 30 to 60
+# microseconds: at most this many per Capture keep them to about a second. A
+# Capture with more hidden pixels than that tests a sample of them.
+HIT_TEST_MAX = 20_000

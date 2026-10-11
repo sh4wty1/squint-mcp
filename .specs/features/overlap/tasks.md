@@ -135,7 +135,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (OVL-67), remove `.spe
 
 ### T3: Add the overlap thresholds, the Silent layer roles and the hit-test cap to config
 
-- [ ] Done
+- [x] Done
 
 **What**: `OVERLAP_MIN_HIDDEN_PERCENT`, `OVERLAP_MAJOR_HIDDEN_PERCENT`, `SILENT_LAYER_ROLES` and `HIT_TEST_MAX` with the values of the design and the source of each in a comment; `"z-index"` in `CAPTURE_COMPUTED_PROPERTIES`.
 **Where**: `src/squint_mcp/config.py`
@@ -150,10 +150,10 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (OVL-67), remove `.spe
 
 **Done when**:
 
-- [ ] Each constant cites "Squint default" with its reason, or WAI-ARIA for the roles
-- [ ] `INSPECT_COMPUTED_PROPERTIES` is unchanged, so `inspect_element` does not return `z-index`
-- [ ] Gate check passes: Build
-- [ ] Test count: 237 tests pass
+- [x] Each constant cites "Squint default" with its reason, or WAI-ARIA for the roles
+- [x] `INSPECT_COMPUTED_PROPERTIES` is unchanged, so `inspect_element` does not return `z-index`
+- [x] Gate check passes: Build
+- [x] Test count: 237 tests pass
 
 **Tests**: none
 **Gate**: build
