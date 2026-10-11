@@ -26,7 +26,7 @@ Used by the criteria below; each is defined once here.
 - **Silent layer**: an element that declares itself a layer or stays in view while the page scrolls, together with its descendants. It is an element with a `role` attribute of `menu`, `listbox`, `tooltip`, `dialog` or `alertdialog`, a `dialog` element with the `open` attribute, an open popover, or an element whose computed `position` is `fixed` or `sticky`. A Silent layer that holds an element is not one for that element.
 - **Hidden ink** of an element: its Text ink that is not seen in the Capture and that would be seen if, of everything outside the element, only its Silent layers were painted.
 - **Hidden share**: Hidden ink divided by Text ink.
-- **Coverer** of an element: of the Other elements that hit testing gives at its Hidden ink, the one it gives over the largest part of that ink; on a tie, the first of them in document order. Hit testing is what `document.elementFromPoint` answers, continued into open shadow roots, with the page scrolled so that the point is in the viewport; an element the scroll moved from where the Capture has it is passed over for the next one at the point. When a Capture has more than 20,000 pixels of Hidden ink to test, every nth pixel of every nth row is tested, and each element at least once: the largest part is then of that sample.
+- **Coverer** of an element: of the Other elements that hit testing gives at its Hidden ink, the one it gives over the largest part of that ink; on a tie, the first of them in document order. Hit testing is what `document.elementFromPoint` answers, continued into open shadow roots, with the page scrolled so that the point is in the viewport; an element the scroll moved from where the Capture has it is passed over for the next one at the point. When a Capture has more than 20,000 pixels of Hidden ink to test, every nth pixel of every nth row is tested, counted from the origin of the page (the pixels whose column and whose row on the page are both multiples of n, n being the smallest whole number for which the pixels of Hidden ink to test, divided by n × n, are at most 20,000), and each element at least once: the largest part is then of that sample.
 - **Raised layer**: a Coverer is in a Raised layer when it, or one of its ancestors that is not an ancestor of the covered element, has a computed `position` other than `static` and a computed `z-index` above 0.
 
 ## Out of Scope
@@ -137,6 +137,7 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 19. WHEN the element that hides ink of a text has a `role` attribute that lists several roles, one of them the role of a Silent layer (`#under-role-list` in `overlap-bounds.html`, half covered by `#role-list`, whose `role` attribute is `"menu navigation"`) THEN the Check SHALL return one Finding for the text with `evidence.measured.hiddenPercent` equal to 50, `evidence.measured.coveredBy` equal to `#role-list` and `severity` equal to `major`: a list of several roles is not a Silent layer. <!-- OVL-71 -->
 20. WHEN a covered text is faded by `opacity` and keeps at least half of its ink (`#opacity-60` in `overlap-bounds.html`, of `opacity: 0.6`, half under a cover) THEN the Check SHALL return one Finding for it with `evidence.measured.hiddenPercent` equal to 50. <!-- OVL-75 -->
 21. WHEN two elements that both have Hidden ink are painted over each other (in `overlap-bounds.html`, `#under-label`, a text of ten glyphs, under `#label` over its first 100px; `#label` has a background and two glyphs of its own, and `#label-cover` lies over the second of those glyphs) THEN the Check SHALL return one Finding for each of the two: for `#under-label` with `evidence.measured.hiddenPercent` equal to 50 and `evidence.measured.coveredBy` equal to `#label`, and for `#label` with `evidence.measured.hiddenPercent` equal to 50 and `evidence.measured.coveredBy` equal to `#label-cover`. <!-- OVL-76 -->
+22. WHEN the hit tests of a Capture are a sample and all the Hidden ink of an element lies on pixels the sample leaves out (`#speck` in `overlap-sampled.html`, a page with 25,010 pixels of Hidden ink, so tested at every second pixel of every second row: one glyph of `font-size: 10px`, 100 pixels of ink, with `#speck-cover`, one pixel wide, over column 45 of the page, 10 pixels) THEN the Check SHALL return one Finding for the element with `evidence.measured.hiddenPercent` equal to 10, `severity` equal to `minor` and `evidence.measured.coveredBy` equal to `#speck-cover`. <!-- OVL-78 -->
 
 **Independent Test**: Call `detect_visual_bugs` on `overlap-bug.html` and read the four Findings, the collision among them.
 
@@ -216,6 +217,7 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 6. WHEN two Other elements hide equal shares of one text (`#tie` in `overlap-bounds.html`: `#tie-first`, first in the document, over its last 40px and `#tie-second` over its first 40px) THEN the Check SHALL return one Finding for the text with `evidence.measured.hiddenPercent` equal to 40 and `evidence.measured.coveredBy` equal to `#tie-first`. <!-- OVL-52 -->
 7. WHEN the `selector` or the `evidence.measured.coveredBy` of any Finding of `overlap-bug.html` or `overlap-bounds.html` is passed to `inspect_element` with the same `url` and `viewport` THEN `inspect_element` SHALL return `isError: false`, with a `box` equal to the Finding's `box` when it was passed the `selector`. <!-- OVL-53 -->
 8. WHEN hit testing scrolls the page and the scroll brings over the Hidden ink of a text an element that does not lie over it where the Capture has it (`#far` in `overlap-scrolled.html`, a page 2700px high: 1000px down the page, the last 100px of its 200px of text under `#far-cover`; `#fixed-bar`, of `position: fixed`, is 100px down the viewport and lies over those 100px once the page is scrolled 900px) THEN `detect_visual_bugs` called with `checks` equal to `["overlap"]` and a viewport of 1440 × 900 SHALL return exactly one Finding, on `#far`, with `evidence.measured.hiddenPercent` equal to 50 and `evidence.measured.coveredBy` equal to `#far-cover`. <!-- OVL-77 -->
+9. WHEN the hit tests of a Capture are a sample THEN the Coverer SHALL be the Other element found at the largest part of the pixels tested, not of all the Hidden ink: in `overlap-sampled.html`, tested at every second pixel of every second row, `#stripes`, painted as stripes 1px wide on the odd columns of the page, hides 600 pixels of the ink of `#striped`, none of them tested, and `#solid-cover` hides 400, and with `checks` equal to `["overlap"]` the `(selector, severity, evidence.measured.hiddenPercent, evidence.measured.coveredBy)` of `findings` SHALL be, in this order, `(#striped, major, 25, #solid-cover)`, `(#filler-n, major, 50, #filler-cover-n)` for n from 0 to 11 (the twelve texts that take the page over 20,000 pixels of Hidden ink, each half under a cover of its own) and `(#speck, minor, 10, #speck-cover)`. <!-- OVL-79 -->
 
 **Independent Test**: Read the Finding of `#half` and compare it with the literal above.
 
@@ -349,13 +351,15 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 | OVL-75 | P1: Report text that another element covers | F2 | Implemented |
 | OVL-76 | P1: Report text that another element covers | F2 | Implemented |
 | OVL-77 | P1: Read the Finding | F3 | Implemented |
+| OVL-78 | P1: Report text that another element covers | F4 | Implemented |
+| OVL-79 | P1: Read the Finding | F4 | Implemented |
 
-**Coverage:** 77 total, 77 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
+**Coverage:** 79 total, 79 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
 
 ---
 
 ## Success Criteria
 
-- [ ] All 77 requirements verified by the Verifier, OVL-61 to OVL-67 from file evidence.
+- [ ] All 79 requirements verified by the Verifier, OVL-61 to OVL-67 from file evidence.
 - [ ] The gate passes: typecheck, lint, format check and the whole test suite.
 - [ ] The discrimination sensor leaves no surviving mutant in the Check, in what the Capture gains for it and in the rules of Silent and Raised layers.

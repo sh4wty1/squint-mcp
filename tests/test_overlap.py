@@ -23,6 +23,7 @@ BOUNDS = fixture_url("overlap-bounds.html")
 ORDER = fixture_url("overlap-order.html")
 MANY = fixture_url("overlap-many.html")
 SCROLLED = fixture_url("overlap-scrolled.html")
+SAMPLED = fixture_url("overlap-sampled.html")
 ONLY = ["overlap"]
 # The colour of the covers of the fixtures.
 COVER = "#c80000"
@@ -682,3 +683,32 @@ async def test_an_element_the_scroll_brings_over_a_text_is_not_what_covers_it(
         "hiddenPercent": 50,
         "coveredBy": "#far-cover",
     }
+
+
+async def test_a_text_the_hit_test_step_passes_over_whole_still_names_its_cover(
+    client: Client,
+) -> None:
+    # The 10 hidden pixels of `#speck` are on an odd column of the page, which
+    # holds so much hidden ink that only its even columns are hit tested.
+    finding = await finding_on(client, SAMPLED, "#speck")
+    assert finding["evidence"]["measured"] == {
+        "hiddenPercent": 10,
+        "coveredBy": "#speck-cover",
+    }
+    assert finding["severity"] == "minor"
+
+
+async def test_the_cover_named_is_the_one_over_most_of_the_pixels_hit_tested(
+    client: Client,
+) -> None:
+    # `#stripes` hides 600 pixels of `#striped` and `#solid-cover` 400. Every
+    # second pixel of every second row is hit tested: none under the stripes.
+    findings = (await detect(client, SAMPLED, checks=ONLY))["findings"]
+    assert covered(findings) == [
+        ("#striped", "major", 25, "#solid-cover"),
+        *(
+            (f"#filler-{place}", "major", 50, f"#filler-cover-{place}")
+            for place in range(12)
+        ),
+        ("#speck", "minor", 10, "#speck-cover"),
+    ]

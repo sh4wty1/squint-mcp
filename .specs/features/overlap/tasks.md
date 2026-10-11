@@ -9,7 +9,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ---
 
 **Design**: `.specs/features/overlap/design.md`
-**Status**: Approved by the maintainer on 2026-10-11. T1 to T13 are done; the fixes of the first validation pass (F1 to F4, at the end of this file) are in progress
+**Status**: Approved by the maintainer on 2026-10-11. T1 to T13 are done; the fixes of the first validation pass (F1 to F4, at the end of this file) are done too and wait for the second pass
 
 ---
 
@@ -665,7 +665,7 @@ Baseline: 302 tests pass (2026-10-11). The whole suite takes about eleven minute
 
 ### F4: Pin the sample of a capped Capture and the text its step passes over
 
-- [ ] Done
+- [x] Done
 
 **What**: The fixture `overlap-sampled.html`, a page of more than 20,000 pixels of Hidden ink with a text the step passes over whole (OVL-78) and a text whose Coverer depends on the sample (OVL-79), and their tests. The sentence of the Terms on the sample says where its count starts.
 **Where**: `tests/test_overlap.py` (with `tests/fixtures/overlap-sampled.html`)
@@ -680,12 +680,12 @@ Baseline: 302 tests pass (2026-10-11). The whole suite takes about eleven minute
 
 **Done when**:
 
-- [ ] The test of OVL-79 asserts the whole list of `(selector, severity, hiddenPercent, coveredBy)` of the page in order (L-020)
-- [ ] The comment of the fixture gives its pixels of Hidden ink and the step they are tested at
-- [ ] Each test fails under its mutant: J10 (`#speck`), C8 (`#striped`)
-- [ ] `validate_spec.py --strict` exits 0 on the spec with its ten new criteria
-- [ ] Gate check passes: Build
-- [ ] Test count: 312 tests pass; none deleted
+- [x] The test of OVL-79 asserts the whole list of `(selector, severity, hiddenPercent, coveredBy)` of the page in order (L-020)
+- [x] The comment of the fixture gives its pixels of Hidden ink and the step they are tested at
+- [x] Each test fails under its mutant: J10 (`#speck`), C8 (`#striped`)
+- [x] `validate_spec.py --strict` exits 0 on the spec with its ten new criteria
+- [x] Gate check passes: Build
+- [x] Test count: 312 tests pass; none deleted
 
 **Tests**: integration
 **Gate**: build
