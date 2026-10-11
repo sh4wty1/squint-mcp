@@ -215,6 +215,7 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 5. WHEN two Other elements hide different shares of one text (`#two-covers` in `overlap-bounds.html`: `#small-cover`, first in the document, over its first 40px and `#large-cover` over its last 80px) THEN the Check SHALL return one Finding for the text with `evidence.measured.hiddenPercent` equal to 60 and `evidence.measured.coveredBy` equal to `#large-cover`. <!-- OVL-51 -->
 6. WHEN two Other elements hide equal shares of one text (`#tie` in `overlap-bounds.html`: `#tie-first`, first in the document, over its last 40px and `#tie-second` over its first 40px) THEN the Check SHALL return one Finding for the text with `evidence.measured.hiddenPercent` equal to 40 and `evidence.measured.coveredBy` equal to `#tie-first`. <!-- OVL-52 -->
 7. WHEN the `selector` or the `evidence.measured.coveredBy` of any Finding of `overlap-bug.html` or `overlap-bounds.html` is passed to `inspect_element` with the same `url` and `viewport` THEN `inspect_element` SHALL return `isError: false`, with a `box` equal to the Finding's `box` when it was passed the `selector`. <!-- OVL-53 -->
+8. WHEN hit testing scrolls the page and the scroll brings over the Hidden ink of a text an element that does not lie over it where the Capture has it (`#far` in `overlap-scrolled.html`, a page 2700px high: 1000px down the page, the last 100px of its 200px of text under `#far-cover`; `#fixed-bar`, of `position: fixed`, is 100px down the viewport and lies over those 100px once the page is scrolled 900px) THEN `detect_visual_bugs` called with `checks` equal to `["overlap"]` and a viewport of 1440 × 900 SHALL return exactly one Finding, on `#far`, with `evidence.measured.hiddenPercent` equal to 50 and `evidence.measured.coveredBy` equal to `#far-cover`. <!-- OVL-77 -->
 
 **Independent Test**: Read the Finding of `#half` and compare it with the literal above.
 
@@ -347,13 +348,14 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 | OVL-74 | P1: Stay silent on overlaps that are meant | F1 | Implemented |
 | OVL-75 | P1: Report text that another element covers | F2 | Implemented |
 | OVL-76 | P1: Report text that another element covers | F2 | Implemented |
+| OVL-77 | P1: Read the Finding | F3 | Implemented |
 
-**Coverage:** 76 total, 76 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
+**Coverage:** 77 total, 77 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
 
 ---
 
 ## Success Criteria
 
-- [ ] All 76 requirements verified by the Verifier, OVL-61 to OVL-67 from file evidence.
+- [ ] All 77 requirements verified by the Verifier, OVL-61 to OVL-67 from file evidence.
 - [ ] The gate passes: typecheck, lint, format check and the whole test suite.
 - [ ] The discrimination sensor leaves no surviving mutant in the Check, in what the Capture gains for it and in the rules of Silent and Raised layers.

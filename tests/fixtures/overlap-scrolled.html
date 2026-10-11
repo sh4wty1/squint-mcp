@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: an element the scroll brings over a covered text</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are a block of
+         200 x 20 text pixels, 5px under the top of their 30px line: 4000 pixels.
+
+         The page is 2700px high: three viewports of 900px. Its one text is 1000px
+         down, in the second of them, so hit testing scrolls the page 900px to
+         reach it and the text is then 100px down the viewport. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        height: 2700px;
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      /* The row holds the text, from 40px to 240px, and its cover, placed from the
+         left of the row. */
+      #row {
+        position: absolute;
+        top: 1000px;
+        left: 0;
+        width: 100%;
+        height: 30px;
+      }
+      #far {
+        margin-left: 40px;
+        width: 200px;
+      }
+      /* An opaque box over the last 100px of the text: 2000 pixels, 50%. */
+      #far-cover {
+        position: absolute;
+        top: 0;
+        left: 140px;
+        width: 100px;
+        height: 30px;
+        background: rgb(200, 0, 0);
+      }
+      /* As large as the cover and 100px down the viewport: over nothing while the
+         Capture is taken, and over the cover, so over the hidden half of the
+         text, once the page is scrolled 900px. It comes after the cover in the
+         document, so it is the first element hit testing finds there. */
+      #fixed-bar {
+        position: fixed;
+        top: 100px;
+        left: 140px;
+        width: 100px;
+        height: 30px;
+        background: rgb(0, 0, 200);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="row">
+      <div id="far">XXXXXXXXXX</div>
+      <div id="far-cover"></div>
+    </div>
+    <div id="fixed-bar"></div>
+  </body>
+</html>

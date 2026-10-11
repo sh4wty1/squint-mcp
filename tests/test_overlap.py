@@ -22,6 +22,7 @@ CLEAN = fixture_url("overlap-clean.html")
 BOUNDS = fixture_url("overlap-bounds.html")
 ORDER = fixture_url("overlap-order.html")
 MANY = fixture_url("overlap-many.html")
+SCROLLED = fixture_url("overlap-scrolled.html")
 ONLY = ["overlap"]
 # The colour of the covers of the fixtures.
 COVER = "#c80000"
@@ -668,3 +669,16 @@ async def test_a_page_of_a_hundred_covered_texts_is_checked(client: Client) -> N
     assert covered(findings) == [
         (f"#text-{place}", "major", 50, f"#cover-{place}") for place in range(100)
     ]
+
+
+async def test_an_element_the_scroll_brings_over_a_text_is_not_what_covers_it(
+    client: Client,
+) -> None:
+    # Hit testing scrolls the page 900px to reach `#far`, which brings
+    # `#fixed-bar` over the half of it that `#far-cover` hides.
+    (finding,) = (await detect(client, SCROLLED, checks=ONLY))["findings"]
+    assert finding["selector"] == "#far"
+    assert finding["evidence"]["measured"] == {
+        "hiddenPercent": 50,
+        "coveredBy": "#far-cover",
+    }

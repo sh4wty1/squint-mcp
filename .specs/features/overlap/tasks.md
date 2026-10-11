@@ -635,7 +635,7 @@ Baseline: 302 tests pass (2026-10-11). The whole suite takes about eleven minute
 
 ### F3: Pass over an element the scroll moved at hit testing
 
-- [ ] Done
+- [x] Done
 
 **What**: The fixture `overlap-scrolled.html`, a page of three viewports with one covered text below the first and a fixed element that lies over its Hidden ink once hit testing scrolls, and its test (OVL-77).
 **Where**: `tests/test_overlap.py` (with `tests/fixtures/overlap-scrolled.html`)
@@ -650,11 +650,11 @@ Baseline: 302 tests pass (2026-10-11). The whole suite takes about eleven minute
 
 **Done when**:
 
-- [ ] The test asserts the whole list of Findings of the page: one, with `coveredBy` the plain cover
-- [ ] Nothing else on the page is covered
-- [ ] The test fails under J8
-- [ ] Gate check passes: Build
-- [ ] Test count: 310 tests pass; none deleted
+- [x] The test asserts the whole list of Findings of the page: one, with `coveredBy` the plain cover
+- [x] Nothing else on the page is covered
+- [x] The test fails under J8
+- [x] Gate check passes: Build
+- [x] Test count: 310 tests pass; none deleted
 
 **Tests**: integration
 **Gate**: build
