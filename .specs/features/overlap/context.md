@@ -65,9 +65,9 @@ A spike against real Chromium on 2026-10-10 (outside the repository) measured 20
 - No CSS signal alone tells an intended layer from a bug. The covered share does not (slides and a fixed bar cover 100%), and `z-index` is also set on elements that collide at a narrow viewport.
 - Of the existing fixtures, only `#covered` in `low-contrast-bounds.html` and `#veiled-most` in `low-contrast-reach.html` hold covered text. The tests that read those two files name their Check.
 
-### Design spike (2026-10-10 and 2026-10-11, unfinished)
+### Design spike (2026-10-10 and 2026-10-11)
 
-A second spike against real Chromium (headless shell 153, `playwright 1.63`, Windows), outside the repository, on a page holding the cases of the spec. Design is not closed: AD-005 and `design.md` are not written. What it measured:
+A second spike against real Chromium (headless shell 153, `playwright 1.63`, Windows), outside the repository, on a page holding the cases of the spec. The files of the first session were lost with its scratchpad; the second rebuilt the mechanism in its cheaper shape and settled what the first left open. `design.md` holds the mechanism as designed and every result; it is a draft until the maintainer accepts it. What the first session measured:
 
 **A mechanism that gives the Terms.** In batches, not per element:
 
@@ -96,12 +96,15 @@ A second spike against real Chromium (headless shell 153, `playwright 1.63`, Win
 
 A full-page screenshot costs about 0.03s per megapixel; a hit test 13 to 33 microseconds. All 100 texts of the OVL-60 page came out at 50% with their own cover. The limit of 30s holds.
 
-**Open when the spike stopped.**
+**Open when the first session stopped, and how the second settled each.**
 
-- The cheaper shape (`spike2.py`: four full-page screenshots for every Capture, the rest clipped to the texts that lose ink) misses text painted over text (`#collision`, `#z-static`): with all glyphs painted alone, the text on top still hides the one below. Texts whose boxes cross have to go to the second phase whatever the first one says, as the first shape (`spike.py`) did.
-- Whether the alone render stays the thinner of the two on a page with a dark root background and a light card (ink measured over a dark backdrop is wider than over a white one: 2118 against 1704 pixels for the same text).
-- A cap on hit tests per Capture and what a text beyond it gets.
-- Whether the Capture takes these layers on every call or only when `overlap` is asked for.
+- Text painted over text in the cheaper shape. Settled: a text goes to the second phase when what it loses plus the ink of other texts inside its boxes reaches the threshold. `#collision` gives 20 and `#z-static` 50; two real-font lines pulled 14px into each other hide 1% of each other.
+- A dark root background. Settled: with `--disable-lcd-text`, a red or a blue highlight gives the same 2707 text pixels over white, `#111` and `#888`, alone and as painted. The 2118 against 1704 came from a white highlight, which Chromium paints fatter; a bright green one too (3272 against 2707), so green is used at 64. No backdrop is forced.
+- A cap on hit tests. Settled: 20,000 per Capture; over it every nth pixel of every nth row, and each text at least once. On 100 half-covered texts, 12,500 tests take 0.7s and name the same Coverers as 200,000, which take 9.8s.
+- Layers on every call or on request. Settled: on request. Covered text adds 0.4s to a Capture of 0.9s and 4.0s to one of 3.5s.
+- The existing suite with `--disable-lcd-text`: 237 passed.
+
+**Found on the way.** On Windows the first screenshot beyond the viewport changes the font of the generic `monospace` family and the page is laid out again, after the collector has read its boxes: on a page of 14 sections the bottom was 14px off, and the `code` elements came out as covered. A 16 × 16 screenshot taken first settles it. It is a fault of every Capture since 0.1.0; `design.md` has the measurements.
 
 ---
 

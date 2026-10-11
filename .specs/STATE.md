@@ -34,14 +34,30 @@
 - **Date**: 2026-10-08
 - **Status**: active
 
+### AD-005
+- **Decision**: A Capture measures covered text only when asked (`capture(..., covered_text=True)`): for each element with own text that may be covered, `Element.covered_text` holds its Text ink, its Hidden ink and the Other elements that hit testing gives there. It is measured from screenshots in which the glyphs of chosen text nodes are repainted through CSS highlights, alone and as painted, and by hit testing with the page scrolled. A Check that reads it is listed in `COVERED_TEXT_CHECKS`.
+- **Reason**: Only the pixels say how much of a text is hidden, and only the page can paint a text alone. Spiked for slice 8: the cost about doubles a Capture, which three of the four Checks and `inspect_element` would pay for nothing.
+- **Trade-off**: A Capture is no longer one shape: a Check that needs covered text has to be declared, or it reads `None`. The rules of Silent and Raised layers live in a page script.
+- **Scope**: `src/squint_mcp/capture.py`, `src/squint_mcp/covered.py`, `src/squint_mcp/js/covered_text.js`, `src/squint_mcp/models.py`, `src/squint_mcp/checks/__init__.py`, every Check that reads `covered_text`.
+- **Date**: 2026-10-11
+- **Status**: active
+
+### AD-006
+- **Decision**: Chromium is launched with `--disable-lcd-text`, and a Capture takes one small screenshot beyond the viewport before it measures anything.
+- **Reason**: With subpixel text Chromium rasterizes the same glyph differently alone and as painted, and ink measured in two renders cannot be compared. The first screenshot beyond the viewport changes the layout of some pages on Windows (issue #18); taken first, boxes and pixels are of one layout.
+- **Trade-off**: The pixels of a Capture are not those of a Windows screen with ClearType. About 0.09s more per Capture.
+- **Scope**: `src/squint_mcp/capture.py`, `src/squint_mcp/config.py`, every tool.
+- **Date**: 2026-10-11
+- **Status**: active
+
 ## Handoff
 
 - **Feature**: `overlap` (roadmap slice 8) / `.specs/features/overlap/`
-- **Phase / Task**: Design, under `tlc-spec-driven`, scope Complex. Stopped in the middle of the spike; nothing of Design is written.
-- **Completed**: Specify (`spec.md`, OVL-01 to OVL-69, and `context.md`; `validate_spec.py --strict` passes). A spike in real Chromium of how the Capture learns Text ink, Hidden ink and the Coverer: one mechanism gives the Terms on every case measured, and the 100 covered texts of OVL-60 take 3.8s to 10.8s against the limit of 30s. Mechanism, results, costs and what is open are in `context.md`, "Design spike".
-- **In-progress** (file:line): none in the repository.
-- **Next step**: settle the four points listed as open in `context.md` (text painted over text in the cheaper shape, a dark root background, a cap on hit tests, layers on every call or on request), run the existing suite with Chromium launched with `--disable-lcd-text`, then record AD-005 and write `design.md`.
-- **Blockers**: the maintainer has not said whether the spec is approved as it stands: the message of 2026-10-10 left "Decisão sobre a spec" unfilled. The spike asks for three additions to the Terms, for the maintainer to accept or change: "seen" relative to the ink of the pixel alone, text rasterized in grayscale (`--disable-lcd-text`, which touches every Capture), and hit testing below the first viewport done with the page scrolled. The five unconfirmed choices of the Assumptions table stand as before.
+- **Phase / Task**: Execute, under `tlc-spec-driven`, scope Complex. `tasks.md` (T1 to T13, four phases) is approved; T1 is next.
+- **Completed**: Specify (the maintainer accepted the spec on 2026-10-11, with three changes the design asked for; `validate_spec.py --strict` passes). Design (`design.md`, approved; AD-005 and AD-006 recorded). Issue #18 opened for the fault of the Capture the spike found. Tasks (`tasks.md`, approved on 2026-10-11; `validate_tasks.py` passes with warnings only).
+- **In-progress** (file:line): none.
+- **Next step**: T1. The maintainer chose two batches of sub-agents, one after the other: phases 1 and 2 (T1 to T8), then phases 3 and 4 (T9 to T13); the Verifier runs after T13.
+- **Blockers**: none.
 - **Uncommitted files**: none.
 - **Branch**: `feat/overlap`, local only, from `origin/main` at `8aa017c`. Not pushed; no pull request.
-- **Spike**: throwaway, outside the repository, in the scratchpad of the session of 2026-10-10, under `%LOCALAPPDATA%/Temp/claude/E--projetos-fassi-squint-mcp/bbc2085e-9df4-4743-8b8f-48d8dee3565a/scratchpad/overlap-spike/` (`build.py`, `page.js`, `spike.py`, `spike2.py`, `probe*.py`). The files may be gone; `context.md` holds what they showed.
+- **Spike**: in `.specs/features/overlap/spike/` until the slice closes. `uv run python .specs/features/overlap/spike/cases.py` builds the page of cases and checks the mechanism against it (24 of 24).

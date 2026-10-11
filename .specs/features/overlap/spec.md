@@ -21,12 +21,12 @@ Used by the criteria below; each is defined once here.
 
 - **Own text**: the text nodes that are direct children of an element (same reach as the other Checks).
 - **Other element**, for an element: any element that is not the element, one of its ancestors or one of its descendants. The elements of a shadow tree have the host of that tree as an ancestor.
-- **Seen**: a pixel of text ink is seen when at least half of the ink shows on the page. It is the bound `low-contrast-real` uses (LCR-56, LCR-57).
+- **Seen**: a pixel of text ink is seen when the ink that shows on the page is at least half of the ink that pixel has when nothing outside the element is painted over it. The bound is relative to the pixel, so a veil gives the same answer on a full glyph and on an anti-aliased edge.
 - **Text ink** of an element: the page pixels its own text covers by at least half when nothing outside the element is painted over it. Text that is clipped away, off the page, of `visibility: hidden` or faded below half by `opacity` has no Text ink.
 - **Silent layer**: an element that declares itself a layer or stays in view while the page scrolls, together with its descendants. It is an element with a `role` attribute of `menu`, `listbox`, `tooltip`, `dialog` or `alertdialog`, a `dialog` element with the `open` attribute, an open popover, or an element whose computed `position` is `fixed` or `sticky`. A Silent layer that holds an element is not one for that element.
 - **Hidden ink** of an element: its Text ink that is not seen in the Capture and that would be seen if, of everything outside the element, only its Silent layers were painted.
 - **Hidden share**: Hidden ink divided by Text ink.
-- **Coverer** of an element: of the Other elements that hit testing gives at its Hidden ink, the one it gives over the largest part of that ink; on a tie, the first of them in document order. Hit testing is what `document.elementFromPoint` answers, continued into open shadow roots.
+- **Coverer** of an element: of the Other elements that hit testing gives at its Hidden ink, the one it gives over the largest part of that ink; on a tie, the first of them in document order. Hit testing is what `document.elementFromPoint` answers, continued into open shadow roots, with the page scrolled so that the point is in the viewport; an element the scroll moved from where the Capture has it is passed over for the next one at the point. When a Capture has more than 20,000 pixels of Hidden ink to test, every nth pixel of every nth row is tested, and each element at least once: the largest part is then of that sample.
 - **Raised layer**: a Coverer is in a Raised layer when it, or one of its ancestors that is not an ancestor of the covered element, has a computed `position` other than `static` and a computed `z-index` above 0.
 
 ## Out of Scope
@@ -47,7 +47,7 @@ Explicitly excluded. Documented to prevent scope creep.
 | More than one Coverer named in a Finding | `evidence.measured` holds numbers and strings, not lists |
 | Any other Check, Profile, Audit, score, `compare_viewports` | Not in this slice |
 | A parameter for thresholds or for the list of Silent layers | `docs/SPEC.md`: behaviour changes only through `url`, `viewports`, `checks` |
-| Changes to the behaviour of `inspect_element` or `ping`, or to the Findings of the other three Checks | Earlier slices are closed |
+| Changes to the behaviour of `inspect_element` or `ping`, or to the Findings of the other three Checks | Earlier slices are closed. Two changes reach every Capture and are in scope: text is rasterized in grayscale, and a Capture settles the layout before it measures (issue #18). Neither changes a result of the existing fixtures (OVL-59) |
 | Tests outside the MCP tool boundary | `docs/SPEC.md` Testing Decisions: one seam |
 | Pushing the branch and opening the pull request | Remote actions; they need the maintainer's go-ahead |
 
@@ -57,6 +57,8 @@ Explicitly excluded. Documented to prevent scope creep.
 
 Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 
+The maintainer accepted the spec on 2026-10-11, with the three changes the design asked for ("seen" relative to the pixel, grayscale text, hit testing with the page scrolled and capped): every default below is confirmed.
+
 | Assumption / decision | Chosen default | Rationale | Confirmed? |
 | --- | --- | --- | --- |
 | What marks an overlap as meant | The Silent layers of the Terms stay unreported; everything else that hides text is reported; a Coverer in a Raised layer lowers the severity | Decided with the maintainer (2026-10-10) | y |
@@ -65,26 +67,28 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 | `fixed` and `sticky` | Never reported as what covers a text | Decided with the maintainer (2026-10-10) | y |
 | Where the Finding sits | On the covered element; the Coverer's selector is `evidence.measured.coveredBy` | Decided with the maintainer (2026-10-10). The harm is on the text that cannot be read | y |
 | Severity by share | `major` or `minor` by the Hidden share | Decided with the maintainer (2026-10-10) | y |
-| Reporting threshold | A Hidden share of at least 10%; the value lives in config | One glyph in a word of ten, the same share `low-contrast-real` takes as its worst part. The smallest real bug of the spike hid 13%, a badge 0% | n |
-| `major` threshold | A Hidden share of at least 25%; the value lives in config | A quarter of a text gone leaves a sentence or a price unreadable; less than that costs a word | n |
-| Severity under a Raised layer | One level lower: `major` becomes `minor`, `minor` becomes `info`. It is the first use of `info` | "Lower" has to hold for a small cover too. An element given a positive `z-index` was put on top on purpose more often than not, and the five crops of a call go to the Findings above it | n |
-| A translucent veil | It hides the ink it lets less than half of through, and none of the ink it lets at least half of through | The same bound as `low-contrast-real`, so every text under a veil is judged by exactly one of the two Checks: the one that sees it, or the one that says it is covered. Refines "a veil is left to `low-contrast-real`", which holds for a veil that leaves the text seen | n |
-| `alertdialog` | A Silent layer, with `dialog` | It is the same widget for this purpose; the decision named `dialog` | n |
-| The `role` attribute | Compared whole, in lower case and trimmed; a list of several roles is not a Silent layer | The four roles are written alone in practice; a fallback list is rare | n |
-| Popovers and modal dialogs | An open popover is a Silent layer whatever its `position`; a `dialog` opened as a modal is one by its `open` attribute | Both are layers by construction. The fixture gives its popover `position: absolute`, so the criterion does not pass by the `fixed` rule alone | n |
-| A Silent layer around the covered element | Not a Silent layer for that element: a text covered by its neighbour inside one dialog or one fixed header is reported | The layer explains why the two are above the page, not why one is above the other | n |
-| Several elements cover one text | One Finding: the Hidden share counts all of the Hidden ink; `coveredBy` and the Raised-layer rule read the Coverer of the Terms | A Finding is one element × one viewport × one Check (`docs/SPEC.md`) | n |
-| Hit testing gives no Other element at the Hidden ink | No Finding | A Finding without `coveredBy` cannot be acted on, and the roadmap asks for both signals | n |
-| Comparison and rounding | The unrounded Hidden share is compared with the thresholds; `hiddenPercent` is the share in percent, truncated to an integer (24.5% gives 24) | As in `low-contrast-real`: a reported value never contradicts the severity next to it | n |
-| `evidence.measured` | Exactly `hiddenPercent` (integer) and `coveredBy` (a selector unique on the page, as `selector` is) | What an agent needs to act: how bad, and which element to move. The Coverer's styles are one `inspect_element` call away | n |
-| `evidence.computed` | Exactly `position` and `z-index` of the covered element. `z-index` is a new property collected for a Capture; `inspect_element` does not return it | The styles of the covered element that decide what is painted above it | n |
-| Message, suggestion, source, category | `"{hiddenPercent}% of the text is covered by another element"`, `"Move one of the two elements or give the text its own space"`, `"Squint heuristic"`, `visual-bug` | As `text-clipped`: no outside norm defines this | n |
-| Text hidden on purpose | No Finding for text of `visibility: hidden`, of a glyph colour with alpha 0, or with no Text ink | It is not text a reader was meant to see | n |
-| Unknown-Check message (supersedes the literal in force since slice 7) | `Valid checks: low-contrast-real, offscreen-overflow, overlap, text-clipped.` | Same rule, alphabetical; the list grew. It changes four assertions: `tests/test_detect_visual_bugs.py` lines 342, 352, 362 and 373 | n |
-| Order of Findings | Unchanged: severity, then viewport, then document order of the element, then Check name | Settled in slice 4 (LCR-37 to LCR-39, LCR-53) | n |
-| How the Capture learns Text ink, Hidden ink and the Coverer | A Design decision, spiked there against real Chromium. A first spike (2026-10-10) measured the Hidden share by filling the glyphs of one element with what covers it shown and then hidden: 0% under a stretched link, 15% in a real-font collision, 36% under a stray card. If no mechanism gives the Terms within the time limit of a call, this spec comes back for revision | AD-003 says how a Check gets a new fact; ADR-0002 keeps the browser out of the Check | n |
-| Fixtures | Ahem at `font-size: 20px` and `line-height: 30px`, as in slice 4: ten glyphs are a block of 200 × 20 pixels of ink. A cover is an opaque box unless a criterion says otherwise, so every share is exact. No text of a fixture is covered by anything its criterion does not name | Exact shares need exact pixels | n |
-| Criteria not observable through the tool boundary (OVL-61 to OVL-67) | Verified by the Verifier from file evidence, not by pytest | The source docs forbid a second test seam | n |
+| Reporting threshold | A Hidden share of at least 10%; the value lives in config | One glyph in a word of ten, the same share `low-contrast-real` takes as its worst part. The smallest real bug of the spike hid 13%, a badge 0% | y |
+| `major` threshold | A Hidden share of at least 25%; the value lives in config | A quarter of a text gone leaves a sentence or a price unreadable; less than that costs a word | y |
+| Severity under a Raised layer | One level lower: `major` becomes `minor`, `minor` becomes `info`. It is the first use of `info` | "Lower" has to hold for a small cover too. An element given a positive `z-index` was put on top on purpose more often than not, and the five crops of a call go to the Findings above it | y |
+| A translucent veil | It hides the ink it lets less than half of through, and none of the ink it lets at least half of through | The same bound as `low-contrast-real`, so every text under a veil is judged by exactly one of the two Checks: the one that sees it, or the one that says it is covered. Refines "a veil is left to `low-contrast-real`", which holds for a veil that leaves the text seen | y |
+| `alertdialog` | A Silent layer, with `dialog` | It is the same widget for this purpose; the decision named `dialog` | y |
+| The `role` attribute | Compared whole, in lower case and trimmed; a list of several roles is not a Silent layer | The four roles are written alone in practice; a fallback list is rare | y |
+| Popovers and modal dialogs | An open popover is a Silent layer whatever its `position`; a `dialog` opened as a modal is one by its `open` attribute | Both are layers by construction. The fixture gives its popover `position: absolute`, so the criterion does not pass by the `fixed` rule alone | y |
+| A Silent layer around the covered element | Not a Silent layer for that element: a text covered by its neighbour inside one dialog or one fixed header is reported | The layer explains why the two are above the page, not why one is above the other | y |
+| Several elements cover one text | One Finding: the Hidden share counts all of the Hidden ink; `coveredBy` and the Raised-layer rule read the Coverer of the Terms | A Finding is one element × one viewport × one Check (`docs/SPEC.md`) | y |
+| Hit testing gives no Other element at the Hidden ink | No Finding | A Finding without `coveredBy` cannot be acted on, and the roadmap asks for both signals | y |
+| Comparison and rounding | The unrounded Hidden share is compared with the thresholds; `hiddenPercent` is the share in percent, truncated to an integer (24.5% gives 24) | As in `low-contrast-real`: a reported value never contradicts the severity next to it | y |
+| `evidence.measured` | Exactly `hiddenPercent` (integer) and `coveredBy` (a selector unique on the page, as `selector` is) | What an agent needs to act: how bad, and which element to move. The Coverer's styles are one `inspect_element` call away | y |
+| `evidence.computed` | Exactly `position` and `z-index` of the covered element. `z-index` is a new property collected for a Capture; `inspect_element` does not return it | The styles of the covered element that decide what is painted above it | y |
+| Message, suggestion, source, category | `"{hiddenPercent}% of the text is covered by another element"`, `"Move one of the two elements or give the text its own space"`, `"Squint heuristic"`, `visual-bug` | As `text-clipped`: no outside norm defines this | y |
+| Text hidden on purpose | No Finding for text of `visibility: hidden`, of a glyph colour with alpha 0, or with no Text ink | It is not text a reader was meant to see | y |
+| Unknown-Check message (supersedes the literal in force since slice 7) | `Valid checks: low-contrast-real, offscreen-overflow, overlap, text-clipped.` | Same rule, alphabetical; the list grew. It changes four assertions: `tests/test_detect_visual_bugs.py` lines 342, 352, 362 and 373 | y |
+| Order of Findings | Unchanged: severity, then viewport, then document order of the element, then Check name | Settled in slice 4 (LCR-37 to LCR-39, LCR-53) | y |
+| How the Capture learns Text ink, Hidden ink and the Coverer | On request, from screenshots in which the glyphs of chosen text nodes are repainted through CSS highlights, alone and as painted, and by hit testing: AD-005 and [`design.md`](design.md). Spiked against real Chromium on 2026-10-11: every case of this spec gives the value of its criterion | AD-003 says how a Check gets a new fact; ADR-0002 keeps the browser out of the Check | y |
+| Text rasterization | Chromium is launched with `--disable-lcd-text`, so text is anti-aliased in grayscale in every Capture (AD-006) | With subpixel text the same glyph is rasterized differently alone and as painted: `#veil-55` measured 95% for 100%. The existing suite passes with the flag | y |
+| The layout of a Capture | A Capture takes one small screenshot beyond the viewport before it measures anything (AD-006, issue #18) | On Windows that first screenshot changes the font of the generic `monospace` family and the page is laid out again: boxes read before it are off | y |
+| Fixtures | Ahem at `font-size: 20px` and `line-height: 30px`, as in slice 4: ten glyphs are a block of 200 × 20 pixels of ink. A cover is an opaque box unless a criterion says otherwise, so every share is exact. No text of a fixture is covered by anything its criterion does not name | Exact shares need exact pixels | y |
+| Criteria not observable through the tool boundary (OVL-61 to OVL-67) | Verified by the Verifier from file evidence, not by pytest | The source docs forbid a second test seam | y |
 
 **Open questions:** none - all resolved or logged above.
 
@@ -260,77 +264,77 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 
 | Requirement ID | Story | Phase | Status |
 | --- | --- | --- | --- |
-| OVL-01 | P1: Report text that another element covers | - | Pending |
-| OVL-02 | P1: Report text that another element covers | - | Pending |
-| OVL-03 | P1: Report text that another element covers | - | Pending |
-| OVL-04 | P1: Report text that another element covers | - | Pending |
-| OVL-05 | P1: Report text that another element covers | - | Pending |
-| OVL-06 | P1: Report text that another element covers | - | Pending |
-| OVL-07 | P1: Report text that another element covers | - | Pending |
-| OVL-08 | P1: Report text that another element covers | - | Pending |
-| OVL-09 | P1: Report text that another element covers | - | Pending |
-| OVL-10 | P1: Report text that another element covers | - | Pending |
-| OVL-11 | P1: Report text that another element covers | - | Pending |
-| OVL-12 | P1: Report text that another element covers | - | Pending |
-| OVL-13 | P1: Report text that another element covers | - | Pending |
-| OVL-14 | P1: Report text that another element covers | - | Pending |
-| OVL-15 | P1: Report text that another element covers | - | Pending |
-| OVL-16 | P1: Report text that another element covers | - | Pending |
-| OVL-17 | P1: Report text that another element covers | - | Pending |
-| OVL-18 | P1: Report text that another element covers | - | Pending |
-| OVL-19 | P1: Stay silent on overlaps that are meant | - | Pending |
-| OVL-20 | P1: Stay silent on overlaps that are meant | - | Pending |
-| OVL-21 | P1: Stay silent on overlaps that are meant | - | Pending |
-| OVL-22 | P1: Stay silent on overlaps that are meant | - | Pending |
-| OVL-23 | P1: Stay silent on overlaps that are meant | - | Pending |
-| OVL-24 | P1: Stay silent on overlaps that are meant | - | Pending |
-| OVL-25 | P1: Stay silent on overlaps that are meant | - | Pending |
-| OVL-26 | P1: Stay silent on overlaps that are meant | - | Pending |
-| OVL-27 | P1: Stay silent on overlaps that are meant | - | Pending |
-| OVL-28 | P1: Stay silent on overlaps that are meant | - | Pending |
-| OVL-29 | P1: Stay silent on overlaps that are meant | - | Pending |
-| OVL-30 | P1: Stay silent on overlaps that are meant | - | Pending |
-| OVL-31 | P1: Stay silent on overlaps that are meant | - | Pending |
-| OVL-32 | P1: Stay silent on overlaps that are meant | - | Pending |
-| OVL-33 | P1: Stay silent on overlaps that are meant | - | Pending |
-| OVL-34 | P1: Stay silent on overlaps that are meant | - | Pending |
-| OVL-35 | P1: Stay silent on overlaps that are meant | - | Pending |
-| OVL-36 | P1: Stay silent on overlaps that are meant | - | Pending |
-| OVL-37 | P1: Stay silent on overlaps that are meant | - | Pending |
-| OVL-38 | P1: Stay silent on overlaps that are meant | - | Pending |
-| OVL-39 | P1: Stay silent on overlaps that are meant | - | Pending |
-| OVL-40 | P1: Severity | - | Pending |
-| OVL-41 | P1: Severity | - | Pending |
-| OVL-42 | P1: Severity | - | Pending |
-| OVL-43 | P1: Severity | - | Pending |
-| OVL-44 | P1: Severity | - | Pending |
-| OVL-45 | P1: Severity | - | Pending |
-| OVL-46 | P1: Severity | - | Pending |
-| OVL-47 | P1: Read the Finding | - | Pending |
-| OVL-48 | P1: Read the Finding | - | Pending |
-| OVL-49 | P1: Read the Finding | - | Pending |
-| OVL-50 | P1: Read the Finding | - | Pending |
-| OVL-51 | P1: Read the Finding | - | Pending |
-| OVL-52 | P1: Read the Finding | - | Pending |
-| OVL-53 | P1: Read the Finding | - | Pending |
-| OVL-54 | P1: With the other Checks | - | Pending |
-| OVL-55 | P1: With the other Checks | - | Pending |
-| OVL-56 | P1: With the other Checks | - | Pending |
-| OVL-57 | P1: With the other Checks | - | Pending |
-| OVL-58 | P1: With the other Checks | - | Pending |
-| OVL-59 | P1: With the other Checks | - | Pending |
-| OVL-60 | P1: With the other Checks | - | Pending |
-| OVL-61 | P2: Check contract, configuration and documents | - | Pending |
-| OVL-62 | P2: Check contract, configuration and documents | - | Pending |
-| OVL-63 | P2: Check contract, configuration and documents | - | Pending |
-| OVL-64 | P2: Check contract, configuration and documents | - | Pending |
-| OVL-65 | P2: Check contract, configuration and documents | - | Pending |
-| OVL-66 | P2: Check contract, configuration and documents | - | Pending |
-| OVL-67 | P2: Check contract, configuration and documents | - | Pending |
-| OVL-68 | Edge cases | - | Pending |
-| OVL-69 | Edge cases | - | Pending |
+| OVL-01 | P1: Report text that another element covers | T9 | Pending |
+| OVL-02 | P1: Report text that another element covers | T9 | Pending |
+| OVL-03 | P1: Report text that another element covers | T9 | Pending |
+| OVL-04 | P1: Report text that another element covers | T9 | Pending |
+| OVL-05 | P1: Report text that another element covers | T9 | Pending |
+| OVL-06 | P1: Report text that another element covers | T9 | Pending |
+| OVL-07 | P1: Report text that another element covers | T11 | Pending |
+| OVL-08 | P1: Report text that another element covers | T11 | Pending |
+| OVL-09 | P1: Report text that another element covers | T11 | Pending |
+| OVL-10 | P1: Report text that another element covers | T11 | Pending |
+| OVL-11 | P1: Report text that another element covers | T11 | Pending |
+| OVL-12 | P1: Report text that another element covers | T11 | Pending |
+| OVL-13 | P1: Report text that another element covers | T11 | Pending |
+| OVL-14 | P1: Report text that another element covers | T9 | Pending |
+| OVL-15 | P1: Report text that another element covers | T11 | Pending |
+| OVL-16 | P1: Report text that another element covers | T11 | Pending |
+| OVL-17 | P1: Report text that another element covers | T12 | Pending |
+| OVL-18 | P1: Report text that another element covers | T12 | Pending |
+| OVL-19 | P1: Stay silent on overlaps that are meant | T10 | Pending |
+| OVL-20 | P1: Stay silent on overlaps that are meant | T10 | Pending |
+| OVL-21 | P1: Stay silent on overlaps that are meant | T10 | Pending |
+| OVL-22 | P1: Stay silent on overlaps that are meant | T10 | Pending |
+| OVL-23 | P1: Stay silent on overlaps that are meant | T10 | Pending |
+| OVL-24 | P1: Stay silent on overlaps that are meant | T10 | Pending |
+| OVL-25 | P1: Stay silent on overlaps that are meant | T10 | Pending |
+| OVL-26 | P1: Stay silent on overlaps that are meant | T10 | Pending |
+| OVL-27 | P1: Stay silent on overlaps that are meant | T10 | Pending |
+| OVL-28 | P1: Stay silent on overlaps that are meant | T10 | Pending |
+| OVL-29 | P1: Stay silent on overlaps that are meant | T10 | Pending |
+| OVL-30 | P1: Stay silent on overlaps that are meant | T11 | Pending |
+| OVL-31 | P1: Stay silent on overlaps that are meant | T10 | Pending |
+| OVL-32 | P1: Stay silent on overlaps that are meant | T10 | Pending |
+| OVL-33 | P1: Stay silent on overlaps that are meant | T10 | Pending |
+| OVL-34 | P1: Stay silent on overlaps that are meant | T10 | Pending |
+| OVL-35 | P1: Stay silent on overlaps that are meant | T10 | Pending |
+| OVL-36 | P1: Stay silent on overlaps that are meant | T10 | Pending |
+| OVL-37 | P1: Stay silent on overlaps that are meant | T10 | Pending |
+| OVL-38 | P1: Stay silent on overlaps that are meant | T10 | Pending |
+| OVL-39 | P1: Stay silent on overlaps that are meant | T10 | Pending |
+| OVL-40 | P1: Severity | T11 | Pending |
+| OVL-41 | P1: Severity | T11 | Pending |
+| OVL-42 | P1: Severity | T11 | Pending |
+| OVL-43 | P1: Severity | T11 | Pending |
+| OVL-44 | P1: Severity | T11 | Pending |
+| OVL-45 | P1: Severity | T11 | Pending |
+| OVL-46 | P1: Severity | T11 | Pending |
+| OVL-47 | P1: Read the Finding | T9 | Pending |
+| OVL-48 | P1: Read the Finding | T9 | Pending |
+| OVL-49 | P1: Read the Finding | T11 | Pending |
+| OVL-50 | P1: Read the Finding | T11 | Pending |
+| OVL-51 | P1: Read the Finding | T11 | Pending |
+| OVL-52 | P1: Read the Finding | T11 | Pending |
+| OVL-53 | P1: Read the Finding | T11 | Pending |
+| OVL-54 | P1: With the other Checks | T9 | Pending |
+| OVL-55 | P1: With the other Checks | T9 | Pending |
+| OVL-56 | P1: With the other Checks | T9 | Pending |
+| OVL-57 | P1: With the other Checks | T12 | Pending |
+| OVL-58 | P1: With the other Checks | T9 | Pending |
+| OVL-59 | P1: With the other Checks | T12 | Pending |
+| OVL-60 | P1: With the other Checks | T12 | Pending |
+| OVL-61 | P2: Check contract, configuration and documents | T9 | Pending |
+| OVL-62 | P2: Check contract, configuration and documents | T7, T9 | Pending |
+| OVL-63 | P2: Check contract, configuration and documents | T3 | Pending |
+| OVL-64 | P2: Check contract, configuration and documents | T9 | Pending |
+| OVL-65 | P2: Check contract, configuration and documents | T13 | Pending |
+| OVL-66 | P2: Check contract, configuration and documents | T13 | Pending |
+| OVL-67 | P2: Check contract, configuration and documents | closing step | Pending |
+| OVL-68 | Edge cases | T9 | Pending |
+| OVL-69 | Edge cases | T12 | Pending |
 
-**Coverage:** 69 total, 0 mapped to tasks, 69 unmapped (the Tasks phase has not run).
+**Coverage:** 69 total, 69 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
 
 ---
 
