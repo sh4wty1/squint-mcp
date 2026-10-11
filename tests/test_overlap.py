@@ -20,6 +20,8 @@ pytestmark = pytest.mark.anyio
 BUG = fixture_url("overlap-bug.html")
 CLEAN = fixture_url("overlap-clean.html")
 BOUNDS = fixture_url("overlap-bounds.html")
+ORDER = fixture_url("overlap-order.html")
+MANY = fixture_url("overlap-many.html")
 ONLY = ["overlap"]
 # The colour of the covers of the fixtures.
 COVER = "#c80000"
@@ -538,3 +540,56 @@ async def test_the_selectors_of_a_finding_work_in_inspect_element(
             assert inspected["box"] == finding["box"]
             # `inspect` fails on a selector that does not match one element.
             await inspect(client, url, finding["evidence"]["measured"]["coveredBy"])
+
+
+async def test_text_under_an_opaque_cover_of_an_earlier_fixture_is_reported(
+    client: Client,
+) -> None:
+    url = fixture_url("low-contrast-bounds.html")
+    (finding,) = (await detect(client, url, checks=ONLY))["findings"]
+    assert finding["selector"] == "#covered"
+    assert finding["evidence"]["measured"]["hiddenPercent"] == 100
+    assert finding["severity"] == "major"
+
+
+async def test_text_under_a_veil_of_an_earlier_fixture_is_reported(
+    client: Client,
+) -> None:
+    url = fixture_url("low-contrast-reach.html")
+    (finding,) = (await detect(client, url, checks=ONLY))["findings"]
+    assert finding["selector"] == "#veiled-most"
+    assert finding["evidence"]["measured"]["hiddenPercent"] == 100
+
+
+async def test_an_element_behind_the_clipped_part_of_a_text_does_not_cover_it(
+    client: Client,
+) -> None:
+    # `#backdrop` lies where the text of `#in-scaled` would go on if its parent
+    # did not cut it off.
+    url = fixture_url("text-clipped-clean.html")
+    assert (await detect(client, url, checks=ONLY))["findings"] == []
+
+
+async def test_findings_of_overlap_and_another_check_come_in_document_order(
+    client: Client,
+) -> None:
+    findings = (await detect(client, ORDER))["findings"]
+    assert {finding["severity"] for finding in findings} == {"minor"}
+    assert [(finding["selector"], finding["check"]) for finding in findings] == [
+        ("#a", "overlap"),
+        ("#b", "low-contrast-real"),
+        ("#b", "overlap"),
+        ("#c", "overlap"),
+    ]
+
+
+async def test_a_page_of_a_hundred_covered_texts_is_checked(client: Client) -> None:
+    result = await call(client, MANY, checks=ONLY)
+    assert result.is_error is False
+    assert result.structured_content is not None
+    findings = result.structured_content["findings"]
+    assert len(findings) == 100
+    # More hidden pixels than are hit tested: each text still names its own cover.
+    assert covered(findings) == [
+        (f"#text-{place}", "major", 50, f"#cover-{place}") for place in range(100)
+    ]

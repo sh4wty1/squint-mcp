@@ -280,8 +280,8 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 | OVL-14 | P1: Report text that another element covers | T9 | Implemented |
 | OVL-15 | P1: Report text that another element covers | T11 | Implemented |
 | OVL-16 | P1: Report text that another element covers | T11 | Implemented |
-| OVL-17 | P1: Report text that another element covers | T12 | Pending |
-| OVL-18 | P1: Report text that another element covers | T12 | Pending |
+| OVL-17 | P1: Report text that another element covers | T12 | Implemented |
+| OVL-18 | P1: Report text that another element covers | T12 | Implemented |
 | OVL-19 | P1: Stay silent on overlaps that are meant | T10 | Implemented |
 | OVL-20 | P1: Stay silent on overlaps that are meant | T10 | Implemented |
 | OVL-21 | P1: Stay silent on overlaps that are meant | T10 | Implemented |
@@ -320,10 +320,10 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 | OVL-54 | P1: With the other Checks | T9 | Implemented |
 | OVL-55 | P1: With the other Checks | T9 | Implemented |
 | OVL-56 | P1: With the other Checks | T9 | Implemented |
-| OVL-57 | P1: With the other Checks | T12 | Pending |
+| OVL-57 | P1: With the other Checks | T12 | Implemented |
 | OVL-58 | P1: With the other Checks | T9 | Implemented |
-| OVL-59 | P1: With the other Checks | T12 | Pending |
-| OVL-60 | P1: With the other Checks | T12 | Pending |
+| OVL-59 | P1: With the other Checks | T12 | Implemented |
+| OVL-60 | P1: With the other Checks | T12 | Implemented |
 | OVL-61 | P2: Check contract, configuration and documents | T9 | Implemented |
 | OVL-62 | P2: Check contract, configuration and documents | T7, T9 | Implemented |
 | OVL-63 | P2: Check contract, configuration and documents | T3 | Implemented |
@@ -332,7 +332,7 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 | OVL-66 | P2: Check contract, configuration and documents | T13 | Pending |
 | OVL-67 | P2: Check contract, configuration and documents | closing step | Pending |
 | OVL-68 | Edge cases | T9 | Implemented |
-| OVL-69 | Edge cases | T12 | Pending |
+| OVL-69 | Edge cases | T12 | Implemented |
 
 **Coverage:** 69 total, 69 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
 

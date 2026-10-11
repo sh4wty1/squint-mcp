@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: many covered texts</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are a block of
+         200 x 20 text pixels: 4000 pixels. 100 texts, each with a cover of its own
+         over its last 100px: 2000 hidden pixels each and 200,000 together, ten
+         times what a Capture hit tests. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      .row {
+        position: relative;
+        margin-top: 20px;
+        height: 30px;
+      }
+      .text {
+        margin-left: 40px;
+        width: 200px;
+      }
+      .cover {
+        position: absolute;
+        top: 0;
+        left: 140px;
+        width: 100px;
+        height: 30px;
+        background: rgb(200, 0, 0);
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      for (let i = 0; i < 100; i++) {
+        const row = document.createElement("div");
+        row.className = "row";
+        row.innerHTML =
+          `<div id="text-${i}" class="text">XXXXXXXXXX</div>` +
+          `<div id="cover-${i}" class="cover"></div>`;
+        document.body.append(row);
+      }
+    </script>
+  </body>
+</html>

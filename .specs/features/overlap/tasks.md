@@ -410,7 +410,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (OVL-67), remove `.spe
 
 ### T12: Hold the Check with the other Checks and on a page of many covered texts
 
-- [ ] Done
+- [x] Done
 
 **What**: The fixtures `overlap-order.html` and `overlap-many.html`, and the tests of the order across Checks, of the 100 covered texts and of the three existing fixtures the spec names (`low-contrast-bounds.html`, `low-contrast-reach.html`, `text-clipped-clean.html`).
 **Where**: `tests/test_overlap.py` (with the two fixtures)
@@ -425,11 +425,11 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (OVL-67), remove `.spe
 
 **Done when**:
 
-- [ ] The test of OVL-57 asserts the whole list of `(selector, check)` pairs in order (L-020)
-- [ ] The test of OVL-60 asserts 100 Findings and no error
-- [ ] No test of an earlier slice changed but for the four literals of T9 (OVL-59)
-- [ ] Gate check passes: Build
-- [ ] Test count: the count after T11 plus the tests of this task; none deleted
+- [x] The test of OVL-57 asserts the whole list of `(selector, check)` pairs in order (L-020)
+- [x] The test of OVL-60 asserts 100 Findings and no error
+- [x] No test of an earlier slice changed but for the four literals of T9 (OVL-59)
+- [x] Gate check passes: Build
+- [x] Test count: the count after T11 plus the tests of this task; none deleted
 
 **Tests**: integration
 **Gate**: build

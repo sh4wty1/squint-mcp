@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: the order of Findings with overlap among the Checks</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are 200px wide.
+         Four Findings, all minor, from two Checks: each text has a cover over its
+         last 40px, 20% of it, and the second is also too pale. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      .row {
+        position: relative;
+        margin-top: 20px;
+        height: 30px;
+      }
+      .text {
+        margin-left: 40px;
+        width: 200px;
+      }
+      .cover {
+        position: absolute;
+        top: 0;
+        left: 200px;
+        width: 40px;
+        height: 30px;
+        background: rgb(200, 0, 0);
+      }
+      /* 4.47:1 on white, under 4.5:1. */
+      .grey {
+        color: rgb(119, 119, 119);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="row">
+      <div id="a" class="text">XXXXXXXXXX</div>
+      <div class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="b" class="text grey">XXXXXXXXXX</div>
+      <div class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="c" class="text">XXXXXXXXXX</div>
+      <div class="cover"></div>
+    </div>
+  </body>
+</html>
