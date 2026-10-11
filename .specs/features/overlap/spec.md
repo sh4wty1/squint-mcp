@@ -134,6 +134,9 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 16. WHEN an element and the Other element that covers it are both inside one element of `position: fixed` (`#in-fixed` in `overlap-bounds.html`, half covered) THEN the Check SHALL return one Finding for it with `severity` equal to `major`. <!-- OVL-16 -->
 17. WHEN `detect_visual_bugs` is called with `checks` equal to `["overlap"]` on `low-contrast-bounds.html` THEN `findings` SHALL hold exactly one Finding, on `#covered`, with `evidence.measured.hiddenPercent` equal to 100 and `severity` equal to `major`. <!-- OVL-17 -->
 18. WHEN `detect_visual_bugs` is called with `checks` equal to `["overlap"]` on `low-contrast-reach.html` THEN `findings` SHALL hold exactly one Finding, on `#veiled-most` (under a layer of `rgba(255, 255, 255, 0.7)`), with `evidence.measured.hiddenPercent` equal to 100. <!-- OVL-18 -->
+19. WHEN the element that hides ink of a text has a `role` attribute that lists several roles, one of them the role of a Silent layer (`#under-role-list` in `overlap-bounds.html`, half covered by `#role-list`, whose `role` attribute is `"menu navigation"`) THEN the Check SHALL return one Finding for the text with `evidence.measured.hiddenPercent` equal to 50, `evidence.measured.coveredBy` equal to `#role-list` and `severity` equal to `major`: a list of several roles is not a Silent layer. <!-- OVL-71 -->
+20. WHEN a covered text is faded by `opacity` and keeps at least half of its ink (`#opacity-60` in `overlap-bounds.html`, of `opacity: 0.6`, half under a cover) THEN the Check SHALL return one Finding for it with `evidence.measured.hiddenPercent` equal to 50. <!-- OVL-75 -->
+21. WHEN two elements that both have Hidden ink are painted over each other (in `overlap-bounds.html`, `#under-label`, a text of ten glyphs, under `#label` over its first 100px; `#label` has a background and two glyphs of its own, and `#label-cover` lies over the second of those glyphs) THEN the Check SHALL return one Finding for each of the two: for `#under-label` with `evidence.measured.hiddenPercent` equal to 50 and `evidence.measured.coveredBy` equal to `#label`, and for `#label` with `evidence.measured.hiddenPercent` equal to 50 and `evidence.measured.coveredBy` equal to `#label-cover`. <!-- OVL-76 -->
 
 **Independent Test**: Call `detect_visual_bugs` on `overlap-bug.html` and read the four Findings, the collision among them.
 
@@ -338,16 +341,19 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 | OVL-68 | Edge cases | T9 | Implemented |
 | OVL-69 | Edge cases | T12 | Implemented |
 | OVL-70 | P1: Stay silent on overlaps that are meant | F1 | Implemented |
+| OVL-71 | P1: Report text that another element covers | F2 | Implemented |
 | OVL-72 | P1: Stay silent on overlaps that are meant | F1 | Implemented |
 | OVL-73 | P1: Stay silent on overlaps that are meant | F1 | Implemented |
 | OVL-74 | P1: Stay silent on overlaps that are meant | F1 | Implemented |
+| OVL-75 | P1: Report text that another element covers | F2 | Implemented |
+| OVL-76 | P1: Report text that another element covers | F2 | Implemented |
 
-**Coverage:** 73 total, 73 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
+**Coverage:** 76 total, 76 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
 
 ---
 
 ## Success Criteria
 
-- [ ] All 73 requirements verified by the Verifier, OVL-61 to OVL-67 from file evidence.
+- [ ] All 76 requirements verified by the Verifier, OVL-61 to OVL-67 from file evidence.
 - [ ] The gate passes: typecheck, lint, format check and the whole test suite.
 - [ ] The discrimination sensor leaves no surviving mutant in the Check, in what the Capture gains for it and in the rules of Silent and Raised layers.

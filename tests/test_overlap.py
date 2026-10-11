@@ -392,17 +392,21 @@ async def test_only_the_covered_texts_of_the_bounds_fixture_are_reported(
         "#bottom",
         "#in-dialog",
         "#in-fixed",
+        "#label",
         "#layer-ancestor",
         "#layered-corner",
         "#layered-half",
         "#left",
         "#mixed",
+        "#opacity-60",
         "#shared-layer",
         "#split",
         "#three-lines",
         "#tie",
         "#top",
         "#two-covers",
+        "#under-label",
+        "#under-role-list",
         "#veil-55",
         "#z-static",
         "#z-zero",
@@ -561,10 +565,49 @@ async def test_of_two_covers_that_hide_as_much_the_first_in_the_document_is_name
     }
 
 
+async def test_text_under_an_element_with_a_list_of_roles_is_reported(
+    client: Client,
+) -> None:
+    # `#role-list` has a `role` of "menu navigation": it would hide
+    # `#under-role-list` unreported if one role of a list made a layer.
+    finding = await bounds(client, "#under-role-list")
+    assert finding["evidence"]["measured"] == {
+        "hiddenPercent": 50,
+        "coveredBy": "#role-list",
+    }
+    assert finding["severity"] == "major"
+
+
+async def test_covered_text_that_keeps_over_half_of_its_ink_is_reported(
+    client: Client,
+) -> None:
+    # `#opacity-60` shows 60 parts in 100 of its ink: text, where 40 are not.
+    finding = await bounds(client, "#opacity-60")
+    assert finding["evidence"]["measured"]["hiddenPercent"] == 50
+
+
+async def test_two_covered_texts_painted_over_each_other_are_each_measured(
+    client: Client,
+) -> None:
+    # `#label` hides half of `#under-label`, and `#label-cover` one of the two
+    # glyphs of `#label`: neither share is exact unless each text is told from
+    # the other, in the pixels of the page and when it is painted alone.
+    under = await bounds(client, "#under-label")
+    assert under["evidence"]["measured"] == {
+        "hiddenPercent": 50,
+        "coveredBy": "#label",
+    }
+    label = await bounds(client, "#label")
+    assert label["evidence"]["measured"] == {
+        "hiddenPercent": 50,
+        "coveredBy": "#label-cover",
+    }
+
+
 async def test_the_selectors_of_a_finding_work_in_inspect_element(
     client: Client,
 ) -> None:
-    for url, count in ((BUG, 4), (BOUNDS, 19)):
+    for url, count in ((BUG, 4), (BOUNDS, 23)):
         findings = (await detect(client, url, checks=ONLY))["findings"]
         assert len(findings) == count
         for finding in findings:

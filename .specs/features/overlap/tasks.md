@@ -605,7 +605,7 @@ Baseline: 302 tests pass (2026-10-11). The whole suite takes about eleven minute
 
 ### F2: Pin a list of roles, the bound of Text ink and two measured texts that cross
 
-- [ ] Done
+- [x] Done
 
 **What**: Three cases appended to `overlap-bounds.html`, with a test each: a cover of `role` `"menu navigation"` (OVL-71), a text of `opacity: 0.6` (OVL-75) and a text under a label whose own glyphs are covered too (OVL-76).
 **Where**: `tests/test_overlap.py` (with `tests/fixtures/overlap-bounds.html`)
@@ -620,11 +620,11 @@ Baseline: 302 tests pass (2026-10-11). The whole suite takes about eleven minute
 
 **Done when**:
 
-- [ ] The pinned list of selectors and the count of the fixture grow by the four new Findings, to 23
-- [ ] `#tie` and `#two-covers` keep their Coverer: the page stays at a hit-test step of 2
-- [ ] Each test fails under its mutants: J5 (`#under-role-list`), C2b (`#opacity-60`), C5 and C11 (`#under-label` and `#label`)
-- [ ] Gate check passes: Build
-- [ ] Test count: 309 tests pass; none deleted
+- [x] The pinned list of selectors and the count of the fixture grow by the four new Findings, to 23
+- [x] `#tie` and `#two-covers` keep their Coverer: the page stays at a hit-test step of 2
+- [x] Each test fails under its mutants: J5 (`#under-role-list`), C2b (`#opacity-60`), C5 and C11 (`#under-label` and `#label`)
+- [x] Gate check passes: Build
+- [x] Test count: 309 tests pass; none deleted
 
 **Tests**: integration
 **Gate**: build

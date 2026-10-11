@@ -9,7 +9,7 @@
          which a tenth is 400 and a quarter 1000. A cover is an opaque box as high
          as the line unless its comment says otherwise.
 
-         The page holds some 29,000 pixels of hidden ink, more than are hit tested:
+         The page holds some 35,000 pixels of hidden ink, more than are hit tested:
          every second pixel of every second row is, counted from the corner of the
          page. What covers a text is still the element found at most of them. */
       @font-face {
@@ -175,6 +175,25 @@
         left: 40px;
         width: 40px;
       }
+      /* 50% of a text that shows 60 parts in 100 of its ink: over half. */
+      #opacity-60 {
+        opacity: 0.6;
+      }
+      /* Two texts that are both measured, one painted over the other. The label
+         is an opaque box over the first 100px of the text under it: 50%. Its own
+         two glyphs take its first 40px, 800 pixels, and the cover is over the
+         second of them: 400 pixels, 50%. That cover is also over 20 of the 100
+         columns the label hides of the text under it, so the label is over most
+         of them. */
+      #label {
+        left: 40px;
+        width: 100px;
+        background: rgb(200, 200, 200);
+      }
+      #label-cover {
+        left: 60px;
+        width: 20px;
+      }
     </style>
   </head>
   <body>
@@ -257,6 +276,21 @@
       <div id="tie" class="text">XXXXXXXXXX</div>
       <div id="tie-first" class="cover"></div>
       <div id="tie-second" class="cover"></div>
+    </div>
+    <!-- 50%. A role is one word: a list of two, `menu` among them, declares no
+         layer. -->
+    <div class="row">
+      <div id="under-role-list" class="text">XXXXXXXXXX</div>
+      <div id="role-list" role="menu navigation" class="cover half"></div>
+    </div>
+    <div class="row">
+      <div id="opacity-60" class="text">XXXXXXXXXX</div>
+      <div id="opacity-60-cover" class="cover half"></div>
+    </div>
+    <div class="row">
+      <div id="under-label" class="text">XXXXXXXXXX</div>
+      <div id="label" class="cover">XX</div>
+      <div id="label-cover" class="cover"></div>
     </div>
     <script>
       // A style does not cross into a shadow tree, so these carry their own. The
