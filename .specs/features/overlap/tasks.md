@@ -931,7 +931,7 @@ Spiked before F9 (2026-10-11, real Chromium, pages outside the repository): with
 
 ### F11: Pin the ink of a font with anti-aliased edges
 
-- [ ] Done
+- [x] Done
 
 **What**: The fixture `overlap-font.html`, four texts in the system `sans-serif` font at 16px: one wholly under an opaque cover (OVL-101), one of two equal lines with the second under a cover (OVL-102), one under a veil that lets 45 parts in 100 of its ink through (OVL-103) and one under a veil that lets 55 through (OVL-104), with one test on the whole list of Findings and one on the silent text. Every outcome holds on any platform: it is a share of whole glyphs.
 **Where**: `tests/test_overlap.py` (with `tests/fixtures/overlap-font.html`)
@@ -946,10 +946,10 @@ Spiked before F9 (2026-10-11, real Chromium, pages outside the repository): with
 
 **Done when**:
 
-- [ ] The test of the list fails under V6 (Hidden ink not cut to Text ink, `covered.py:272`: over 100% and over 50%)
-- [ ] The test of OVL-104 fails with "seen" judged against a fixed amount of ink instead of the ink of the pixel (`covered.py:98`)
-- [ ] Gate check passes: Build
-- [ ] Test count: 339 tests pass; none deleted
+- [x] The test of the list fails under V6 (Hidden ink not cut to Text ink, `covered.py:272`: over 100% and over 50%)
+- [x] The test of OVL-104 fails with "seen" judged against a fixed amount of ink instead of the ink of the pixel (`covered.py:98`)
+- [x] Gate check passes: Build
+- [x] Test count: 339 tests pass; none deleted
 
 **Tests**: integration
 **Gate**: build

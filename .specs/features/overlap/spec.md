@@ -89,7 +89,7 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 | How the Capture learns Text ink, Hidden ink and the Coverer | On request, from screenshots in which the glyphs of chosen text nodes are repainted through CSS highlights, alone and as painted, and by hit testing: AD-005 and [`design.md`](design.md). Spiked against real Chromium on 2026-10-11: every case of this spec gives the value of its criterion | AD-003 says how a Check gets a new fact; ADR-0002 keeps the browser out of the Check | y |
 | Text rasterization | Chromium is launched with `--disable-lcd-text`, so text is anti-aliased in grayscale in every Capture (AD-006) | With subpixel text the same glyph is rasterized differently alone and as painted: `#veil-55` measured 95% for 100%. The existing suite passes with the flag | y |
 | The layout of a Capture | A Capture takes one small screenshot beyond the viewport before it measures anything (AD-006, issue #18) | On Windows that first screenshot changes the font of the generic `monospace` family and the page is laid out again: boxes read before it are off | y |
-| Fixtures | Ahem at `font-size: 20px` and `line-height: 30px`, as in slice 4: ten glyphs are a block of 200 × 20 pixels of ink. A cover is an opaque box unless a criterion says otherwise, so every share is exact. No text of a fixture is covered by anything its criterion does not name | Exact shares need exact pixels | y |
+| Fixtures | Ahem at `font-size: 20px` and `line-height: 30px`, as in slice 4: ten glyphs are a block of 200 × 20 pixels of ink. A cover is an opaque box unless a criterion says otherwise, so every share is exact. No text of a fixture is covered by anything its criterion does not name. `overlap-font.html` alone is in the system `sans-serif` font, whose pixels differ from one platform to the next: its outcomes are shares of whole glyphs, which do not | Exact shares need exact pixels | y |
 | Criteria not observable through the tool boundary (OVL-61 to OVL-67) | Verified by the Verifier from file evidence, not by pytest | The source docs forbid a second test seam | y |
 
 **Open questions:** none - all resolved or logged above.
@@ -153,6 +153,9 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 33. WHEN the Other element over a text is placed by an element that holds it only because it has a `filter` (`#held` in `overlap-bounds.html`: `#holder`, of `position: static` and `filter: sepia(1)`, holds `#held-cover`, of `position: absolute`, over the last 100px of the text) THEN the Check SHALL return one Finding for the text with `evidence.measured.hiddenPercent` equal to 50, `evidence.measured.coveredBy` equal to `#held-cover` and `severity` equal to `major`: measuring moves nothing on the page. <!-- OVL-94 -->
 34. WHEN the root of a page has a `filter` that changes colours (`overlap-inverted.html`, whose `html` element has `filter: invert(1)`: the last 100px of the 200px of text of `#inverted` are under `#inverted-cover`) THEN `detect_visual_bugs` called with `checks` equal to `["overlap"]` SHALL return exactly one Finding, on `#inverted`, with `evidence.measured.hiddenPercent` equal to 50, `severity` equal to `major` and `evidence.measured.coveredBy` equal to `#inverted-cover`. <!-- OVL-95 -->
 35. WHEN the glyphs of a covered text are painted with a colour that is not computed to `rgb()` and has no alpha or an alpha above 0 (in `overlap-bounds.html`, each half under a cover: `#opaque-oklch`, `color: oklch(0 0 0)`, and `#translucent-oklch`, `color: oklch(0 0 0 / 0.5)`) THEN the Check SHALL return one Finding for it with `evidence.measured.hiddenPercent` equal to 50. <!-- OVL-100 -->
+36. WHEN a text in a font with anti-aliased edges is wholly under an opaque Other element (`#font-whole` in `overlap-font.html`, a line of the system `sans-serif` font at 16px under `#font-whole-cover`) THEN the Check SHALL return one Finding for it with `evidence.measured.hiddenPercent` equal to 100, `severity` equal to `major` and `evidence.measured.coveredBy` equal to `#font-whole-cover`: Hidden ink is a part of Text ink, pixel by pixel. <!-- OVL-101 -->
+37. WHEN a text in such a font is two lines of the same glyphs at the same columns and the second line is wholly under an opaque Other element (`#font-lines` in `overlap-font.html`, under `#font-lines-cover`) THEN the Check SHALL return one Finding for it with `evidence.measured.hiddenPercent` equal to 50, `severity` equal to `major` and `evidence.measured.coveredBy` equal to `#font-lines-cover`. <!-- OVL-102 -->
+38. WHEN a text in such a font is wholly under an Other element that lets less than half of its ink through (`#font-veil-55` in `overlap-font.html`, under `#font-veil-55-cover`, a layer of `rgba(255, 255, 255, 0.55)`) THEN the Check SHALL return one Finding for it with `evidence.measured.hiddenPercent` equal to 100, `severity` equal to `major` and `evidence.measured.coveredBy` equal to `#font-veil-55-cover`. <!-- OVL-103 -->
 
 **Independent Test**: Call `detect_visual_bugs` on `overlap-bug.html` and read the four Findings, the collision among them.
 
@@ -197,6 +200,7 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 29. IF a covered text is faded out by its `filter` (`#filter-faded-text` in `overlap-clean.html`, of `filter: opacity(0)`, half under a cover) THEN the Check SHALL return no Finding for it. <!-- OVL-97 -->
 30. IF a text is painted above an element with a `filter`, and an Other element inside that element has a `z-index` above that of the text (`#above-filter-layer` in `overlap-clean.html`, of `position: relative` and `z-index: 1`: `#layered-cover`, of `z-index: 5`, is inside `#filter-layer`, of `filter: invert(1)`, and lies under the glyphs of the last 100px of the text) THEN the Check SHALL return no Finding for the text: an element with a `filter` is painted as one layer while ink is measured too. <!-- OVL-98 -->
 31. IF the glyphs of a covered text are painted with a colour of alpha 0 that is not computed to `rgb()` (in `overlap-clean.html`, each half under a cover: `#transparent-oklch`, `color: oklch(0 0 0 / 0)`; `#transparent-mix`, `color: color-mix(in srgb, rgb(0 0 0) 0%, transparent)`, which is computed to `color(srgb 0 0 0 / 0)`; `#transparent-none`, `color: oklch(0 0 0 / none)`) THEN the Check SHALL return no Finding for it. <!-- OVL-99 -->
+32. IF a text in a font with anti-aliased edges is wholly under an Other element that lets at least half of its ink through (`#font-veil-45` in `overlap-font.html`, a line of the system `sans-serif` font at 16px under a layer of `rgba(255, 255, 255, 0.45)`) THEN the Check SHALL return no Finding for it: a pixel is seen by the ink it has, at the edge of a glyph as at its middle. <!-- OVL-104 -->
 
 **Independent Test**: Call `detect_visual_bugs` on `overlap-clean.html` and get an empty list.
 
@@ -397,13 +401,17 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 | OVL-98 | P1: Stay silent on overlaps that are meant | F9 | Implemented |
 | OVL-99 | P1: Stay silent on overlaps that are meant | F10 | Implemented |
 | OVL-100 | P1: Report text that another element covers | F10 | Implemented |
+| OVL-101 | P1: Report text that another element covers | F11 | Implemented |
+| OVL-102 | P1: Report text that another element covers | F11 | Implemented |
+| OVL-103 | P1: Report text that another element covers | F11 | Implemented |
+| OVL-104 | P1: Stay silent on overlaps that are meant | F11 | Implemented |
 
-**Coverage:** 100 total, 100 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
+**Coverage:** 104 total, 104 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
 
 ---
 
 ## Success Criteria
 
-- [ ] All 100 requirements verified by the Verifier, OVL-61 to OVL-67 from file evidence.
+- [ ] All 104 requirements verified by the Verifier, OVL-61 to OVL-67 from file evidence.
 - [ ] The gate passes: typecheck, lint, format check and the whole test suite.
 - [ ] The discrimination sensor leaves no surviving mutant in the Check, in what the Capture gains for it and in the rules of Silent and Raised layers.

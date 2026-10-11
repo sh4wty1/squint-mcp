@@ -27,6 +27,7 @@ SCROLLED_ON_LOAD = fixture_url("overlap-scrolled-on-load.html")
 SAMPLED = fixture_url("overlap-sampled.html")
 EXACT = fixture_url("overlap-exact.html")
 INVERTED = fixture_url("overlap-inverted.html")
+FONT = fixture_url("overlap-font.html")
 ONLY = ["overlap"]
 # The colour of the covers of the fixtures.
 COVER = "#c80000"
@@ -959,3 +960,30 @@ async def test_every_hidden_pixel_of_a_page_under_the_cap_is_hit_tested(
     # each of them tested, and 600 of them are under `#stripes`.
     findings = (await detect(client, EXACT, checks=ONLY))["findings"]
     assert covered(findings) == [("#striped", "major", 25, "#stripes")]
+
+
+async def test_covered_text_in_a_font_with_anti_aliased_edges_is_measured_by_its_ink(
+    client: Client,
+) -> None:
+    # At the edge of a glyph of the system font a pixel has a part of the ink of
+    # a full one, and with under half of it is not text: such a pixel is neither
+    # ink of the text nor hidden ink. `#font-whole` is under an opaque cover, so
+    # is the second of the two equal lines of `#font-lines`, and `#font-veil-55`
+    # is under a veil that lets 45 parts in 100 of every pixel through.
+    findings = (await detect(client, FONT, checks=ONLY))["findings"]
+    assert covered(findings) == [
+        ("#font-whole", "major", 100, "#font-whole-cover"),
+        ("#font-lines", "major", 50, "#font-lines-cover"),
+        ("#font-veil-55", "major", 100, "#font-veil-55-cover"),
+    ]
+
+
+async def test_text_in_such_a_font_mostly_seen_through_a_veil_is_not_reported(
+    client: Client,
+) -> None:
+    # `#font-veil-45` shows 55 parts in 100 of every pixel: at the edge of a
+    # glyph that is under half of the ink of a full pixel, and over half of the
+    # ink that pixel has. It would be reported if a pixel were seen from a fixed
+    # amount of ink on.
+    findings = (await detect(client, FONT, checks=ONLY))["findings"]
+    assert await findings_on(client, FONT, "#font-veil-45", findings) == []
