@@ -4,7 +4,7 @@
 > Canonical state lives in `.specs/lessons.json`. Edit lessons only via the script.
 > promote_threshold=2 distinct features · window_days=45 · quarantine_threshold=2
 
-## Confirmed (load these at Plan/Checks)
+## Confirmed (load these at Specify/Design)
 
 Corroborated across multiple features. Safe to apply as guidance.
 
@@ -14,11 +14,29 @@ Corroborated across multiple features. Safe to apply as guidance.
 - evidence: spec.md:49, spec.md:53 (mutants N1, N7, N8; CAP-14, CAP-20) (spec,geometry) (+1 more)
 - last seen: 2026-10-07T16:30:33Z
 
+### L-019 - Give each clause of an or-condition a fixture that only that clause catches
+- signal: `surviving_mutant` · recurrence: 2 feature(s) · scope: `tests,checks` · harmful: 0
+- features: detect-visual-bugs-text-clipped, overlap
+- evidence: mutant C11, src/squint_mcp/checks/text_clipped.py:50 (DVB-69) (tests,checks) (+1 more)
+- last seen: 2026-10-11T10:40:25Z
+
 ### L-020 - Assert the full order of a returned list on a fixture with several items of equal rank, not only the place of one item
 - signal: `surviving_mutant` · recurrence: 2 feature(s) · scope: `tests,ordering` · harmful: 0
 - features: detect-visual-bugs-text-clipped, low-contrast-real
 - evidence: mutants J09, J10, src/squint_mcp/js/collect_elements.js:41,133 (DVB-15) (tests,ordering) (+1 more)
 - last seen: 2026-10-08T05:06:17Z
+
+### L-038 - Pin a pixel-intensity threshold with fixture pixels just on each side of it, not only with pixels at the two ends of the range
+- signal: `surviving_mutant` · recurrence: 2 feature(s) · scope: `tests,thresholds` · harmful: 0
+- features: low-contrast-real, overlap
+- evidence: mutants G8, G8b, src/squint_mcp/config.py:98 (tests,thresholds) (+1 more)
+- last seen: 2026-10-11T10:40:25Z
+
+### L-046 - Prove a limit on a fixture whose result differs on each side of the limit, not on one that reads the same either way
+- signal: `spec_precision_gap` · recurrence: 2 feature(s) · scope: `tests,limits` · harmful: 0
+- features: capture-pixel-budget, overlap
+- evidence: C3 - src/squint_mcp/vision.py:49 (tests,limits) (+1 more)
+- last seen: 2026-10-11T10:40:26Z
 
 ## Candidates (under observation - do NOT load as guidance yet)
 
@@ -126,12 +144,6 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: mutant T03, src/squint_mcp/tools/detect_visual_bugs.py:105 (DVB-45) (tests,vision)
 - last seen: 2026-10-07T16:30:32Z
 
-### L-019 - Give each clause of an or-condition a fixture that only that clause catches
-- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,checks` · harmful: 0
-- features: detect-visual-bugs-text-clipped
-- evidence: mutant C11, src/squint_mcp/checks/text_clipped.py:50 (DVB-69) (tests,checks)
-- last seen: 2026-10-07T16:30:33Z
-
 ### L-021 - Pin a count threshold with a case exactly at it and a case one past it, not only with a case far past it
 - signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,thresholds` · harmful: 0
 - features: detect-visual-bugs-text-clipped
@@ -234,12 +246,6 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: mutant V3, src/squint_mcp/vision.py:64 (tests,vision)
 - last seen: 2026-10-08T05:06:18Z
 
-### L-038 - Pin a pixel-intensity threshold with fixture pixels just on each side of it, not only with pixels at the two ends of the range
-- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,thresholds` · harmful: 0
-- features: low-contrast-real
-- evidence: mutants G8, G8b, src/squint_mcp/config.py:98 (tests,thresholds)
-- last seen: 2026-10-08T05:06:18Z
-
 ### L-039 - Give every Squint default threshold in config an acceptance criterion whose outcome changes when the value changes
 - signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `spec,config` · harmful: 0
 - features: low-contrast-real
@@ -282,12 +288,6 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: C14 - src/squint_mcp/vision.py:69 (checks,comments)
 - last seen: 2026-10-09T14:40:32Z
 
-### L-046 - Prove a limit on a fixture whose result differs on each side of the limit, not on one that reads the same either way
-- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `tests,limits` · harmful: 0
-- features: capture-pixel-budget
-- evidence: C3 - src/squint_mcp/vision.py:49 (tests,limits)
-- last seen: 2026-10-09T14:40:32Z
-
 ### L-047 - Back every design claim about what a browser or library API covers with a test that fails when the claim is false
 - signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `design, external-apis` · harmful: 0
 - features: offscreen-overflow
@@ -305,6 +305,30 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - features: offscreen-overflow
 - evidence: C12 - tests/test_offscreen_overflow.py:176 (verification.md precision gap 1a) (tests,measurement)
 - last seen: 2026-10-10T03:17:44Z
+
+### L-050 - Give every rule the Terms or the Assumptions table of a spec define an acceptance criterion with a fixture whose outcome changes when the rule is dropped
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `spec` · harmful: 0
+- features: overlap
+- evidence: spec.md:29, spec.md:75 (Terms: Coverer; Assumptions: the role attribute); mutants J4, J5, J8, J10 (spec)
+- last seen: 2026-10-11T10:40:26Z
+
+### L-051 - Test a rule that normalizes a string before matching it with a value in another case, with surrounding spaces and with several tokens
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,checks` · harmful: 0
+- features: overlap
+- evidence: mutants J4, J5, src/squint_mcp/js/covered_text.js:54 (OVL-23) (tests,checks)
+- last seen: 2026-10-11T10:40:26Z
+
+### L-052 - Test the fallback of a sampled set with an input the sampling step passes over whole
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,sampling` · harmful: 0
+- features: overlap
+- evidence: mutant J10, src/squint_mcp/js/covered_text.js:259 (tests,sampling)
+- last seen: 2026-10-11T10:40:26Z
+
+### L-053 - Test a measurement that isolates one item with two measured items that paint over each other
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,vision` · harmful: 0
+- features: overlap
+- evidence: mutants C5, C11, src/squint_mcp/covered.py:242, src/squint_mcp/capture.py:205 (tests,vision)
+- last seen: 2026-10-11T10:40:26Z
 
 ## Quarantined (failed when applied - ignore)
 
