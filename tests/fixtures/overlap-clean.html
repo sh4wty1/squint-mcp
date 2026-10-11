@@ -259,6 +259,25 @@
       #transparent-none {
         color: oklch(0 0 0 / none);
       }
+      /* A badge inside the text over its first 80px, placed from the left of the
+         text: what the text shows of itself is the 120px beside the badge, 2400
+         pixels. The cover is over the last 10px: 200 of those, 8.3%. With the
+         badge taken for a cover the text would be 45% hidden. */
+      #child-and-nick {
+        position: relative;
+      }
+      #nick-badge {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 80px;
+        height: 30px;
+        background: rgb(200, 0, 0);
+      }
+      #child-nick-cover {
+        left: 230px;
+        width: 10px;
+      }
     </style>
   </head>
   <body>
@@ -405,6 +424,10 @@
     <div class="row">
       <div id="transparent-none" class="text">XXXXXXXXXX</div>
       <div class="cover half"></div>
+    </div>
+    <div class="row">
+      <div id="child-and-nick" class="text">XXXXXXXXXX<span id="nick-badge"></span></div>
+      <div id="child-nick-cover" class="cover"></div>
     </div>
     <script>
       // A popover is closed until a script shows it.

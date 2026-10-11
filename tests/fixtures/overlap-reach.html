@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: the reach of the rules of overlap</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are a block of
+         200 x 20 text pixels, 5px under the top of their 30px line: 4000 pixels, of
+         which a tenth is 400 and a quarter 1000. A cover is an opaque box as high
+         as the line unless its comment says otherwise.
+
+         Each row holds the other side, or the other order, of a rule that
+         `overlap-bounds.html` holds from one side only. The page holds 17,200
+         pixels of hidden ink in the texts that are hit tested, no more than the
+         20,000 a Capture tests: every one of them is tested. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      /* A row holds one text, from 40px to 240px, and what is painted over it,
+         placed from the left of the row. */
+      .row {
+        position: relative;
+        margin-top: 20px;
+        height: 30px;
+      }
+      .text {
+        margin-left: 40px;
+        width: 200px;
+      }
+      .cover {
+        position: absolute;
+        top: 0;
+        height: 30px;
+        background: rgb(200, 0, 0);
+      }
+      /* Over the last 100px of the text: 50%. */
+      .half {
+        left: 140px;
+        width: 100px;
+      }
+
+      /* A badge inside the text, placed from the left of the text, over 80px of
+         it: what a text shows of itself is the 120px beside its badge, 2400
+         pixels. A cover over 20px of those hides 400 of them: 16.6%. Of all ten
+         glyphs they would be 10%, and with the badge taken for a cover the text
+         would be half hidden. */
+      .with-badge {
+        position: relative;
+      }
+      .badge {
+        position: absolute;
+        top: 0;
+        width: 80px;
+        height: 30px;
+        background: rgb(200, 200, 200);
+      }
+      /* The badge over the first 80px and the cover over the last 20px. */
+      #child-first-badge {
+        left: 0;
+      }
+      #child-first-cover {
+        left: 220px;
+        width: 20px;
+      }
+      /* The badge over the last 80px and the cover over the first 20px. */
+      #child-last-badge {
+        left: 120px;
+      }
+      #child-last-cover {
+        left: 40px;
+        width: 20px;
+      }
+      /* The row of `#under-tag` of `overlap-bounds.html` with the tag first in the
+         document. The tag is an opaque box from 140px to 280px: over the last
+         100px of the text, 50%. Its own two glyphs come after a padding of 100px,
+         from 240px to 280px, beside that text, and the cover is over the second
+         of them: 400 of 800 pixels, 50%. */
+      #tag-first {
+        left: 140px;
+        padding-left: 100px;
+        width: 40px;
+        background: rgb(200, 200, 200);
+      }
+      #tag-first-cover {
+        left: 260px;
+        width: 20px;
+      }
+      /* 50%, by a `details` element that is open. Its `open` attribute is the
+         one a `dialog` shows itself with, and it is no layer. The summary a
+         browser gives it is not to be seen. */
+      #open-details {
+        font-size: 0;
+      }
+      /* The first 20px by a cover with a `z-index` above 0 and the last 80px by
+         one without: 50%, most of it by the second. The first stands first in
+         the document. */
+      #raised-small {
+        left: 40px;
+        width: 20px;
+        z-index: 1;
+      }
+      #plain-large {
+        left: 160px;
+        width: 80px;
+      }
+      /* The first 20px by a cover without a `z-index` and the last 80px by one
+         with a `z-index` above 0: 50%, most of it by the second. The first
+         stands first in the document. */
+      #plain-small {
+        left: 40px;
+        width: 20px;
+      }
+      #raised-large {
+        left: 160px;
+        width: 80px;
+        z-index: 1;
+      }
+      /* An element with two glyphs of its own from 260px to 300px, beside the
+         text and all seen. What it paints over the last 100px of the text is a
+         box of its `::after`, placed 120px left of it. 50%. */
+      .owner {
+        position: absolute;
+        top: 0;
+        left: 260px;
+        width: 40px;
+      }
+      #after-owner::after,
+      #before-owner::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -120px;
+        width: 100px;
+        height: 30px;
+        background: rgb(200, 0, 0);
+      }
+      /* 50% of a text that is positioned, with a `z-index` of 1: its cover has
+         one of 2 to be above it. */
+      #positioned {
+        position: relative;
+        z-index: 1;
+      }
+      #positioned-cover {
+        z-index: 2;
+      }
+      /* 50% of a text that is positioned, with no `z-index`: the cover comes
+         after it in the document and is above it. */
+      #relative {
+        position: relative;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="row">
+      <div id="child-first" class="text with-badge">XXXXXXXXXX<span id="child-first-badge" class="badge"></span></div>
+      <div id="child-first-cover" class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="child-last" class="text with-badge">XXXXXXXXXX<span id="child-last-badge" class="badge"></span></div>
+      <div id="child-last-cover" class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="tag-first" class="cover">XX</div>
+      <div id="under-tag-first" class="text">XXXXXXXXXX</div>
+      <div id="tag-first-cover" class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="under-details" class="text">XXXXXXXXXX</div>
+      <details id="open-details" open class="cover half"></details>
+    </div>
+    <div class="row">
+      <div id="under-raised-small" class="text">XXXXXXXXXX</div>
+      <div id="raised-small" class="cover"></div>
+      <div id="plain-large" class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="under-raised-large" class="text">XXXXXXXXXX</div>
+      <div id="plain-small" class="cover"></div>
+      <div id="raised-large" class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="under-after" class="text">XXXXXXXXXX</div>
+      <div id="after-owner" class="owner">XX</div>
+    </div>
+    <div class="row">
+      <div id="under-before" class="text">XXXXXXXXXX</div>
+      <div id="before-owner" class="owner">XX</div>
+    </div>
+    <div class="row">
+      <div id="positioned" class="text">XXXXXXXXXX</div>
+      <div id="positioned-cover" class="cover half"></div>
+    </div>
+    <div class="row">
+      <div id="relative" class="text">XXXXXXXXXX</div>
+      <div id="relative-cover" class="cover half"></div>
+    </div>
+  </body>
+</html>

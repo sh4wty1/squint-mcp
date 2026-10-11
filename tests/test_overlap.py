@@ -28,6 +28,7 @@ SAMPLED = fixture_url("overlap-sampled.html")
 EXACT = fixture_url("overlap-exact.html")
 INVERTED = fixture_url("overlap-inverted.html")
 FONT = fixture_url("overlap-font.html")
+REACH = fixture_url("overlap-reach.html")
 ONLY = ["overlap"]
 # The colour of the covers of the fixtures.
 COVER = "#c80000"
@@ -439,6 +440,16 @@ async def test_covered_text_of_an_alpha_of_zero_in_any_notation_is_not_reported(
     # browser keeps `oklch()` as it is written, computes a `color-mix()` to
     # `color()`, and writes `none` for an alpha that is missing.
     assert await clean(client, selector) == (0.5, [])
+
+
+async def test_text_under_its_own_descendant_and_a_nick_beside_it_is_not_reported(
+    client: Client,
+) -> None:
+    # `#nick-badge`, a child of the text, is over 80px of it and
+    # `#child-nick-cover` over 10px: 200 of the 2400 pixels the text shows beside
+    # its badge. Measured without what is inside it, the text would be 45%
+    # hidden and reported, covered by `#child-nick-cover`.
+    assert await clean(client, "#child-and-nick") == (0.45, [])
 
 
 async def bounds(client: Client, selector: str) -> dict[str, Any]:
@@ -987,3 +998,132 @@ async def test_text_in_such_a_font_mostly_seen_through_a_veil_is_not_reported(
     # amount of ink on.
     findings = (await detect(client, FONT, checks=ONLY))["findings"]
     assert await findings_on(client, FONT, "#font-veil-45", findings) == []
+
+
+async def reach(client: Client, selector: str) -> dict[str, Any]:
+    """The one Finding of the Check on one element of the reach fixture."""
+    return await finding_on(client, REACH, selector)
+
+
+async def test_the_reach_fixture_has_these_findings_in_this_order(
+    client: Client,
+) -> None:
+    # No more than 20,000 pixels of hidden ink: every one is hit tested.
+    findings = (await detect(client, REACH, checks=ONLY))["findings"]
+    assert covered(findings) == [
+        ("#tag-first", "major", 50, "#tag-first-cover"),
+        ("#under-tag-first", "major", 50, "#tag-first"),
+        ("#under-details", "major", 50, "#open-details"),
+        ("#under-raised-small", "major", 50, "#plain-large"),
+        ("#under-after", "major", 50, "#after-owner"),
+        ("#under-before", "major", 50, "#before-owner"),
+        ("#relative", "major", 50, "#relative-cover"),
+        ("#child-first", "minor", 16, "#child-first-cover"),
+        ("#child-last", "minor", 16, "#child-last-cover"),
+        ("#under-raised-large", "minor", 50, "#raised-large"),
+        ("#positioned", "minor", 50, "#positioned-cover"),
+    ]
+
+
+@pytest.mark.parametrize("selector", ["#child-first", "#child-last"])
+async def test_the_share_is_of_the_ink_a_text_shows_beside_what_is_inside_it(
+    client: Client, selector: str
+) -> None:
+    # A badge inside the text is over 80px of it, at its start or at its end, and
+    # a cover over 20px at the other end: 400 of the 2400 pixels the text shows
+    # of itself. Of all ten glyphs that would be 10%, and with the badge taken
+    # for a cover the text would be half hidden.
+    finding = await reach(client, selector)
+    assert finding["evidence"]["measured"] == {
+        "hiddenPercent": 16,
+        "coveredBy": f"{selector}-cover",
+    }
+    assert finding["severity"] == "minor"
+
+
+async def test_a_tag_that_stands_before_the_text_it_covers_is_measured_apart_from_it(
+    client: Client,
+) -> None:
+    # The row of `#under-tag` of the bounds fixture with the tag first in the
+    # document: painted alone in one screenshot with the tag, the text under it
+    # would show half of its ink and have none of it hidden.
+    under = await reach(client, "#under-tag-first")
+    assert under["evidence"]["measured"] == {
+        "hiddenPercent": 50,
+        "coveredBy": "#tag-first",
+    }
+    tag = await reach(client, "#tag-first")
+    assert tag["evidence"]["measured"] == {
+        "hiddenPercent": 50,
+        "coveredBy": "#tag-first-cover",
+    }
+
+
+async def test_text_under_an_open_element_that_is_not_a_dialog_is_reported(
+    client: Client,
+) -> None:
+    # `#open-details` has the `open` attribute a `dialog` shows itself with: it
+    # would hide `#under-details` unreported if that attribute alone made a
+    # layer.
+    finding = await reach(client, "#under-details")
+    assert finding["evidence"]["measured"] == {
+        "hiddenPercent": 50,
+        "coveredBy": "#open-details",
+    }
+    assert finding["severity"] == "major"
+
+
+async def test_a_raised_cover_that_hides_less_than_another_does_not_lower_the_severity(
+    client: Client,
+) -> None:
+    # `#raised-small`, with a `z-index` of 1 and first in the document, hides
+    # 20px and `#plain-large` 80px: the cover named is the plain one, and it is
+    # the one the severity reads.
+    finding = await reach(client, "#under-raised-small")
+    assert finding["evidence"]["measured"] == {
+        "hiddenPercent": 50,
+        "coveredBy": "#plain-large",
+    }
+    assert finding["severity"] == "major"
+
+
+async def test_a_raised_cover_that_hides_more_than_another_lowers_the_severity(
+    client: Client,
+) -> None:
+    # `#plain-small`, first in the document, hides 20px and `#raised-large`, with
+    # a `z-index` of 1, 80px.
+    finding = await reach(client, "#under-raised-large")
+    assert finding["evidence"]["measured"] == {
+        "hiddenPercent": 50,
+        "coveredBy": "#raised-large",
+    }
+    assert finding["severity"] == "minor"
+
+
+@pytest.mark.parametrize("pseudo", ["after", "before"])
+async def test_text_under_a_pseudo_element_of_an_element_with_text_is_reported(
+    client: Client, pseudo: str
+) -> None:
+    # The owner has two glyphs of its own beside the text, all seen, and paints
+    # a box over half of the text with its pseudo-element. Were that box left
+    # painted when the glyphs of the page are told apart, the text would be
+    # taken for one with half of its ink and nothing hidden.
+    finding = await reach(client, f"#under-{pseudo}")
+    assert finding["evidence"]["measured"] == {
+        "hiddenPercent": 50,
+        "coveredBy": f"#{pseudo}-owner",
+    }
+    assert finding["severity"] == "major"
+
+
+@pytest.mark.parametrize(
+    ("selector", "z_index"), [("#positioned", "1"), ("#relative", "auto")]
+)
+async def test_the_finding_carries_the_position_and_the_z_index_of_a_positioned_text(
+    client: Client, selector: str, z_index: str
+) -> None:
+    finding = await reach(client, selector)
+    assert finding["evidence"]["computed"] == {
+        "position": "relative",
+        "z-index": z_index,
+    }

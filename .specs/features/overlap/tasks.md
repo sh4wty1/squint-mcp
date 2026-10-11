@@ -960,7 +960,7 @@ Spiked before F9 (2026-10-11, real Chromium, pages outside the repository): with
 
 ### F12: Pin what is inside a text, the order of two texts, an `open` attribute, a raised cover and the styles of a Finding
 
-- [ ] Done
+- [x] Done
 
 **What**: The fixture `overlap-reach.html`, a page under the hit-test cap, and one case appended to `overlap-clean.html`, with their tests. A text with a child over a part of it and an Other element over under a tenth of what is left (clean, OVL-105) and over a tenth of it, with the child at the start and at the end (OVL-106). A tag with text of its own that stands before the text it covers in the document (OVL-107). A `details` element with the `open` attribute over a text (OVL-108). Two covers of which only the smaller is in a Raised layer (OVL-109) and of which only the larger is (OVL-110). A text under the `::after` and one under the `::before` of an element with text of its own (OVL-111). A covered text that is positioned, with and without a `z-index` (OVL-112).
 **Where**: `tests/test_overlap.py` (with `tests/fixtures/overlap-reach.html` and `tests/fixtures/overlap-clean.html`)
@@ -975,12 +975,12 @@ Spiked before F9 (2026-10-11, real Chromium, pages outside the repository): with
 
 **Done when**:
 
-- [ ] The page of `overlap-reach.html` holds no more than 20,000 pixels of Hidden ink to test, counted in its comment: every one is hit tested
-- [ ] One test asserts the whole list of Findings of the page, in order
-- [ ] Each test fails under its mutant: V15 (OVL-105, OVL-106), V7 (OVL-107), V10 (OVL-108), V1 (OVL-109), the Raised layer read from the first cover in the document (OVL-110), V4 (OVL-111, both pseudo-elements), V14 (OVL-112)
-- [ ] The whole-page test of OVL-19 passes unchanged
-- [ ] Gate check passes: Build
-- [ ] Test count: 348 tests pass; none deleted
+- [x] The page of `overlap-reach.html` holds no more than 20,000 pixels of Hidden ink to test, counted in its comment: every one is hit tested
+- [x] One test asserts the whole list of Findings of the page, in order
+- [x] Each test fails under its mutant: V15 (OVL-106; OVL-105 on every Capture once F17 is in, on one in six before it), V7 (OVL-107), V10 (OVL-108), V1 (OVL-109), the Raised layer read from the first cover in the document (OVL-110), V4 (OVL-111, both pseudo-elements), V14 (OVL-112)
+- [x] The whole-page test of OVL-19 passes unchanged
+- [x] Gate check passes: Build
+- [x] Test count: 351 tests pass; none deleted
 
 **Tests**: integration
 **Gate**: build
