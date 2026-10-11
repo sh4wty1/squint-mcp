@@ -246,6 +246,19 @@
         position: relative;
         z-index: 1;
       }
+      /* 50% each of a text that is not there to be read: its colour has an alpha
+         of 0 in a notation that a browser keeps as it is written, with the alpha
+         after a slash. The second is what a colour mixed down to nothing comes
+         to, `color(srgb 0 0 0 / 0)`, and the `none` of the third stands for 0. */
+      #transparent-oklch {
+        color: oklch(0 0 0 / 0);
+      }
+      #transparent-mix {
+        color: color-mix(in srgb, rgb(0 0 0) 0%, transparent);
+      }
+      #transparent-none {
+        color: oklch(0 0 0 / none);
+      }
     </style>
   </head>
   <body>
@@ -380,6 +393,18 @@
     <div class="row">
       <div id="filter-layer"><div id="layered-cover" class="cover half"></div></div>
       <div id="above-filter-layer" class="text">XXXXXXXXXX</div>
+    </div>
+    <div class="row">
+      <div id="transparent-oklch" class="text">XXXXXXXXXX</div>
+      <div class="cover half"></div>
+    </div>
+    <div class="row">
+      <div id="transparent-mix" class="text">XXXXXXXXXX</div>
+      <div class="cover half"></div>
+    </div>
+    <div class="row">
+      <div id="transparent-none" class="text">XXXXXXXXXX</div>
+      <div class="cover half"></div>
     </div>
     <script>
       // A popover is closed until a script shows it.

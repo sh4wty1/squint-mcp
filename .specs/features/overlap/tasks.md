@@ -900,7 +900,7 @@ Spiked before F9 (2026-10-11, real Chromium, pages outside the repository): with
 
 ### F10: Read the alpha of a glyph colour in every notation
 
-- [ ] Done
+- [x] Done
 
 **What**: The Check reads the alpha of the glyph colour as Chromium writes it in any notation: the fourth value of `rgba()`, or what follows the slash of `oklch()`, `oklab()`, `lab()`, `lch()` and `color()`, where `none` is 0; a colour written without an alpha is opaque. Three cases appended to `overlap-clean.html` (`oklch(0 0 0 / 0)`, a `color-mix()` with `transparent` and `oklch(0 0 0 / none)`, OVL-99) and two to `overlap-bounds.html` (`oklch(0 0 0)` and `oklch(0 0 0 / 0.5)`, OVL-100), with their tests.
 **Where**: `src/squint_mcp/checks/overlap.py`, `tests/test_overlap.py` (with `tests/fixtures/overlap-clean.html` and `tests/fixtures/overlap-bounds.html`)
@@ -915,12 +915,12 @@ Spiked before F9 (2026-10-11, real Chromium, pages outside the repository): with
 
 **Done when**:
 
-- [ ] The three tests of OVL-99 fail on the code as it is at `b08856a` (a Finding at 50%) and pass with the change
-- [ ] The tests of OVL-100 fail with every colour that has a slash taken for transparent, and with every colour outside `rgb()` taken for transparent
-- [ ] The pinned list of selectors and the count of the bounds fixture grow by the two new Findings, to 39; the page holds 65,180 pixels of Hidden ink to test
-- [ ] The whole-page test of OVL-19 passes unchanged
-- [ ] Gate check passes: Build
-- [ ] Test count: 337 tests pass; none deleted
+- [x] The three tests of OVL-99 fail on the code as it is at `b08856a` (a Finding at 50%) and pass with the change
+- [x] The tests of OVL-100 fail with every colour that has a slash taken for transparent, and with every colour outside `rgb()` taken for transparent
+- [x] The pinned list of selectors and the count of the bounds fixture grow by the two new Findings, to 39; the page holds 65,180 pixels of Hidden ink to test
+- [x] The whole-page test of OVL-19 passes unchanged
+- [x] Gate check passes: Build
+- [x] Test count: 337 tests pass; none deleted
 
 **Tests**: integration
 **Gate**: build

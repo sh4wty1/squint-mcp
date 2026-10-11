@@ -82,7 +82,7 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 | `evidence.measured` | Exactly `hiddenPercent` (integer) and `coveredBy` (a selector unique on the page, as `selector` is) | What an agent needs to act: how bad, and which element to move. The Coverer's styles are one `inspect_element` call away | y |
 | `evidence.computed` | Exactly `position` and `z-index` of the covered element. `z-index` is a new property collected for a Capture; `inspect_element` does not return it | The styles of the covered element that decide what is painted above it | y |
 | Message, suggestion, source, category | `"{hiddenPercent}% of the text is covered by another element"`, `"Move one of the two elements or give the text its own space"`, `"Squint heuristic"`, `visual-bug` | As `text-clipped`: no outside norm defines this | y |
-| Text hidden on purpose | No Finding for text of `visibility: hidden`, of a glyph colour with alpha 0, or with no Text ink | It is not text a reader was meant to see | y |
+| Text hidden on purpose | No Finding for text of `visibility: hidden`, of a glyph colour with alpha 0, or with no Text ink. The alpha is read in every notation a browser computes a colour to: the fourth value of `rgba()`, or what follows the slash of `oklch()`, `oklab()`, `lab()`, `lch()` and `color()`, where `none` is 0; a colour without one is opaque | It is not text a reader was meant to see. The notations: decided with the maintainer (2026-10-11), after the third validation pass | y |
 | A `filter` on a text, around it or on what covers it | Ink is measured with the functions of every `filter` that change colours left out (`grayscale()`, `invert()`, `hue-rotate()` and the like) and those that keep them (`blur()`, `drop-shadow()`, `opacity()`) applied. An element keeps a `filter` while it is measured, so it goes on holding what is positioned inside it and being painted as one layer | Decided with the maintainer (2026-10-11), after the third validation pass: a text is as covered in a grey-scaled section or on an inverted page as without the filter, and what `filter: opacity()` fades is faded. Spiked: with a `filter` set to `none`, boxes move and another element comes on top | y |
 | Unknown-Check message (supersedes the literal in force since slice 7) | `Valid checks: low-contrast-real, offscreen-overflow, overlap, text-clipped.` | Same rule, alphabetical; the list grew. It changes four assertions: `tests/test_detect_visual_bugs.py` lines 342, 352, 362 and 373 | y |
 | Order of Findings | Unchanged: severity, then viewport, then document order of the element, then Check name | Settled in slice 4 (LCR-37 to LCR-39, LCR-53) | y |
@@ -152,6 +152,7 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 32. WHEN a covered text has a `filter` of its own that changes colours (`#own-filter` in `overlap-bounds.html`, of `filter: hue-rotate(180deg)`, half under `#own-filter-cover`) THEN the Check SHALL return one Finding for it with `evidence.measured.hiddenPercent` equal to 50, `evidence.measured.coveredBy` equal to `#own-filter-cover` and `severity` equal to `major`. <!-- OVL-93 -->
 33. WHEN the Other element over a text is placed by an element that holds it only because it has a `filter` (`#held` in `overlap-bounds.html`: `#holder`, of `position: static` and `filter: sepia(1)`, holds `#held-cover`, of `position: absolute`, over the last 100px of the text) THEN the Check SHALL return one Finding for the text with `evidence.measured.hiddenPercent` equal to 50, `evidence.measured.coveredBy` equal to `#held-cover` and `severity` equal to `major`: measuring moves nothing on the page. <!-- OVL-94 -->
 34. WHEN the root of a page has a `filter` that changes colours (`overlap-inverted.html`, whose `html` element has `filter: invert(1)`: the last 100px of the 200px of text of `#inverted` are under `#inverted-cover`) THEN `detect_visual_bugs` called with `checks` equal to `["overlap"]` SHALL return exactly one Finding, on `#inverted`, with `evidence.measured.hiddenPercent` equal to 50, `severity` equal to `major` and `evidence.measured.coveredBy` equal to `#inverted-cover`. <!-- OVL-95 -->
+35. WHEN the glyphs of a covered text are painted with a colour that is not computed to `rgb()` and has no alpha or an alpha above 0 (in `overlap-bounds.html`, each half under a cover: `#opaque-oklch`, `color: oklch(0 0 0)`, and `#translucent-oklch`, `color: oklch(0 0 0 / 0.5)`) THEN the Check SHALL return one Finding for it with `evidence.measured.hiddenPercent` equal to 50. <!-- OVL-100 -->
 
 **Independent Test**: Call `detect_visual_bugs` on `overlap-bug.html` and read the four Findings, the collision among them.
 
@@ -195,6 +196,7 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 28. IF the Other element over a text is faded out by its `filter` (`#under-filter-faded` in `overlap-clean.html`, half under an opaque box of `filter: opacity(0)`) THEN the Check SHALL return no Finding for the text. <!-- OVL-96 -->
 29. IF a covered text is faded out by its `filter` (`#filter-faded-text` in `overlap-clean.html`, of `filter: opacity(0)`, half under a cover) THEN the Check SHALL return no Finding for it. <!-- OVL-97 -->
 30. IF a text is painted above an element with a `filter`, and an Other element inside that element has a `z-index` above that of the text (`#above-filter-layer` in `overlap-clean.html`, of `position: relative` and `z-index: 1`: `#layered-cover`, of `z-index: 5`, is inside `#filter-layer`, of `filter: invert(1)`, and lies under the glyphs of the last 100px of the text) THEN the Check SHALL return no Finding for the text: an element with a `filter` is painted as one layer while ink is measured too. <!-- OVL-98 -->
+31. IF the glyphs of a covered text are painted with a colour of alpha 0 that is not computed to `rgb()` (in `overlap-clean.html`, each half under a cover: `#transparent-oklch`, `color: oklch(0 0 0 / 0)`; `#transparent-mix`, `color: color-mix(in srgb, rgb(0 0 0) 0%, transparent)`, which is computed to `color(srgb 0 0 0 / 0)`; `#transparent-none`, `color: oklch(0 0 0 / none)`) THEN the Check SHALL return no Finding for it. <!-- OVL-99 -->
 
 **Independent Test**: Call `detect_visual_bugs` on `overlap-clean.html` and get an empty list.
 
@@ -393,13 +395,15 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 | OVL-96 | P1: Stay silent on overlaps that are meant | F9 | Implemented |
 | OVL-97 | P1: Stay silent on overlaps that are meant | F9 | Implemented |
 | OVL-98 | P1: Stay silent on overlaps that are meant | F9 | Implemented |
+| OVL-99 | P1: Stay silent on overlaps that are meant | F10 | Implemented |
+| OVL-100 | P1: Report text that another element covers | F10 | Implemented |
 
-**Coverage:** 98 total, 98 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
+**Coverage:** 100 total, 100 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
 
 ---
 
 ## Success Criteria
 
-- [ ] All 98 requirements verified by the Verifier, OVL-61 to OVL-67 from file evidence.
+- [ ] All 100 requirements verified by the Verifier, OVL-61 to OVL-67 from file evidence.
 - [ ] The gate passes: typecheck, lint, format check and the whole test suite.
 - [ ] The discrimination sensor leaves no surviving mutant in the Check, in what the Capture gains for it and in the rules of Silent and Raised layers.

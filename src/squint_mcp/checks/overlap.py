@@ -21,14 +21,17 @@ from squint_mcp.models import (
 # The styles of the covered element that decide what is painted above it.
 _EVIDENCE_PROPERTIES = ("position", "z-index")
 
-# How Chromium serializes a computed sRGB colour, as in `low_contrast_real`.
-_COLOR = re.compile(r"rgba?\((\d+), (\d+), (\d+)(?:, ([\d.]+))?\)")
+# The alpha of a computed colour as Chromium writes it: the fourth value of
+# `rgba()`, or what follows the slash in `oklch()`, `oklab()`, `lab()`, `lch()`
+# and `color()`, where `none` stands for 0. A colour written without an alpha
+# is opaque.
+_ALPHA = re.compile(r"(?:^rgba\(.*,|/) *([^ ,)]+)\)$")
 
 
 def _is_transparent(element: Element) -> bool:
     """Whether the glyphs of the element are painted with a colour of alpha 0."""
-    color = _COLOR.fullmatch(element.computed["-webkit-text-fill-color"])
-    return color is not None and color[4] is not None and float(color[4]) == 0
+    alpha = _ALPHA.search(element.computed["-webkit-text-fill-color"])
+    return alpha is not None and (alpha[1] == "none" or float(alpha[1]) == 0)
 
 
 def _coverer(element: Element) -> tuple[CoveredText, Cover] | None:

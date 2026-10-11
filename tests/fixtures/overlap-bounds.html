@@ -9,9 +9,9 @@
          which a tenth is 400 and a quarter 1000. A cover is an opaque box as high
          as the line unless its comment says otherwise.
 
-         The page holds 61,180 pixels of hidden ink in the texts that are hit
+         The page holds 65,180 pixels of hidden ink in the texts that are hit
          tested, 35,380 down to `#label`, 19,800 from `#stack-0` to
-         `#under-closed-menu` and 6000 from `#in-grey` on: more than the 20,000
+         `#under-closed-menu` and 10,000 from `#in-grey` on: more than the 20,000
          a Capture tests and no more than the 80,000 a step of 2 takes.
          Every second pixel of every second row is tested, counted from the corner
          of the page. What covers a text is still the element found at most of
@@ -292,6 +292,16 @@
         height: 30px;
         filter: sepia(1);
       }
+      /* 50% each of a text whose colour is in a notation that a browser keeps as
+         it is written: one without an alpha, which is opaque, and one with an
+         alpha of 0.5 after the slash. Only an alpha of 0 hides a text on
+         purpose. */
+      #opaque-oklch {
+        color: oklch(0 0 0);
+      }
+      #translucent-oklch {
+        color: oklch(0 0 0 / 0.5);
+      }
     </style>
   </head>
   <body>
@@ -434,6 +444,14 @@
     <div id="holder">
       <div id="held" class="text">XXXXXXXXXX</div>
       <div id="held-cover" class="cover half"></div>
+    </div>
+    <div class="row">
+      <div id="opaque-oklch" class="text">XXXXXXXXXX</div>
+      <div id="opaque-oklch-cover" class="cover half"></div>
+    </div>
+    <div class="row">
+      <div id="translucent-oklch" class="text">XXXXXXXXXX</div>
+      <div id="translucent-oklch-cover" class="cover half"></div>
     </div>
     <script>
       // A style does not cross into a shadow tree, so these carry their own. The

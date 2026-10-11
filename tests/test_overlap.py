@@ -428,6 +428,18 @@ async def test_text_above_the_layer_that_a_filter_makes_is_not_reported(
     assert await clean(client, "#above-filter-layer") == (0, [])
 
 
+@pytest.mark.parametrize(
+    "selector", ["#transparent-oklch", "#transparent-mix", "#transparent-none"]
+)
+async def test_covered_text_of_an_alpha_of_zero_in_any_notation_is_not_reported(
+    client: Client, selector: str
+) -> None:
+    # Each would be reported at 50% if only `rgba()` were read for an alpha: a
+    # browser keeps `oklch()` as it is written, computes a `color-mix()` to
+    # `color()`, and writes `none` for an alpha that is missing.
+    assert await clean(client, selector) == (0.5, [])
+
+
 async def bounds(client: Client, selector: str) -> dict[str, Any]:
     """The one Finding of the Check on one element of the bounds fixture."""
     return await finding_on(client, BOUNDS, selector)
@@ -453,6 +465,7 @@ async def test_only_the_covered_texts_of_the_bounds_fixture_are_reported(
         "#left",
         "#mixed",
         "#opacity-60",
+        "#opaque-oklch",
         "#own-filter",
         "#shared-layer",
         "#shifted",
@@ -466,6 +479,7 @@ async def test_only_the_covered_texts_of_the_bounds_fixture_are_reported(
         "#tie",
         "#top",
         "#translucent",
+        "#translucent-oklch",
         "#two-covers",
         "#under-closed-menu",
         "#under-label",
@@ -792,10 +806,24 @@ async def test_covered_text_of_a_page_with_a_filter_on_its_root_is_reported(
     assert covered(findings) == [("#inverted", "major", 50, "#inverted-cover")]
 
 
+@pytest.mark.parametrize("selector", ["#opaque-oklch", "#translucent-oklch"])
+async def test_covered_text_of_an_alpha_above_zero_in_any_notation_is_reported(
+    client: Client, selector: str
+) -> None:
+    # `oklch(0 0 0)` has no alpha and is opaque, and `oklch(0 0 0 / 0.5)` has
+    # one of a half: neither is hidden on purpose because it is not `rgb()` or
+    # because a slash is in it.
+    finding = await bounds(client, selector)
+    assert finding["evidence"]["measured"] == {
+        "hiddenPercent": 50,
+        "coveredBy": f"{selector}-cover",
+    }
+
+
 async def test_the_selectors_of_a_finding_work_in_inspect_element(
     client: Client,
 ) -> None:
-    for url, count in ((BUG, 4), (BOUNDS, 37)):
+    for url, count in ((BUG, 4), (BOUNDS, 39)):
         findings = (await detect(client, url, checks=ONLY))["findings"]
         assert len(findings) == count
         for finding in findings:
