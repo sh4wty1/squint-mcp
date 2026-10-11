@@ -284,6 +284,236 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (OVL-67), remove `.spe
 
 ---
 
+### Phase 3: Check
+
+```
+T9 → T10 → T11 → T12
+```
+
+### Phase 4: Documents
+
+```
+T13
+```
+
+After the Verifier reports PASS: update `docs/ROADMAP.md` (OVL-67), remove `.specs/features/overlap/spike/` and its `extend-exclude` line in `pyproject.toml`, close issue #18 through the pull request, and replace the Handoff of `.specs/STATE.md`. It is a closing step, not a task, because it is conditional on the verdict.
+
+---
+
+## Task Breakdown
+
+### Phase 1: Every Capture
+
+### T1: Launch Chromium with grayscale text
+
+- [x] Done
+
+**What**: `CHROMIUM_ARGS = ("--disable-lcd-text",)` in config, with its source in a comment (AD-006), passed to `chromium.launch` by `BrowserSession`.
+**Where**: `src/squint_mcp/capture.py` (with the constant in the config module)
+**Depends on**: None
+**Reuses**: the launch at `capture.py:44`
+**Requirement**: OVL-59 (enabling), AD-006
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [x] Every launch of the session passes the arguments, the relaunch after a crash included
+- [x] No existing test changes
+- [x] Gate check passes: Build
+- [x] Test count: 237 tests pass
+
+**Tests**: none
+**Gate**: build
+
+**Commit**: `feat(capture): rasterize text in grayscale`
+
+---
+
+### T2: Settle the layout before a Capture measures anything
+
+- [x] Done
+
+**What**: `_settle_layout(page)`: one screenshot of 16 × 16 pixels with `full_page=True`, discarded, taken after the idle wait and before the selector is counted; retried once on a `PlaywrightError` (issue #18, AD-006).
+**Where**: `src/squint_mcp/capture.py`
+**Depends on**: T1
+**Reuses**: `page.screenshot` as in `_screenshot` (`capture.py:77`)
+**Requirement**: issue #18, AD-006
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [x] The collector, `scroll_width` and `pixels` all come after it
+- [x] A comment says what it is for and that Linux does not show the fault
+- [x] On Windows, `.specs/features/overlap/spike/probe_first_screenshot.py` shows the `code` width unchanged between the collector's layout and the screenshots (checked by hand; no test can hold it on CI)
+- [x] Gate check passes: Build
+- [x] Test count: 237 tests pass
+
+**Tests**: none
+**Gate**: build
+
+**Commit**: `fix(capture): settle the layout before measuring (#18)`
+
+---
+
+### T3: Add the overlap thresholds, the Silent layer roles and the hit-test cap to config
+
+- [x] Done
+
+**What**: `OVERLAP_MIN_HIDDEN_PERCENT`, `OVERLAP_MAJOR_HIDDEN_PERCENT`, `SILENT_LAYER_ROLES` and `HIT_TEST_MAX` with the values of the design and the source of each in a comment; `"z-index"` in `CAPTURE_COMPUTED_PROPERTIES`.
+**Where**: `src/squint_mcp/config.py`
+**Depends on**: T2
+**Reuses**: the comment form of the existing constants
+**Requirement**: OVL-63
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [x] Each constant cites "Squint default" with its reason, or WAI-ARIA for the roles
+- [x] `INSPECT_COMPUTED_PROPERTIES` is unchanged, so `inspect_element` does not return `z-index`
+- [x] Gate check passes: Build
+- [x] Test count: 237 tests pass
+
+**Tests**: none
+**Gate**: build
+
+**Commit**: `feat(config): add the overlap thresholds and the Silent layer roles`
+
+---
+
+### T4: Add covered text to the Element model
+
+- [x] Done
+
+**What**: `Cover` (`selector`, `pixels`, `raised`), `CoveredText` (`ink`, `hidden`, `covers`) and `Element.covered_text: CoveredText | None = None`, with the docstrings of the design.
+**Where**: `src/squint_mcp/models.py`
+**Depends on**: T3
+**Reuses**: the camelCase alias configuration of `Element`
+**Requirement**: OVL-01 (enabling), AD-005
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [x] An `Element` validated from the collector's output, which has no such key, gets `None`
+- [x] The result of `inspect_element` is unchanged
+- [x] Gate check passes: Build
+- [x] Test count: 237 tests pass
+
+**Tests**: none
+**Gate**: build
+
+**Commit**: `feat(models): add covered text to an element`
+
+---
+
+### T5: Keep the collector's element list on the page
+
+- [x] Done
+
+**What**: The collector stores the list it returns, in the order it returns it, as `globalThis.__squintElements`.
+**Where**: `src/squint_mcp/js/collect_elements.js`
+**Depends on**: T4
+**Reuses**: the sorted list at `collect_elements.js:185`
+**Requirement**: OVL-13, OVL-53 (enabling)
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [x] The header comment of the script says the list is kept and why
+- [x] What the collector returns is unchanged
+- [x] Gate check passes: Build
+- [x] Test count: 237 tests pass
+
+**Tests**: none
+**Gate**: build
+
+**Commit**: `feat(capture): keep the collected elements on the page`
+
+---
+
+### Phase 2: Covered text
+
+### T6: Add the cover page script
+
+- [x] Done
+
+**What**: `covered_text.js`: installs `globalThis.__squintCovered` and returns the texts (`index`, `ancestors`, `region`, `layers`); `mark`, `ink`, `show` and `hit` as in the design, with the Silent layer and Raised layer rules.
+**Where**: `src/squint_mcp/js/covered_text.js`
+**Depends on**: T5
+**Reuses**: `.specs/features/overlap/spike/overlap.js`; the root walk of `fill_text.js`
+**Requirement**: OVL-23 to OVL-30, OVL-41 to OVL-46 (enabling)
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [x] It speaks of elements only by their index in `__squintElements`
+- [x] The highlight colours are red and blue at 255 and green at 64, with the reason in a comment
+- [x] Only elements that were `visible` before are ever shown
+- [x] `hit` restores the scroll position and tests each text at least once
+- [x] Gate check passes: Build
+- [x] Test count: 237 tests pass
+
+**Tests**: none
+**Gate**: build
+
+**Commit**: `feat(capture): add the page script that paints and hit tests covered text`
+
+---
+
+### T7: Add the covered-text arithmetic
+
+- [x] Done
+
+**What**: `covered.py`: `assign_channels`, `ink_layers`, `may_be_covered`, `groups`, `hidden_ink`, `runs` and `hit_step` as in the design, on Pillow only.
+**Where**: `src/squint_mcp/covered.py` (with `_bounds` of the vision module made public)
+**Depends on**: T6
+**Reuses**: `.specs/features/overlap/spike/spike.py`; `vision._bounds`; `config.TEXT_INK_MIN`
+**Requirement**: OVL-62, OVL-49 (enabling)
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [x] The module imports neither `playwright` nor `capture`
+- [x] "Seen" is in integers: twice the ink that shows is at least the ink alone
+- [x] No literal of the thresholds or of the cap: they come from `config`
+- [x] The two limits of the design are marked `ponytail:` (a positioned pseudo-element in a group; a text with a very large region)
+- [x] Gate check passes: Build
+- [x] Test count: 237 tests pass
+
+**Tests**: none
+**Gate**: build
+
+**Commit**: `feat(covered): compute the hidden ink of a text from its layers`
+
+---
+
 ### T8: Measure covered text in a Capture on request
 
 - [ ] Done
