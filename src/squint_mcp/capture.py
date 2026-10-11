@@ -10,7 +10,13 @@ from urllib.parse import urlsplit
 
 from mcp.server.mcpserver.exceptions import ToolError
 from PIL import Image, ImageChops
-from playwright.async_api import Browser, Page, Playwright, async_playwright
+from playwright.async_api import (
+    Browser,
+    FloatRect,
+    Page,
+    Playwright,
+    async_playwright,
+)
 from playwright.async_api import Error as PlaywrightError
 from playwright.async_api import TimeoutError as PlaywrightTimeoutError
 
@@ -76,6 +82,23 @@ def _first_line(error: PlaywrightError) -> str:
     return error.message.splitlines()[0]
 
 
+async def _settle_layout(page: Page) -> None:
+    """Have Chromium lay the page out as its screenshots will show it.
+
+    On Windows the first screenshot that reaches beyond the viewport changes the
+    font of the generic `monospace` family, and the page is laid out again: boxes
+    read before it are of another layout than the pixels (issue #18, AD-006). A
+    small one taken first, and thrown away, leaves one layout for both. Linux does
+    not show the fault, so no test holds this.
+    """
+    corner = FloatRect(x=0, y=0, width=16, height=16)
+    try:
+        await page.screenshot(full_page=True, clip=corner)
+    except PlaywrightError:
+        # Chromium now and then fails to capture a small clip: once more.
+        await page.screenshot(full_page=True, clip=corner)
+
+
 async def _screenshot(page: Page) -> Image.Image:
     return Image.open(io.BytesIO(await page.screenshot(full_page=True))).convert("RGB")
 
@@ -121,6 +144,8 @@ async def capture(
         except PlaywrightTimeoutError:
             # Polling and analytics keep some pages busy forever: capture them anyway.
             stabilized = False
+        # Before anything is measured: boxes and pixels are of one layout.
+        await _settle_layout(page)
         matches = page.locator(f"css={selector}")
         try:
             # count() only parses and runs the selector: a failure is its syntax.

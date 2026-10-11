@@ -105,7 +105,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (OVL-67), remove `.spe
 
 ### T2: Settle the layout before a Capture measures anything
 
-- [ ] Done
+- [x] Done
 
 **What**: `_settle_layout(page)`: one screenshot of 16 × 16 pixels with `full_page=True`, discarded, taken after the idle wait and before the selector is counted; retried once on a `PlaywrightError` (issue #18, AD-006).
 **Where**: `src/squint_mcp/capture.py`
@@ -120,11 +120,11 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (OVL-67), remove `.spe
 
 **Done when**:
 
-- [ ] The collector, `scroll_width` and `pixels` all come after it
-- [ ] A comment says what it is for and that Linux does not show the fault
-- [ ] On Windows, `.specs/features/overlap/spike/probe_first_screenshot.py` shows the `code` width unchanged between the collector's layout and the screenshots (checked by hand; no test can hold it on CI)
-- [ ] Gate check passes: Build
-- [ ] Test count: 237 tests pass
+- [x] The collector, `scroll_width` and `pixels` all come after it
+- [x] A comment says what it is for and that Linux does not show the fault
+- [x] On Windows, `.specs/features/overlap/spike/probe_first_screenshot.py` shows the `code` width unchanged between the collector's layout and the screenshots (checked by hand; no test can hold it on CI)
+- [x] Gate check passes: Build
+- [x] Test count: 237 tests pass
 
 **Tests**: none
 **Gate**: build
