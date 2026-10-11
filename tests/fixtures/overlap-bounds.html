@@ -9,9 +9,12 @@
          which a tenth is 400 and a quarter 1000. A cover is an opaque box as high
          as the line unless its comment says otherwise.
 
-         The page holds some 35,000 pixels of hidden ink, more than are hit tested:
-         every second pixel of every second row is, counted from the corner of the
-         page. What covers a text is still the element found at most of them. */
+         The page holds 55,180 pixels of hidden ink in the texts that are hit
+         tested, 35,380 down to `#label` and 19,800 from `#stack-0` on: more than
+         the 20,000 a Capture tests and no more than the 80,000 a step of 2 takes.
+         Every second pixel of every second row is tested, counted from the corner
+         of the page. What covers a text is still the element found at most of
+         them. */
       @font-face {
         font-family: Ahem;
         src: url("Ahem.ttf");
@@ -194,6 +197,83 @@
         left: 60px;
         width: 20px;
       }
+      /* Four texts in one row, each 40px to the right of the one before and
+         painted over it: more texts in one place than one pair of screenshots
+         tells apart, which is three. 160 of the 200 columns of each of the first
+         three are under the glyphs of the texts after it: 3200 pixels, 80%. The
+         fourth is on top of 80, of 120 and of 150 of those columns, more than
+         any other. The cover is over its last 50px: 1000 pixels, 25%. */
+      .stacked {
+        position: absolute;
+        top: 0;
+        width: 200px;
+      }
+      #stack-1 {
+        left: 80px;
+      }
+      #stack-2 {
+        left: 120px;
+      }
+      #stack-3 {
+        left: 160px;
+      }
+      #stack-cover {
+        left: 310px;
+        width: 50px;
+      }
+      /* The one text of the page that starts 300px from its left. The last 20
+         columns of its 200, from 480px: 400 pixels, 10%. */
+      #shifted {
+        margin-left: 300px;
+      }
+      #shifted-cover {
+        left: 480px;
+        width: 20px;
+      }
+      /* The tag is an opaque box from 140px to 280px: over the last 100px of the
+         text under it, 50%. Its own two glyphs come after a padding of 100px,
+         from 240px to 280px: beside that text and over none of it. The cover is
+         over the second of them, beside the text too: 400 of 800 pixels, 50%. */
+      #tag {
+        left: 140px;
+        padding-left: 100px;
+        width: 40px;
+        background: rgb(200, 200, 200);
+      }
+      #tag-cover {
+        left: 260px;
+        width: 20px;
+      }
+      /* Five glyphs, the ten of a child and five glyphs, from 40px to 440px: the
+         own text is 4000 pixels around the 4000 of the child. Its last 20
+         columns: 400 pixels, 10% of its own and 5% of the two together. Ahem
+         has one weight, and a bold made up from it would not be exact. */
+      #around {
+        width: 400px;
+      }
+      #around b {
+        font-weight: inherit;
+      }
+      #around-cover {
+        left: 420px;
+        width: 20px;
+      }
+      /* 50% of a text whose glyphs are painted at half strength: a colour with
+         an alpha of 0.5 is not one with an alpha of 0. */
+      #translucent {
+        color: rgba(0, 0, 0, 0.5);
+      }
+      /* 50% of a text whose glyphs are painted black by the fill colour: its
+         `color`, transparent, is not what paints them. */
+      #filled {
+        color: transparent;
+        -webkit-text-fill-color: rgb(0, 0, 0);
+      }
+      /* 50%, by the cover. The menu is over the same 100px and is closed: it
+         paints nothing, so it hides nothing. */
+      #closed-menu {
+        visibility: hidden;
+      }
     </style>
   </head>
   <body>
@@ -291,6 +371,39 @@
       <div id="under-label" class="text">XXXXXXXXXX</div>
       <div id="label" class="cover">XX</div>
       <div id="label-cover" class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="stack-0" class="text">XXXXXXXXXX</div>
+      <div id="stack-1" class="stacked">XXXXXXXXXX</div>
+      <div id="stack-2" class="stacked">XXXXXXXXXX</div>
+      <div id="stack-3" class="stacked">XXXXXXXXXX</div>
+      <div id="stack-cover" class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="shifted" class="text">XXXXXXXXXX</div>
+      <div id="shifted-cover" class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="under-tag" class="text">XXXXXXXXXX</div>
+      <div id="tag" class="cover">XX</div>
+      <div id="tag-cover" class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="around" class="text">XXXXX<b>XXXXXXXXXX</b>XXXXX</div>
+      <div id="around-cover" class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="translucent" class="text">XXXXXXXXXX</div>
+      <div id="translucent-cover" class="cover half"></div>
+    </div>
+    <div class="row">
+      <div id="filled" class="text">XXXXXXXXXX</div>
+      <div id="filled-cover" class="cover half"></div>
+    </div>
+    <div class="row">
+      <div id="under-closed-menu" class="text">XXXXXXXXXX</div>
+      <div id="plain-cover" class="cover half"></div>
+      <div id="closed-menu" role="menu" class="cover half"></div>
     </div>
     <script>
       // A style does not cross into a shadow tree, so these carry their own. The

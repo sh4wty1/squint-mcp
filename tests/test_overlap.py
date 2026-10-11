@@ -391,7 +391,9 @@ async def test_only_the_covered_texts_of_the_bounds_fixture_are_reported(
     findings = (await detect(client, BOUNDS, checks=ONLY))["findings"]
     assert sorted(finding["selector"] for finding in findings) == [
         "#almost-quarter",
+        "#around",
         "#bottom",
+        "#filled",
         "#in-dialog",
         "#in-fixed",
         "#label",
@@ -402,13 +404,22 @@ async def test_only_the_covered_texts_of_the_bounds_fixture_are_reported(
         "#mixed",
         "#opacity-60",
         "#shared-layer",
+        "#shifted",
         "#split",
+        "#stack-0",
+        "#stack-1",
+        "#stack-2",
+        "#stack-3",
+        "#tag",
         "#three-lines",
         "#tie",
         "#top",
+        "#translucent",
         "#two-covers",
+        "#under-closed-menu",
         "#under-label",
         "#under-role-list",
+        "#under-tag",
         "#veil-55",
         "#z-static",
         "#z-zero",
@@ -606,10 +617,96 @@ async def test_two_covered_texts_painted_over_each_other_are_each_measured(
     }
 
 
+async def test_four_texts_stacked_in_one_place_are_each_measured(
+    client: Client,
+) -> None:
+    # One pair of screenshots tells three texts in one place apart: the fourth
+    # is read from a second pair. Each of the first three is under the glyphs
+    # of those after it over 160 of its 200px, and most of that under the last.
+    findings = (await detect(client, BOUNDS, checks=ONLY))["findings"]
+    stack = [
+        finding
+        for place in range(4)
+        for finding in await findings_on(client, BOUNDS, f"#stack-{place}", findings)
+    ]
+    assert covered(stack) == [
+        ("#stack-0", "major", 80, "#stack-3"),
+        ("#stack-1", "major", 80, "#stack-3"),
+        ("#stack-2", "major", 80, "#stack-3"),
+        ("#stack-3", "major", 25, "#stack-cover"),
+    ]
+
+
+async def test_a_text_that_starts_at_a_column_of_its_own_is_measured_there(
+    client: Client,
+) -> None:
+    # `#shifted` starts 300px from the left of the page and shares a screenshot
+    # with texts that start at 40px: read where they are, it has no ink.
+    assert share_and_severity(await bounds(client, "#shifted")) == (10, "minor")
+
+
+async def test_a_text_under_the_box_of_a_tag_whose_glyphs_stand_beside_it_is_measured(
+    client: Client,
+) -> None:
+    # The glyphs of `#tag` are right of `#under-tag` and its box is over half of
+    # it: painted alone in one screenshot with the tag, the text would show
+    # half of its ink and have none of it hidden.
+    under = await bounds(client, "#under-tag")
+    assert under["evidence"]["measured"] == {
+        "hiddenPercent": 50,
+        "coveredBy": "#tag",
+    }
+    tag = await bounds(client, "#tag")
+    assert tag["evidence"]["measured"] == {
+        "hiddenPercent": 50,
+        "coveredBy": "#tag-cover",
+    }
+
+
+async def test_the_text_of_a_child_is_not_ink_of_the_element_around_it(
+    client: Client,
+) -> None:
+    # 400 of the 4000 pixels of the own text of `#around` are hidden: a tenth.
+    # With the ten glyphs of its `b` they would be a twentieth of 8000.
+    assert share_and_severity(await bounds(client, "#around")) == (10, "minor")
+
+
+async def test_covered_text_painted_half_transparent_is_reported(
+    client: Client,
+) -> None:
+    # The colour of `#translucent` has an alpha of 0.5: only text painted with
+    # an alpha of 0 is hidden on purpose.
+    finding = await bounds(client, "#translucent")
+    assert finding["evidence"]["measured"]["hiddenPercent"] == 50
+
+
+async def test_covered_text_of_a_transparent_colour_and_an_opaque_fill_is_reported(
+    client: Client,
+) -> None:
+    # The glyphs of `#filled` are painted with its `-webkit-text-fill-color`,
+    # black, and not with its `color`, transparent.
+    finding = await bounds(client, "#filled")
+    assert finding["evidence"]["measured"]["hiddenPercent"] == 50
+
+
+async def test_a_silent_layer_that_is_not_painted_hides_nothing(
+    client: Client,
+) -> None:
+    # `#closed-menu` is hidden and lies over the half of the text that
+    # `#plain-cover` hides: were it painted with the text, that half would be
+    # taken for hidden by a menu and left out.
+    finding = await bounds(client, "#under-closed-menu")
+    assert finding["evidence"]["measured"] == {
+        "hiddenPercent": 50,
+        "coveredBy": "#plain-cover",
+    }
+    assert finding["severity"] == "major"
+
+
 async def test_the_selectors_of_a_finding_work_in_inspect_element(
     client: Client,
 ) -> None:
-    for url, count in ((BUG, 4), (BOUNDS, 23)):
+    for url, count in ((BUG, 4), (BOUNDS, 34)):
         findings = (await detect(client, url, checks=ONLY))["findings"]
         assert len(findings) == count
         for finding in findings:

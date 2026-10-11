@@ -9,7 +9,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ---
 
 **Design**: `.specs/features/overlap/design.md`
-**Status**: Approved by the maintainer on 2026-10-11. T1 to T13 are done; the fixes of the first validation pass (F1 to F4, at the end of this file) are done too and wait for the second pass
+**Status**: Approved by the maintainer on 2026-10-11. T1 to T13 and the fixes of the first validation pass (F1 to F4) are done; the fixes of the second pass (F5 to F8, at the end of this file) are in progress
 
 ---
 
@@ -704,3 +704,148 @@ Baseline: 302 tests pass (2026-10-11). The whole suite takes about eleven minute
 | OVL-78, OVL-79 | F4 |
 
 10 of 10 mapped; with the table above, 79 of 79.
+
+---
+
+## Fixes of the second validation pass
+
+The Verifier's second pass ([`validation.md`](validation.md), 2026-10-11) again found no defect in `src/`. Of its 21 new mutants eleven survive as gaps: rules the code implements and the Terms decide, with no criterion and no test. The four tasks below add the criteria OVL-80 to OVL-91, their fixture cases and their tests through the MCP boundary, and the two sentences the report asks of the spec (Fix 7): which Hidden ink counts towards the 20,000 of the Term "Coverer", and the limit of the design that Out of Scope did not list. None changes `src/`. A new test is done when it fails under the mutant it is for, applied to a scratch copy of `src/` as the report describes it.
+
+```
+F5 → F6 → F7 → F8
+```
+
+Baseline: 312 tests pass (2026-10-11). The whole suite takes about eleven minutes. The matrix and the gate commands at the top of this file apply.
+
+### F5: Pin texts stacked in one place, where a text sits and the colour of its glyphs
+
+- [x] Done
+
+**What**: Seven cases appended to `overlap-bounds.html`, with a test each: four texts stacked in one row (OVL-80), a text that starts at a column of its own (OVL-81), a text under the box of a tag whose glyphs stand beside it (OVL-82), own text around a child with text (OVL-83), glyphs of a colour of alpha 0.5 (OVL-87), a transparent `color` under an opaque fill (OVL-89) and a hidden menu over what a plain cover hides (OVL-90). With them, the sentence of the Term "Coverer" on which Hidden ink is tested and the Out of Scope row for the pseudo-element limit of the design.
+**Where**: `tests/test_overlap.py` (with `tests/fixtures/overlap-bounds.html`)
+**Depends on**: None
+**Reuses**: the rows of the fixture and the `bounds` helper of the tests
+**Requirement**: OVL-80, OVL-81, OVL-82, OVL-83, OVL-87, OVL-89, OVL-90
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [x] The pinned list of selectors and the count of the fixture grow by the eleven new Findings, to 34
+- [x] The page holds 55,180 pixels of Hidden ink to test, counted in the comment of the fixture: it stays at a hit-test step of 2, and `#tie` and `#two-covers` keep their Coverer
+- [x] Each test fails under its mutants: N2 and N3 (`#stack-0` to `#stack-3`), N1b (`#shifted`), N9 (`#under-tag`), N28 (`#around`), N10 (`#translucent`), N22 (`#filled`), N11 (`#under-closed-menu`)
+- [x] The Out of Scope row describes the case that probes `p2b` and `p2c` of the report tell apart, and no more
+- [x] Gate check passes: Build
+- [x] Test count: 319 tests pass; none deleted
+
+**Tests**: integration
+**Gate**: build
+
+**Commit**: `test(overlap): pin stacked texts, where a text sits and its glyph colour`
+
+---
+
+### F6: Hold a transparent fill and closed menus silent
+
+- [ ] Done
+
+**What**: Three cases appended to `overlap-clean.html`, with their tests: a text of a transparent `-webkit-text-fill-color` under an opaque `color` (OVL-88), a text under a menu closed by `display: none` and one under a menu closed by `visibility: hidden` (OVL-91).
+**Where**: `tests/test_overlap.py` (with `tests/fixtures/overlap-clean.html`)
+**Depends on**: None
+**Reuses**: the rows of the fixture and the `clean` helper of the tests
+**Requirement**: OVL-88, OVL-91
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [ ] The cases come after the existing rows, so nothing already placed moves
+- [ ] The whole-page test of OVL-19 passes unchanged: no Finding of any of the four Checks
+- [ ] The test of OVL-88 fails under N22 (`#transparent-fill`)
+- [ ] The tests of OVL-91 assert through `inspect_element` that nothing is painted over the two texts
+- [ ] Gate check passes: Build
+- [ ] Test count: 322 tests pass; none deleted
+
+**Tests**: integration
+**Gate**: build
+
+**Commit**: `test(overlap): hold a transparent fill and closed menus silent`
+
+---
+
+### F7: Pin the rows of the sample and a page under the cap
+
+- [ ] Done
+
+**What**: A text of `overlap-sampled.html` whose Coverer depends on the rows the sample tests (OVL-84), and the fixture `overlap-exact.html`, the row of `#striped` alone on a page under the cap (OVL-85), with their tests.
+**Where**: `tests/test_overlap.py` (with `tests/fixtures/overlap-sampled.html` and `tests/fixtures/overlap-exact.html`)
+**Depends on**: None
+**Reuses**: the row of `#striped` of `overlap-sampled.html`
+**Requirement**: OVL-84, OVL-85
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [ ] The whole-list assertion of the sampled page grows by the new Finding, and `#speck` and `#striped` keep theirs
+- [ ] The comment of the sampled fixture gives its 26,610 pixels of Hidden ink and the step they are tested at, which stays 2
+- [ ] Each test fails under its mutant: N5 (`#row-striped`), N13 (`#striped` of `overlap-exact.html`)
+- [ ] Gate check passes: Build
+- [ ] Test count: 324 tests pass; none deleted
+
+**Tests**: integration
+**Gate**: build
+
+**Commit**: `test(overlap): pin the rows of the sample and a page under the cap`
+
+---
+
+### F8: Measure a page that is scrolled when it is captured
+
+- [ ] Done
+
+**What**: The fixture `overlap-scrolled-on-load.html`, a page of three viewports with one covered text below the first and a script that scrolls it 900px while it loads, and its test (OVL-86).
+**Where**: `tests/test_overlap.py` (with `tests/fixtures/overlap-scrolled-on-load.html`)
+**Depends on**: None
+**Reuses**: the row and the cover of `overlap-scrolled.html`
+**Requirement**: OVL-86
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [ ] The test asserts the whole list of Findings of the page: one, with its severity and with `coveredBy` the plain cover
+- [ ] The test fails under N8
+- [ ] `validate_spec.py --strict` exits 0 on the spec with its twelve new criteria
+- [ ] Gate check passes: Build
+- [ ] Test count: 325 tests pass; none deleted
+
+**Tests**: integration
+**Gate**: build
+
+**Commit**: `test(overlap): measure a page that is scrolled when it is captured`
+
+---
+
+### Requirement coverage of the second fixes
+
+| Requirements | Task |
+| --- | --- |
+| OVL-80, OVL-81, OVL-82, OVL-83, OVL-87, OVL-89, OVL-90 | F5 |
+| OVL-88, OVL-91 | F6 |
+| OVL-84, OVL-85 | F7 |
+| OVL-86 | F8 |
+
+12 of 12 mapped; with the tables above, 91 of 91.
