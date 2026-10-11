@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: overlaps that are meant</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are a block of
+         200 x 20 text pixels, 5px under the top of their 30px line: 4000 pixels, of
+         which a tenth is 400. Each text below would be reported but for one rule;
+         the comment of its cover gives the share of the text the cover lies over. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      /* A row holds one text, from 40px to 240px, and what is painted over it,
+         placed from the left of the row. The rows are 50px apart: the first is
+         20px down the page, the twelfth 570px. */
+      .row {
+        position: relative;
+        margin-top: 20px;
+        height: 30px;
+      }
+      .text {
+        margin-left: 40px;
+        width: 200px;
+      }
+      /* An opaque box as high as the line. */
+      .cover {
+        position: absolute;
+        top: 0;
+        height: 30px;
+        background: rgb(200, 0, 0);
+      }
+      /* Over the last 100px of the text: 50%. */
+      .half {
+        left: 140px;
+        width: 100px;
+      }
+
+      /* 50%. A fixed element is placed from the viewport, so its row is one of the
+         first of the page: this one is over the first row at any scroll of zero. */
+      #fixed-cover {
+        position: fixed;
+        top: 20px;
+      }
+      /* 50%, by a child of `position: static` of a fixed element over the second
+         row. */
+      #fixed-parent {
+        position: fixed;
+        top: 70px;
+        left: 140px;
+        width: 100px;
+      }
+      #fixed-child {
+        height: 30px;
+        background: rgb(200, 0, 0);
+      }
+      /* 100% by hit testing and nothing in the pixels: the link is stretched over
+         its card, the row, and paints nothing. */
+      #card-link::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+      }
+      /* 50% by hit testing and nothing in the pixels. */
+      #faded-cover {
+        opacity: 0;
+      }
+      /* All of the text, of which 55 parts in 100 show: more than half. */
+      #veil {
+        left: 40px;
+        width: 200px;
+        background: rgba(255, 255, 255, 0.45);
+      }
+      /* 50%. A `dialog` brings a margin, a border and a padding of its own. */
+      #open-dialog {
+        right: auto;
+        margin: 0;
+        border: 0;
+        padding: 0;
+      }
+      /* 50%. A popover is shown in the top layer, where `position: absolute` is
+         placed from the page: over the twelfth row. It brings an inset, a margin,
+         a border and a padding of its own. */
+      #popover {
+        position: absolute;
+        inset: 570px auto auto 140px;
+        margin: 0;
+        border: 0;
+        padding: 0;
+        width: 100px;
+        height: 30px;
+        background: rgb(200, 0, 0);
+      }
+      /* 50%. It comes after the text in the flow and is pulled back over it. */
+      #sticky-cover {
+        position: sticky;
+        top: 0;
+        margin: -30px 0 0 140px;
+        width: 100px;
+        height: 30px;
+        background: rgb(200, 0, 0);
+      }
+      /* 50%, by an element with no role inside a menu that paints nothing itself. */
+      #item-menu {
+        background: none;
+      }
+      #menu-item {
+        height: 30px;
+        background: rgb(200, 0, 0);
+      }
+      /* The last 19px of 200: 380 pixels, 9.5%. */
+      #nick-cover {
+        left: 221px;
+        width: 19px;
+      }
+      /* The glyphs take rows 5 to 24 of the line. The first of the 20 rows: 200
+         pixels, 5%. */
+      #skim-cover {
+        left: 40px;
+        width: 200px;
+        height: 6px;
+      }
+      /* 50%, by a child of the element whose text it is. */
+      #parent-text {
+        position: relative;
+      }
+      #child-cover {
+        position: absolute;
+        top: 0;
+        left: 100px;
+        width: 100px;
+        height: 30px;
+        background: rgb(200, 0, 0);
+      }
+      /* 50%, and hit testing passes through it. */
+      #ghost-cover {
+        pointer-events: none;
+      }
+      /* Four glyphs over an element with no text: nothing hides ink of a text.
+         Black on this grey is 12.5:1. */
+      #picture {
+        margin-left: 40px;
+        width: 200px;
+        height: 30px;
+        background: rgb(200, 200, 200);
+      }
+      #caption {
+        left: 60px;
+        background: none;
+      }
+      /* Five glyphs from 60px to 160px in a box that ends at 180px. The badge is
+         over the last 16px of the box and its first 14 rows: none of the ink. */
+      #inbox {
+        padding: 0 20px;
+        width: 100px;
+        background: rgb(220, 220, 220);
+      }
+      #badge {
+        left: 164px;
+        width: 16px;
+        height: 14px;
+      }
+      /* 50% each of a text that is not there to be read. */
+      #hidden-text {
+        visibility: hidden;
+      }
+      #transparent-text {
+        color: transparent;
+      }
+      #faded-text {
+        opacity: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="row">
+      <div id="under-fixed" class="text">XXXXXXXXXX</div>
+      <div id="fixed-cover" class="cover half"></div>
+    </div>
+    <div class="row">
+      <div id="under-fixed-child" class="text">XXXXXXXXXX</div>
+      <div id="fixed-parent"><div id="fixed-child"></div></div>
+    </div>
+    <div class="row">
+      <div id="stretched" class="text">XXXXXXXXXX</div>
+      <a id="card-link" href="#"></a>
+    </div>
+    <div class="row">
+      <div id="under-faded" class="text">XXXXXXXXXX</div>
+      <div id="faded-cover" class="cover half"></div>
+    </div>
+    <div class="row">
+      <div id="veil-45" class="text">XXXXXXXXXX</div>
+      <div id="veil" class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="under-menu" class="text">XXXXXXXXXX</div>
+      <div id="menu" role="menu" class="cover half"></div>
+    </div>
+    <div class="row">
+      <div id="under-listbox" class="text">XXXXXXXXXX</div>
+      <div id="listbox" role="listbox" class="cover half"></div>
+    </div>
+    <div class="row">
+      <div id="under-tooltip" class="text">XXXXXXXXXX</div>
+      <div id="tooltip" role="tooltip" class="cover half"></div>
+    </div>
+    <div class="row">
+      <div id="under-dialog" class="text">XXXXXXXXXX</div>
+      <div id="dialog" role="dialog" class="cover half"></div>
+    </div>
+    <div class="row">
+      <div id="under-alertdialog" class="text">XXXXXXXXXX</div>
+      <div id="alertdialog" role="alertdialog" class="cover half"></div>
+    </div>
+    <div class="row">
+      <div id="under-open-dialog" class="text">XXXXXXXXXX</div>
+      <dialog id="open-dialog" open class="cover half"></dialog>
+    </div>
+    <div class="row">
+      <div id="under-popover" class="text">XXXXXXXXXX</div>
+      <div id="popover" popover="manual"></div>
+    </div>
+    <div class="row">
+      <div id="under-sticky" class="text">XXXXXXXXXX</div>
+      <div id="sticky-cover"></div>
+    </div>
+    <div class="row">
+      <div id="under-menu-item" class="text">XXXXXXXXXX</div>
+      <div id="item-menu" role="menu" class="cover half"><div id="menu-item"></div></div>
+    </div>
+    <div class="row">
+      <div id="nick" class="text">XXXXXXXXXX</div>
+      <div id="nick-cover" class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="skim" class="text">XXXXXXXXXX</div>
+      <div id="skim-cover" class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="parent-text" class="text">XXXXXXXXXX<span id="child-cover"></span></div>
+    </div>
+    <div class="row">
+      <div id="under-ghost" class="text">XXXXXXXXXX</div>
+      <div id="ghost-cover" class="cover half"></div>
+    </div>
+    <div class="row">
+      <div id="picture"></div>
+      <div id="caption" class="cover">XXXX</div>
+    </div>
+    <div class="row">
+      <div id="inbox" class="text">XXXXX</div>
+      <div id="badge" class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="hidden-text" class="text">XXXXXXXXXX</div>
+      <div class="cover half"></div>
+    </div>
+    <div class="row">
+      <div id="transparent-text" class="text">XXXXXXXXXX</div>
+      <div class="cover half"></div>
+    </div>
+    <div class="row">
+      <div id="faded-text" class="text">XXXXXXXXXX</div>
+      <div class="cover half"></div>
+    </div>
+    <script>
+      // A popover is closed until a script shows it.
+      document.getElementById("popover").showPopover();
+    </script>
+  </body>
+</html>

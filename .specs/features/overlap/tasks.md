@@ -350,7 +350,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (OVL-67), remove `.spe
 
 ### T10: Keep the Check silent on overlaps that are meant
 
-- [ ] Done
+- [x] Done
 
 **What**: The fixture `overlap-clean.html` with the cases of OVL-20 to OVL-29 and OVL-31 to OVL-39, and its tests: the page as a whole, and one test per rule that names the element it holds silent.
 **Where**: `tests/test_overlap.py` (with `tests/fixtures/overlap-clean.html`)
@@ -365,11 +365,11 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (OVL-67), remove `.spe
 
 **Done when**:
 
-- [ ] Each case fails if its rule is removed: a test per case says which element would be reported, and the fixture's comment gives the share its cover hides
-- [ ] `#nick` and `#skim` are under the threshold along the width and along the height (L-012)
-- [ ] No text of the fixture is covered by anything its criterion does not name
-- [ ] Gate check passes: Build
-- [ ] Test count: the count after T9 plus the tests of this task; none deleted
+- [x] Each case fails if its rule is removed: a test per case says which element would be reported, and the fixture's comment gives the share its cover hides
+- [x] `#nick` and `#skim` are under the threshold along the width and along the height (L-012)
+- [x] No text of the fixture is covered by anything its criterion does not name
+- [x] Gate check passes: Build
+- [x] Test count: the count after T9 plus the tests of this task; none deleted
 
 **Tests**: integration
 **Gate**: build

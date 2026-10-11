@@ -282,27 +282,27 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 | OVL-16 | P1: Report text that another element covers | T11 | Pending |
 | OVL-17 | P1: Report text that another element covers | T12 | Pending |
 | OVL-18 | P1: Report text that another element covers | T12 | Pending |
-| OVL-19 | P1: Stay silent on overlaps that are meant | T10 | Pending |
-| OVL-20 | P1: Stay silent on overlaps that are meant | T10 | Pending |
-| OVL-21 | P1: Stay silent on overlaps that are meant | T10 | Pending |
-| OVL-22 | P1: Stay silent on overlaps that are meant | T10 | Pending |
-| OVL-23 | P1: Stay silent on overlaps that are meant | T10 | Pending |
-| OVL-24 | P1: Stay silent on overlaps that are meant | T10 | Pending |
-| OVL-25 | P1: Stay silent on overlaps that are meant | T10 | Pending |
-| OVL-26 | P1: Stay silent on overlaps that are meant | T10 | Pending |
-| OVL-27 | P1: Stay silent on overlaps that are meant | T10 | Pending |
-| OVL-28 | P1: Stay silent on overlaps that are meant | T10 | Pending |
-| OVL-29 | P1: Stay silent on overlaps that are meant | T10 | Pending |
+| OVL-19 | P1: Stay silent on overlaps that are meant | T10 | Implemented |
+| OVL-20 | P1: Stay silent on overlaps that are meant | T10 | Implemented |
+| OVL-21 | P1: Stay silent on overlaps that are meant | T10 | Implemented |
+| OVL-22 | P1: Stay silent on overlaps that are meant | T10 | Implemented |
+| OVL-23 | P1: Stay silent on overlaps that are meant | T10 | Implemented |
+| OVL-24 | P1: Stay silent on overlaps that are meant | T10 | Implemented |
+| OVL-25 | P1: Stay silent on overlaps that are meant | T10 | Implemented |
+| OVL-26 | P1: Stay silent on overlaps that are meant | T10 | Implemented |
+| OVL-27 | P1: Stay silent on overlaps that are meant | T10 | Implemented |
+| OVL-28 | P1: Stay silent on overlaps that are meant | T10 | Implemented |
+| OVL-29 | P1: Stay silent on overlaps that are meant | T10 | Implemented |
 | OVL-30 | P1: Stay silent on overlaps that are meant | T11 | Pending |
-| OVL-31 | P1: Stay silent on overlaps that are meant | T10 | Pending |
-| OVL-32 | P1: Stay silent on overlaps that are meant | T10 | Pending |
-| OVL-33 | P1: Stay silent on overlaps that are meant | T10 | Pending |
-| OVL-34 | P1: Stay silent on overlaps that are meant | T10 | Pending |
-| OVL-35 | P1: Stay silent on overlaps that are meant | T10 | Pending |
-| OVL-36 | P1: Stay silent on overlaps that are meant | T10 | Pending |
-| OVL-37 | P1: Stay silent on overlaps that are meant | T10 | Pending |
-| OVL-38 | P1: Stay silent on overlaps that are meant | T10 | Pending |
-| OVL-39 | P1: Stay silent on overlaps that are meant | T10 | Pending |
+| OVL-31 | P1: Stay silent on overlaps that are meant | T10 | Implemented |
+| OVL-32 | P1: Stay silent on overlaps that are meant | T10 | Implemented |
+| OVL-33 | P1: Stay silent on overlaps that are meant | T10 | Implemented |
+| OVL-34 | P1: Stay silent on overlaps that are meant | T10 | Implemented |
+| OVL-35 | P1: Stay silent on overlaps that are meant | T10 | Implemented |
+| OVL-36 | P1: Stay silent on overlaps that are meant | T10 | Implemented |
+| OVL-37 | P1: Stay silent on overlaps that are meant | T10 | Implemented |
+| OVL-38 | P1: Stay silent on overlaps that are meant | T10 | Implemented |
+| OVL-39 | P1: Stay silent on overlaps that are meant | T10 | Implemented |
 | OVL-40 | P1: Severity | T11 | Pending |
 | OVL-41 | P1: Severity | T11 | Pending |
 | OVL-42 | P1: Severity | T11 | Pending |
