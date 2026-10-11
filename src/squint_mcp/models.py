@@ -41,6 +41,29 @@ class BoxModel(BaseModel):
     content: Size
 
 
+class Cover(BaseModel):
+    """An Other element that hit testing gives where ink of a text is hidden."""
+
+    selector: str
+    pixels: int
+    """How many of the hit-tested pixels it was given at."""
+    raised: bool
+    """Whether it, or an ancestor of it that is not an ancestor of the text, has
+    a `position` other than `static` and a `z-index` above 0."""
+
+
+class CoveredText(BaseModel):
+    """How much of the own text of an element is hidden, and by what (AD-005)."""
+
+    ink: int
+    """The pixels the own text covers by at least half, painted alone."""
+    hidden: int
+    """Those of them that are unseen on the page and that its Silent layers
+    alone would leave seen."""
+    covers: list[Cover]
+    """In document order."""
+
+
 class Element(BaseModel):
     """One element as collected inside the page."""
 
@@ -67,6 +90,9 @@ class Element(BaseModel):
     client_width: int
     selector: str
     """Unique on the page, open shadow trees included."""
+    covered_text: CoveredText | None = None
+    """None when the Capture was not asked for it, and for a text that cannot
+    reach the reporting threshold."""
 
 
 @dataclass(frozen=True)

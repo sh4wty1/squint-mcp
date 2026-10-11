@@ -164,7 +164,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (OVL-67), remove `.spe
 
 ### T4: Add covered text to the Element model
 
-- [ ] Done
+- [x] Done
 
 **What**: `Cover` (`selector`, `pixels`, `raised`), `CoveredText` (`ink`, `hidden`, `covers`) and `Element.covered_text: CoveredText | None = None`, with the docstrings of the design.
 **Where**: `src/squint_mcp/models.py`
@@ -179,10 +179,10 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (OVL-67), remove `.spe
 
 **Done when**:
 
-- [ ] An `Element` validated from the collector's output, which has no such key, gets `None`
-- [ ] The result of `inspect_element` is unchanged
-- [ ] Gate check passes: Build
-- [ ] Test count: 237 tests pass
+- [x] An `Element` validated from the collector's output, which has no such key, gets `None`
+- [x] The result of `inspect_element` is unchanged
+- [x] Gate check passes: Build
+- [x] Test count: 237 tests pass
 
 **Tests**: none
 **Gate**: build
