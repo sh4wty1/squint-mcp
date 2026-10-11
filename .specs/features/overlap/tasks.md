@@ -781,7 +781,7 @@ Baseline: 312 tests pass (2026-10-11). The whole suite takes about eleven minute
 
 ### F7: Pin the rows of the sample and a page under the cap
 
-- [ ] Done
+- [x] Done
 
 **What**: A text of `overlap-sampled.html` whose Coverer depends on the rows the sample tests (OVL-84), and the fixture `overlap-exact.html`, the row of `#striped` alone on a page under the cap (OVL-85), with their tests.
 **Where**: `tests/test_overlap.py` (with `tests/fixtures/overlap-sampled.html` and `tests/fixtures/overlap-exact.html`)
@@ -796,11 +796,11 @@ Baseline: 312 tests pass (2026-10-11). The whole suite takes about eleven minute
 
 **Done when**:
 
-- [ ] The whole-list assertion of the sampled page grows by the new Finding, and `#speck` and `#striped` keep theirs
-- [ ] The comment of the sampled fixture gives its 26,610 pixels of Hidden ink and the step they are tested at, which stays 2
-- [ ] Each test fails under its mutant: N5 (`#row-striped`), N13 (`#striped` of `overlap-exact.html`)
-- [ ] Gate check passes: Build
-- [ ] Test count: 324 tests pass; none deleted
+- [x] The whole-list assertion of the sampled page grows by the new Finding, and `#speck` and `#striped` keep theirs
+- [x] The comment of the sampled fixture gives its 26,610 pixels of Hidden ink and the step they are tested at, which stays 2
+- [x] Each test fails under its mutant: N5 (`#row-striped`), N13 (`#striped` of `overlap-exact.html`)
+- [x] Gate check passes: Build
+- [x] Test count: 324 tests pass; none deleted
 
 **Tests**: integration
 **Gate**: build

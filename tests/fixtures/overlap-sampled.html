@@ -8,10 +8,11 @@
          200 x 20 text pixels, 5px under the top of their 30px line: 4000 pixels. A
          cover is a box as high as the line.
 
-         The page holds 25,010 pixels of hidden ink, more than the 20,000 a Capture
-         hit tests: every second pixel of every second row is tested, counted from
-         the corner of the page. So a hidden pixel is tested only where both its
-         column and its row on the page are even. */
+         The page holds 26,610 pixels of hidden ink, more than the 20,000 a Capture
+         hit tests and no more than the 80,000 a step of 2 takes: every second pixel
+         of every second row is tested, counted from the corner of the page. So a
+         hidden pixel is tested only where both its column and its row on the page
+         are even. */
       @font-face {
         font-family: Ahem;
         src: url("Ahem.ttf");
@@ -72,7 +73,27 @@
         left: 220px;
         width: 20px;
       }
-      /* The last 100px of each of the twelve texts under these two: 2000 pixels
+      /* Stripes one pixel high over the first 120px of the third text, from 40px to
+         160px: clear on the even rows of the page and opaque on the odd ones. The
+         row is 120px down the page and its glyphs take the rows 125 to 144: 10 odd
+         rows of 120 columns, 1200 pixels, none of them tested. */
+      #row-stripes {
+        left: 40px;
+        width: 120px;
+        background: repeating-linear-gradient(
+          to bottom,
+          transparent 0 1px,
+          rgb(200, 0, 0) 1px 2px
+        );
+      }
+      /* The last 20px of the same text: 400 pixels, of which 100 are tested. With
+         the stripes 1600 of its 4000 pixels are hidden: 40%, most of it by the
+         stripes and all of what is tested by this cover. */
+      #row-solid-cover {
+        left: 220px;
+        width: 20px;
+      }
+      /* The last 100px of each of the twelve texts under these three: 2000 pixels
          each, 24,000 together. */
       .filler-cover {
         left: 140px;
@@ -89,6 +110,11 @@
       <div id="striped" class="text">XXXXXXXXXX</div>
       <div id="stripes" class="cover"></div>
       <div id="solid-cover" class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="row-striped" class="text">XXXXXXXXXX</div>
+      <div id="row-stripes" class="cover"></div>
+      <div id="row-solid-cover" class="cover"></div>
     </div>
     <script>
       for (let i = 0; i < 12; i++) {

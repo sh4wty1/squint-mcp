@@ -24,6 +24,7 @@ ORDER = fixture_url("overlap-order.html")
 MANY = fixture_url("overlap-many.html")
 SCROLLED = fixture_url("overlap-scrolled.html")
 SAMPLED = fixture_url("overlap-sampled.html")
+EXACT = fixture_url("overlap-exact.html")
 ONLY = ["overlap"]
 # The colour of the covers of the fixtures.
 COVER = "#c80000"
@@ -820,9 +821,33 @@ async def test_the_cover_named_is_the_one_over_most_of_the_pixels_hit_tested(
     findings = (await detect(client, SAMPLED, checks=ONLY))["findings"]
     assert covered(findings) == [
         ("#striped", "major", 25, "#solid-cover"),
+        ("#row-striped", "major", 40, "#row-solid-cover"),
         *(
             (f"#filler-{place}", "major", 50, f"#filler-cover-{place}")
             for place in range(12)
         ),
         ("#speck", "minor", 10, "#speck-cover"),
     ]
+
+
+async def test_the_rows_of_the_page_are_sampled_as_its_columns_are(
+    client: Client,
+) -> None:
+    # `#row-stripes` hides 1200 pixels of `#row-striped`, all of them on odd rows
+    # of the page, and `#row-solid-cover` 400. Every second row is hit tested:
+    # none under the stripes.
+    finding = await finding_on(client, SAMPLED, "#row-striped")
+    assert finding["evidence"]["measured"] == {
+        "hiddenPercent": 40,
+        "coveredBy": "#row-solid-cover",
+    }
+    assert finding["severity"] == "major"
+
+
+async def test_every_hidden_pixel_of_a_page_under_the_cap_is_hit_tested(
+    client: Client,
+) -> None:
+    # The row of `#striped` of the sampled fixture alone: 1000 hidden pixels,
+    # each of them tested, and 600 of them are under `#stripes`.
+    findings = (await detect(client, EXACT, checks=ONLY))["findings"]
+    assert covered(findings) == [("#striped", "major", 25, "#stripes")]
