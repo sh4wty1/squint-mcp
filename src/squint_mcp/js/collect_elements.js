@@ -4,7 +4,10 @@
 // of its text, the boxes and the right edge of its own text, its opacity with that
 // of its ancestors, its scroll and client width and a selector that is unique on
 // the page.
-(elements, { properties, textLimit, transformMinSizeDiffPx }) => {
+// The elements themselves are kept on the page as `globalThis.__squintElements`, in
+// the order they are returned in: a script that runs later names an element by its
+// place in the Capture, which needs no second selector (AD-005).
+(elements,{ properties, textLimit, transformMinSizeDiffPx }) => {
   // Document order, an open shadow tree right after its host. Playwright lists the
   // matches inside shadow trees after the whole light tree, so its order is not used.
   // ponytail: the whole page is walked and every match is serialized, whatever the
@@ -182,5 +185,7 @@
     };
   };
 
-  return [...elements].sort((a, b) => order.get(a) - order.get(b)).map(describe);
+  const sorted = [...elements].sort((a, b) => order.get(a) - order.get(b));
+  globalThis.__squintElements = sorted;
+  return sorted.map(describe);
 };

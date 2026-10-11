@@ -193,7 +193,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (OVL-67), remove `.spe
 
 ### T5: Keep the collector's element list on the page
 
-- [ ] Done
+- [x] Done
 
 **What**: The collector stores the list it returns, in the order it returns it, as `globalThis.__squintElements`.
 **Where**: `src/squint_mcp/js/collect_elements.js`
@@ -208,10 +208,10 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (OVL-67), remove `.spe
 
 **Done when**:
 
-- [ ] The header comment of the script says the list is kept and why
-- [ ] What the collector returns is unchanged
-- [ ] Gate check passes: Build
-- [ ] Test count: 237 tests pass
+- [x] The header comment of the script says the list is kept and why
+- [x] What the collector returns is unchanged
+- [x] Gate check passes: Build
+- [x] Test count: 237 tests pass
 
 **Tests**: none
 **Gate**: build
