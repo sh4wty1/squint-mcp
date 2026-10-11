@@ -146,6 +146,7 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 27. WHEN the glyphs of a covered text are painted with a colour of an alpha above 0 and below 1 (`#translucent` in `overlap-bounds.html`, `color: rgba(0, 0, 0, 0.5)`, half under a cover) THEN the Check SHALL return one Finding for it with `evidence.measured.hiddenPercent` equal to 50. <!-- OVL-87 -->
 28. WHEN a covered text has a `color` of alpha 0 and its glyphs are painted with a `-webkit-text-fill-color` that is opaque (`#filled` in `overlap-bounds.html`, `color: transparent` and `-webkit-text-fill-color: rgb(0, 0, 0)`, half under a cover) THEN the Check SHALL return one Finding for it with `evidence.measured.hiddenPercent` equal to 50. <!-- OVL-89 -->
 29. WHEN an Other element hides ink of a text and a Silent layer that is not painted lies over the same ink (`#under-closed-menu` in `overlap-bounds.html`, the last 100px of its text under `#plain-cover` and under `#closed-menu`, an element of `role` `menu` and `visibility: hidden`) THEN the Check SHALL return one Finding for the text with `evidence.measured.hiddenPercent` equal to 50, `evidence.measured.coveredBy` equal to `#plain-cover` and `severity` equal to `major`: a Silent layer that is not painted hides nothing. <!-- OVL-90 -->
+30. WHEN the page is scrolled when the Capture is taken (`overlap-scrolled-on-load.html`, a page 2700px high that a script of the page scrolls 900px while it loads: `#far` is 1000px down the page, the last 100px of its 200px of text under `#far-cover`) THEN `detect_visual_bugs` called with `checks` equal to `["overlap"]` and a viewport of 1440 × 900 SHALL return exactly one Finding, on `#far`, with `evidence.measured.hiddenPercent` equal to 50, `severity` equal to `major` and `evidence.measured.coveredBy` equal to `#far-cover`. <!-- OVL-86 -->
 
 **Independent Test**: Call `detect_visual_bugs` on `overlap-bug.html` and read the four Findings, the collision among them.
 
@@ -371,18 +372,19 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 | OVL-83 | P1: Report text that another element covers | F5 | Implemented |
 | OVL-84 | P1: Read the Finding | F7 | Implemented |
 | OVL-85 | P1: Read the Finding | F7 | Implemented |
+| OVL-86 | P1: Report text that another element covers | F8 | Implemented |
 | OVL-87 | P1: Report text that another element covers | F5 | Implemented |
 | OVL-88 | P1: Stay silent on overlaps that are meant | F6 | Implemented |
 | OVL-89 | P1: Report text that another element covers | F5 | Implemented |
 | OVL-90 | P1: Report text that another element covers | F5 | Implemented |
 | OVL-91 | P1: Stay silent on overlaps that are meant | F6 | Implemented |
 
-**Coverage:** 90 total, 90 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
+**Coverage:** 91 total, 91 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
 
 ---
 
 ## Success Criteria
 
-- [ ] All 90 requirements verified by the Verifier, OVL-61 to OVL-67 from file evidence.
+- [ ] All 91 requirements verified by the Verifier, OVL-61 to OVL-67 from file evidence.
 - [ ] The gate passes: typecheck, lint, format check and the whole test suite.
 - [ ] The discrimination sensor leaves no surviving mutant in the Check, in what the Capture gains for it and in the rules of Silent and Raised layers.

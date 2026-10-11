@@ -23,6 +23,7 @@ BOUNDS = fixture_url("overlap-bounds.html")
 ORDER = fixture_url("overlap-order.html")
 MANY = fixture_url("overlap-many.html")
 SCROLLED = fixture_url("overlap-scrolled.html")
+SCROLLED_ON_LOAD = fixture_url("overlap-scrolled-on-load.html")
 SAMPLED = fixture_url("overlap-sampled.html")
 EXACT = fixture_url("overlap-exact.html")
 ONLY = ["overlap"]
@@ -798,6 +799,15 @@ async def test_an_element_the_scroll_brings_over_a_text_is_not_what_covers_it(
         "hiddenPercent": 50,
         "coveredBy": "#far-cover",
     }
+
+
+async def test_a_page_that_is_scrolled_when_it_is_captured_is_measured(
+    client: Client,
+) -> None:
+    # The page scrolls itself 900px while it loads: what it says of a box is
+    # then 900px short of where the box is on the page.
+    findings = (await detect(client, SCROLLED_ON_LOAD, checks=ONLY))["findings"]
+    assert covered(findings) == [("#far", "major", 50, "#far-cover")]
 
 
 async def test_a_text_the_hit_test_step_passes_over_whole_still_names_its_cover(

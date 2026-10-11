@@ -9,7 +9,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ---
 
 **Design**: `.specs/features/overlap/design.md`
-**Status**: Approved by the maintainer on 2026-10-11. T1 to T13 and the fixes of the first validation pass (F1 to F4) are done; the fixes of the second pass (F5 to F8, at the end of this file) are in progress
+**Status**: Approved by the maintainer on 2026-10-11. T1 to T13 and the fixes of the first validation pass (F1 to F4) are done; the fixes of the second pass (F5 to F8, at the end of this file) are done too and wait for the third pass
 
 ---
 
@@ -811,7 +811,7 @@ Baseline: 312 tests pass (2026-10-11). The whole suite takes about eleven minute
 
 ### F8: Measure a page that is scrolled when it is captured
 
-- [ ] Done
+- [x] Done
 
 **What**: The fixture `overlap-scrolled-on-load.html`, a page of three viewports with one covered text below the first and a script that scrolls it 900px while it loads, and its test (OVL-86).
 **Where**: `tests/test_overlap.py` (with `tests/fixtures/overlap-scrolled-on-load.html`)
@@ -826,11 +826,11 @@ Baseline: 312 tests pass (2026-10-11). The whole suite takes about eleven minute
 
 **Done when**:
 
-- [ ] The test asserts the whole list of Findings of the page: one, with its severity and with `coveredBy` the plain cover
-- [ ] The test fails under N8
-- [ ] `validate_spec.py --strict` exits 0 on the spec with its twelve new criteria
-- [ ] Gate check passes: Build
-- [ ] Test count: 325 tests pass; none deleted
+- [x] The test asserts the whole list of Findings of the page: one, with its severity and with `coveredBy` the plain cover
+- [x] The test fails under N8
+- [x] `validate_spec.py --strict` exits 0 on the spec with its twelve new criteria
+- [x] Gate check passes: Build
+- [x] Test count: 325 tests pass; none deleted
 
 **Tests**: integration
 **Gate**: build
