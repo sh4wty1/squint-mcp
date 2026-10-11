@@ -750,7 +750,7 @@ Baseline: 312 tests pass (2026-10-11). The whole suite takes about eleven minute
 
 ### F6: Hold a transparent fill and closed menus silent
 
-- [ ] Done
+- [x] Done
 
 **What**: Three cases appended to `overlap-clean.html`, with their tests: a text of a transparent `-webkit-text-fill-color` under an opaque `color` (OVL-88), a text under a menu closed by `display: none` and one under a menu closed by `visibility: hidden` (OVL-91).
 **Where**: `tests/test_overlap.py` (with `tests/fixtures/overlap-clean.html`)
@@ -765,12 +765,12 @@ Baseline: 312 tests pass (2026-10-11). The whole suite takes about eleven minute
 
 **Done when**:
 
-- [ ] The cases come after the existing rows, so nothing already placed moves
-- [ ] The whole-page test of OVL-19 passes unchanged: no Finding of any of the four Checks
-- [ ] The test of OVL-88 fails under N22 (`#transparent-fill`)
-- [ ] The tests of OVL-91 assert through `inspect_element` that nothing is painted over the two texts
-- [ ] Gate check passes: Build
-- [ ] Test count: 322 tests pass; none deleted
+- [x] The cases come after the existing rows, so nothing already placed moves
+- [x] The whole-page test of OVL-19 passes unchanged: no Finding of any of the four Checks
+- [x] The test of OVL-88 fails under N22 (`#transparent-fill`)
+- [x] The tests of OVL-91 assert through `inspect_element` that nothing is painted over the two texts
+- [x] Gate check passes: Build
+- [x] Test count: 322 tests pass; none deleted
 
 **Tests**: integration
 **Gate**: build

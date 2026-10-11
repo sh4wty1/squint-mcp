@@ -380,6 +380,23 @@ async def test_covered_text_faded_to_under_half_of_its_ink_is_not_reported(
     assert await clean(client, "#opacity-40") == (0.5, [])
 
 
+async def test_covered_text_of_an_opaque_colour_and_a_transparent_fill_is_not_reported(
+    client: Client,
+) -> None:
+    # `#transparent-fill` would be reported at 50% if its `color`, black, were
+    # taken for what paints its glyphs: its fill colour does, and is transparent.
+    assert await clean(client, "#transparent-fill") == (0.5, [])
+
+
+@pytest.mark.parametrize("selector", ["#under-removed-menu", "#under-hidden-menu"])
+async def test_text_under_a_closed_menu_is_not_reported(
+    client: Client, selector: str
+) -> None:
+    # A menu of `display: none` and one of `visibility: hidden`, each placed over
+    # half of its text: open, it would be painted over half of the box.
+    assert await clean(client, selector) == (0, [])
+
+
 async def bounds(client: Client, selector: str) -> dict[str, Any]:
     """The one Finding of the Check on one element of the bounds fixture."""
     return await finding_on(client, BOUNDS, selector)

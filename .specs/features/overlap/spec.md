@@ -184,6 +184,8 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 23. IF the only thing painted over the own text of an element is painted by one of its ancestors (`#under-own-row` in `overlap-clean.html`, the last 100px of its 200px of text under an opaque box painted by the `::after` of its row, `#decorated-row`) THEN the Check SHALL return no Finding for the element. <!-- OVL-72 -->
 24. IF hit testing gives a descendant of an element at all of its Hidden ink (`#own-link-text` in `overlap-clean.html`, half under `#linked-cover`, an Other element of `z-index: 1`, with the `::after` of its own link, `#own-link`, stretched over all of it above that cover by `position: absolute`, `inset: 0` and `z-index: 2`) THEN the Check SHALL return no Finding for the element. <!-- OVL-73 -->
 25. IF a covered text is faded below half by `opacity` (`#opacity-40` in `overlap-clean.html`, of `opacity: 0.4`, half under a cover) THEN the Check SHALL return no Finding for it: it has no Text ink. <!-- OVL-74 -->
+26. IF the glyphs of a covered text are painted with a `-webkit-text-fill-color` of alpha 0 while its `color` is opaque (`#transparent-fill` in `overlap-clean.html`, `color: rgb(0, 0, 0)` and `-webkit-text-fill-color: transparent`, half under a cover) THEN the Check SHALL return no Finding for it. <!-- OVL-88 -->
+27. IF all that lies over a text is a menu that is closed (in `overlap-clean.html`, `#under-removed-menu`, with `#removed-menu`, an element of `role` `menu` and `display: none`, placed over the last 100px of its 200px of text, and `#under-hidden-menu`, with `#hidden-menu`, an element of `role` `menu` and `visibility: hidden`, over the last 100px of its text) THEN the Check SHALL return no Finding for the text, and nothing SHALL be painted over it. <!-- OVL-91 -->
 
 **Independent Test**: Call `detect_visual_bugs` on `overlap-clean.html` and get an empty list.
 
@@ -366,15 +368,17 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 | OVL-82 | P1: Report text that another element covers | F5 | Implemented |
 | OVL-83 | P1: Report text that another element covers | F5 | Implemented |
 | OVL-87 | P1: Report text that another element covers | F5 | Implemented |
+| OVL-88 | P1: Stay silent on overlaps that are meant | F6 | Implemented |
 | OVL-89 | P1: Report text that another element covers | F5 | Implemented |
 | OVL-90 | P1: Report text that another element covers | F5 | Implemented |
+| OVL-91 | P1: Stay silent on overlaps that are meant | F6 | Implemented |
 
-**Coverage:** 86 total, 86 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
+**Coverage:** 88 total, 88 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
 
 ---
 
 ## Success Criteria
 
-- [ ] All 86 requirements verified by the Verifier, OVL-61 to OVL-67 from file evidence.
+- [ ] All 88 requirements verified by the Verifier, OVL-61 to OVL-67 from file evidence.
 - [ ] The gate passes: typecheck, lint, format check and the whole test suite.
 - [ ] The discrimination sensor leaves no surviving mutant in the Check, in what the Capture gains for it and in the rules of Silent and Raised layers.

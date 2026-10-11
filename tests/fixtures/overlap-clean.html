@@ -207,6 +207,21 @@
       #opacity-40 {
         opacity: 0.4;
       }
+      /* 50% of a text that is not there to be read: its glyphs are painted by the
+         fill colour, transparent, and not by its `color`, black. */
+      #transparent-fill {
+        color: rgb(0, 0, 0);
+        -webkit-text-fill-color: transparent;
+      }
+      /* Two menus that are closed, each placed over the last 100px of a text: one
+         is not rendered and the other is hidden. Neither paints anything, so
+         nothing is over either text. */
+      #removed-menu {
+        display: none;
+      }
+      #hidden-menu {
+        visibility: hidden;
+      }
     </style>
   </head>
   <body>
@@ -317,6 +332,18 @@
     <div class="row">
       <div id="opacity-40" class="text">XXXXXXXXXX</div>
       <div class="cover half"></div>
+    </div>
+    <div class="row">
+      <div id="transparent-fill" class="text">XXXXXXXXXX</div>
+      <div class="cover half"></div>
+    </div>
+    <div class="row">
+      <div id="under-removed-menu" class="text">XXXXXXXXXX</div>
+      <div id="removed-menu" role="menu" class="cover half"></div>
+    </div>
+    <div class="row">
+      <div id="under-hidden-menu" class="text">XXXXXXXXXX</div>
+      <div id="hidden-menu" role="menu" class="cover half"></div>
     </div>
     <script>
       // A popover is closed until a script shows it.
