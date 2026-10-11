@@ -9,9 +9,10 @@
          which a tenth is 400 and a quarter 1000. A cover is an opaque box as high
          as the line unless its comment says otherwise.
 
-         The page holds 55,180 pixels of hidden ink in the texts that are hit
-         tested, 35,380 down to `#label` and 19,800 from `#stack-0` on: more than
-         the 20,000 a Capture tests and no more than the 80,000 a step of 2 takes.
+         The page holds 61,180 pixels of hidden ink in the texts that are hit
+         tested, 35,380 down to `#label`, 19,800 from `#stack-0` to
+         `#under-closed-menu` and 6000 from `#in-grey` on: more than the 20,000
+         a Capture tests and no more than the 80,000 a step of 2 takes.
          Every second pixel of every second row is tested, counted from the corner
          of the page. What covers a text is still the element found at most of
          them. */
@@ -274,6 +275,23 @@
       #closed-menu {
         visibility: hidden;
       }
+      /* 50%, in a row whose filter turns every colour to a grey: a text is as
+         covered under a filter that changes colours as without it. */
+      #grey-row {
+        filter: grayscale(1);
+      }
+      /* 50% of a text with such a filter of its own. Black stays black. */
+      #own-filter {
+        filter: hue-rotate(180deg);
+      }
+      /* 50%. The block is not positioned: it is its filter that makes it hold
+         the cover, which is placed from its left. Without one the cover would be
+         placed from the page and lie at its top. */
+      #holder {
+        margin-top: 20px;
+        height: 30px;
+        filter: sepia(1);
+      }
     </style>
   </head>
   <body>
@@ -404,6 +422,18 @@
       <div id="under-closed-menu" class="text">XXXXXXXXXX</div>
       <div id="plain-cover" class="cover half"></div>
       <div id="closed-menu" role="menu" class="cover half"></div>
+    </div>
+    <div id="grey-row" class="row">
+      <div id="in-grey" class="text">XXXXXXXXXX</div>
+      <div id="in-grey-cover" class="cover half"></div>
+    </div>
+    <div class="row">
+      <div id="own-filter" class="text">XXXXXXXXXX</div>
+      <div id="own-filter-cover" class="cover half"></div>
+    </div>
+    <div id="holder">
+      <div id="held" class="text">XXXXXXXXXX</div>
+      <div id="held-cover" class="cover half"></div>
     </div>
     <script>
       // A style does not cross into a shadow tree, so these carry their own. The

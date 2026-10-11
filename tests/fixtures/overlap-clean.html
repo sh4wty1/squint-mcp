@@ -222,6 +222,30 @@
       #hidden-menu {
         visibility: hidden;
       }
+      /* 50% by hit testing and nothing in the pixels: a filter fades the cover
+         out, as `opacity` does. */
+      #filter-faded-cover {
+        filter: opacity(0);
+      }
+      /* 50% of a text that is not there to be read: a filter fades it out. */
+      #filter-faded-text {
+        filter: opacity(0);
+      }
+      /* A filter makes one layer of what is inside its element. The cover has a
+         `z-index` of 5 in that layer, and the text, with a `z-index` of 1, is
+         above all of it: the cover is painted under the glyphs, over the last
+         100px of the box. Inverted, its grey is the one of `#picture`. */
+      #filter-layer {
+        filter: invert(1);
+      }
+      #layered-cover {
+        z-index: 5;
+        background: rgb(55, 55, 55);
+      }
+      #above-filter-layer {
+        position: relative;
+        z-index: 1;
+      }
     </style>
   </head>
   <body>
@@ -344,6 +368,18 @@
     <div class="row">
       <div id="under-hidden-menu" class="text">XXXXXXXXXX</div>
       <div id="hidden-menu" role="menu" class="cover half"></div>
+    </div>
+    <div class="row">
+      <div id="under-filter-faded" class="text">XXXXXXXXXX</div>
+      <div id="filter-faded-cover" class="cover half"></div>
+    </div>
+    <div class="row">
+      <div id="filter-faded-text" class="text">XXXXXXXXXX</div>
+      <div class="cover half"></div>
+    </div>
+    <div class="row">
+      <div id="filter-layer"><div id="layered-cover" class="cover half"></div></div>
+      <div id="above-filter-layer" class="text">XXXXXXXXXX</div>
     </div>
     <script>
       // A popover is closed until a script shows it.

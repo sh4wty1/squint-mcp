@@ -260,7 +260,8 @@ Config (each with its source in a comment):
 | A text with a very large region (own text nodes at the top and at the bottom of a page) is cropped whole | `covered.py`, `hidden_ink` | Pixel work on the full page for that text | Accepted; `ponytail:` |
 | More than three texts crossing in one place | `covered.py`, `assign_channels` | Each further round is four more full-page screenshots | Accepted; the real page needed one round |
 | A highlight recolours an underline that follows `currentColor` | page content | The underline counts as ink of its text, in every layer alike | Accepted; shares are of the same ink |
-| An ancestor with `mix-blend-mode` or a `filter` | page content | The channels do not hold what the highlights painted: no Text ink, no Finding | Known limit |
+| An element with `mix-blend-mode`, on the text or around it | page content | The channels do not hold what the highlights painted: no Text ink, no Finding | Known limit |
+| A `filter` that changes colours, on the text or around it | `covered_text.js` | The same, for every text of a grey-scaled section or of a page inverted at its root | Fixed after the third validation pass: the cover script takes the functions that change colours out of every `filter` before it measures, and leaves the others and the `filter` itself, so that nothing moves (spiked: `none` moves what is positioned inside) |
 | The page's own `::highlight()` or `::selection` rules | page content | Could repaint the glyphs the Capture marks | The rules of the Capture are `!important`; the page has no selection in a fresh context |
 | A page with a `style-src` policy that refuses inline styles would refuse the styles the Capture injects, the fills of AD-004 included | `src/squint_mcp/js/fill_text.js:18`, `stabilize.js:17` | Not verified. If so, no ink on such a page for any Check | Out of this slice; a follow-up issue to check `bypass_csp` on the context |
 

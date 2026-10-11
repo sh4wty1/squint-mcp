@@ -42,6 +42,19 @@
     return subtree;
   };
 
+  // A `filter` that changes colours changes those of the highlights too, and the
+  // glyphs under it would leave no ink. Its functions that keep them stay, in
+  // their order: what they fade or blur is not seen as well. Never `none`: an
+  // element with a `filter` holds what is positioned inside it and is painted as
+  // one layer, and has to go on doing both.
+  const KEEPS_COLOURS = /\b(?:blur|drop-shadow|opacity)\((?:[^()]|\([^()]*\))*\)/g;
+  for (const element of elements) {
+    const filter = getComputedStyle(element).filter;
+    if (filter === "none") continue;
+    const kept = filter.match(KEEPS_COLOURS) ?? ["opacity(1)"];
+    element.style.setProperty("filter", kept.join(" "), "important");
+  }
+
   const facts = elements.map((element) => {
     const style = getComputedStyle(element);
     const rect = element.getBoundingClientRect();

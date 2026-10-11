@@ -26,6 +26,7 @@ SCROLLED = fixture_url("overlap-scrolled.html")
 SCROLLED_ON_LOAD = fixture_url("overlap-scrolled-on-load.html")
 SAMPLED = fixture_url("overlap-sampled.html")
 EXACT = fixture_url("overlap-exact.html")
+INVERTED = fixture_url("overlap-inverted.html")
 ONLY = ["overlap"]
 # The colour of the covers of the fixtures.
 COVER = "#c80000"
@@ -399,6 +400,34 @@ async def test_text_under_a_closed_menu_is_not_reported(
     assert await clean(client, selector) == (0, [])
 
 
+async def test_text_under_a_cover_that_a_filter_fades_out_is_not_reported(
+    client: Client,
+) -> None:
+    # `#under-filter-faded` would be reported at 50%, covered by
+    # `#filter-faded-cover`, if a filter were set aside whole while ink is
+    # measured: this one changes no colour and leaves nothing of the cover.
+    assert await clean(client, "#under-filter-faded") == (0, [])
+
+
+async def test_covered_text_that_a_filter_fades_out_is_not_reported(
+    client: Client,
+) -> None:
+    # `#filter-faded-text` would be reported at 50% if its filter were set aside.
+    assert await clean(client, "#filter-faded-text") == (0.5, [])
+
+
+async def test_text_above_the_layer_that_a_filter_makes_is_not_reported(
+    client: Client,
+) -> None:
+    # `#layered-cover` has a `z-index` above that of the text and is painted
+    # under it: 1000 of the 6000 pixels of the box show its grey around the
+    # glyphs. Its `z-index` counts inside the layer of `#filter-layer` only, and
+    # with no filter there the cover would be over half of the text.
+    inspected = await inspect(client, CLEAN, "#above-filter-layer")
+    assert painted(inspected)["#c8c8c8"] == 0.1667
+    assert await clean(client, "#above-filter-layer") == (0, [])
+
+
 async def bounds(client: Client, selector: str) -> dict[str, Any]:
     """The one Finding of the Check on one element of the bounds fixture."""
     return await finding_on(client, BOUNDS, selector)
@@ -413,8 +442,10 @@ async def test_only_the_covered_texts_of_the_bounds_fixture_are_reported(
         "#around",
         "#bottom",
         "#filled",
+        "#held",
         "#in-dialog",
         "#in-fixed",
+        "#in-grey",
         "#label",
         "#layer-ancestor",
         "#layered-corner",
@@ -422,6 +453,7 @@ async def test_only_the_covered_texts_of_the_bounds_fixture_are_reported(
         "#left",
         "#mixed",
         "#opacity-60",
+        "#own-filter",
         "#shared-layer",
         "#shifted",
         "#split",
@@ -722,10 +754,48 @@ async def test_a_silent_layer_that_is_not_painted_hides_nothing(
     assert finding["severity"] == "major"
 
 
+@pytest.mark.parametrize("selector", ["#in-grey", "#own-filter"])
+async def test_covered_text_under_a_filter_that_changes_colours_is_reported(
+    client: Client, selector: str
+) -> None:
+    # The row of `#in-grey` turns every colour to a grey and `#own-filter` turns
+    # its own around the colour wheel: the colours that tell the glyphs of a text
+    # from the rest of the page would come out as others, and the text have no
+    # ink.
+    finding = await bounds(client, selector)
+    assert finding["evidence"]["measured"] == {
+        "hiddenPercent": 50,
+        "coveredBy": f"{selector}-cover",
+    }
+    assert finding["severity"] == "major"
+
+
+async def test_a_cover_that_the_filter_of_its_block_places_stays_over_its_text(
+    client: Client,
+) -> None:
+    # `#holder` is not positioned and holds `#held-cover` over the text through
+    # its filter alone: measured with that filter taken away, the cover would
+    # lie at the top of the page and hide nothing of `#held`.
+    finding = await bounds(client, "#held")
+    assert finding["evidence"]["measured"] == {
+        "hiddenPercent": 50,
+        "coveredBy": "#held-cover",
+    }
+    assert finding["severity"] == "major"
+
+
+async def test_covered_text_of_a_page_with_a_filter_on_its_root_is_reported(
+    client: Client,
+) -> None:
+    # The root inverts every colour of the page, as a dark mode of one rule does.
+    findings = (await detect(client, INVERTED, checks=ONLY))["findings"]
+    assert covered(findings) == [("#inverted", "major", 50, "#inverted-cover")]
+
+
 async def test_the_selectors_of_a_finding_work_in_inspect_element(
     client: Client,
 ) -> None:
-    for url, count in ((BUG, 4), (BOUNDS, 34)):
+    for url, count in ((BUG, 4), (BOUNDS, 37)):
         findings = (await detect(client, url, checks=ONLY))["findings"]
         assert len(findings) == count
         for finding in findings:
