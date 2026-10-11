@@ -442,7 +442,7 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (OVL-67), remove `.spe
 
 ### T13: Document the Check
 
-- [ ] Done
+- [x] Done
 
 **What**: The CHANGELOG entries under the unreleased version (the Check with its two thresholds, the lower severity under a Raised layer and what it does not report; grayscale text; the fix of issue #18) and the README naming four Checks.
 **Where**: `CHANGELOG.md` (with the README)
@@ -457,10 +457,10 @@ After the Verifier reports PASS: update `docs/ROADMAP.md` (OVL-67), remove `.spe
 
 **Done when**:
 
-- [ ] The CHANGELOG names the Silent layers, `fixed` and `sticky` elements and covers that paint nothing as not reported
-- [ ] The README gives the number of Checks as four and says what `overlap` reports
-- [ ] Gate check passes: Build
-- [ ] Test count: the count after T12; none deleted
+- [x] The CHANGELOG names the Silent layers, `fixed` and `sticky` elements and covers that paint nothing as not reported
+- [x] The README gives the number of Checks as four and says what `overlap` reports
+- [x] Gate check passes: Build
+- [x] Test count: the count after T12; none deleted
 
 **Tests**: none
 **Gate**: build

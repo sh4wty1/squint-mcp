@@ -328,8 +328,8 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 | OVL-62 | P2: Check contract, configuration and documents | T7, T9 | Implemented |
 | OVL-63 | P2: Check contract, configuration and documents | T3 | Implemented |
 | OVL-64 | P2: Check contract, configuration and documents | T9 | Implemented |
-| OVL-65 | P2: Check contract, configuration and documents | T13 | Pending |
-| OVL-66 | P2: Check contract, configuration and documents | T13 | Pending |
+| OVL-65 | P2: Check contract, configuration and documents | T13 | Implemented |
+| OVL-66 | P2: Check contract, configuration and documents | T13 | Implemented |
 | OVL-67 | P2: Check contract, configuration and documents | closing step | Pending |
 | OVL-68 | Edge cases | T9 | Implemented |
 | OVL-69 | Edge cases | T12 | Implemented |
