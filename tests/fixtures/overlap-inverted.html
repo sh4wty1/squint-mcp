@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: covered text on a page with a filter on its root</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are a block of
+         200 x 20 text pixels, 5px under the top of their 30px line: 4000 pixels.
+
+         The root has a filter that inverts every colour of the page, as a dark mode
+         made of one rule does: the text is painted white on black, and whatever
+         colour a glyph is given comes out as another. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      html {
+        filter: invert(1);
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      /* The row holds the text, from 40px to 240px, and its cover, placed from the
+         left of the row. */
+      .row {
+        position: relative;
+        margin-top: 20px;
+        height: 30px;
+      }
+      #inverted {
+        margin-left: 40px;
+        width: 200px;
+      }
+      /* An opaque box over the last 100px of the text: 2000 pixels, 50%. */
+      #inverted-cover {
+        position: absolute;
+        top: 0;
+        left: 140px;
+        width: 100px;
+        height: 30px;
+        background: rgb(200, 0, 0);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="row">
+      <div id="inverted">XXXXXXXXXX</div>
+      <div id="inverted-cover"></div>
+    </div>
+  </body>
+</html>

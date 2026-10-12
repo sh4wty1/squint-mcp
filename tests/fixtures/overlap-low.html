@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: a covered text low on a page of layers</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are a block of
+         200 x 20 text pixels, 5px under the top of their 30px line: 4000 pixels. A
+         cover is an opaque box as high as the line, over the last 100px of its
+         text.
+
+         The page is 1850px high, two viewports of 900px and a little more. Its one
+         covered text is at its foot, under thirty-six rows that a browser paints
+         as layers of their own: four rows of `overlap-clean.html` in turn, none
+         of which gets a Finding. On such a page Chromium now and then hands back
+         a screenshot in which the foot of the page is not painted yet, and a
+         text read from that picture has no ink. How often depends on the machine
+         and on the moment: no page brings it about every time. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      /* A row holds one text, from 40px to 240px, and what is painted over it,
+         placed from the left of the row. The rows are 50px apart, the first 20px
+         down the page. */
+      .row {
+        position: relative;
+        margin-top: 20px;
+        height: 30px;
+      }
+      .text {
+        margin-left: 40px;
+        width: 200px;
+      }
+      .cover {
+        position: absolute;
+        top: 0;
+        left: 140px;
+        width: 100px;
+        height: 30px;
+        background: rgb(200, 0, 0);
+      }
+      /* A sticky element, which comes after its text in the flow and is pulled
+         back over it. */
+      .sticky-cover {
+        position: sticky;
+        top: 0;
+        margin: -30px 0 0 140px;
+        width: 100px;
+        height: 30px;
+        background: rgb(200, 0, 0);
+      }
+      /* A text that is not there to be read. */
+      .faded {
+        opacity: 0;
+      }
+      /* A cover with a `z-index` of 1 and, above it, the link of the text,
+         stretched over the row and painting nothing. */
+      .linked-cover {
+        z-index: 1;
+      }
+      .own-link::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+      }
+      /* A text that shows 40 parts in 100 of its ink. */
+      .faint {
+        opacity: 0.4;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- The last row, 1820px down and 920px under the viewport: 2000 of the 4000
+         pixels of its text are hidden, 50%. -->
+    <div id="low-row" class="row">
+      <div id="low" class="text">XXXXXXXXXX</div>
+      <div id="low-cover" class="cover"></div>
+    </div>
+    <script>
+      // The thirty-six rows above it, the four kinds in turn.
+      const text = (extra) => `<div class="text ${extra}">XXXXXXXXXX`;
+      const kinds = [
+        `${text("")}</div><div class="sticky-cover"></div>`,
+        `${text("faded")}</div><div class="cover"></div>`,
+        `${text("")}<a class="own-link" href="#"></a></div>` +
+          `<div class="cover linked-cover"></div>`,
+        `${text("faint")}</div><div class="cover"></div>`,
+      ];
+      for (let i = 0; i < 36; i++) {
+        const row = document.createElement("div");
+        row.className = "row";
+        row.innerHTML = kinds[i % 4];
+        document.getElementById("low-row").before(row);
+      }
+    </script>
+  </body>
+</html>

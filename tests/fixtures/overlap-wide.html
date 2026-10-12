@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: covered texts on a page wider than its viewport</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are a block of
+         200 x 20 text pixels, 5px under the top of their 30px line: 4000 pixels.
+
+         The page is 3000px wide and 2000px high. At 1440 x 900 hit testing reaches
+         it a viewport at a time: the columns of the page from 1440px on are tested
+         with the page scrolled sideways, and those from 2880px on with it scrolled
+         as far as it goes, 1560px, which is short of 2880px. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        width: 3000px;
+        height: 2000px;
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      /* A row is placed on the page and holds one text, from 40px to 240px of the
+         row, and its cover, an opaque box over the last 100px of the text: 2000
+         pixels, 50%. */
+      .row {
+        position: absolute;
+        width: 240px;
+        height: 30px;
+      }
+      .text {
+        margin-left: 40px;
+        width: 200px;
+      }
+      .cover {
+        position: absolute;
+        top: 0;
+        left: 140px;
+        width: 100px;
+        height: 30px;
+        background: rgb(200, 0, 0);
+      }
+      /* In the first viewport: its hidden ink is from 140px to 240px. */
+      #near-row {
+        top: 20px;
+        left: 0;
+      }
+      /* Right of the first viewport: its hidden ink is from 2100px to 2200px. */
+      #right-row {
+        top: 20px;
+        left: 1960px;
+      }
+      /* In the last 120px of the page: its hidden ink is from 2880px to 2980px,
+         where the page cannot be scrolled to. */
+      #edge-row {
+        top: 20px;
+        left: 2740px;
+      }
+      /* Right of the first viewport and below it. */
+      #far-row {
+        top: 1000px;
+        left: 1960px;
+      }
+      /* With the page scrolled 1440px sideways the hidden ink of `#right` is from
+         660px to 760px of the viewport, where this bar then lies. On the page as
+         it is captured the bar is over no text. */
+      #fixed-bar {
+        position: fixed;
+        top: 20px;
+        left: 660px;
+        width: 100px;
+        height: 30px;
+        background: rgb(0, 0, 200);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="near-row" class="row">
+      <div id="near" class="text">XXXXXXXXXX</div>
+      <div id="near-cover" class="cover"></div>
+    </div>
+    <div id="right-row" class="row">
+      <div id="right" class="text">XXXXXXXXXX</div>
+      <div id="right-cover" class="cover"></div>
+    </div>
+    <div id="edge-row" class="row">
+      <div id="edge" class="text">XXXXXXXXXX</div>
+      <div id="edge-cover" class="cover"></div>
+    </div>
+    <div id="far-row" class="row">
+      <div id="far" class="text">XXXXXXXXXX</div>
+      <div id="far-cover" class="cover"></div>
+    </div>
+    <div id="fixed-bar"></div>
+  </body>
+</html>

@@ -107,7 +107,7 @@ A v0.2 fecha a fase 2 da especificação inicial ([`.docs/START.md`](../.docs/ST
 |---|---|---|---|---|
 | 6 | Orçamento de pixels por Capture | — | `tlc-spec-lean` | concluída |
 | 7 | `offscreen-overflow` | — | `tlc-spec-lean` | concluída |
-| 8 | `overlap` | — | `tlc-spec-driven` | pendente |
+| 8 | `overlap` | — | `tlc-spec-driven` | concluída |
 | 9 | `font-fallback` | — | `tlc-spec-driven` | pendente |
 | 10 | `extract_tokens` | — | `tlc-spec-driven` | pendente |
 | 11 | Release 0.2.0 | 6 a 10 | `tlc-implement` | pendente |
@@ -147,7 +147,7 @@ A v0.2 fecha a fase 2 da especificação inicial ([`.docs/START.md`](../.docs/ST
 - **Não entra:** estados de interação (hover, modal aberto); iframes.
 - **Dependência:** nenhuma.
 - **Skill:** `tlc-spec-driven`, porque o critério de falso positivo ainda está em aberto.
-- **Status:** pendente.
+- **Status:** concluída. Spec, design e relatório de validação em [`.specs/features/overlap/`](../.specs/features/overlap/).
 
 ## 9. `font-fallback`
 

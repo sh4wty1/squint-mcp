@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: covered text under a filter of several functions</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are a block of
+         200 x 20 text pixels, 5px under the top of their 30px line: 4000 pixels. A
+         cover is an opaque box as high as the line, over the last 100px of its
+         text unless its comment says otherwise: 50%.
+
+         `overlap-bounds.html` and `overlap-clean.html` hold a filter of one
+         function. Each row here holds what a filter of one function does not
+         show: a list of functions, a function that keeps colours and is not
+         `opacity()`, and a filter the page declares with more weight than an
+         inline style has. The page holds 6000 pixels of hidden ink to test:
+         every one of them is tested. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      /* A row holds one text, from 40px to 240px, and what is painted over it,
+         placed from the left of the row. */
+      .row {
+        position: relative;
+        margin-top: 20px;
+        height: 30px;
+      }
+      .text {
+        margin-left: 40px;
+        width: 200px;
+      }
+      .cover {
+        position: absolute;
+        top: 0;
+        left: 140px;
+        width: 100px;
+        height: 30px;
+        background: rgb(200, 0, 0);
+      }
+      /* A function that changes colours and one that keeps them, in one filter:
+         the text keeps 60 parts in 100 of its ink and is still text. */
+      #listed {
+        filter: grayscale(1) opacity(0.6);
+      }
+      /* A filter that changes colours, declared `!important`. */
+      #weighty-row {
+        filter: grayscale(1) !important;
+      }
+      /* The box of the cover is over the last 60px of the text, from 180px to
+         240px, and its shadow, 40px to the left of it and as opaque, over 40px
+         more, from 140px to 180px: 100px together, 50%. The box alone hides
+         30%. Hit testing gives the cover at its box and not at its shadow. */
+      #shadow-cover {
+        left: 180px;
+        width: 60px;
+        filter: drop-shadow(-40px 0 0 rgb(200, 0, 0));
+      }
+      /* A text blurred until no pixel of it has half of the ink of a glyph: it
+         has no ink to hide. The row stands apart from the others, and what the
+         blur spreads stays inside it. */
+      #blurred-row {
+        margin-top: 80px;
+        padding: 60px 0;
+        overflow: hidden;
+      }
+      #blurred-row .cover {
+        top: 60px;
+      }
+      #blurred {
+        filter: blur(20px);
+      }
+      /* Faded twice by one filter, with a function that changes colours between
+         the two: 36 parts in 100 of its ink are left, under half. Faded once it
+         would keep 60. */
+      #twice-faded {
+        filter: opacity(0.6) grayscale(1) opacity(0.6);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="row">
+      <div id="listed" class="text">XXXXXXXXXX</div>
+      <div id="listed-cover" class="cover"></div>
+    </div>
+    <div id="weighty-row" class="row">
+      <div id="weighty" class="text">XXXXXXXXXX</div>
+      <div id="weighty-cover" class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="under-shadow" class="text">XXXXXXXXXX</div>
+      <div id="shadow-cover" class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="twice-faded" class="text">XXXXXXXXXX</div>
+      <div id="twice-faded-cover" class="cover"></div>
+    </div>
+    <div id="blurred-row" class="row">
+      <div id="blurred" class="text">XXXXXXXXXX</div>
+      <div id="blurred-cover" class="cover"></div>
+    </div>
+  </body>
+</html>

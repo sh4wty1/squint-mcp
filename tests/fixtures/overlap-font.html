@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: covered text in a font with anti-aliased edges</title>
+    <style>
+      /* The system sans-serif font at 16px. The edge of its glyphs is anti-aliased:
+         a pixel there gets a part of the ink of a full one, and under half of it is
+         not text. Which pixels those are differs from one platform to the next, so
+         every share below is of whole glyphs: a text wholly under a cover or a veil
+         is hidden whole, and of two equal lines one is half. */
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 16px/30px sans-serif;
+      }
+      /* A row holds one text, from 40px to 440px, and what is painted over it,
+         placed from the left of the row and as wide as the text. */
+      .row {
+        position: relative;
+        margin-top: 20px;
+      }
+      .text {
+        margin-left: 40px;
+        width: 400px;
+      }
+      .cover {
+        position: absolute;
+        top: 0;
+        left: 40px;
+        width: 400px;
+        height: 30px;
+        background: rgb(200, 0, 0);
+      }
+      /* The second of two lines that hold the same glyphs at the same columns:
+         50%, whatever the pixels of a line are. */
+      #font-lines-cover {
+        top: 30px;
+      }
+      /* All of the text, of which 45 parts in 100 show: less than half, at the
+         middle of a glyph and at its edge alike. */
+      #font-veil-55-cover {
+        background: rgba(255, 255, 255, 0.55);
+      }
+      /* All of the text, of which 55 parts in 100 show: more than half of what
+         each pixel has, though at the edge of a glyph that is less than half of
+         the ink of a full one. */
+      #font-veil-45-cover {
+        background: rgba(255, 255, 255, 0.45);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="row">
+      <div id="font-whole" class="text">Hamburgefonstiv</div>
+      <div id="font-whole-cover" class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="font-lines" class="text">Hamburgefonstiv<br />Hamburgefonstiv</div>
+      <div id="font-lines-cover" class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="font-veil-55" class="text">Hamburgefonstiv</div>
+      <div id="font-veil-55-cover" class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="font-veil-45" class="text">Hamburgefonstiv</div>
+      <div id="font-veil-45-cover" class="cover"></div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: covered texts hit tested by sample</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are a block of
+         200 x 20 text pixels, 5px under the top of their 30px line: 4000 pixels. A
+         cover is a box as high as the line.
+
+         The page holds 26,610 pixels of hidden ink, more than the 20,000 a Capture
+         hit tests and no more than the 80,000 a step of 2 takes: every second pixel
+         of every second row is tested, counted from the corner of the page. So a
+         hidden pixel is tested only where both its column and its row on the page
+         are even. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      /* A row holds one text, which starts 40px from its left, and what is painted
+         over it, placed from the left of the row. */
+      .row {
+        position: relative;
+        margin-top: 20px;
+        height: 30px;
+      }
+      .text {
+        margin-left: 40px;
+        width: 200px;
+      }
+      .cover {
+        position: absolute;
+        top: 0;
+        height: 30px;
+        background: rgb(200, 0, 0);
+      }
+
+      /* One glyph of 10px, from 40px to 50px: 10 x 10 pixels of ink, 100 pixels.
+         The cover is over one column of it, the column 45: 10 pixels, 10%, all on
+         an odd column, so the step passes over every one of them. */
+      #speck {
+        font-size: 10px;
+      }
+      #speck-cover {
+        left: 45px;
+        width: 1px;
+      }
+      /* Stripes one pixel wide over the first 60px of the text, from 40px to 100px:
+         clear on the even columns of the page and opaque on the odd ones, 41 to
+         99. 30 columns of 20 rows: 600 pixels, none of them tested. */
+      #stripes {
+        left: 40px;
+        width: 60px;
+        background: repeating-linear-gradient(
+          to right,
+          transparent 0 1px,
+          rgb(200, 0, 0) 1px 2px
+        );
+      }
+      /* The last 20px of the same text: 400 pixels, of which 100 are tested. With
+         the stripes 1000 of its 4000 pixels are hidden: 25%, most of it by the
+         stripes and most of what is tested by this cover. */
+      #solid-cover {
+        left: 220px;
+        width: 20px;
+      }
+      /* Stripes one pixel high over the first 120px of the third text, from 40px to
+         160px: clear on the even rows of the page and opaque on the odd ones. The
+         row is 120px down the page and its glyphs take the rows 125 to 144: 10 odd
+         rows of 120 columns, 1200 pixels, none of them tested. */
+      #row-stripes {
+        left: 40px;
+        width: 120px;
+        background: repeating-linear-gradient(
+          to bottom,
+          transparent 0 1px,
+          rgb(200, 0, 0) 1px 2px
+        );
+      }
+      /* The last 20px of the same text: 400 pixels, of which 100 are tested. With
+         the stripes 1600 of its 4000 pixels are hidden: 40%, most of it by the
+         stripes and all of what is tested by this cover. */
+      #row-solid-cover {
+        left: 220px;
+        width: 20px;
+      }
+      /* The last 100px of each of the twelve texts under these three: 2000 pixels
+         each, 24,000 together. */
+      .filler-cover {
+        left: 140px;
+        width: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="row">
+      <div id="speck" class="text">X</div>
+      <div id="speck-cover" class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="striped" class="text">XXXXXXXXXX</div>
+      <div id="stripes" class="cover"></div>
+      <div id="solid-cover" class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="row-striped" class="text">XXXXXXXXXX</div>
+      <div id="row-stripes" class="cover"></div>
+      <div id="row-solid-cover" class="cover"></div>
+    </div>
+    <script>
+      for (let i = 0; i < 12; i++) {
+        const row = document.createElement("div");
+        row.className = "row";
+        row.innerHTML =
+          `<div id="filler-${i}" class="text">XXXXXXXXXX</div>` +
+          `<div id="filler-cover-${i}" class="cover filler-cover"></div>`;
+        document.body.append(row);
+      }
+    </script>
+  </body>
+</html>

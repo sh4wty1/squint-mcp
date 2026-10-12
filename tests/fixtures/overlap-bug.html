@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: text that another element covers</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are a block of
+         200 x 20 text pixels, 5px under the top of their 30px line: 4000 pixels. A
+         cover is an opaque box as high as the line, so the share of the text it
+         hides is how many of the 200px it lies over. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      /* A row holds one text, from 40px to 240px, and what is painted over it,
+         placed from the left of the row. */
+      .row {
+        position: relative;
+        margin-top: 20px;
+        height: 30px;
+      }
+      .text {
+        margin-left: 40px;
+        width: 200px;
+      }
+      .cover {
+        position: absolute;
+        top: 0;
+        height: 30px;
+        background: rgb(200, 0, 0);
+      }
+      /* The last 100px: 50%. */
+      #half-cover {
+        left: 140px;
+        width: 100px;
+      }
+      /* The last 20px: 10%, the share from which a text is reported. */
+      #corner-cover {
+        left: 220px;
+        width: 20px;
+      }
+      /* The last 50px: 25%, the share from which a Finding is major. */
+      #quarter-cover {
+        left: 190px;
+        width: 50px;
+      }
+      /* Two glyphs and no background, over the third and the fourth of the ten:
+         20%. Nothing is painted over the two glyphs themselves. */
+      #stray {
+        left: 80px;
+        background: none;
+      }
+      /* The last 100px, only while the viewport is at most 600px wide. */
+      #narrow-cover {
+        display: none;
+        left: 140px;
+        width: 100px;
+      }
+      @media (max-width: 600px) {
+        #narrow-cover {
+          display: block;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="row">
+      <div id="half" class="text">XXXXXXXXXX</div>
+      <div id="half-cover" class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="corner" class="text">XXXXXXXXXX</div>
+      <div id="corner-cover" class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="quarter" class="text">XXXXXXXXXX</div>
+      <div id="quarter-cover" class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="collision" class="text">XXXXXXXXXX</div>
+      <div id="stray" class="cover">XX</div>
+    </div>
+    <div class="row">
+      <div id="narrow" class="text">XXXXXXXXXX</div>
+      <div id="narrow-cover" class="cover"></div>
+    </div>
+  </body>
+</html>

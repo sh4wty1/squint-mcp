@@ -34,13 +34,40 @@
 - **Date**: 2026-10-08
 - **Status**: active
 
+### AD-005
+- **Decision**: A Capture measures covered text only when asked (`capture(..., covered_text=True)`): for each element with own text that may be covered, `Element.covered_text` holds its Text ink, its Hidden ink and the Other elements that hit testing gives there. It is measured from screenshots in which the glyphs of chosen text nodes are repainted through CSS highlights, alone and as painted, and by hit testing with the page scrolled. A Check that reads it is listed in `COVERED_TEXT_CHECKS`.
+- **Reason**: Only the pixels say how much of a text is hidden, and only the page can paint a text alone. Spiked for slice 8: the cost about doubles a Capture, which three of the four Checks and `inspect_element` would pay for nothing.
+- **Trade-off**: A Capture is no longer one shape: a Check that needs covered text has to be declared, or it reads `None`. The rules of Silent and Raised layers live in a page script.
+- **Scope**: `src/squint_mcp/capture.py`, `src/squint_mcp/covered.py`, `src/squint_mcp/js/covered_text.js`, `src/squint_mcp/models.py`, `src/squint_mcp/checks/__init__.py`, every Check that reads `covered_text`.
+- **Date**: 2026-10-11
+- **Status**: active
+
+### AD-006
+- **Decision**: Chromium is launched with `--disable-lcd-text`, and a Capture takes one small screenshot beyond the viewport before it measures anything.
+- **Reason**: With subpixel text Chromium rasterizes the same glyph differently alone and as painted, and ink measured in two renders cannot be compared. The first screenshot beyond the viewport changes the layout of some pages on Windows (issue #18); taken first, boxes and pixels are of one layout.
+- **Trade-off**: The pixels of a Capture are not those of a Windows screen with ClearType. About 0.09s more per Capture.
+- **Scope**: `src/squint_mcp/capture.py`, `src/squint_mcp/config.py`, every tool.
+- **Date**: 2026-10-11
+- **Status**: active
+
+### AD-007
+- **Decision**: A Capture lets the page paint two animation frames before every screenshot it takes, and waits for them 250ms at most.
+- **Reason**: On a page with several layers of its own, a screenshot taken right after a change of style now and then shows a band of the page beyond the viewport not painted. Ink read there is zero: a covered text at the foot of `overlap-low.html` got no Finding on about six calls in ten. With the two frames no miss was measured in 60 calls, and no screenshot differed from one taken again at once. Tried and dropped: every screenshot taken twice (right, at twice the cost), `--run-all-compositor-stages-before-draw` (7 misses in 10), a small screenshot taken first (20 misses in 20).
+- **Trade-off**: An eighth to a fifth more time per Capture, for every tool (165s to 187s on 71 tests; the whole suite from 14:00 to 17:13, 18s of that a new test). The frames are asked of the page's own world: a page that puts a function that never calls back where `requestAnimationFrame` is failed every tool with the total timeout until the wait was given its bound (`PAINT_WAIT_MAX_S`), and is now captured after 250ms per screenshot, about 2s more on a page of one covered text. The two frames take about 30ms, and 90ms at most were measured. The timer is of the page's own world too: a page that replaces `setTimeout` as well still fails with the total timeout, until the wait is bounded from the server's side. The rate of the fault moves with the machine and the day: the fifth validation pass measured 7 misses in 30 calls without the wait, where the fourth had 20 in 30.
+- **Scope**: `src/squint_mcp/capture.py`, every tool.
+- **Date**: 2026-10-11
+- **Status**: active. Taken by the agent in the third fix round of slice 8 with the maintainer away; confirmed by the maintainer on 2026-10-12, who had the wait bounded.
+
 ## Handoff
 
-- **Feature**: `offscreen-overflow` (roadmap slice 7, pull request #17) / `.specs/features/offscreen-overflow/`
-- **Phase / Task**: Verified, with `tlc-spec-lean` at profile `light`: round 2 of the Verifier is PASS on C1 to C21 at `47c6163`. Reviewed by `the-judge` (round 1, COMMENT) and fixed with `tlc-implement`: `.checks/pr17-review-fixes.md`.
-- **Completed**: plan, checks, build, `verification.md`, roadmap slice 7 at `concluída`, the task record, the review fixes of pull request #17: F1, F2 and F4, and F3 in part (the three older copies of the crop decode stay, by the user's decision of 2026-10-10).
+- **Feature**: `overlap` (roadmap slice 8) / `.specs/features/overlap/`
+- **Phase / Task**: Execute, under `tlc-spec-driven`, scope Complex: closed. The fifth validation pass is a PASS and the branch is pushed (2026-10-12, on the maintainer's word). The pull request is open: [sh4wty1/squint-mcp#19](https://github.com/sh4wty1/squint-mcp/pull/19), which closes issue #18.
+- **Completed**: T1 to T13 and the fixes F1 to F17 (`89385b0` to `a8feee6`), four validation passes (the fourth, `ad6c911`, FAIL on nine surviving mutants). The maintainer's three decisions of 2026-10-12: AD-007 stays with a bound on its wait, the Fix 1 to 5 of the fourth report are written, and a PASS asks that the named mutants die. The fourth fix round F18 to F24 (F18 `bd77a0c`, F19 `081e6a1`, F20 `9f58aab`, F21 `a58e816`, F22 `f99e424`, F23 `788732c`, F24 `c14cd2f`). The fifth pass (`de3e1e4`, PASS: 131 of 131 criteria due, 9 of 9 survivors killed, gate green with 368 tests in about 22 minutes). After it: the wording of the bound (`b364efc`), the spike and its `extend-exclude` removed (`0b9af3a`), the roadmap and OVL-67 (`c00b172`). The spec has 132 criteria.
 - **In-progress** (file:line): none.
-- **Next step**: the next roadmap slice, 8 (`overlap`, `tlc-spec-driven`).
-- **Blockers**: none. Precision gaps 1a, 2 and 3 fail no check and stay recorded: 2 and 3 by the user's decision of 2026-10-10, 1a new in round 2 and not yet decided (see `docs/tasks/2026-10-09-offscreen-overflow.md`).
-- **Uncommitted files**: none
-- **Branch**: `feat/offscreen-overflow`, from `origin/main` at `9923762`, in pull request #17.
+- **Next step**: merge pull request #19 once its checks are green. Its first run on the CI's Linux passed 366 of 368 tests: the timing of AD-007 and the system font of `overlap-font.html` held there. The two that failed compared the share of a box that glyphs paint in their own colour with a figure that is true on Windows alone, where Chromium blends the columns at the seam of two glyphs (0.6 of a box of 200 x 30 for ten glyphs, two thirds on Linux); they now read that share from a text of the same page with nothing over it. Then the next roadmap slice: 9, `font-fallback`, under `tlc-spec-driven`.
+- **Blockers**: none. Merging is the maintainer's.
+- **Uncommitted files**: none.
+- **Branch**: `feat/overlap`, from `origin/main` at `8aa017c`, pushed to `origin/feat/overlap`. Pull request #19, open against `main`.
+- **Residuals of the fifth pass** (`validation.md`, "Residuals and proposed issues"; none has an issue yet, and opening one is the maintainer's call): (1) the test of OVL-120 fails on a minority of runs with the wait taken out (3 of 10): it is a tripwire, and twelve calls would hold the wait on most runs. (2) The bound of the wait is a timer of the page's own world: a page that replaces `setTimeout` as well as `requestAnimationFrame` still fails every tool with `Timed out after 30s.`; a timeout around the `evaluate` of `_screenshot` (`src/squint_mcp/capture.py`), on the server's side, would end it. (3) A timer of 0ms did as well as two frames in 78 calls: whether a frame is needed is not shown. (4) `PAINT_WAIT_MAX_S` is held by its comment, not by a test. (5) No fixture holds 20,001 pixels of Hidden ink.
+- **Found outside this slice**: under a Content Security Policy that refuses inline styles (`style-src file:`), a page with a covered text and a low-contrast text returns `No findings`: the styles a Capture injects are refused, for every Check (`design.md` names `bypass_csp` to try). On a right-to-left page that scrolls sideways every tool reads the wrong pixels. Both are rows of Out of Scope of the spec; neither has an issue yet.
+- **Notes for the next session**: the suite takes 18 to 23 minutes and does not fit a 10-minute foreground timeout, run it in the background. The working tree mixes line endings (`spec.md`, `tasks.md`, `STATE.md`, `docs/ROADMAP.md`, `pyproject.toml`, most of `src/` CRLF; `tests/test_overlap.py`, the overlap fixtures, `checks/overlap.py`, `validation.md` LF): keep each file as it is, and check with a byte count, since `grep -c $'\r$'` counts every line in Git Bash. A heredoc with an odd number of single quotes fails in the shell wrapper: write scripts to files. `validate_tasks.py` only parses ids of the form `T<n>`. Sub-agents cannot write `.md` files with the Write tool. To run tests against a mutant without touching the tree, copy `src/squint_mcp` to a temp directory, mutate the copy and run pytest with `PYTHONPATH` set to it. To commit tasks one by one after one gate on all of them, record each task's files as blobs when it is done (`git hash-object -w --path`) and stage them with `git update-index --cacheinfo` in order. A mutant on a page of many layers is judged on several runs: the fault AD-007 fixes changes such results from one call to the next.

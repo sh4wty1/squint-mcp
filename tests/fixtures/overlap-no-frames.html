@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: covered text on a page that never calls a frame back</title>
+    <script>
+      // The page puts a function of its own where `requestAnimationFrame` is, and
+      // that function never calls back: whoever waits for a frame of this page
+      // through it waits for ever.
+      window.requestAnimationFrame = () => 0;
+    </script>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are a block of
+         200 x 20 text pixels, 5px under the top of their 30px line: 4000 pixels. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      /* The row holds the text, from 40px to 240px, and its cover, placed from the
+         left of the row. */
+      .row {
+        position: relative;
+        margin-top: 20px;
+        height: 30px;
+      }
+      #still {
+        margin-left: 40px;
+        width: 200px;
+      }
+      /* An opaque box over the last 100px of the text: 2000 pixels, 50%. */
+      #still-cover {
+        position: absolute;
+        top: 0;
+        left: 140px;
+        width: 100px;
+        height: 30px;
+        background: rgb(200, 0, 0);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="row">
+      <div id="still">XXXXXXXXXX</div>
+      <div id="still-cover"></div>
+    </div>
+  </body>
+</html>
