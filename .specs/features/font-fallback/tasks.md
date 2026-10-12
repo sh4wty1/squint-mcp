@@ -9,7 +9,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ---
 
 **Design**: `.specs/features/font-fallback/design.md`
-**Status**: Written on 2026-10-12. The maintainer read it the same day, accepted FNT-52 to FNT-54 and had it committed. Execute has not started
+**Status**: Written on 2026-10-12. The maintainer read it the same day, accepted FNT-52 to FNT-54 and had it committed, then asked for one phase per session. Execute has not started
 
 ---
 
@@ -39,7 +39,17 @@ FNT-40 to FNT-43 are not observable through the tool boundary: the Verifier read
 
 ## Execution Plan
 
-Phases are ordered and run sequentially. Twelve tasks: two batches (phases 1 and 2, then phases 3 and 4), so sub-agents are offered before Execute. T12 follows the Verifier and is the orchestrator's.
+Phases are ordered and run sequentially, one phase per session: the maintainer asked for it on 2026-10-12, so that a session closes one piece of work and stays under about 30% of its context. A session holds three tasks at most and runs them in its own window: no sub-agent is offered for the tasks. The Verifier is still a fresh sub-agent, in a session of its own.
+
+| Session | Runs | Closes when |
+| --- | --- | --- |
+| 1 | Phase 1: T1 to T3 | the Build of phase 1 passes |
+| 2 | Phase 2: T4 to T6 | the Build of phase 2 passes |
+| 3 | Phase 3: T7 to T9 | the Build of phase 3 passes |
+| 4 | Phase 4: T10 and T11 | the Build of phase 4 passes |
+| 5 | The Verifier, its fix rounds if any, and T12 on a PASS | `validate_state.py` exits 0 |
+
+A session reads `tasks.md` down to the end of its phase and, of the spec and the design, what its tasks name; it does not read the phases that follow. It ends with the Handoff of `.specs/STATE.md` replaced and committed, and with the prompt for the next session handed to the maintainer: the phase, the hash of the last commit and what weighs in that phase. Pushing the branch and opening the pull request are a session after the fifth, on the maintainer's go-ahead.
 
 Baseline: 368 tests are collected on this branch at `28360bd` (2026-10-12, `uv run pytest --collect-only`). The whole suite takes 18 to 23 minutes.
 
@@ -48,7 +58,7 @@ Baseline: 368 tests are collected on this branch at `28360bd` (2026-10-12, `uv r
 - **Red**: the test fails because the rule it asks for is not built yet. The task lists them under "Red before the code". Rules are built in the task whose fixture needs them, so T2 leaves out on purpose what T3, T4, T5 and T7 add.
 - **Pin**: the test passes at once, because an earlier task built the rule. A pin a task names a mutant for is proved by it: the mutant is applied to a scratch copy of `src/squint_mcp` (run with `PYTHONPATH` set to the copy, never to the tree) and the test fails there.
 
-**The whole suite.** The gate of a task is Full: the static checks and the test module of the slice. The Build gate runs once per phase, in the background, on the commit of the last task of the phase, from a `git worktree` of that commit so that the edits of the next phase do not reach a run under way. The next phase starts while it runs. Two runs then share the machine: a test of an earlier slice that fails in the background is run again alone before it counts as a regression. A regression is fixed in a commit of its own before the Build of the next phase. The Build of phase 4 is the gate the spec's Success Criteria name, and the Verifier starts only after it passes.
+**The whole suite.** The gate of a task is Full: the static checks and the test module of the slice. The Build gate runs once per phase, in the background (it does not fit a foreground call), on the commit of the last task of the phase, and the session waits for it: a phase is closed, and its session over, only when it passes. A test of an earlier slice that fails there is run again alone before it counts as a regression, and a regression is fixed in a commit of its own, in the same session. The Build of phase 4 is the gate the spec's Success Criteria name, and the Verifier starts only after it passes.
 
 **The page script.** The spike's scripts were not kept. `font_widths.js` is written from the section "Font script" of `design.md`, which gives its interface, the names of a `font-family`, a copy, the shaping properties and the host.
 
@@ -82,7 +92,7 @@ T10 → T11
 T12
 ```
 
-The Verifier is dispatched after T11 and the Build of phase 4. T12 is the closing step, written as a task so that FNT-46 has one: it runs only on a PASS, and the Verifier's report already holds the other 53 criteria by then.
+The Verifier is dispatched in the fifth session, after T11 and the Build of phase 4. T12 is the closing step, written as a task so that FNT-46 has one: it runs only on a PASS, and the Verifier's report already holds the other 53 criteria by then.
 
 ---
 
@@ -479,7 +489,7 @@ Phase 4:  T10 -----→ T11
 Phase 5:  T12
 ```
 
-Execution is strictly sequential. Batches: phases 1 and 2 (six tasks: the Check and its rules), then phases 3 and 4 (five tasks). T12 is taken by the orchestrator after the Verifier.
+Execution is strictly sequential, one phase per session (Execution Plan). T12 is taken in the session of the Verifier, after its PASS.
 
 ---
 
