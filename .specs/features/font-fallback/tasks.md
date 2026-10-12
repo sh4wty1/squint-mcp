@@ -264,7 +264,7 @@ The Verifier is dispatched in the fifth session, after T11 and the Build of phas
 
 ### T6: Pin own text, the one line and the evidence
 
-- [ ] Done
+- [x] Done
 
 **What**: The tests of the cases of `font-fallback-bounds.html` that T5 did not read: what an element is judged on, the widths of one line, the element a Finding sits on and what it carries, and every `selector` passed to `inspect_element`. No change to `src/`: every test is a pin.
 **Where**: `tests/test_font_fallback.py`
@@ -279,15 +279,15 @@ The Verifier is dispatched in the fifth session, after T11 and the Build of phas
 
 **Done when**:
 
-- [ ] The tests of FNT-20, FNT-21 and FNT-22 fail on a scratch copy in which the Check counts an element without comparing its two widths (L-046)
-- [ ] The test of FNT-11 fails on a scratch copy in which the script copies the whole text content of an element in place of its own text nodes (L-036)
-- [ ] The test of FNT-26 fails on a scratch copy in which the Check does not read `visibility`
-- [ ] The test of FNT-52 fails on a scratch copy in which the Check does not read `own_text_boxes` (L-019)
-- [ ] The test of FNT-54 fails on a scratch copy in which the script measures only the first text node of an element
-- [ ] The test of FNT-30 fails on a scratch copy in which a copy is left free to wrap, and asserts both `textWidthPx` equal to 280 and a `box` 100 wide
-- [ ] The test of FNT-32 passes every `selector` of the Findings of the bug fixture, at both viewports, and of the bounds fixture to `inspect_element` and compares the `box`
+- [x] The tests of FNT-20, FNT-21 and FNT-22 fail on a scratch copy in which the Check counts an element without comparing its two widths (L-046)
+- [x] The test of FNT-11 fails on a scratch copy in which the script copies the whole text content of an element in place of its own text nodes (L-036)
+- [x] The test of FNT-26 fails on a scratch copy in which the Check does not read `visibility`
+- [x] The test of FNT-52 fails on a scratch copy in which the Check does not read `own_text_boxes` (L-019)
+- [x] The test of FNT-54 fails on a scratch copy in which the script measures only the first text node of an element
+- [x] The test of FNT-30 fails on a scratch copy in which a copy is left free to wrap, and asserts both `textWidthPx` equal to 280 and a `box` 100 wide
+- [x] The test of FNT-32 passes every `selector` of the Findings of the bug fixture, at both viewports, and of the bounds fixture to `inspect_element` and compares the `box`
 - [ ] Gate check passes: Full; then Build for phase 2, in the background
-- [ ] Test count: the count after T5 plus the tests of this task (eleven at least); none deleted
+- [x] Test count: the count after T5 plus the tests of this task (eleven at least); none deleted
 
 **Tests**: integration
 **Gate**: full, then build for the phase

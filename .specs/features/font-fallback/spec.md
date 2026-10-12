@@ -249,8 +249,8 @@ The maintainer accepted the spec on 2026-10-12 and took every default of the tab
 | FNT-08 | P1: Report a font that did not load | T5 | Implemented |
 | FNT-09 | P1: Report a font that did not load | T5 | Implemented |
 | FNT-10 | P1: Report a font that did not load | T5 | Implemented |
-| FNT-11 | P1: Report a font that did not load | T6 | Pending |
-| FNT-12 | P1: Report a font that did not load | T6 | Pending |
+| FNT-11 | P1: Report a font that did not load | T6 | Implemented |
+| FNT-12 | P1: Report a font that did not load | T6 | Implemented |
 | FNT-13 | P1: Report a font that did not load | T2 | Implemented |
 | FNT-14 | P1: Report a font that did not load | T8 | Pending |
 | FNT-15 | P1: Report a font that did not load | T5 | Implemented |
@@ -258,19 +258,19 @@ The maintainer accepted the spec on 2026-10-12 and took every default of the tab
 | FNT-17 | P1: Stay silent when the text is in the font it asks for | T4 | Implemented |
 | FNT-18 | P1: Stay silent when the text is in the font it asks for | T4 | Implemented |
 | FNT-19 | P1: Stay silent when the text is in the font it asks for | T4 | Implemented |
-| FNT-20 | P1: Stay silent when the text is in the font it asks for | T6 | Pending |
-| FNT-21 | P1: Stay silent when the text is in the font it asks for | T6 | Pending |
-| FNT-22 | P1: Stay silent when the text is in the font it asks for | T6 | Pending |
+| FNT-20 | P1: Stay silent when the text is in the font it asks for | T6 | Implemented |
+| FNT-21 | P1: Stay silent when the text is in the font it asks for | T6 | Implemented |
+| FNT-22 | P1: Stay silent when the text is in the font it asks for | T6 | Implemented |
 | FNT-23 | P1: Stay silent when the text is in the font it asks for | T4 | Implemented |
 | FNT-24 | P1: Stay silent when the text is in the font it asks for | T4 | Implemented |
 | FNT-25 | P1: Stay silent when the text is in the font it asks for | T4 | Implemented |
-| FNT-26 | P1: Stay silent when the text is in the font it asks for | T6 | Pending |
+| FNT-26 | P1: Stay silent when the text is in the font it asks for | T6 | Implemented |
 | FNT-27 | P1: Read the Finding | T3 | Implemented |
 | FNT-28 | P1: Read the Finding | T2 | Implemented |
 | FNT-29 | P1: Read the Finding | T5 | Implemented |
-| FNT-30 | P1: Read the Finding | T6 | Pending |
-| FNT-31 | P1: Read the Finding | T6 | Pending |
-| FNT-32 | P1: Read the Finding | T6 | Pending |
+| FNT-30 | P1: Read the Finding | T6 | Implemented |
+| FNT-31 | P1: Read the Finding | T6 | Implemented |
+| FNT-32 | P1: Read the Finding | T6 | Implemented |
 | FNT-33 | P1: With the other Checks | T2 | Implemented |
 | FNT-34 | P1: With the other Checks | T1 | Implemented |
 | FNT-35 | P1: With the other Checks | T2 | Implemented |
@@ -290,9 +290,9 @@ The maintainer accepted the spec on 2026-10-12 and took every default of the tab
 | FNT-49 | P1: Stay silent when the text is in the font it asks for | T7 | Pending |
 | FNT-50 | P1: Report a font that did not load | T7 | Pending |
 | FNT-51 | P1: Read the Finding | T7 | Pending |
-| FNT-52 | P1: Stay silent when the text is in the font it asks for | T6 | Pending |
+| FNT-52 | P1: Stay silent when the text is in the font it asks for | T6 | Implemented |
 | FNT-53 | P1: Stay silent when the text is in the font it asks for | T5 | Implemented |
-| FNT-54 | P1: Read the Finding | T6 | Pending |
+| FNT-54 | P1: Read the Finding | T6 | Implemented |
 
 **Coverage:** 54 total, 54 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
 

@@ -342,3 +342,100 @@ async def test_a_family_with_no_face_that_failed_is_not_reported(
     assert (
         await reported(client, BOUNDS, families=families, on=("#out-of-range",)) == []
     )
+
+
+def width(finding: dict[str, Any]) -> float:
+    return finding["evidence"]["measured"]["textWidthPx"]
+
+
+async def test_an_element_is_judged_on_its_own_text(client: Client) -> None:
+    finding = await of_family(client, BOUNDS, "Parent Brand")
+    assert finding == await sits_on(client, BOUNDS, "#own-parent")
+    assert (elements(finding), width(finding)) == (1, 100)
+    assert await reported(client, BOUNDS, families=(), on=("#bare-parent",)) == []
+
+
+async def test_a_child_that_falls_back_is_reported_and_not_its_parent(
+    client: Client,
+) -> None:
+    finding = await of_family(client, BOUNDS, "Child Brand")
+    assert finding == await sits_on(client, BOUNDS, "#fallen-child")
+    assert elements(finding) == 1
+    assert await reported(client, BOUNDS, families=(), on=("#clean-parent",)) == []
+
+
+async def test_a_text_in_a_face_that_loaded_is_not_counted(client: Client) -> None:
+    assert await reported(client, BOUNDS, families=(), on=("#half-normal",)) == []
+    assert elements(await of_family(client, BOUNDS, "Half")) == 1
+
+
+async def test_a_text_that_fills_its_lines_in_a_face_that_loaded_is_not_counted(
+    client: Client,
+) -> None:
+    assert await reported(client, BOUNDS, families=(), on=("#wrapped",)) == []
+    assert elements(await of_family(client, BOUNDS, "Half")) == 1
+
+
+async def test_a_text_partly_in_the_range_of_the_face_that_failed_is_not_counted(
+    client: Client,
+) -> None:
+    assert await reported(client, BOUNDS, families=(), on=("#mixed-both",)) == []
+    assert elements(await of_family(client, BOUNDS, "Mixed")) == 1
+
+
+async def test_hidden_text_before_the_first_that_falls_back_is_not_judged(
+    client: Client,
+) -> None:
+    finding = await of_family(client, BOUNDS, "Veiled Brand")
+    assert finding == await sits_on(client, BOUNDS, "#seen")
+    assert elements(finding) == 1
+    assert await reported(client, BOUNDS, families=(), on=("#veiled",)) == []
+
+
+async def test_text_that_paints_no_box_is_not_judged(client: Client) -> None:
+    # `#unshown` has no box to find it by: the Finding is told from its selector.
+    finding = await of_family(client, BOUNDS, "Unshown Brand")
+    assert finding["selector"] == "#shown"
+    assert finding == await sits_on(client, BOUNDS, "#shown")
+    assert elements(finding) == 1
+
+
+async def test_the_width_of_a_text_that_wraps_is_of_one_line(client: Client) -> None:
+    finding = await sits_on(client, BOUNDS, "#long")
+    assert width(finding) == 280
+    assert finding["box"]["w"] == 100
+
+
+async def test_the_finding_of_a_bold_text_carries_its_weight(client: Client) -> None:
+    finding = await sits_on(client, BOUNDS, "#half-bold")
+    assert finding["evidence"]["computed"] == {
+        "font-family": "Half, Wide",
+        "font-weight": "700",
+        "font-style": "normal",
+    }
+    assert width(finding) == 300
+
+
+async def test_the_selector_of_a_finding_works_in_inspect_element(
+    client: Client,
+) -> None:
+    for url, viewports, count in ((BUG, [DESKTOP, MOBILE], 5), (BOUNDS, [DESKTOP], 12)):
+        content = await detect(client, url, viewports=viewports, checks=ONLY)
+        assert len(content["findings"]) == count
+        for finding in content["findings"]:
+            arguments = {
+                "url": url,
+                "selector": finding["selector"],
+                "viewport": finding["viewport"],
+            }
+            result = await client.call_tool("inspect_element", arguments)
+            assert result.is_error is False, texts(result)
+            assert result.structured_content is not None
+            assert result.structured_content["box"] == finding["box"]
+
+
+async def test_the_widths_of_the_text_nodes_of_an_element_are_added(
+    client: Client,
+) -> None:
+    finding = await sits_on(client, BOUNDS, "#split")
+    assert (width(finding), elements(finding)) == (140, 1)
