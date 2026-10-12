@@ -198,7 +198,7 @@ The Verifier is dispatched in the fifth session, after T11 and the Build of phas
 
 ### T4: Leave out text that is hidden or paints no box
 
-- [ ] Done
+- [x] Done
 
 **What**: The fixture `font-fallback-clean.html` with the cases of FNT-16 to FNT-19 and FNT-23 to FNT-25, and its tests; then "Judged element" in rule 3 of the Check: `own_text_boxes` is not empty and `computed["visibility"]` is `visible`.
 **Where**: `src/squint_mcp/checks/font_fallback.py` (with the clean fixture and its tests)
@@ -213,14 +213,14 @@ The Verifier is dispatched in the fifth session, after T11 and the Build of phas
 
 **Done when**:
 
-- [ ] Red before the code: the tests of FNT-16 and FNT-23 fail on a Finding of `Hidden Brand` on `#hidden`
-- [ ] The test of FNT-16 calls the tool without `checks`: the page is clean for the other four Checks too, and the response has no image block and the one text block `No findings in 1 viewport.`
-- [ ] One test per criterion names the element or the family it holds silent
-- [ ] The test of FNT-18 fails on a scratch copy in which the family judged is the first of the list that has a Face
-- [ ] The comment of the fixture gives the status of its eight Faces, four `error` and four `unloaded`, as read from the page in Chromium when the fixture was written: the tool does not show a status
-- [ ] The half "paints at least one box" is written here with the other, from the Term of the spec; its test is FNT-52, a pin of T6, whose case is in the bounds fixture
-- [ ] Gate check passes: Full
-- [ ] Test count: the count after T3 plus the tests of this task (seven at least); none deleted
+- [x] Red before the code: the tests of FNT-16 and FNT-23 fail on a Finding of `Hidden Brand` on `#hidden`
+- [x] The test of FNT-16 calls the tool without `checks`: the page is clean for the other four Checks too, and the response has no image block and the one text block `No findings in 1 viewport.`
+- [x] One test per criterion names the element or the family it holds silent
+- [x] The test of FNT-18 fails on a scratch copy in which the family judged is the first of the list that has a Face
+- [x] The comment of the fixture gives the status of its eight Faces, four `error` and four `unloaded`, as read from the page in Chromium when the fixture was written: the tool does not show a status
+- [x] The half "paints at least one box" is written here with the other, from the Term of the spec; its test is FNT-52, a pin of T6, whose case is in the bounds fixture
+- [x] Gate check passes: Full
+- [x] Test count: the count after T3 plus the tests of this task (seven at least); none deleted
 
 **Tests**: integration
 **Gate**: full

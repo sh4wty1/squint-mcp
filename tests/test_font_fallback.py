@@ -3,12 +3,22 @@
 from typing import Any
 
 import pytest
-from helpers import DESKTOP, MOBILE, call, detect, findings_on, fixture_url, texts
+from helpers import (
+    DESKTOP,
+    MOBILE,
+    call,
+    detect,
+    findings_on,
+    fixture_url,
+    images,
+    texts,
+)
 from mcp import Client
 
 pytestmark = pytest.mark.anyio
 
 BUG = fixture_url("font-fallback-bug.html")
+CLEAN = fixture_url("font-fallback-clean.html")
 
 ONLY = ["font-fallback"]
 
@@ -156,3 +166,74 @@ async def test_each_finding_of_the_first_viewport_has_one_in_the_second(
     )
     assert len(desktop) == 2
     assert desktop <= mobile
+
+
+async def test_a_page_whose_text_is_in_the_font_it_asks_for_has_no_findings(
+    client: Client,
+) -> None:
+    result = await call(client, CLEAN)
+    assert result.is_error is False
+    assert result.structured_content is not None
+    assert result.structured_content["findings"] == []
+    assert images(result) == []
+    assert texts(result) == ["No findings in 1 viewport."]
+
+
+async def reported(
+    client: Client,
+    url: str,
+    *,
+    families: tuple[str, ...],
+    on: tuple[str, ...] = (),
+) -> list[tuple[str, str]]:
+    """The `(selector, family)` of the Findings of the Check that name one of
+    `families` or sit on one of the elements `on`."""
+    findings = (await detect(client, url, checks=ONLY))["findings"]
+    found = [finding for finding in findings if family(finding) in families]
+    for selector in on:
+        for finding in await findings_on(client, url, selector, findings):
+            if finding not in found:
+                found.append(finding)
+    return [(finding["selector"], family(finding)) for finding in found]
+
+
+async def test_a_family_that_is_only_named_is_not_reported(client: Client) -> None:
+    families = ("Squint No Such Font",)
+    assert await reported(client, CLEAN, families=families, on=("#undeclared",)) == []
+
+
+async def test_a_failed_family_that_is_not_the_first_of_the_list_is_not_reported(
+    client: Client,
+) -> None:
+    families = ("Second Choice",)
+    assert await reported(client, CLEAN, families=families, on=("#second",)) == []
+
+
+async def test_a_failed_family_no_element_asks_for_is_not_reported(
+    client: Client,
+) -> None:
+    assert await reported(client, CLEAN, families=("Preloaded",)) == []
+
+
+async def test_a_failed_family_only_hidden_text_asks_for_is_not_reported(
+    client: Client,
+) -> None:
+    families = ("Hidden Brand",)
+    assert await reported(client, CLEAN, families=families, on=("#hidden",)) == []
+
+
+async def test_a_failed_family_only_a_pseudo_element_asks_for_is_not_reported(
+    client: Client,
+) -> None:
+    families = ("Pseudo Brand",)
+    assert await reported(client, CLEAN, families=families, on=("#pseudo",)) == []
+
+
+async def test_a_family_whose_faces_were_never_needed_is_not_reported(
+    client: Client,
+) -> None:
+    # `#none` and `#blank` paint no box to find them by: their families stand
+    # for them.
+    families = ("Unused", "After Generic", "Never Shown", "Blank")
+    on = ("#after-generic",)
+    assert await reported(client, CLEAN, families=families, on=on) == []

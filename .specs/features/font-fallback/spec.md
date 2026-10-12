@@ -254,16 +254,16 @@ The maintainer accepted the spec on 2026-10-12 and took every default of the tab
 | FNT-13 | P1: Report a font that did not load | T2 | Implemented |
 | FNT-14 | P1: Report a font that did not load | T8 | Pending |
 | FNT-15 | P1: Report a font that did not load | T5 | Pending |
-| FNT-16 | P1: Stay silent when the text is in the font it asks for | T4 | Pending |
-| FNT-17 | P1: Stay silent when the text is in the font it asks for | T4 | Pending |
-| FNT-18 | P1: Stay silent when the text is in the font it asks for | T4 | Pending |
-| FNT-19 | P1: Stay silent when the text is in the font it asks for | T4 | Pending |
+| FNT-16 | P1: Stay silent when the text is in the font it asks for | T4 | Implemented |
+| FNT-17 | P1: Stay silent when the text is in the font it asks for | T4 | Implemented |
+| FNT-18 | P1: Stay silent when the text is in the font it asks for | T4 | Implemented |
+| FNT-19 | P1: Stay silent when the text is in the font it asks for | T4 | Implemented |
 | FNT-20 | P1: Stay silent when the text is in the font it asks for | T6 | Pending |
 | FNT-21 | P1: Stay silent when the text is in the font it asks for | T6 | Pending |
 | FNT-22 | P1: Stay silent when the text is in the font it asks for | T6 | Pending |
-| FNT-23 | P1: Stay silent when the text is in the font it asks for | T4 | Pending |
-| FNT-24 | P1: Stay silent when the text is in the font it asks for | T4 | Pending |
-| FNT-25 | P1: Stay silent when the text is in the font it asks for | T4 | Pending |
+| FNT-23 | P1: Stay silent when the text is in the font it asks for | T4 | Implemented |
+| FNT-24 | P1: Stay silent when the text is in the font it asks for | T4 | Implemented |
+| FNT-25 | P1: Stay silent when the text is in the font it asks for | T4 | Implemented |
 | FNT-26 | P1: Stay silent when the text is in the font it asks for | T6 | Pending |
 | FNT-27 | P1: Read the Finding | T3 | Implemented |
 | FNT-28 | P1: Read the Finding | T2 | Implemented |

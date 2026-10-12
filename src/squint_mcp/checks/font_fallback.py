@@ -50,6 +50,9 @@ def check(capture: Capture) -> list[Finding]:
         widths = element.line_widths
         if widths is None or widths.family not in failed:
             continue
+        # Judged: its own text paints a box, and is not hidden on purpose.
+        if not element.own_text_boxes or element.computed["visibility"] != "visible":
+            continue
         # The family changes nothing: the text is as wide without it. The two
         # widths are of one text laid out twice in one page, so they are compared
         # as they are.
