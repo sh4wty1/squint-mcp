@@ -9,7 +9,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ---
 
 **Design**: `.specs/features/font-fallback/design.md`
-**Status**: Written on 2026-10-12. The maintainer read it the same day, accepted FNT-52 to FNT-54 and had it committed, then asked for one phase per session. Execute: phase 1 (T1 to T3) is done and its Build passed on `9953077`, and phase 2 (T4 to T6) is done and its Build passed on `357206d`, both the same day
+**Status**: Written on 2026-10-12. The maintainer read it the same day, accepted FNT-52 to FNT-54 and had it committed, then asked for one phase per session. Execute: phase 1 (T1 to T3) is done and its Build passed on `9953077`, phase 2 (T4 to T6) is done and its Build passed on `357206d`, and phase 3 (T7 to T9) is done and its Build passed on `ba860c9`, all the same day
 
 ---
 
@@ -376,7 +376,7 @@ The Verifier is dispatched in the fifth session, after T11 and the Build of phas
 
 - [x] The test of FNT-36 asserts the whole list of `(selector, check)` pairs in order (L-020), and every Finding is `minor`
 - [x] The test of FNT-39 asserts `isError: false`, exactly one Finding and `elements` equal to 1000
-- [ ] Gate check passes: Full; then Build for phase 3, in the background
+- [x] Gate check passes: Full; then Build for phase 3, in the background
 - [x] Test count: the count after T8 plus two; none deleted
 
 **Tests**: integration
