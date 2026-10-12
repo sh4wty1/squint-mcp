@@ -42,6 +42,7 @@ Explicitly excluded. Documented to prevent scope creep.
 | Text of pseudo-elements | Own text only, as in the other Checks. An icon font used through `::before` and `content` gets no Finding when it fails (FNT-24). Known limit of this Check |
 | A Failed family that has the name of a font installed on the machine | Chromium renders the text in the installed font of that name (measured for a page that declares its own `Arial`). The Finding then depends on whether the Tail gives the same font: it differs from one machine to the next. No fixture uses such a name. Known limit of this Check |
 | A Tail whose font is as wide as the family for a text, when the element renders in a loaded Face of a Failed family | The two widths are equal and the element counts as fallen back. It takes a family with one Face failed and another loaded, and a fallback of the same metrics. Known limit of this Check |
+| A Tail that starts with a family the page declares and no text has used | The copy of the text that measures the Tail asks for that font, a request the page had not made, and the width read is of the family after it when the font is not there yet ([`design.md`](design.md), Risks). It touches only an element that renders in a loaded Face of a Failed family, which then counts as fallen back only if that Face is as wide as the family after. Known limit of this Check |
 | Text in a vertical writing mode | The width of a line that runs down the page is its thickness, not its length. An element that renders in a loaded Face of a Failed family can count as fallen back there. Known limit of this Check |
 | A font whose request never ends | `load` does not fire and the call fails with the total timeout, as it has since slice 2 (measured, [`context.md`](context.md)) |
 | A Face that is still `loading` when the Capture is taken, or that fails after it | Only a `status` of `error` makes a Failed family. A Capture waits for `document.fonts.ready` before anything else (slice 2) |
@@ -63,7 +64,7 @@ Explicitly excluded. Documented to prevent scope creep.
 
 Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 
-The rows marked `y` were decided with the maintainer on 2026-10-12 or follow a rule an earlier slice settled. The rows marked `n` are the agent's defaults and wait for the maintainer's review of this spec.
+The maintainer accepted the spec on 2026-10-12 and took every default of the table below: all of them are confirmed. The same day the maintainer accepted what the design asked for: the criteria FNT-49 to FNT-51, on a fixture of their own, and one row of Out of Scope ("A Tail that starts with a family the page declares and no text has used").
 
 | Assumption / decision | Chosen default | Rationale | Confirmed? |
 | --- | --- | --- | --- |
@@ -71,26 +72,26 @@ The rows marked `y` were decided with the maintainer on 2026-10-12 or follow a r
 | Severity | Always `minor` | Decided with the maintainer (2026-10-12). The text can be read; `major` is kept for content that cannot. Nothing measured grades the fault: the width in the font that was asked for is not known | y |
 | Which family of the list is judged | The First family only | Decided with the maintainer (2026-10-12). It is the font the CSS asks for. Measured: a family named after a generic one is never even asked for by Chromium | y |
 | The platforms the spike ran on | Windows 11 and Linux (the Playwright image for Docker), the same Chromium 153 | Decided with the maintainer (2026-10-12), and done: every figure this spec relies on is the same on both ([`context.md`](context.md)) | y |
-| Which families can be reported | Only those that have a Face: declared by an `@font-face` rule or added by a script | The roadmap names `document.fonts`. A family that is only named cannot fail to load, it can only be missing from a machine | n |
-| What "not loaded" means | A Face with a `status` of `error`. `unloaded` and `loading` do not make a Failed family | Measured: after `document.fonts.ready` a Face that was needed and could not be had is `error`, whatever the cause (a missing file, a 404, bytes that are not a font, a `local()` font that is not installed). `unloaded` is a Face no text needed: a weight nobody uses, a `unicode-range` without the text, a family behind a generic one. `document.fonts.check()` answers `true` for a family that nothing declares and is not used | n |
-| Which Face of a family has to fail | Any. The Check does not match Faces to elements by weight, style or `unicode-range`; the width does it | Measured: when the Face that matches an element fails, Chromium goes to the next family, not to another Face of the same one. An element that renders in a loaded Face of the family is wider or narrower than in its Tail (FNT-20) | n |
-| How the width confirms | The element falls back when its Line width in its computed `font-family` is equal to its Line width in its Tail | "Confirmada pela métrica de largura" (roadmap). The width in the font that failed cannot be measured; that the family changes nothing can. It is what `.docs/START.md` calls "differs from the expected" read from the other side | n |
-| Why on one line | Both widths are of the Own text set on one line, not of its boxes on the page | Measured: a justified paragraph 300px wide has a box of 300px in the family and in its Tail, though the family renders it. On one line it is 1380px against 2070px | n |
-| Equality | Exact: no tolerance and no threshold. `config` gains no value for this Check | Both widths are of the same text, laid out twice in one page by one browser: measured equal to the last fraction on both platforms, twice in a row. A tolerance would be a number tuned on one machine | n |
-| The Tail of a list of one family | The initial value of `font-family` | Measured: text whose only family failed is as wide as with `font-family: initial`. Icon fonts are named alone | n |
-| Which elements are judged | Those whose Own text paints at least one box and whose `visibility` is `visible` | An element of `display: none` paints no box, and Chromium does not even ask for its font. Text of `visibility: hidden` is hidden on purpose, as `overlap` takes it (slice 8). Other ways of not being seen are not read: Out of Scope | n |
-| The name a family is reported under | As the first of its Faces in `document.fonts` gives it, without quotes; elements that write it in another case are counted with it | A Face gives the name without quotes (measured). Chromium matches `half` and `HALF` to a family declared as `Half` (measured) | n |
-| `evidence.measured` | Exactly `family` (a string), `elements` (an integer) and `textWidthPx` (the Line width of the element the Finding sits on, the same in its `font-family` and in its Tail, rounded to two decimal places) | What an agent needs to act: which font, and how far the fault reaches. `textWidthPx` is the measurement that confirms the claim (`docs/SPEC.md`, story 47). On a text that wraps it is wider than `box.w`: it is of one line | n |
-| `evidence.computed` | Exactly `font-family`, `font-weight` and `font-style` of the element. `font-style` is a new property collected for a Capture; `inspect_element` does not return it | The three say which Face the element asked for. As `z-index` in slice 8 | n |
-| Message, suggestion, source, category | `The font "{family}" did not load: the text of {elements} element(s) is rendered in a fallback font`, with `element` for one and `elements` otherwise; `Fix the source the page loads "{family}" from, or take the family out of font-family`; `Squint heuristic`; `visual-bug` | As `text-clipped` and `overlap`: no outside norm defines this | n |
+| Which families can be reported | Only those that have a Face: declared by an `@font-face` rule or added by a script | The roadmap names `document.fonts`. A family that is only named cannot fail to load, it can only be missing from a machine | y |
+| What "not loaded" means | A Face with a `status` of `error`. `unloaded` and `loading` do not make a Failed family | Measured: after `document.fonts.ready` a Face that was needed and could not be had is `error`, whatever the cause (a missing file, a 404, bytes that are not a font, a `local()` font that is not installed). `unloaded` is a Face no text needed: a weight nobody uses, a `unicode-range` without the text, a family behind a generic one. `document.fonts.check()` answers `true` for a family that nothing declares and is not used | y |
+| Which Face of a family has to fail | Any. The Check does not match Faces to elements by weight, style or `unicode-range`; the width does it | Measured: when the Face that matches an element fails, Chromium goes to the next family, not to another Face of the same one. An element that renders in a loaded Face of the family is wider or narrower than in its Tail (FNT-20) | y |
+| How the width confirms | The element falls back when its Line width in its computed `font-family` is equal to its Line width in its Tail | "Confirmada pela métrica de largura" (roadmap). The width in the font that failed cannot be measured; that the family changes nothing can. It is what `.docs/START.md` calls "differs from the expected" read from the other side | y |
+| Why on one line | Both widths are of the Own text set on one line, not of its boxes on the page | Measured: a justified paragraph 300px wide has a box of 300px in the family and in its Tail, though the family renders it. On one line it is 1380px against 2070px | y |
+| Equality | Exact: no tolerance and no threshold. `config` gains no value for this Check | Both widths are of the same text, laid out twice in one page by one browser: measured equal to the last fraction on both platforms, twice in a row. A tolerance would be a number tuned on one machine | y |
+| The Tail of a list of one family | The initial value of `font-family` | Measured: text whose only family failed is as wide as with `font-family: initial`. Icon fonts are named alone | y |
+| Which elements are judged | Those whose Own text paints at least one box and whose `visibility` is `visible` | An element of `display: none` paints no box, and Chromium does not even ask for its font. Text of `visibility: hidden` is hidden on purpose, as `overlap` takes it (slice 8). Other ways of not being seen are not read: Out of Scope | y |
+| The name a family is reported under | As the first of its Faces in `document.fonts` gives it, without quotes; elements that write it in another case are counted with it | A Face gives the name without quotes (measured). Chromium matches `half` and `HALF` to a family declared as `Half` (measured) | y |
+| `evidence.measured` | Exactly `family` (a string), `elements` (an integer) and `textWidthPx` (the Line width of the element the Finding sits on, the same in its `font-family` and in its Tail, rounded to two decimal places) | What an agent needs to act: which font, and how far the fault reaches. `textWidthPx` is the measurement that confirms the claim (`docs/SPEC.md`, story 47). On a text that wraps it is wider than `box.w`: it is of one line | y |
+| `evidence.computed` | Exactly `font-family`, `font-weight` and `font-style` of the element. `font-style` is a new property collected for a Capture; `inspect_element` does not return it | The three say which Face the element asked for. As `z-index` in slice 8 | y |
+| Message, suggestion, source, category | `The font "{family}" did not load: the text of {elements} element(s) is rendered in a fallback font`, with `element` for one and `elements` otherwise; `Fix the source the page loads "{family}" from, or take the family out of font-family`; `Squint heuristic`; `visual-bug` | As `text-clipped` and `overlap`: no outside norm defines this | y |
 | Unknown-Check message (supersedes the literal in force since slice 8) | `Valid checks: font-fallback, low-contrast-real, offscreen-overflow, overlap, text-clipped.` | Same rule, alphabetical; the list grew. It changes four assertions: `tests/test_detect_visual_bugs.py` lines 342, 353, 364 and 376 | y |
 | Order of Findings | Unchanged: severity, then viewport, then document order of the element, then Check name | Settled in slice 4 (LCR-37 to LCR-39, LCR-53) | y |
-| How the Capture learns the Faces and the two widths | On request, as covered text is (AD-005): only when `font-fallback` is among the Checks of a call. They are held in the Capture in fields the Check reads (AD-003). The shape is [`design.md`](design.md)'s | The maintainer asked for the path of AD-005 and AD-003. Measured: two widths for 1,000 elements take 45 to 66ms when read together, and a page with no Failed family has nothing to measure | n |
-| The layout the widths are of | Both Line widths of an element are read in the layout the boxes of the Capture are of: after the Capture has settled it (AD-006) | Measured on both platforms: the first screenshot beyond the viewport changes the font of the generic `monospace` family, and fifteen glyphs go from 164.95px (Windows) or 150px (Linux) to 180.03px. The two widths move together; one read before and one after would differ and the Finding be lost | n |
-| Outcomes on two platforms | A criterion asserts whether a Finding is there, where it sits, its severity, `family` and `elements`. It asserts `textWidthPx` as a figure only for text in Ahem; for text in a system font it asserts that it equals another value of the same response (FNT-14). No criterion compares a width with a figure from another machine | Chromium rasterizes and picks system fonts differently on Windows and on Linux (slice 8: two tests failed on the CI's first run). An equality of two widths of one Capture does not depend on either | n |
-| Fixtures | Ahem at `font-size: 20px` and `line-height: 30px`: a glyph is 20px wide. `Wide` is Ahem with `size-adjust: 150%`: a glyph is 30px wide (measured on both platforms). A family that fails is declared with a `src` that names a file that is not there. A text is a block 200px wide, 40px from the left of the page, unless a criterion says otherwise. Each rule has its own family, so one Finding has one cause. No fixture names a family that a machine can have installed | Exact widths need a font whose glyphs are whole pixels, and a fallback that can be told from it | n |
+| How the Capture learns the Faces and the two widths | On request, as covered text is (AD-005): only when `font-fallback` is among the Checks of a call. They are held in the Capture in fields the Check reads (AD-003). The shape is [`design.md`](design.md)'s | The maintainer asked for the path of AD-005 and AD-003. Measured: two widths for 1,000 elements take 45 to 66ms when read together, and a page with no Failed family has nothing to measure | y |
+| The layout the widths are of | Both Line widths of an element are read in the layout the boxes of the Capture are of: after the Capture has settled it (AD-006) | Measured on both platforms: the first screenshot beyond the viewport changes the font of the generic `monospace` family, and fifteen glyphs go from 164.95px (Windows) or 150px (Linux) to 180.03px. The two widths move together; one read before and one after would differ and the Finding be lost | y |
+| Outcomes on two platforms | A criterion asserts whether a Finding is there, where it sits, its severity, `family` and `elements`. It asserts `textWidthPx` as a figure only for text in Ahem; for text in a system font it asserts that it equals another value of the same response (FNT-14). No criterion compares a width with a figure from another machine | Chromium rasterizes and picks system fonts differently on Windows and on Linux (slice 8: two tests failed on the CI's first run). An equality of two widths of one Capture does not depend on either | y |
+| Fixtures | Ahem at `font-size: 20px` and `line-height: 30px`: a glyph is 20px wide. `Wide` is Ahem with `size-adjust: 150%`: a glyph is 30px wide (measured on both platforms). A family that fails is declared with a `src` that names a file that is not there. A text is a block 200px wide, 40px from the left of the page, unless a criterion says otherwise. Each rule has its own family, so one Finding has one cause. No fixture names a family that a machine can have installed | Exact widths need a font whose glyphs are whole pixels, and a fallback that can be told from it | y |
 | Criteria not observable through the tool boundary (FNT-40 to FNT-46) | Verified by the Verifier from file evidence, not by pytest | The source docs forbid a second test seam. As in slices 3, 4 and 8 | y |
-| When the discrimination sensor is satisfied | As in slice 8: the mutants that a validation report or a task names die, with those of the code the last fix round changed. One found alive later is a residual or an issue and does not fail the feature | The maintainer decided it for slice 8 (2026-10-12); carried over here | n |
+| When the discrimination sensor is satisfied | As in slice 8: the mutants that a validation report or a task names die, with those of the code the last fix round changed. One found alive later is a residual or an issue and does not fail the feature | The maintainer decided it for slice 8 (2026-10-12); carried over here | y |
 
 **Open questions:** none - all resolved or logged above.
 
@@ -133,6 +134,7 @@ The rows marked `y` were decided with the maintainer on 2026-10-12 or follow a r
 13. WHEN `detect_visual_bugs` is called on `font-fallback-bug.html` with `viewports` of 1440 × 900 and 390 × 844 THEN `#narrow` (`font-family: "Narrow Only", Ahem`, of `display: none` while the viewport is more than 600px wide; `Narrow Only` has a `src` that names no file) SHALL get one Finding whose `viewport` is 390 × 844, with `evidence.measured.family` equal to `Narrow Only`, and none whose `viewport` is 1440 × 900. <!-- FNT-13 -->
 14. WHEN the Tail of an element that falls back is the generic `monospace` family and the page is taller than the viewport (`font-fallback-monospace.html`, a page 3900px high at 1440 × 900: `#code`, an inline element that holds fifteen glyphs on one line and nothing else, of `font-family: Brand, monospace`, with `Brand` declared with a `src` that names no file) THEN `detect_visual_bugs` called with `checks` equal to `["font-fallback"]` SHALL return exactly one Finding, on `#code`, with `evidence.measured.family` equal to `Brand`, `evidence.measured.elements` equal to 1 and `evidence.measured.textWidthPx` equal to the `w` of its `box` rounded to two decimal places: both widths are read in the layout the boxes of the Capture are of (AD-006). <!-- FNT-14 -->
 15. WHEN `detect_visual_bugs` is called on `font-fallback-bounds.html` with `checks` equal to `["font-fallback"]` THEN the `(selector, evidence.measured.family, evidence.measured.elements)` of `findings` SHALL be, in this order, `(#half-bold, Half, 1)`, `(#mixed-lower, Mixed, 1)`, `(#lower, Missing Brand, 2)`, `(#scripted, Scripted, 1)`, `(#seen, Veiled Brand, 1)`, `(#own-parent, Parent Brand, 1)`, `(#fallen-child, Child Brand, 1)`, `(#long, Long Brand, 1)`, `(#twice-normal, Twice, 2)` and `([data-testid="shadow-text"], Shadow Brand, 2)`, all with `severity` equal to `minor`. <!-- FNT-15 -->
+16. WHEN the Face that failed is the italic one of a family and an element asks for it (in `font-fallback-shaping.html`, `Slant` has a Face of `font-style: normal` from the file of Ahem and one of `font-style: italic` with a `src` that names no file; `#slant-normal` and after it `#slant-italic`, of `font-style: italic`, both have `font-family: Slant, Wide`) THEN the Check SHALL return one Finding for the family, on `#slant-italic`, with `evidence.measured.elements` equal to 1 and `evidence.computed` equal to `{"font-family": "Slant, Wide", "font-weight": "400", "font-style": "italic"}`. <!-- FNT-50 -->
 
 **Independent Test**: Call `detect_visual_bugs` on `font-fallback-bug.html` and read the two Findings: `Brand` on three elements, `Icon Set` on one.
 
@@ -157,6 +159,7 @@ The rows marked `y` were decided with the maintainer on 2026-10-12 or follow a r
 9. IF a Failed family is named only by the `content` of a pseudo-element (`#pseudo` in `font-fallback-clean.html`, an element with no Own text whose `::before` has `content: "XXXXXXXXXX"` and `font-family: "Pseudo Brand", Ahem`) THEN the Check SHALL return no Finding for the family. <!-- FNT-24 -->
 10. IF no Face of the First family of an element has a `status` of `error` THEN the Check SHALL return no Finding for that family; in `font-fallback-clean.html` the Faces of these families, each declared with a `src` that names no file, are `unloaded`: `Unused` (no `font-family` names it), `After Generic` (`#after-generic`, `font-family: sans-serif, "After Generic"`), `Never Shown` (`#none`, of `display: none`) and `Blank` (`#blank`, whose text is whitespace). <!-- FNT-25 -->
 11. WHEN a Failed family has an element of `visibility: hidden` before the first element that falls back in it (in `font-fallback-bounds.html`, `#veiled`, `font-family: "Veiled Brand", Ahem` and `visibility: hidden`, and after it `#seen`, with the same `font-family`) THEN the Finding of the family SHALL sit on `#seen` and have `evidence.measured.elements` equal to 1. <!-- FNT-26 -->
+12. IF the `text-transform` of an element puts its characters in the `unicode-range` of a Face that loaded (`#upper-mixed` in `font-fallback-shaping.html`, `font-family: Mixed, Wide`, the text `xxxxxxxxxx` and `text-transform: uppercase`: 200px wide, 300px in its Tail; `Mixed` is declared as in FNT-09) THEN the Check SHALL return no Finding on the element and SHALL not count it. <!-- FNT-49 -->
 
 **Independent Test**: Call `detect_visual_bugs` on `font-fallback-clean.html`: four faces of the page failed and nothing is reported.
 
@@ -176,6 +179,7 @@ The rows marked `y` were decided with the maintainer on 2026-10-12 or follow a r
 4. WHEN the Own text of the element a Finding sits on wraps (`#long` in `font-fallback-bounds.html`, a block 100px wide with the text `XXXX XXXX XXXX` and `font-family: "Long Brand", Ahem`) THEN `evidence.measured.textWidthPx` SHALL be its width on one line, 280, and the `w` of its `box` SHALL be 100. <!-- FNT-30 -->
 5. WHEN the element a Finding sits on is not of normal weight (`#half-bold` in `font-fallback-bounds.html`) THEN `evidence.computed` SHALL equal `{"font-family": "Half, Wide", "font-weight": "700", "font-style": "normal"}` and `evidence.measured.textWidthPx` SHALL be 300, the width of its ten glyphs in `Wide`. <!-- FNT-31 -->
 6. WHEN the `selector` of any Finding of `font-fallback-bug.html` or `font-fallback-bounds.html` is passed to `inspect_element` with the same `url` and `viewport` THEN `inspect_element` SHALL return `isError: false` with a `box` equal to the Finding's `box`. <!-- FNT-32 -->
+7. WHEN the element a Finding sits on has a `letter-spacing` and a `word-spacing` (`#spaced` in `font-fallback-shaping.html`, an inline element of `font-family: "Spaced Brand", Ahem`, `letter-spacing: 2px` and `word-spacing: 6px` with the text `XXXX XXXXX`) THEN `evidence.measured.textWidthPx` SHALL be 226: nine glyphs of 20px, a space of 20px, 2px after each of the ten characters and 6px at the space. <!-- FNT-51 -->
 
 **Independent Test**: Read the Finding of `#heading` and compare it with the literal above.
 
@@ -232,62 +236,65 @@ The rows marked `y` were decided with the maintainer on 2026-10-12 or follow a r
 
 | Requirement ID | Story | Phase | Status |
 | --- | --- | --- | --- |
-| FNT-01 | P1: Report a font that did not load | - | Pending |
-| FNT-02 | P1: Report a font that did not load | - | Pending |
-| FNT-03 | P1: Report a font that did not load | - | Pending |
-| FNT-04 | P1: Report a font that did not load | - | Pending |
-| FNT-05 | P1: Report a font that did not load | - | Pending |
-| FNT-06 | P1: Report a font that did not load | - | Pending |
-| FNT-07 | P1: Report a font that did not load | - | Pending |
-| FNT-08 | P1: Report a font that did not load | - | Pending |
-| FNT-09 | P1: Report a font that did not load | - | Pending |
-| FNT-10 | P1: Report a font that did not load | - | Pending |
-| FNT-11 | P1: Report a font that did not load | - | Pending |
-| FNT-12 | P1: Report a font that did not load | - | Pending |
-| FNT-13 | P1: Report a font that did not load | - | Pending |
-| FNT-14 | P1: Report a font that did not load | - | Pending |
-| FNT-15 | P1: Report a font that did not load | - | Pending |
-| FNT-16 | P1: Stay silent when the text is in the font it asks for | - | Pending |
-| FNT-17 | P1: Stay silent when the text is in the font it asks for | - | Pending |
-| FNT-18 | P1: Stay silent when the text is in the font it asks for | - | Pending |
-| FNT-19 | P1: Stay silent when the text is in the font it asks for | - | Pending |
-| FNT-20 | P1: Stay silent when the text is in the font it asks for | - | Pending |
-| FNT-21 | P1: Stay silent when the text is in the font it asks for | - | Pending |
-| FNT-22 | P1: Stay silent when the text is in the font it asks for | - | Pending |
-| FNT-23 | P1: Stay silent when the text is in the font it asks for | - | Pending |
-| FNT-24 | P1: Stay silent when the text is in the font it asks for | - | Pending |
-| FNT-25 | P1: Stay silent when the text is in the font it asks for | - | Pending |
-| FNT-26 | P1: Stay silent when the text is in the font it asks for | - | Pending |
-| FNT-27 | P1: Read the Finding | - | Pending |
-| FNT-28 | P1: Read the Finding | - | Pending |
-| FNT-29 | P1: Read the Finding | - | Pending |
-| FNT-30 | P1: Read the Finding | - | Pending |
-| FNT-31 | P1: Read the Finding | - | Pending |
-| FNT-32 | P1: Read the Finding | - | Pending |
-| FNT-33 | P1: With the other Checks | - | Pending |
-| FNT-34 | P1: With the other Checks | - | Pending |
-| FNT-35 | P1: With the other Checks | - | Pending |
-| FNT-36 | P1: With the other Checks | - | Pending |
-| FNT-37 | P1: With the other Checks | - | Pending |
-| FNT-38 | P1: With the other Checks | - | Pending |
-| FNT-39 | P1: With the other Checks | - | Pending |
-| FNT-40 | P2: Check contract, Capture and documents | - | Pending |
-| FNT-41 | P2: Check contract, Capture and documents | - | Pending |
-| FNT-42 | P2: Check contract, Capture and documents | - | Pending |
-| FNT-43 | P2: Check contract, Capture and documents | - | Pending |
-| FNT-44 | P2: Check contract, Capture and documents | - | Pending |
-| FNT-45 | P2: Check contract, Capture and documents | - | Pending |
-| FNT-46 | P2: Check contract, Capture and documents | - | Pending |
-| FNT-47 | Edge cases | - | Pending |
-| FNT-48 | Edge cases | - | Pending |
+| FNT-01 | P1: Report a font that did not load | Design | In Design |
+| FNT-02 | P1: Report a font that did not load | Design | In Design |
+| FNT-03 | P1: Report a font that did not load | Design | In Design |
+| FNT-04 | P1: Report a font that did not load | Design | In Design |
+| FNT-05 | P1: Report a font that did not load | Design | In Design |
+| FNT-06 | P1: Report a font that did not load | Design | In Design |
+| FNT-07 | P1: Report a font that did not load | Design | In Design |
+| FNT-08 | P1: Report a font that did not load | Design | In Design |
+| FNT-09 | P1: Report a font that did not load | Design | In Design |
+| FNT-10 | P1: Report a font that did not load | Design | In Design |
+| FNT-11 | P1: Report a font that did not load | Design | In Design |
+| FNT-12 | P1: Report a font that did not load | Design | In Design |
+| FNT-13 | P1: Report a font that did not load | Design | In Design |
+| FNT-14 | P1: Report a font that did not load | Design | In Design |
+| FNT-15 | P1: Report a font that did not load | Design | In Design |
+| FNT-16 | P1: Stay silent when the text is in the font it asks for | Design | In Design |
+| FNT-17 | P1: Stay silent when the text is in the font it asks for | Design | In Design |
+| FNT-18 | P1: Stay silent when the text is in the font it asks for | Design | In Design |
+| FNT-19 | P1: Stay silent when the text is in the font it asks for | Design | In Design |
+| FNT-20 | P1: Stay silent when the text is in the font it asks for | Design | In Design |
+| FNT-21 | P1: Stay silent when the text is in the font it asks for | Design | In Design |
+| FNT-22 | P1: Stay silent when the text is in the font it asks for | Design | In Design |
+| FNT-23 | P1: Stay silent when the text is in the font it asks for | Design | In Design |
+| FNT-24 | P1: Stay silent when the text is in the font it asks for | Design | In Design |
+| FNT-25 | P1: Stay silent when the text is in the font it asks for | Design | In Design |
+| FNT-26 | P1: Stay silent when the text is in the font it asks for | Design | In Design |
+| FNT-27 | P1: Read the Finding | Design | In Design |
+| FNT-28 | P1: Read the Finding | Design | In Design |
+| FNT-29 | P1: Read the Finding | Design | In Design |
+| FNT-30 | P1: Read the Finding | Design | In Design |
+| FNT-31 | P1: Read the Finding | Design | In Design |
+| FNT-32 | P1: Read the Finding | Design | In Design |
+| FNT-33 | P1: With the other Checks | Design | In Design |
+| FNT-34 | P1: With the other Checks | Design | In Design |
+| FNT-35 | P1: With the other Checks | Design | In Design |
+| FNT-36 | P1: With the other Checks | Design | In Design |
+| FNT-37 | P1: With the other Checks | Design | In Design |
+| FNT-38 | P1: With the other Checks | Design | In Design |
+| FNT-39 | P1: With the other Checks | Design | In Design |
+| FNT-40 | P2: Check contract, Capture and documents | Design | In Design |
+| FNT-41 | P2: Check contract, Capture and documents | Design | In Design |
+| FNT-42 | P2: Check contract, Capture and documents | Design | In Design |
+| FNT-43 | P2: Check contract, Capture and documents | Design | In Design |
+| FNT-44 | P2: Check contract, Capture and documents | Design | In Design |
+| FNT-45 | P2: Check contract, Capture and documents | Design | In Design |
+| FNT-46 | P2: Check contract, Capture and documents | Design | In Design |
+| FNT-47 | Edge cases | Design | In Design |
+| FNT-48 | Edge cases | Design | In Design |
+| FNT-49 | P1: Stay silent when the text is in the font it asks for | Design | In Design |
+| FNT-50 | P1: Report a font that did not load | Design | In Design |
+| FNT-51 | P1: Read the Finding | Design | In Design |
 
-**Coverage:** 48 total, 0 mapped to tasks, 48 unmapped until the Tasks phase.
+**Coverage:** 51 total, 0 mapped to tasks, 51 unmapped until the Tasks phase.
 
 ---
 
 ## Success Criteria
 
-- [ ] All 48 requirements verified by the Verifier, FNT-40 to FNT-46 from file evidence.
+- [ ] All 51 requirements verified by the Verifier, FNT-40 to FNT-46 from file evidence.
 - [ ] The gate passes: typecheck, lint, format check and the whole test suite.
 - [ ] The first run of the suite on the CI's Linux passes the tests of this slice with no assertion changed for it.
 - [ ] The discrimination sensor leaves alive none of the mutants that a validation report or a task names, nor any of the code the last fix round changed, in the Check and in what the Capture gains for it (Assumptions, "When the discrimination sensor is satisfied").
