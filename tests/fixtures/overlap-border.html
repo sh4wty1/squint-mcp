@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: a text under the border of an element with text</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are a block of
+         200 x 20 text pixels, 5px under the top of their 30px line: 4000 pixels.
+
+         `overlap-bounds.html` holds a text under the background of an element
+         with text of its own and `overlap-reach.html` one under its
+         pseudo-elements. Here it is under its border. The page holds 2000
+         pixels of hidden ink to test. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      /* A row holds one text, from 40px to 240px, and what is painted over it,
+         placed from the left of the row. */
+      .row {
+        position: relative;
+        margin-top: 20px;
+        height: 30px;
+      }
+      .text {
+        margin-left: 40px;
+        width: 200px;
+      }
+      .cover {
+        position: absolute;
+        top: 0;
+        height: 30px;
+        background: rgb(200, 0, 0);
+      }
+      /* An element with no background and two glyphs of its own from 240px to
+         280px, beside the text and all seen. Its left border, 100px wide and
+         opaque, is over the last 100px of the text: 50%. */
+      #bordered {
+        position: absolute;
+        top: 0;
+        left: 140px;
+        width: 40px;
+        height: 30px;
+        border-left: 100px solid rgb(200, 0, 0);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="row">
+      <div id="under-border" class="text">XXXXXXXXXX</div>
+      <div id="bordered">XX</div>
+    </div>
+  </body>
+</html>

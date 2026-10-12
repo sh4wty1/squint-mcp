@@ -170,6 +170,7 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 45. WHEN a covered text is inside an element whose `filter` that changes colours is declared `!important` (`#weighty` in `overlap-filters.html`, in a row of `filter: grayscale(1) !important`, half under `#weighty-cover`) THEN the Check SHALL return one Finding for it with `evidence.measured.hiddenPercent` equal to 50, `evidence.measured.coveredBy` equal to `#weighty-cover` and `severity` equal to `major`. <!-- OVL-123 -->
 46. WHEN the `drop-shadow()` of an Other element hides ink of a text beside the ink its box hides (`#under-shadow` in `overlap-filters.html`: the box of `#shadow-cover` is over the last 60px of its 200px of text and its shadow, of `filter: drop-shadow(-40px 0 0 rgb(200, 0, 0))`, over the 40px before them) THEN the Check SHALL return one Finding for the text with `evidence.measured.hiddenPercent` equal to 50, `evidence.measured.coveredBy` equal to `#shadow-cover` and `severity` equal to `major`: what a `drop-shadow()` hides is hidden. <!-- OVL-124 -->
 47. WHEN an element inside a text that is not its child is painted over a part of the own text of that text and an Other element hides at least 10% of the ink the text shows beside it (`#grandchild-first` in `overlap-nested.html`: `#grandchild-badge`, the child of a child of the text, of `position: absolute`, over the first 80px of its 200px of text and `#grandchild-first-cover` over its last 20px, 400 of the 2400 pixels the text shows) THEN the Check SHALL return one Finding for the text with `evidence.measured.hiddenPercent` equal to 16, `severity` equal to `minor` and `evidence.measured.coveredBy` equal to `#grandchild-first-cover`: what is inside a text is its descendants, not its children alone. <!-- OVL-127 -->
+48. WHEN ink of a text is hidden by the border of an Other element that has own text, all of it seen (`#under-border` in `overlap-border.html`: the last 100px of its 200px of text under the left border, 100px wide, of `#bordered`, which has no background and two glyphs of its own beside the text) THEN the Check SHALL return one Finding for the text with `evidence.measured.hiddenPercent` equal to 50, `severity` equal to `major` and `evidence.measured.coveredBy` equal to `#bordered`. <!-- OVL-131 -->
 
 **Independent Test**: Call `detect_visual_bugs` on `overlap-bug.html` and read the four Findings, the collision among them.
 
@@ -462,13 +463,14 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 | OVL-128 | P1: Stay silent on overlaps that are meant | F20 | Implemented |
 | OVL-129 | P1: Severity | F21 | Implemented |
 | OVL-130 | P1: Severity | F21 | Implemented |
+| OVL-131 | P1: Report text that another element covers | F22 | Implemented |
 
-**Coverage:** 130 total, 130 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
+**Coverage:** 131 total, 131 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
 
 ---
 
 ## Success Criteria
 
-- [ ] All 130 requirements verified by the Verifier, OVL-61 to OVL-67 from file evidence.
+- [ ] All 131 requirements verified by the Verifier, OVL-61 to OVL-67 from file evidence.
 - [ ] The gate passes: typecheck, lint, format check and the whole test suite.
 - [ ] The discrimination sensor leaves no surviving mutant in the Check, in what the Capture gains for it and in the rules of Silent and Raised layers.

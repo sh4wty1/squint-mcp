@@ -35,6 +35,7 @@ INVERTED = fixture_url("overlap-inverted.html")
 FILTERS = fixture_url("overlap-filters.html")
 NESTED = fixture_url("overlap-nested.html")
 RAISED = fixture_url("overlap-raised.html")
+BORDER = fixture_url("overlap-border.html")
 LOW = fixture_url("overlap-low.html")
 NO_FRAMES = fixture_url("overlap-no-frames.html")
 FONT = fixture_url("overlap-font.html")
@@ -1328,3 +1329,14 @@ async def test_the_severity_reads_the_coverer_when_it_stands_first_of_two_covers
         ("#under-plain-first", "major", 50, "#plain-large-first"),
         ("#under-raised-first", "minor", 50, "#raised-large-first"),
     ]
+
+
+async def test_text_under_the_border_of_an_element_with_text_is_reported(
+    client: Client,
+) -> None:
+    # `#bordered` has two glyphs of its own beside the text, all seen, and its
+    # left border is over half of the text. Were that border left painted when
+    # the glyphs of the page are told apart, the text would be taken for one
+    # with half of its ink and nothing hidden.
+    findings = (await detect(client, BORDER, checks=ONLY))["findings"]
+    assert covered(findings) == [("#under-border", "major", 50, "#bordered")]

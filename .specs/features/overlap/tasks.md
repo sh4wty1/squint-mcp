@@ -1277,3 +1277,31 @@ Baseline: 359 tests pass (2026-10-11). The whole suite takes about seventeen and
 **Gate**: build
 
 **Commit**: `test(overlap): pin the raised layer of a coverer that stands first in the document`
+
+---
+
+### F22: Pin a text under the border of an element with text
+
+- [x] Done
+
+**What**: Fix 4 of the report (mutant B1). The fixture `overlap-border.html`, a text half under the left border of an element that has no background and two glyphs of its own beside the text, and its test (OVL-131).
+**Where**: `tests/test_overlap.py` (with `tests/fixtures/overlap-border.html`), `.specs/features/overlap/spec.md`
+**Depends on**: F21 (the count of tests)
+**Reuses**: the row of `#under-after` of `overlap-reach.html`
+**Requirement**: OVL-131
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [x] The test fails with `border-color: transparent` taken out of the rule that paints the glyphs alone (`covered_text.js:232`): no Finding
+- [x] Gate check passes: Build
+- [x] Test count: 367 tests pass; none deleted
+
+**Tests**: integration
+**Gate**: build
+
+**Commit**: `test(overlap): pin a text under the border of an element with text`
