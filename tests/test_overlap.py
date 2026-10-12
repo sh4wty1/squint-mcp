@@ -32,6 +32,7 @@ COUNT_UNREPORTED = fixture_url("overlap-count-unreported.html")
 STEP_TWO = fixture_url("overlap-step-two.html")
 STEP_THREE = fixture_url("overlap-step-three.html")
 INVERTED = fixture_url("overlap-inverted.html")
+FILTERS = fixture_url("overlap-filters.html")
 LOW = fixture_url("overlap-low.html")
 NO_FRAMES = fixture_url("overlap-no-frames.html")
 FONT = fixture_url("overlap-font.html")
@@ -1256,3 +1257,32 @@ async def test_the_finding_carries_the_position_and_the_z_index_of_a_positioned_
         "position": "relative",
         "z-index": z_index,
     }
+
+
+async def test_covered_text_under_a_filter_of_several_functions_is_measured(
+    client: Client,
+) -> None:
+    # `#listed` has a function that changes colours and one that keeps them in
+    # one filter, the row of `#weighty` declares its filter `!important`, and
+    # the shadow of `#shadow-cover` hides 40px beside the 60px its box hides.
+    # A text left under a function that changes colours would have no ink, and
+    # a cover measured without its shadow would hide 30%.
+    findings = (await detect(client, FILTERS, checks=ONLY))["findings"]
+    assert covered(findings) == [
+        ("#listed", "major", 50, "#listed-cover"),
+        ("#weighty", "major", 50, "#weighty-cover"),
+        ("#under-shadow", "major", 50, "#shadow-cover"),
+    ]
+
+
+@pytest.mark.parametrize("selector", ["#blurred", "#twice-faded"])
+async def test_covered_text_that_its_filter_leaves_without_ink_is_not_reported(
+    client: Client, selector: str
+) -> None:
+    # Each is half under a cover and would be reported at 50% with less of its
+    # filter applied: `#blurred` without its `blur()`, `#twice-faded` with the
+    # first only of its two `opacity()`.
+    inspected = await inspect(client, FILTERS, selector)
+    assert painted(inspected)[COVER] == 0.5
+    findings = (await detect(client, FILTERS, checks=ONLY))["findings"]
+    assert [f for f in findings if f["box"] == inspected["box"]] == []

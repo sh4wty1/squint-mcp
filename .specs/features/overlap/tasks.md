@@ -1191,3 +1191,33 @@ Baseline: 359 tests pass (2026-10-11). The whole suite takes about seventeen and
 **Gate**: build
 
 **Commit**: `fix(capture): give the wait before a screenshot an end of its own`
+
+---
+
+### F19: Pin the filter rule beyond a filter of one function
+
+- [x] Done
+
+**What**: Fix 1 of the report (mutants F4 to F8). The fixture `overlap-filters.html`, five texts each half covered, with a test on the whole list of its Findings and one on the two texts that get none. A text whose filter lists a function that changes colours and one that keeps them (OVL-122). A text in a row whose filter is declared `!important` (OVL-123). A cover whose box hides 60px and whose `drop-shadow()` hides 40px more (OVL-124). A text of `filter: blur(20px)` (OVL-125). A text of `filter: opacity(0.6) grayscale(1) opacity(0.6)` (OVL-126). The report put the rows in the bounds and the clean fixtures; they are in a page of their own, because what a `blur()` spreads reaches the rows around it and the whole-page test of the clean fixture runs every Check.
+**Where**: `tests/test_overlap.py` (with `tests/fixtures/overlap-filters.html`), `.specs/features/overlap/spec.md`
+**Depends on**: F18 (the count of tests)
+**Reuses**: the rows of `overlap-bounds.html`; the `covered`, `inspect` and `painted` helpers of the tests
+**Requirement**: OVL-122, OVL-123, OVL-124, OVL-125, OVL-126
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [x] The test of the list fails under F6 (a filter with a function to keep is left as the page wrote it, `covered_text.js:53`: no Finding for `#listed`), under F7 (`"important"` dropped at `:55`: no Finding for `#weighty`) and under F5 (`drop-shadow` taken out of the expression at `:50`: 30% for `#under-shadow`)
+- [x] The test of the silent texts fails for `#blurred` under F4 (`blur` taken out of the expression) and for `#twice-faded` under F8 (`kept[0]` set at `:55`): a Finding at 50%
+- [x] The page holds 6000 pixels of Hidden ink to test, counted in its comment
+- [x] Gate check passes: Build
+- [x] Test count: 363 tests pass; none deleted
+
+**Tests**: integration
+**Gate**: build
+
+**Commit**: `test(overlap): pin the filter rule beyond a filter of one function`

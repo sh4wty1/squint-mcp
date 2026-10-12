@@ -166,6 +166,9 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 41. WHEN the element that hides ink of a text has the `open` attribute and is not a `dialog` element (`#under-details` in `overlap-reach.html`, half covered by `#open-details`, a `details` element with the `open` attribute) THEN the Check SHALL return one Finding for the text with `evidence.measured.hiddenPercent` equal to 50, `evidence.measured.coveredBy` equal to `#open-details` and `severity` equal to `major`. <!-- OVL-108 -->
 42. WHEN ink of a text is hidden by a pseudo-element of an Other element that has own text, all of it seen (in `overlap-reach.html`: `#under-after`, the last 100px of its text under a box that the `::after` of `#after-owner` paints outside its own box, and `#under-before`, the same under the `::before` of `#before-owner`; each owner has two glyphs of its own beside the text) THEN the Check SHALL return one Finding for the text with `evidence.measured.hiddenPercent` equal to 50, `severity` equal to `major` and `evidence.measured.coveredBy` equal to the owner of the pseudo-element. <!-- OVL-111 -->
 43. WHEN the page is scrolled sideways when the Capture is taken (`overlap-scrolled-sideways-on-load.html`, a page 3000px wide that a script of the page scrolls 1500px sideways while it loads: `#far` is 2000px from the left of the page, the last 100px of its 200px of text under `#far-cover`) THEN `detect_visual_bugs` called with `checks` equal to `["overlap"]` and a viewport of 1440 × 900 SHALL return exactly one Finding, on `#far`, with `evidence.measured.hiddenPercent` equal to 50, `severity` equal to `major` and `evidence.measured.coveredBy` equal to `#far-cover`. <!-- OVL-114 -->
+44. WHEN a covered text has a `filter` that lists a function that changes colours and one that keeps them (`#listed` in `overlap-filters.html`, of `filter: grayscale(1) opacity(0.6)`, the last 100px of its 200px of text under `#listed-cover`) THEN the Check SHALL return one Finding for it with `evidence.measured.hiddenPercent` equal to 50, `evidence.measured.coveredBy` equal to `#listed-cover` and `severity` equal to `major`: the function that changes colours is left out and the one that keeps them applied. <!-- OVL-122 -->
+45. WHEN a covered text is inside an element whose `filter` that changes colours is declared `!important` (`#weighty` in `overlap-filters.html`, in a row of `filter: grayscale(1) !important`, half under `#weighty-cover`) THEN the Check SHALL return one Finding for it with `evidence.measured.hiddenPercent` equal to 50, `evidence.measured.coveredBy` equal to `#weighty-cover` and `severity` equal to `major`. <!-- OVL-123 -->
+46. WHEN the `drop-shadow()` of an Other element hides ink of a text beside the ink its box hides (`#under-shadow` in `overlap-filters.html`: the box of `#shadow-cover` is over the last 60px of its 200px of text and its shadow, of `filter: drop-shadow(-40px 0 0 rgb(200, 0, 0))`, over the 40px before them) THEN the Check SHALL return one Finding for the text with `evidence.measured.hiddenPercent` equal to 50, `evidence.measured.coveredBy` equal to `#shadow-cover` and `severity` equal to `major`: what a `drop-shadow()` hides is hidden. <!-- OVL-124 -->
 
 **Independent Test**: Call `detect_visual_bugs` on `overlap-bug.html` and read the four Findings, the collision among them.
 
@@ -212,6 +215,8 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 31. IF the glyphs of a covered text are painted with a colour of alpha 0 that is not computed to `rgb()` (in `overlap-clean.html`, each half under a cover: `#transparent-oklch`, `color: oklch(0 0 0 / 0)`; `#transparent-mix`, `color: color-mix(in srgb, rgb(0 0 0) 0%, transparent)`, which is computed to `color(srgb 0 0 0 / 0)`; `#transparent-none`, `color: oklch(0 0 0 / none)`) THEN the Check SHALL return no Finding for it. <!-- OVL-99 -->
 32. IF a text in a font with anti-aliased edges is wholly under an Other element that lets at least half of its ink through (`#font-veil-45` in `overlap-font.html`, a line of the system `sans-serif` font at 16px under a layer of `rgba(255, 255, 255, 0.45)`) THEN the Check SHALL return no Finding for it: a pixel is seen by the ink it has, at the edge of a glyph as at its middle. <!-- OVL-104 -->
 33. IF a descendant of an element is painted over a part of its own text and an Other element hides under 10% of the ink the element shows beside that descendant (`#child-and-nick` in `overlap-clean.html`: `#nick-badge`, a child of `position: absolute`, over the first 80px of its 200px of text, and `#child-nick-cover` over its last 10px, 200 of the 2400 pixels the text shows) THEN the Check SHALL return no Finding for the element. <!-- OVL-105 -->
+34. IF a covered text is blurred by its `filter` until no pixel of it keeps half of the ink of a glyph (`#blurred` in `overlap-filters.html`, of `filter: blur(20px)`, half under a cover) THEN the Check SHALL return no Finding for it: it has no Text ink. <!-- OVL-125 -->
+35. IF a covered text is faded below half by two functions of one `filter` that each leave over half of its ink (`#twice-faded` in `overlap-filters.html`, of `filter: opacity(0.6) grayscale(1) opacity(0.6)`, which leaves 36 parts in 100, half under a cover) THEN the Check SHALL return no Finding for it: every function that keeps colours is applied. <!-- OVL-126 -->
 
 **Independent Test**: Call `detect_visual_bugs` on `overlap-clean.html` and get an empty list.
 
@@ -444,13 +449,18 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 | OVL-119 | P1: Read the Finding | F15 | Implemented |
 | OVL-120 | Edge cases | F17 | Implemented |
 | OVL-121 | Edge cases | F18 | Implemented |
+| OVL-122 | P1: Report text that another element covers | F19 | Implemented |
+| OVL-123 | P1: Report text that another element covers | F19 | Implemented |
+| OVL-124 | P1: Report text that another element covers | F19 | Implemented |
+| OVL-125 | P1: Stay silent on overlaps that are meant | F19 | Implemented |
+| OVL-126 | P1: Stay silent on overlaps that are meant | F19 | Implemented |
 
-**Coverage:** 121 total, 121 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
+**Coverage:** 126 total, 126 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
 
 ---
 
 ## Success Criteria
 
-- [ ] All 121 requirements verified by the Verifier, OVL-61 to OVL-67 from file evidence.
+- [ ] All 126 requirements verified by the Verifier, OVL-61 to OVL-67 from file evidence.
 - [ ] The gate passes: typecheck, lint, format check and the whole test suite.
 - [ ] The discrimination sensor leaves no surviving mutant in the Check, in what the Capture gains for it and in the rules of Silent and Raised layers.
