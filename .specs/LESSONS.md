@@ -486,6 +486,18 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: spec-precision gap 2, probe pw-rtl, .specs/features/offscreen-overflow/plan.md:103 (spec)
 - last seen: 2026-10-12T02:08:25Z
 
+### L-080 - Bound a wait that runs a function of the page from the server side, not with another function of the page
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `capture,timeouts` · harmful: 0
+- features: overlap
+- evidence: spec.md:97 and OVL-121 (probe dead-timers, validation pass 5), src/squint_mcp/capture.py:39-43 (capture,timeouts)
+- last seen: 2026-10-12T06:37:06Z
+
+### L-081 - Measure on a quiet and on a loaded machine how often a test that samples a timing fault fails without its fix, and size the sample to that rate
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,timing` · harmful: 0
+- features: overlap
+- evidence: mutant W7 (P1), src/squint_mcp/capture.py:122 (OVL-120, validation pass 5) (tests,timing)
+- last seen: 2026-10-12T06:37:06Z
+
 ## Quarantined (failed when applied - ignore)
 
 A confirmed lesson that recurred alongside failure. Kept for the maintainer to review.

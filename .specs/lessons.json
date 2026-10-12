@@ -3,7 +3,7 @@
   "promote_threshold": 2,
   "window_days": 45,
   "quarantine_threshold": 2,
-  "next_id": 80,
+  "next_id": 82,
   "lessons": [
     {
       "id": "L-001",
@@ -1451,6 +1451,42 @@
       ],
       "created": "2026-10-12T02:08:25Z",
       "last_seen": "2026-10-12T02:08:25Z"
+    },
+    {
+      "id": "L-080",
+      "key": "spec_precision_gap::bound a wait that runs a function of the page from the server side not with another function of the page",
+      "text": "Bound a wait that runs a function of the page from the server side, not with another function of the page",
+      "signal": "spec_precision_gap",
+      "scope": "capture,timeouts",
+      "status": "candidate",
+      "features": [
+        "overlap"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "spec.md:97 and OVL-121 (probe dead-timers, validation pass 5), src/squint_mcp/capture.py:39-43 (capture,timeouts)"
+      ],
+      "created": "2026-10-12T06:37:06Z",
+      "last_seen": "2026-10-12T06:37:06Z"
+    },
+    {
+      "id": "L-081",
+      "key": "surviving_mutant::measure on a quiet and on a loaded machine how often a test that samples a timing fault fails without its fix and size the sample to that rate",
+      "text": "Measure on a quiet and on a loaded machine how often a test that samples a timing fault fails without its fix, and size the sample to that rate",
+      "signal": "surviving_mutant",
+      "scope": "tests,timing",
+      "status": "candidate",
+      "features": [
+        "overlap"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "mutant W7 (P1), src/squint_mcp/capture.py:122 (OVL-120, validation pass 5) (tests,timing)"
+      ],
+      "created": "2026-10-12T06:37:06Z",
+      "last_seen": "2026-10-12T06:37:06Z"
     }
   ]
 }
