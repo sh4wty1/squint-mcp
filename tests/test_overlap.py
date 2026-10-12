@@ -34,6 +34,7 @@ STEP_THREE = fixture_url("overlap-step-three.html")
 INVERTED = fixture_url("overlap-inverted.html")
 FILTERS = fixture_url("overlap-filters.html")
 NESTED = fixture_url("overlap-nested.html")
+RAISED = fixture_url("overlap-raised.html")
 LOW = fixture_url("overlap-low.html")
 NO_FRAMES = fixture_url("overlap-no-frames.html")
 FONT = fixture_url("overlap-font.html")
@@ -1312,3 +1313,18 @@ async def test_text_under_an_element_two_elements_down_inside_a_menu_is_not_repo
     assert painted(inspected)[COVER] == 0.5
     findings = (await detect(client, NESTED, checks=ONLY))["findings"]
     assert [f for f in findings if f["box"] == inspected["box"]] == []
+
+
+async def test_the_severity_reads_the_coverer_when_it_stands_first_of_two_covers(
+    client: Client,
+) -> None:
+    # The two rows of the reach fixture with their covers in the other order:
+    # the one that hides 80px stands first in the document and the one that
+    # hides 20px last. Only the small one is raised over `#under-plain-first`
+    # and only the large one over `#under-raised-first`: read from the last
+    # cover in the document, the two severities would change places.
+    findings = (await detect(client, RAISED, checks=ONLY))["findings"]
+    assert covered(findings) == [
+        ("#under-plain-first", "major", 50, "#plain-large-first"),
+        ("#under-raised-first", "minor", 50, "#raised-large-first"),
+    ]

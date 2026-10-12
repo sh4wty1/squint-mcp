@@ -1249,3 +1249,31 @@ Baseline: 359 tests pass (2026-10-11). The whole suite takes about seventeen and
 **Gate**: build
 
 **Commit**: `test(overlap): pin what is inside a text or a layer, deeper than a child`
+
+---
+
+### F21: Pin the Raised layer read from a Coverer that stands first in the document
+
+- [x] Done
+
+**What**: Fix 3 of the report (mutant R1). The fixture `overlap-raised.html`, the two rows of OVL-109 and OVL-110 with the cover that hides most first in the document, and one test on the whole list of its Findings: only the cover that is not the Coverer is in a Raised layer (OVL-129), and only the Coverer is (OVL-130).
+**Where**: `tests/test_overlap.py` (with `tests/fixtures/overlap-raised.html`), `.specs/features/overlap/spec.md`
+**Depends on**: F20 (the count of tests)
+**Reuses**: the rows of `#under-raised-small` and `#under-raised-large` of `overlap-reach.html`
+**Requirement**: OVL-129, OVL-130
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [x] The test fails with the Raised layer read from the last cover in the document (`covered.covers[-1].raised`, `overlap.py:66`): the two severities change places
+- [x] Gate check passes: Build
+- [x] Test count: 366 tests pass; none deleted
+
+**Tests**: integration
+**Gate**: build
+
+**Commit**: `test(overlap): pin the raised layer of a coverer that stands first in the document`

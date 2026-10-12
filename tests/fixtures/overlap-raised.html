@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: a raised cover that stands before or after a plain one</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are a block of
+         200 x 20 text pixels, 5px under the top of their 30px line: 4000 pixels. A
+         cover is an opaque box as high as the line.
+
+         The two rows of `overlap-reach.html` in which one of two covers has a
+         `z-index` above 0, in the other order: there the cover that hides most
+         stands last in the document, here it stands first. Each text has its
+         first 20px under one cover and its last 80px under the other: 50%, most
+         of it by the second. The page holds 4000 pixels of hidden ink to
+         test. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      /* A row holds one text, from 40px to 240px, and what is painted over it,
+         placed from the left of the row. */
+      .row {
+        position: relative;
+        margin-top: 20px;
+        height: 30px;
+      }
+      .text {
+        margin-left: 40px;
+        width: 200px;
+      }
+      .cover {
+        position: absolute;
+        top: 0;
+        height: 30px;
+        background: rgb(200, 0, 0);
+      }
+      .large {
+        left: 160px;
+        width: 80px;
+      }
+      .small {
+        left: 40px;
+        width: 20px;
+      }
+      #raised-small-last,
+      #raised-large-first {
+        z-index: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="row">
+      <div id="under-plain-first" class="text">XXXXXXXXXX</div>
+      <div id="plain-large-first" class="cover large"></div>
+      <div id="raised-small-last" class="cover small"></div>
+    </div>
+    <div class="row">
+      <div id="under-raised-first" class="text">XXXXXXXXXX</div>
+      <div id="raised-large-first" class="cover large"></div>
+      <div id="plain-small-last" class="cover small"></div>
+    </div>
+  </body>
+</html>

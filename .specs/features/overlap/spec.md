@@ -242,6 +242,8 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 8. WHEN two Other elements hide ink of one text and only the one that is not its Coverer is in a Raised layer (`#under-raised-small` in `overlap-reach.html`: `#raised-small`, first in the document, of `position: absolute` and `z-index: 1`, over its first 20px and `#plain-large` over its last 80px) THEN the Finding SHALL have `evidence.measured.hiddenPercent` equal to 50, `evidence.measured.coveredBy` equal to `#plain-large` and `severity` equal to `major`. <!-- OVL-109 -->
 9. WHEN two Other elements hide ink of one text and only its Coverer is in a Raised layer (`#under-raised-large` in `overlap-reach.html`: `#plain-small`, first in the document, over its first 20px and `#raised-large`, of `position: absolute` and `z-index: 1`, over its last 80px) THEN the Finding SHALL have `evidence.measured.hiddenPercent` equal to 50, `evidence.measured.coveredBy` equal to `#raised-large` and `severity` equal to `minor`. <!-- OVL-110 -->
 10. WHEN Findings of the severities `major`, `minor` and `info` come from one call THEN `findings` SHALL hold them in that order and the summary line SHALL count each severity apart: on `overlap-info.html`, whose texts stand in the document as `#a` (a cover of `position: absolute` and `z-index: 1` over its last 20px), `#b` (a cover over its last 20px) and `#c` (a cover over its last 100px), `detect_visual_bugs` called with `checks` equal to `["overlap"]` SHALL return `findings` whose `(selector, severity, evidence.measured.hiddenPercent, evidence.measured.coveredBy)` are, in this order, `(#c, major, 50, #c-cover)`, `(#b, minor, 10, #b-cover)` and `(#a, info, 10, #a-cover)`, and a first content block that is a text block equal to `Found 3 findings in 1 viewport: 1 major, 1 minor, 1 info.` <!-- OVL-115 -->
+11. WHEN two Other elements hide ink of one text, its Coverer stands first of the two in the document and only the other one is in a Raised layer (`#under-plain-first` in `overlap-raised.html`: `#plain-large-first` over its last 80px and `#raised-small-last`, of `position: absolute` and `z-index: 1`, over its first 20px) THEN the Finding SHALL have `evidence.measured.hiddenPercent` equal to 50, `evidence.measured.coveredBy` equal to `#plain-large-first` and `severity` equal to `major`. <!-- OVL-129 -->
+12. WHEN two Other elements hide ink of one text, its Coverer stands first of the two in the document and only the Coverer is in a Raised layer (`#under-raised-first` in `overlap-raised.html`: `#raised-large-first`, of `position: absolute` and `z-index: 1`, over its last 80px and `#plain-small-last` over its first 20px) THEN the Finding SHALL have `evidence.measured.hiddenPercent` equal to 50, `evidence.measured.coveredBy` equal to `#raised-large-first` and `severity` equal to `minor`. <!-- OVL-130 -->
 
 **Independent Test**: The same half-covered text is `major` under a plain cover and `minor` under one with `z-index: 1`.
 
@@ -458,13 +460,15 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 | OVL-126 | P1: Stay silent on overlaps that are meant | F19 | Implemented |
 | OVL-127 | P1: Report text that another element covers | F20 | Implemented |
 | OVL-128 | P1: Stay silent on overlaps that are meant | F20 | Implemented |
+| OVL-129 | P1: Severity | F21 | Implemented |
+| OVL-130 | P1: Severity | F21 | Implemented |
 
-**Coverage:** 128 total, 128 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
+**Coverage:** 130 total, 130 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
 
 ---
 
 ## Success Criteria
 
-- [ ] All 128 requirements verified by the Verifier, OVL-61 to OVL-67 from file evidence.
+- [ ] All 130 requirements verified by the Verifier, OVL-61 to OVL-67 from file evidence.
 - [ ] The gate passes: typecheck, lint, format check and the whole test suite.
 - [ ] The discrimination sensor leaves no surviving mutant in the Check, in what the Capture gains for it and in the rules of Silent and Raised layers.
