@@ -231,6 +231,16 @@ async def clean(client: Client, selector: str) -> tuple[float, list[dict[str, An
     return painted(inspected).get(COVER, 0), on
 
 
+async def glyph_share(client: Client) -> float:
+    """How much of its box of 200 x 30 a text of ten glyphs with nothing over it
+    paints in its own colour: two thirds where a glyph is a full square of ink,
+    and 0.6 where the browser blends the columns at the seam of two glyphs, as
+    Chromium does on Windows."""
+    share = painted(await inspect(client, CLEAN, "#stretched"))["#000000"]
+    assert share in (0.6, 0.6667)
+    return share
+
+
 async def test_text_under_a_link_stretched_over_its_card_is_not_reported(
     client: Client,
 ) -> None:
@@ -246,9 +256,10 @@ async def test_text_under_an_element_faded_out_is_not_reported(client: Client) -
 
 async def test_text_mostly_seen_through_a_veil_is_not_reported(client: Client) -> None:
     # `#veil-45` would be reported at 100% if any loss of ink counted as hidden:
-    # its glyphs show as a grey of 55 parts of black in 100, but for the seam
-    # between two of them.
-    assert painted(await inspect(client, CLEAN, "#veil-45"))["#737373"] == 0.6
+    # its glyphs show as a grey of 55 parts of black in 100, wherever those of a
+    # text with nothing over it show black.
+    veiled = painted(await inspect(client, CLEAN, "#veil-45"))["#737373"]
+    assert veiled == await glyph_share(client)
     assert await clean(client, "#veil-45") == (0, [])
 
 
@@ -332,10 +343,11 @@ async def test_text_under_a_cover_hit_testing_passes_through_is_not_reported(
 async def test_text_over_an_element_without_text_is_not_reported(
     client: Client,
 ) -> None:
-    # The four glyphs of `#caption` are painted over `#picture`: their black is
-    # 1440 of the 6000 pixels of its box. Neither would be reported unless boxes
-    # that cross were.
-    assert painted(await inspect(client, CLEAN, "#picture"))["#000000"] == 0.24
+    # The four glyphs of `#caption` are painted over `#picture`, whose box is
+    # that of a text of ten: their black is four tenths of the black of ten
+    # glyphs. Neither would be reported unless boxes that cross were.
+    black = painted(await inspect(client, CLEAN, "#picture"))["#000000"]
+    assert black == round(await glyph_share(client) * 4 / 10, 4)
     findings = (await detect(client, CLEAN, checks=ONLY))["findings"]
     assert await findings_on(client, CLEAN, "#caption", findings) == []
     assert await findings_on(client, CLEAN, "#picture", findings) == []
