@@ -1182,7 +1182,7 @@ Baseline: 359 tests pass (2026-10-11). The whole suite takes about seventeen and
 
 **Done when**:
 
-- [x] The test of OVL-121 fails with the timer taken out of the wait (`Timed out after 30s.`) and passes with it; the call takes about 5s
+- [x] The test of OVL-121 fails with the timer taken out of the wait (`Timed out after 30s.`) and passes with it; the call takes about 4s, 2s more than on the same page with its frames
 - [x] The test of OVL-120 still passes: six calls, six Findings
 - [x] Gate check passes: Build
 - [x] Test count: 360 tests pass; none deleted
