@@ -9,7 +9,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ---
 
 **Design**: `.specs/features/font-fallback/design.md`
-**Status**: Written on 2026-10-12. The maintainer read it the same day, accepted FNT-52 to FNT-54 and had it committed, then asked for one phase per session. Execute has not started
+**Status**: Written on 2026-10-12. The maintainer read it the same day, accepted FNT-52 to FNT-54 and had it committed, then asked for one phase per session. Execute: phase 1 (T1 to T3) is done and its Build passed on `9953077`, the same day
 
 ---
 
@@ -184,7 +184,7 @@ The Verifier is dispatched in the fifth session, after T11 and the Build of phas
 - [x] Red before the code: the test fails on `evidence.computed`, which has no `font-style`
 - [x] The test compares the Finding of `#heading` with the whole literal of the spec
 - [x] `INSPECT_COMPUTED_PROPERTIES` is unchanged, so `inspect_element` does not return `font-style`
-- [ ] Gate check passes: Full; then Build for phase 1, in the background
+- [x] Gate check passes: Full; then Build for phase 1, in the background
 - [x] Test count: the count after T2 plus one; none deleted
 
 **Tests**: integration
