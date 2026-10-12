@@ -3,7 +3,7 @@
   "promote_threshold": 2,
   "window_days": 45,
   "quarantine_threshold": 2,
-  "next_id": 72,
+  "next_id": 80,
   "lessons": [
     {
       "id": "L-001",
@@ -351,10 +351,12 @@
       "evidence": [
         "mutant C11, src/squint_mcp/checks/text_clipped.py:50 (DVB-69) (tests,checks)",
         "mutants J6b, J6c, J8, src/squint_mcp/js/covered_text.js:290,171 (Terms: Other element, Coverer) (tests,checks)",
-        "V7 src/squint_mcp/covered.py:246 (tests,checks)"
+        "V7 src/squint_mcp/covered.py:246 (tests,checks)",
+        "mutant F4, src/squint_mcp/js/covered_text.js:50 (tests,checks)",
+        "mutant F5, src/squint_mcp/js/covered_text.js:50 (tests,checks)"
       ],
       "created": "2026-10-07T16:30:33Z",
-      "last_seen": "2026-10-11T14:57:12Z"
+      "last_seen": "2026-10-12T02:08:24Z"
     },
     {
       "id": "L-020",
@@ -382,17 +384,19 @@
       "text": "Pin a count threshold with a case exactly at it and a case one past it, not only with a case far past it",
       "signal": "surviving_mutant",
       "scope": "tests,thresholds",
-      "status": "candidate",
+      "status": "confirmed",
       "features": [
-        "detect-visual-bugs-text-clipped"
+        "detect-visual-bugs-text-clipped",
+        "overlap"
       ],
-      "recurrence": 1,
+      "recurrence": 2,
       "harmful": 0,
       "evidence": [
-        "mutants J01, J03, src/squint_mcp/js/collect_elements.js:79,33 (DVB-16, DVB-37) (tests,thresholds)"
+        "mutants J01, J03, src/squint_mcp/js/collect_elements.js:79,33 (DVB-16, DVB-37) (tests,thresholds)",
+        "mutant H1, src/squint_mcp/covered.py:303 (tests,thresholds)"
       ],
       "created": "2026-10-07T16:30:33Z",
-      "last_seen": "2026-10-07T16:30:33Z"
+      "last_seen": "2026-10-12T02:08:24Z"
     },
     {
       "id": "L-022",
@@ -1303,6 +1307,150 @@
       ],
       "created": "2026-10-11T14:57:13Z",
       "last_seen": "2026-10-11T14:57:13Z"
+    },
+    {
+      "id": "L-072",
+      "key": "surviving_mutant::test code that rewrites a list valued style with a value that mixes items it keeps and items it drops not only with a single item",
+      "text": "Test code that rewrites a list-valued style with a value that mixes items it keeps and items it drops, not only with a single item",
+      "signal": "surviving_mutant",
+      "scope": "tests,capture",
+      "status": "candidate",
+      "features": [
+        "overlap"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "mutant F6, src/squint_mcp/js/covered_text.js:53 (tests,capture)"
+      ],
+      "created": "2026-10-12T02:08:23Z",
+      "last_seen": "2026-10-12T02:08:23Z"
+    },
+    {
+      "id": "L-073",
+      "key": "surviving_mutant::test code that keeps several items of a list with an input that holds more than one kept item so that keeping only the first changes the outcome",
+      "text": "Test code that keeps several items of a list with an input that holds more than one kept item, so that keeping only the first changes the outcome",
+      "signal": "surviving_mutant",
+      "scope": "tests,capture",
+      "status": "candidate",
+      "features": [
+        "overlap"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "mutant F8, src/squint_mcp/js/covered_text.js:55 (tests,capture)"
+      ],
+      "created": "2026-10-12T02:08:23Z",
+      "last_seen": "2026-10-12T02:08:23Z"
+    },
+    {
+      "id": "L-074",
+      "key": "surviving_mutant::test a style the capture overrides on a page that declares that style with important",
+      "text": "Test a style the Capture overrides on a page that declares that style with !important",
+      "signal": "surviving_mutant",
+      "scope": "tests,capture",
+      "status": "candidate",
+      "features": [
+        "overlap"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "mutant F7, src/squint_mcp/js/covered_text.js:55 (tests,capture)"
+      ],
+      "created": "2026-10-12T02:08:24Z",
+      "last_seen": "2026-10-12T02:08:24Z"
+    },
+    {
+      "id": "L-075",
+      "key": "surviving_mutant::test a rule that reads one chosen item of a list with fixtures that put the chosen item first and last in the list",
+      "text": "Test a rule that reads one chosen item of a list with fixtures that put the chosen item first and last in the list",
+      "signal": "surviving_mutant",
+      "scope": "tests,ordering",
+      "status": "candidate",
+      "features": [
+        "overlap"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "mutant R1, src/squint_mcp/checks/overlap.py:66 (tests,ordering)"
+      ],
+      "created": "2026-10-12T02:08:24Z",
+      "last_seen": "2026-10-12T02:08:24Z"
+    },
+    {
+      "id": "L-076",
+      "key": "surviving_mutant::give each property that a reset rule clears a fixture whose outcome changes when that property is left in",
+      "text": "Give each property that a reset rule clears a fixture whose outcome changes when that property is left in",
+      "signal": "surviving_mutant",
+      "scope": "tests,capture",
+      "status": "candidate",
+      "features": [
+        "overlap"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "mutant B1, src/squint_mcp/js/covered_text.js:232 (tests,capture)"
+      ],
+      "created": "2026-10-12T02:08:24Z",
+      "last_seen": "2026-10-12T02:08:24Z"
+    },
+    {
+      "id": "L-077",
+      "key": "surviving_mutant::test a rule over the descendants of an element with a descendant that is deeper than a child",
+      "text": "Test a rule over the descendants of an element with a descendant that is deeper than a child",
+      "signal": "surviving_mutant",
+      "scope": "tests,checks",
+      "status": "candidate",
+      "features": [
+        "overlap"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "mutant U1, src/squint_mcp/js/covered_text.js:37 (tests,checks)"
+      ],
+      "created": "2026-10-12T02:08:24Z",
+      "last_seen": "2026-10-12T02:08:24Z"
+    },
+    {
+      "id": "L-078",
+      "key": "spec_precision_gap::when a fix changes code that every tool shares update in the same commit the spec row that lists the shared changes",
+      "text": "When a fix changes code that every tool shares, update in the same commit the spec row that lists the shared changes",
+      "signal": "spec_precision_gap",
+      "scope": "spec",
+      "status": "candidate",
+      "features": [
+        "overlap"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "spec-precision gap 1, .specs/features/overlap/spec.md:55 (spec)"
+      ],
+      "created": "2026-10-12T02:08:25Z",
+      "last_seen": "2026-10-12T02:08:25Z"
+    },
+    {
+      "id": "L-079",
+      "key": "spec_precision_gap::list in out of scope of a new check every limit an earlier slice recorded for the capture it reads",
+      "text": "List in Out of Scope of a new Check every limit an earlier slice recorded for the Capture it reads",
+      "signal": "spec_precision_gap",
+      "scope": "spec",
+      "status": "candidate",
+      "features": [
+        "overlap"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "spec-precision gap 2, probe pw-rtl, .specs/features/offscreen-overflow/plan.md:103 (spec)"
+      ],
+      "created": "2026-10-12T02:08:25Z",
+      "last_seen": "2026-10-12T02:08:25Z"
     }
   ]
 }

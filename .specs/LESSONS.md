@@ -23,14 +23,20 @@ Corroborated across multiple features. Safe to apply as guidance.
 ### L-019 - Give each clause of an or-condition a fixture that only that clause catches
 - signal: `surviving_mutant` · recurrence: 2 feature(s) · scope: `tests,checks` · harmful: 0
 - features: detect-visual-bugs-text-clipped, overlap
-- evidence: mutant C11, src/squint_mcp/checks/text_clipped.py:50 (DVB-69) (tests,checks) (+2 more)
-- last seen: 2026-10-11T14:57:12Z
+- evidence: mutant C11, src/squint_mcp/checks/text_clipped.py:50 (DVB-69) (tests,checks) (+4 more)
+- last seen: 2026-10-12T02:08:24Z
 
 ### L-020 - Assert the full order of a returned list on a fixture with several items of equal rank, not only the place of one item
 - signal: `surviving_mutant` · recurrence: 2 feature(s) · scope: `tests,ordering` · harmful: 0
 - features: detect-visual-bugs-text-clipped, low-contrast-real
 - evidence: mutants J09, J10, src/squint_mcp/js/collect_elements.js:41,133 (DVB-15) (tests,ordering) (+1 more)
 - last seen: 2026-10-08T05:06:17Z
+
+### L-021 - Pin a count threshold with a case exactly at it and a case one past it, not only with a case far past it
+- signal: `surviving_mutant` · recurrence: 2 feature(s) · scope: `tests,thresholds` · harmful: 0
+- features: detect-visual-bugs-text-clipped, overlap
+- evidence: mutants J01, J03, src/squint_mcp/js/collect_elements.js:79,33 (DVB-16, DVB-37) (tests,thresholds) (+1 more)
+- last seen: 2026-10-12T02:08:24Z
 
 ### L-036 - Pin a rule that judges an element on its own content with a fixture where its child's content would change the outcome
 - signal: `surviving_mutant` · recurrence: 2 feature(s) · scope: `tests,checks` · harmful: 0
@@ -149,12 +155,6 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - features: detect-visual-bugs-text-clipped
 - evidence: mutant T03, src/squint_mcp/tools/detect_visual_bugs.py:105 (DVB-45) (tests,vision)
 - last seen: 2026-10-07T16:30:32Z
-
-### L-021 - Pin a count threshold with a case exactly at it and a case one past it, not only with a case far past it
-- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,thresholds` · harmful: 0
-- features: detect-visual-bugs-text-clipped
-- evidence: mutants J01, J03, src/squint_mcp/js/collect_elements.js:79,33 (DVB-16, DVB-37) (tests,thresholds)
-- last seen: 2026-10-07T16:30:33Z
 
 ### L-022 - Pin each edge of a sampled pixel region with a fixture whose pixels differ just inside and just outside that edge
 - signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,vision` · harmful: 0
@@ -437,6 +437,54 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - features: overlap
 - evidence: OVL-01, probes q4d and q4f - .specs/features/overlap/spec.md:44 (spec)
 - last seen: 2026-10-11T14:57:13Z
+
+### L-072 - Test code that rewrites a list-valued style with a value that mixes items it keeps and items it drops, not only with a single item
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,capture` · harmful: 0
+- features: overlap
+- evidence: mutant F6, src/squint_mcp/js/covered_text.js:53 (tests,capture)
+- last seen: 2026-10-12T02:08:23Z
+
+### L-073 - Test code that keeps several items of a list with an input that holds more than one kept item, so that keeping only the first changes the outcome
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,capture` · harmful: 0
+- features: overlap
+- evidence: mutant F8, src/squint_mcp/js/covered_text.js:55 (tests,capture)
+- last seen: 2026-10-12T02:08:23Z
+
+### L-074 - Test a style the Capture overrides on a page that declares that style with !important
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,capture` · harmful: 0
+- features: overlap
+- evidence: mutant F7, src/squint_mcp/js/covered_text.js:55 (tests,capture)
+- last seen: 2026-10-12T02:08:24Z
+
+### L-075 - Test a rule that reads one chosen item of a list with fixtures that put the chosen item first and last in the list
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,ordering` · harmful: 0
+- features: overlap
+- evidence: mutant R1, src/squint_mcp/checks/overlap.py:66 (tests,ordering)
+- last seen: 2026-10-12T02:08:24Z
+
+### L-076 - Give each property that a reset rule clears a fixture whose outcome changes when that property is left in
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,capture` · harmful: 0
+- features: overlap
+- evidence: mutant B1, src/squint_mcp/js/covered_text.js:232 (tests,capture)
+- last seen: 2026-10-12T02:08:24Z
+
+### L-077 - Test a rule over the descendants of an element with a descendant that is deeper than a child
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,checks` · harmful: 0
+- features: overlap
+- evidence: mutant U1, src/squint_mcp/js/covered_text.js:37 (tests,checks)
+- last seen: 2026-10-12T02:08:24Z
+
+### L-078 - When a fix changes code that every tool shares, update in the same commit the spec row that lists the shared changes
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `spec` · harmful: 0
+- features: overlap
+- evidence: spec-precision gap 1, .specs/features/overlap/spec.md:55 (spec)
+- last seen: 2026-10-12T02:08:25Z
+
+### L-079 - List in Out of Scope of a new Check every limit an earlier slice recorded for the Capture it reads
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `spec` · harmful: 0
+- features: overlap
+- evidence: spec-precision gap 2, probe pw-rtl, .specs/features/offscreen-overflow/plan.md:103 (spec)
+- last seen: 2026-10-12T02:08:25Z
 
 ## Quarantined (failed when applied - ignore)
 

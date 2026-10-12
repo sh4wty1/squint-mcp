@@ -1,25 +1,28 @@
 # overlap Validation
 
 **Date**: 2026-10-11
-**Spec**: `.specs/features/overlap/spec.md` (OVL-01 to OVL-91)
-**Diff range**: `eb9778b..a11b13e` (24 commits, branch `feat/overlap`, base `8aa017c`); the second fix pass is `0a25cca..a11b13e`
-**Verifier**: independent sub-agent (author ≠ verifier), verification pass 3, the last before the loop goes to the maintainer
+**Spec**: `.specs/features/overlap/spec.md` (OVL-01 to OVL-120)
+**Diff range**: `eb9778b..a8feee6` (35 commits, branch `feat/overlap`, base `8aa017c`); the third fix round is `b08856a..a8feee6` (nine commits)
+**Verifier**: independent sub-agent (author ≠ verifier), verification pass 4, after the third and last fix round of the loop
 
 **Verdict**: ❌ FAIL
 
 **Result**: ❌ FAIL
 
-The second fix pass did what it was asked. The eleven survivors of the second pass are all killed, each by the test written for it; the six earlier mutants whose fixtures grew are still killed; the twelve new criteria are faithful statements of rules the Terms and the Assumptions already held; every one of the 90 criteria due now has an assertion on the outcome the spec defines; the gate is green; and `git diff 0a25cca..HEAD -- src` is empty.
+The third fix round did what it was asked, and more of it than the two before. The two places where the third pass found the code short of the spec are fixed: a covered text under a `filter` that changes colours is reported, and a glyph colour of alpha 0 is read in every notation. The twelve survivors of the third pass are all killed, each by the test written for it. The 29 new criteria are faithful statements of the Terms and the Assumptions. All 119 criteria due now have an assertion on the outcome the spec defines, the gate is green with 359 tests, and on sixteen probe pages of this pass the unmutated code gives the outcome the spec defines everywhere inside the scope of this slice. That last point is new.
 
-The verdict is FAIL for three reasons, in the order a maintainer should weigh them.
+The verdict is FAIL on one count: the spec's third success criterion, "the discrimination sensor leaves no surviving mutant".
 
-1. **The code and the spec disagree on three kinds of page that no fixture holds.** Text under a `filter` that changes colours is never reported: the design accepts that and neither the spec nor the CHANGELOG says it. Text made transparent with a colour that Chromium does not compute to `rgb()` is reported, against the rule OVL-38 states: the first defect of `src/` against a criterion's rule in three passes. And the Out of Scope row the fix pass added for pseudo-elements does not cover two cases the code misses for the same reason.
-2. **The sensor, pointed again at what no earlier pass tried, left survivors again.** Of 17 new mutants 5 were killed and 12 survived: 1 is equivalent, and 11 give, on a probe page called through the MCP boundary, a result the Terms exclude. N14, which the second pass could not call a gap, is one now that the spec defines its outcome. The spec's third success criterion asks for none.
-3. **The pattern has not changed in three passes.** 11 gaps of 49 mutants, then 11 of 21, now 12 of 18. Each fix pass closed exactly the mutants it was shown and stopped there: the scroll at capture is pinned down the page and not across it, the tag over a text in one order of the document and not the other, the open `dialog` on the silent side and not the other. A fourth round of the same would find a fourth batch.
+1. **Nine new mutants survive, five of them in the thirteen lines this round added to the cover script.** Of 27 mutants no pass had tried, 17 were killed and 10 survived. One of the ten (one animation frame instead of two) no test can tell from the code. The other nine each give, on a probe page called through the MCP boundary, a result the spec excludes, and all 272 tests that reach the code pass. The filter fix is held for a `filter` of one function: a list of functions, `blur()`, `drop-shadow()` and a filter declared `!important` have no fixture. The other four are a third dimension of rules the round pinned from two sides.
+2. **F17 (AD-007) is sound and should stay, with one thing to settle.** The fault it fixes is real: without the wait 20 of 30 calls on `overlap-low.html` returned no Finding here. But the wait runs a function of the page: a page that never calls an animation frame back now times out, in every tool, where it used to be measured. And the spec row that counts the changes reaching every Capture still says two.
 
-**How much of the code's behaviour is held by tests.** Over the three passes 87 different mutants were written against the 950 lines this feature adds under `src/`. 4 are equivalent. Of the 83 that a page can tell from the real code, 71 were killed when last run (26 of them in this pass, at `a11b13e`) and 12 are not killed. What is held: both thresholds and the truncation, the five roles and how the attribute is read, the open `dialog`, the popover, `fixed` and `sticky`, a Silent layer around the text, the veil on both sides of a half, Text ink on both sides of a half, own text against a child's, Other elements against ancestors and descendants, the Raised layer in all the forms the spec names, the Coverer by size and by document order, shadow trees, the sample by column, by row and at both sides of the cap, a page scrolled down when captured, four texts in one place, and that the other three Checks read the same page as before. What is not held is the list of gaps below: none of them is a wrong result today.
+Nothing found in this pass is a wrong result of the code on a page inside the scope of this slice. Two things outside it are for the maintainer to know: a right-to-left page that scrolls sideways is read from the wrong pixels by every tool (older than this slice, and in no row of this spec), and a page whose Content Security Policy refuses inline styles comes back clean from `overlap` and from `low-contrast-real` (the row of Out of Scope said "not verified"; it is verified now).
 
-**How serious the gaps are for a user of the tool.** Today, on a real page, a user meets only the first group: a covered text inside a grey-scaled or inverted section is silently missed (likely on some sites, and then for every text in that section), and a text made transparent through a `color-mix()` and partly covered gets a false Finding (uncommon). Everything the sensor found is correct in the code as it is. The risk there is the next change: a refactor of `hidden_ink` could double every share on every real font, or one of the page script could drop every Finding right of the viewport, and all 325 tests would stay green.
+**How much of the code's behaviour is held by tests.** Over the four passes 118 different mutants were written against the code this feature adds under `src/`. 4 are equivalent and 1 cannot be told apart by any test. Of the 113 others, 104 were killed when last run (33 of them in this pass, at `a8feee6`) and 9 are not. The rate of gaps among new mutants went from 11 of 21 and 12 of 18 in the two passes before to 9 of 27 now.
+
+**How serious the gaps are for a user of the tool.** Today, none: every survivor is a behaviour the code has right and no test holds. The risk is the next change to the thirteen lines of the filter fix or to `subtreeOf`: a slip there would lose every Finding under a filter that mixes kinds of functions, or overstate the share of every text with a nested badge, with all 359 tests green.
+
+**Where this leaves the loop.** It is at its bound of three fix rounds, so the decision is the maintainer's. Each pass wrote fresh mutants and each found some alive: 11, 11, 12, 9. A sensor run at this depth by a reader who has not seen the tests will keep finding a few. The list has stopped being about how the Check measures and is now about the edges of one new regular expression and one tree walk. The Fix Plans give the nine fixture rows that would close it and the two decisions on F17.
 
 OVL-67 (the roadmap) is a closing step that follows a PASS. It is pending by design and is not counted as a gap.
 
@@ -29,41 +32,33 @@ Abbreviations: `O` = `tests/test_overlap.py`, `D` = `tests/test_detect_visual_bu
 
 ## Earlier passes
 
-The two earlier reports are in git in full, at `aef0799` and `0a25cca`. This pass used them as a map of what had been tried and re-derived the rest.
+The three earlier reports are in git in full, at `aef0799`, `0a25cca` and `26d084f`. This pass used the third as a map of what had been tried and re-derived the rest.
 
-**First pass (`aef0799`): FAIL.** 68 of 68 criteria matched and the gate was green. Of 49 mutants 36 were killed and 13 survived: 2 equivalent (A7, A8) and 11 gaps. Four commits closed the gaps with ten criteria (OVL-70 to OVL-79); none touched `src/`.
+**First pass (`aef0799`): FAIL.** 68 of 68 criteria matched and the gate was green. Of 49 mutants 36 were killed and 13 survived: 2 equivalent and 11 gaps. Four commits closed them with ten criteria (OVL-70 to OVL-79); none touched `src/`.
 
-| Gap of the first pass | Mutant | Closed by | Criterion |
+**Second pass (`0a25cca`): FAIL.** 78 of 78 criteria matched, the gate was green and the eleven survivors were all killed. Of 21 new mutants 8 were killed and 13 survived: 11 gaps, 1 equivalent and 1 with no outcome in the spec. Four commits closed them with twelve criteria (OVL-80 to OVL-91); none touched `src/`.
+
+**Third pass (`26d084f`): FAIL.** 90 of 90 criteria matched, the gate was green (325 tests) and the eleven survivors were all killed. Of 17 new mutants 5 were killed and 12 survived (11 gaps, 1 equivalent), and N14 became a gap. For the first time the code fell short of the spec on pages no fixture held: text under a `filter` that changes colours was never reported, and a glyph colour of alpha 0 outside `rgb()` was. Three spec-precision gaps. Its central finding: each round closed the mutants it was shown and not their neighbours. Nine commits answered it, three of them in `src/`.
+
+| Gap of the third pass | Mutant | Closed by | Criterion |
 | --------------------- | ------ | --------- | --------- |
-| The `role` attribute compared as written | J4 | `7c32a5b` | OVL-70 |
-| A list of roles taken for a Silent layer | J5 | `bb64438` | OVL-71 |
-| An ancestor of the text counted as an Other element | J6b | `7c32a5b` | OVL-72 |
-| A descendant of the text counted as an Other element | J6c | `7c32a5b` | OVL-73 |
-| An element the scroll moved not passed over | J8 | `1e5d5ef` | OVL-77 |
-| A text the step passes over whole not tested | J10 | `f5f190b` | OVL-78 |
-| Text ink from any ink | C2 | `7c32a5b` | OVL-74 |
-| Text ink from ink of 200 | C2b | `bb64438` | OVL-75 |
-| Every measured text in one group | C5 | `bb64438` | OVL-76 |
-| A measured text read on the first channel | C11 | `bb64438` | OVL-76 |
-| Every hidden pixel hit tested (no cap) | C8 | `f5f190b` | OVL-79 |
+| Text under a `filter` that changes colours not reported (code) | - | `82bbaed` | OVL-92 to OVL-98 |
+| A glyph colour of alpha 0 outside `rgb()` reported (code) | - | `c018ab2` | OVL-99, OVL-100 |
+| Hidden ink not held inside Text ink | V6 | `b71e582` | OVL-101 to OVL-104 |
+| A text painted alone without what is inside it | V15 | `ecdf0e5` | OVL-105, OVL-106 |
+| A cover with text that stands before its text in the document | V7 | `ecdf0e5` | OVL-107 |
+| Any `open` attribute taken for a Silent layer | V10 | `ecdf0e5` | OVL-108 |
+| The severity lowered by a raised cover that is not the Coverer | V1 | `ecdf0e5` | OVL-109, OVL-110 |
+| Pseudo-elements left in the glyphs-only screenshot | V4 | `ecdf0e5` | OVL-111 |
+| `evidence.computed` written as constants | V14 | `ecdf0e5` | OVL-112 |
+| No scroll sideways at hit testing | V3 | `3711dee` | OVL-113 |
+| The scroll across the page at capture read as 0 | V17 | `3711dee` | OVL-114 |
+| An `info` Finding ordered as a `minor` one (spec-precision gap 3) | V13 | `e4fed09` | OVL-115 |
+| Hidden ink under the threshold counted towards the cap | N14 | `70f926d` | OVL-116, OVL-117 |
+| The step grown with the pixels, not their square root | V16 | `70f926d` | OVL-118, OVL-119 |
+| The Out of Scope row for a pseudo-element; limits of the design not listed (spec-precision gaps 1 and 2) | - | `a8feee6` | rows of Out of Scope |
+| Not asked for: a screenshot with a part of the page unpainted | - | `51ff006` | OVL-120 (AD-007) |
 
-**Second pass (`0a25cca`): FAIL.** 78 of 78 criteria matched, the gate was green and the eleven survivors of the first pass were all killed. Of 21 new mutants 8 were killed and 13 survived: 11 gaps, 1 equivalent (N7) and 1 where the spec defined no outcome (N14). Two spec-precision gaps. Four commits closed them with twelve criteria (OVL-80 to OVL-91), two new fixtures and two edits of the spec text; none touched `src/`.
-
-| Gap of the second pass | Mutant | Closed by | Criterion |
-| ---------------------- | ------ | --------- | --------- |
-| A measured text read in the round of another | N2 | `c6dd9f1` | OVL-80 |
-| A third channel without ink | N3 | `c6dd9f1` | OVL-80 |
-| A text cut out at the column of another | N1b | `c6dd9f1` | OVL-81 |
-| The region of a text without its box | N9 | `c6dd9f1` | OVL-82 |
-| The glyphs of a child counted as ink of its parent | N28 | `c6dd9f1` | OVL-83 |
-| Glyphs transparent at any alpha under 1 | N10 | `c6dd9f1` | OVL-87 |
-| The alpha read from `color` | N22 | `c6dd9f1`, `93357ec` | OVL-89, OVL-88 |
-| A hidden Silent layer painted with the text | N11 | `c6dd9f1` | OVL-90 (and OVL-91, `93357ec`, for the Goal) |
-| Only the columns of the sample | N5 | `d1eadfb` | OVL-84 |
-| A page under the cap sampled too | N13 | `d1eadfb` | OVL-85 |
-| The scroll at capture read as 0 | N8 | `a11b13e` | OVL-86 |
-| Which Hidden ink counts towards the cap (spec-precision gap 1) | N14 | `c6dd9f1` | a sentence in the Term "Coverer"; no criterion |
-| A limit the design accepts and the spec does not list (spec-precision gap 2) | - | `c6dd9f1` | a row in Out of Scope |
 ---
 
 ## Task Completion
@@ -71,136 +66,171 @@ The two earlier reports are in git in full, at `aef0799` and `0a25cca`. This pas
 | Task | Status | Notes |
 | ---- | ------ | ----- |
 | T1 to T13 | ✅ Done | `89385b0` to `cb8d81b`, as in the earlier passes |
-| F1 to F4: the fixes of the first pass | ✅ Done | `7c32a5b`, `bb64438`, `1e5d5ef`, `f5f190b` |
-| F5: texts stacked in one place, where a text sits, the colour of its glyphs | ✅ Done | `c6dd9f1`, with the two edits of the spec text |
-| F6: a transparent fill and closed menus | ✅ Done | `93357ec` |
-| F7: the rows of the sample and a page under the cap | ✅ Done | `d1eadfb` |
-| F8: a page that is scrolled when it is captured | ✅ Done | `a11b13e` |
+| F1 to F8: the fixes of the first two passes | ✅ Done | `7c32a5b` to `a11b13e` |
+| F9: the ink of text under a filter that changes colours | ✅ Done | `82bbaed`, `src/squint_mcp/js/covered_text.js` |
+| F10: the alpha of a glyph colour in every notation | ✅ Done | `c018ab2`, `src/squint_mcp/checks/overlap.py` |
+| F11: a font with anti-aliased edges | ✅ Done | `b71e582` |
+| F12: what is inside a text, the order of two texts, `open`, a raised cover, the styles of a Finding | ✅ Done | `ecdf0e5` |
+| F17: the page paints before a screenshot | ✅ Done | `51ff006`, `src/squint_mcp/capture.py`; not planned, see "F17 and AD-007" |
+| F13: a page wider than its viewport | ✅ Done | `3711dee` |
+| F14: where an `info` Finding stands | ✅ Done | `e4fed09` |
+| F15: which Hidden ink counts and how the step grows | ✅ Done | `70f926d` |
+| F16: the limits the design accepts, in the spec | ✅ Done | `a8feee6` |
 
-Every box of `tasks.md` is ticked (128 `- [x]`, no open box). None is blocked or partial. `git diff 0a25cca..HEAD -- src` is empty: the second fix pass, like the first, changed tests, fixtures and the spec only.
+Every box of `tasks.md` is ticked (182 `- [x]`, no open box). None is blocked or partial. `git status --porcelain` of the real tree was empty when this pass began.
+
+The "Done when" claims of F9 to F17 about mutants were checked, not copied: each mutant named there was written again and run (sensor section), and each claim holds. Three sentences of `tasks.md` do not match what was committed, none of them a claim about behaviour: F9 says the text of OVL-93 has `filter: invert(1)` (the fixture and the spec have `hue-rotate(180deg)`), F13 says the wide page is 2700px high (it is 2000px, as the spec says), and F17 says its test calls the tool three times (it calls it six times, as the spec says). The Handoff of `.specs/STATE.md` still says the third fix round has not started.
 
 ---
 
 ## Spec-Anchored Acceptance Criteria
 
-Every line number below was located again in this pass, in `tests/test_overlap.py` at `a11b13e` (863 lines, 88 tests). Each fixture a criterion names was read against it: positions, sizes, roles, `z-index` values and document order in `overlap-bug.html`, `overlap-clean.html`, `overlap-bounds.html`, `overlap-order.html`, `overlap-many.html`, `overlap-scrolled.html`, `overlap-scrolled-on-load.html`, `overlap-sampled.html` and `overlap-exact.html` are the ones the criteria state, and the pixel counts in their comments add up (55,180 in the bounds fixture, 26,610 in the sampled one, 1000 in the exact one).
+Every line number below was located again in this pass, in `tests/test_overlap.py` at `a8feee6` (1247 lines, 108 test functions, 122 tests with their parameters). The twelve new fixtures and the two that grew were read against their criteria: positions, sizes, roles, `z-index` values, document order and the pixel counts in their comments are the ones the criteria state (17,200 pixels in the reach fixture, 65,180 in the bounds one, 19,000 + 1520 and 19,000 + 2000 in the two count fixtures, 49,000 and 81,000 in the two step fixtures, worked out again below).
 
 ### P1: Report text that another element covers
 
 | Criterion | Spec-defined outcome | `file:line` + assertion | Result |
 | --------- | -------------------- | ----------------------- | ------ |
-| OVL-01 one Finding per covered element | exactly one Finding each | `tests/test_overlap.py:58-63` - `(finding,) = await findings_on(client, BUG, selector, findings)` for the four elements, `finding["check"] == "overlap"`, `len(findings) == 4`; `O:407-446` pins the sorted list of the 34 selectors of the bounds fixture, so a second Finding on one element fails | ✅ PASS as asserted; pages no fixture holds fall short of it ("Gaps in `src/` and in the spec text", 2 and 3) |
-| OVL-02 the four Findings of the bug fixture, in order | `(#half, major, 50, #half-cover)`, `(#quarter, major, 25, #quarter-cover)`, `(#corner, minor, 10, #corner-cover)`, `(#collision, minor, 20, #stray)` | `O:69-76` - `covered(findings) == [...]`, the four tuples of the spec | ✅ PASS |
-| OVL-03 summary line | first block, `Found 4 findings in 1 viewport: 2 major, 2 minor.` | `O:82-83` - `texts(result)[0] == "Found 4 findings in 1 viewport: 2 major, 2 minor."`; that the first block is the text block is held by `tests/test_detect_visual_bugs.py:263` | ✅ PASS |
-| OVL-04 same call, same content | equal structured content | `O:87` - `await detect(client, BUG) == await detect(client, BUG)` | ✅ PASS |
-| OVL-05 text under the text of another element | one Finding, `hiddenPercent` 20 | `O:93-94` - `finding_on` unpacks exactly one; `["hiddenPercent"] == 20` | ✅ PASS |
-| OVL-06 the text on top | no Finding for `#stray` | `O:98-99` - `await findings_on(client, BUG, "#stray", findings) == []` | ✅ PASS |
-| OVL-07, OVL-08, OVL-09 `#left`, `#top`, `#bottom`, exactly 10% | one Finding each, 10 | `O:449-454` - parametrized over the three, `["hiddenPercent"] == 10` | ✅ PASS |
-| OVL-10 `#three-lines`, middle box | one Finding, 10 | `O:458-459` - `["hiddenPercent"] == 10` | ✅ PASS |
-| OVL-11 `#split`, second text node | one Finding, 10 | `O:463-464` - `["hiddenPercent"] == 10` | ✅ PASS |
-| OVL-12 `#veil-55` | one Finding, 100, `major` | `O:468-470` - `["hiddenPercent"] == 100`, `finding["severity"] == "major"` | ✅ PASS |
-| OVL-13 text and cover in one shadow tree | 50, `coveredBy` `[data-testid="shadow-cover"]` | `O:476-480` - `finding["evidence"]["measured"] == {"hiddenPercent": 50, "coveredBy": SHADOW_COVER}` | ✅ PASS |
-| OVL-14 `#narrow`, one viewport only | one Finding at 390 × 844, none at 1440 × 900 | `O:105-110` - `... DESKTOP) == []`, `(finding,) = ... MOBILE)`, `finding["viewport"] == MOBILE` | ✅ PASS |
-| OVL-15 `#in-dialog` | one Finding, `major` | `O:486` - `(await bounds(client, "#in-dialog"))["severity"] == "major"` | ✅ PASS |
-| OVL-16 `#in-fixed` | one Finding, `major` | `O:492` - `(await bounds(client, "#in-fixed"))["severity"] == "major"` | ✅ PASS |
-| OVL-17 `low-contrast-bounds.html` | exactly one Finding, `#covered`, 100, `major` | `O:741-745` - `(finding,) = ...["findings"]`, `finding["selector"] == "#covered"`, `["hiddenPercent"] == 100`, `["severity"] == "major"` | ✅ PASS |
-| OVL-18 `low-contrast-reach.html` | exactly one Finding, `#veiled-most`, 100 | `O:751-754` - `(finding,) = ...`, `finding["selector"] == "#veiled-most"`, `["hiddenPercent"] == 100` | ✅ PASS |
-| OVL-71 a list of several roles | one Finding, 50, `#role-list`, `major` | `O:605-610` - `["measured"] == {"hiddenPercent": 50, "coveredBy": "#role-list"}`, `finding["severity"] == "major"` | ✅ PASS |
-| OVL-75 `#opacity-60` | one Finding, 50 | `O:617-618` - `["hiddenPercent"] == 50` | ✅ PASS |
-| OVL-76 two measured texts over each other | `#under-label` 50 by `#label`; `#label` 50 by `#label-cover` | `O:627-636` - both `["measured"] == {...}` dicts, the values of the spec | ✅ PASS |
-| OVL-78 `#speck`, all its Hidden ink off the sample | one Finding, 10, `minor`, `#speck-cover` | `O:818-823` - `["measured"] == {"hiddenPercent": 10, "coveredBy": "#speck-cover"}`, `finding["severity"] == "minor"` | ✅ PASS. Its wording changed in this fix pass (25,010 to 26,610 pixels on the page, which gained the row of OVL-84); its outcome did not |
-| OVL-80 four texts stacked in one place | four Findings, all `major`: `#stack-0`, `#stack-1`, `#stack-2` at 80 by `#stack-3`; `#stack-3` at 25 by `#stack-cover` | `O:645-656` - `covered(stack) == [("#stack-0", "major", 80, "#stack-3"), ("#stack-1", "major", 80, "#stack-3"), ("#stack-2", "major", 80, "#stack-3"), ("#stack-3", "major", 25, "#stack-cover")]` | ✅ PASS |
-| OVL-81 `#shifted`, a column of its own | one Finding, 10, `minor` | `O:664` - `share_and_severity(await bounds(client, "#shifted")) == (10, "minor")` | ✅ PASS |
-| OVL-82 the box of a tag whose glyphs stand beside the text | `#under-tag` 50 by `#tag`; `#tag` 50 by `#tag-cover` | `O:673-682` - both `["measured"] == {...}` dicts, the values of the spec | ✅ PASS |
-| OVL-83 `#around`, own text around a child with text | one Finding, 10, `minor` | `O:690` - `share_and_severity(await bounds(client, "#around")) == (10, "minor")`; that the `b` gets none is held by the pinned list, `O:411-446` | ✅ PASS |
-| OVL-87 `#translucent`, glyphs of alpha 0.5 | one Finding, 50 | `O:698-699` - `["hiddenPercent"] == 50` | ✅ PASS |
-| OVL-89 `#filled`, transparent `color`, opaque fill | one Finding, 50 | `O:707-708` - `["hiddenPercent"] == 50` | ✅ PASS |
-| OVL-90 a Silent layer that is not painted | one Finding, 50, `#plain-cover`, `major` | `O:717-722` - `["measured"] == {"hiddenPercent": 50, "coveredBy": "#plain-cover"}`, `finding["severity"] == "major"` | ✅ PASS |
-| OVL-86 a page scrolled when it is captured | exactly one Finding, `#far`, 50, `major`, `#far-cover` | `O:809-810` - `covered(findings) == [("#far", "major", 50, "#far-cover")]` | ✅ PASS |
+| OVL-01 one Finding per covered element | exactly one Finding each | `tests/test_overlap.py:69-74` - `(finding,) = await findings_on(client, BUG, selector, findings)` for the four elements, `finding["check"] == "overlap"`, `len(findings) == 4`; `O:468-512` pins the sorted list of the 39 selectors of the bounds fixture, so a second Finding on one element fails | ✅ PASS |
+| OVL-02 the four Findings of the bug fixture, in order | `(#half, major, 50, #half-cover)`, `(#quarter, major, 25, #quarter-cover)`, `(#corner, minor, 10, #corner-cover)`, `(#collision, minor, 20, #stray)` | `O:80-87` - `covered(findings) == [...]`, the four tuples of the spec | ✅ PASS |
+| OVL-03 summary line | first block, `Found 4 findings in 1 viewport: 2 major, 2 minor.` | `O:93-94` - `texts(result)[0] == "Found 4 findings in 1 viewport: 2 major, 2 minor."` | ✅ PASS |
+| OVL-04 same call, same content | equal structured content | `O:98` - `await detect(client, BUG) == await detect(client, BUG)` | ✅ PASS |
+| OVL-05 text under the text of another element | one Finding, `hiddenPercent` 20 | `O:104-105` - `finding_on` unpacks exactly one; `["hiddenPercent"] == 20` | ✅ PASS |
+| OVL-06 the text on top | no Finding for `#stray` | `O:109-110` - `await findings_on(client, BUG, "#stray", findings) == []` | ✅ PASS |
+| OVL-07, OVL-08, OVL-09 `#left`, `#top`, `#bottom`, exactly 10% | one Finding each, 10 | `O:515-520` - parametrized over the three, `["hiddenPercent"] == 10` | ✅ PASS |
+| OVL-10 `#three-lines`, middle box | one Finding, 10 | `O:524-525` - `["hiddenPercent"] == 10` | ✅ PASS |
+| OVL-11 `#split`, second text node | one Finding, 10 | `O:529-530` - `["hiddenPercent"] == 10` | ✅ PASS |
+| OVL-12 `#veil-55` | one Finding, 100, `major` | `O:534-536` - `["hiddenPercent"] == 100`, `finding["severity"] == "major"` | ✅ PASS |
+| OVL-13 text and cover in one shadow tree | 50, `coveredBy` `[data-testid="shadow-cover"]` | `O:542-546` - `finding["evidence"]["measured"] == {"hiddenPercent": 50, "coveredBy": SHADOW_COVER}` | ✅ PASS |
+| OVL-14 `#narrow`, one viewport only | one Finding at 390 × 844, none at 1440 × 900 | `O:116-121` - `... DESKTOP) == []`, `(finding,) = ... MOBILE)`, `finding["viewport"] == MOBILE` | ✅ PASS |
+| OVL-15 `#in-dialog` | one Finding, `major` | `O:552` - `(await bounds(client, "#in-dialog"))["severity"] == "major"` | ✅ PASS |
+| OVL-16 `#in-fixed` | one Finding, `major` | `O:558` - `(await bounds(client, "#in-fixed"))["severity"] == "major"` | ✅ PASS |
+| OVL-17 `low-contrast-bounds.html` | exactly one Finding, `#covered`, 100, `major` | `O:859-863` - `(finding,) = ...["findings"]`, `finding["selector"] == "#covered"`, `["hiddenPercent"] == 100`, `["severity"] == "major"` | ✅ PASS |
+| OVL-18 `low-contrast-reach.html` | exactly one Finding, `#veiled-most`, 100 | `O:869-872` - `(finding,) = ...`, `finding["selector"] == "#veiled-most"`, `["hiddenPercent"] == 100` | ✅ PASS |
+| OVL-71 a list of several roles | one Finding, 50, `#role-list`, `major` | `O:671-676` - `["measured"] == {"hiddenPercent": 50, "coveredBy": "#role-list"}`, `finding["severity"] == "major"` | ✅ PASS |
+| OVL-75 `#opacity-60` | one Finding, 50 | `O:683-684` - `["hiddenPercent"] == 50` | ✅ PASS |
+| OVL-76 two measured texts over each other | `#under-label` 50 by `#label`; `#label` 50 by `#label-cover` | `O:693-702` - both `["measured"] == {...}` dicts, the values of the spec | ✅ PASS |
+| OVL-78 `#speck`, all its Hidden ink off the sample | one Finding, 10, `minor`, `#speck-cover` | `O:994-999` - `["measured"] == {"hiddenPercent": 10, "coveredBy": "#speck-cover"}`, `finding["severity"] == "minor"` | ✅ PASS |
+| OVL-80 four texts stacked in one place | four Findings, all `major`: three at 80 by `#stack-3`, `#stack-3` at 25 by `#stack-cover` | `O:711-722` - `covered(stack) == [...]`, the four tuples of the spec | ✅ PASS |
+| OVL-81 `#shifted`, a column of its own | one Finding, 10, `minor` | `O:730` - `share_and_severity(await bounds(client, "#shifted")) == (10, "minor")` | ✅ PASS |
+| OVL-82 the box of a tag whose glyphs stand beside the text | `#under-tag` 50 by `#tag`; `#tag` 50 by `#tag-cover` | `O:739-748` - both `["measured"] == {...}` dicts | ✅ PASS |
+| OVL-83 `#around`, own text around a child with text | one Finding, 10, `minor` | `O:756` - `share_and_severity(await bounds(client, "#around")) == (10, "minor")` | ✅ PASS |
+| OVL-87 `#translucent`, glyphs of alpha 0.5 | one Finding, 50 | `O:764-765` - `["hiddenPercent"] == 50` | ✅ PASS |
+| OVL-89 `#filled`, transparent `color`, opaque fill | one Finding, 50 | `O:773-774` - `["hiddenPercent"] == 50` | ✅ PASS |
+| OVL-90 a Silent layer that is not painted | one Finding, 50, `#plain-cover`, `major` | `O:783-788` - `["measured"] == {"hiddenPercent": 50, "coveredBy": "#plain-cover"}`, `finding["severity"] == "major"` | ✅ PASS |
+| OVL-86 a page scrolled when it is captured | exactly one Finding, `#far`, 50, `major`, `#far-cover` | `O:958-959` - `covered(findings) == [("#far", "major", 50, "#far-cover")]` | ✅ PASS |
+| OVL-92 `#in-grey`, in a row of `filter: grayscale(1)` | one Finding, 50, `#in-grey-cover`, `major` | `O:791-804` (case `#in-grey`) - `["measured"] == {"hiddenPercent": 50, "coveredBy": "#in-grey-cover"}`, `finding["severity"] == "major"` | ✅ PASS |
+| OVL-93 `#own-filter`, `filter: hue-rotate(180deg)` of its own | one Finding, 50, `#own-filter-cover`, `major` | `O:791-804` (case `#own-filter`) - the same two assertions | ✅ PASS |
+| OVL-94 `#held`, a cover held by a `filter` alone | one Finding, 50, `#held-cover`, `major` | `O:813-818` - `["measured"] == {"hiddenPercent": 50, "coveredBy": "#held-cover"}`, `finding["severity"] == "major"` | ✅ PASS |
+| OVL-95 `filter: invert(1)` on the root | exactly one Finding, `#inverted`, 50, `major`, `#inverted-cover` | `O:825-826` - `covered(findings) == [("#inverted", "major", 50, "#inverted-cover")]` | ✅ PASS |
+| OVL-100 `#opaque-oklch`, `#translucent-oklch` | one Finding each, 50 | `O:829-840` - parametrized over the two, `["measured"] == {"hiddenPercent": 50, "coveredBy": f"{selector}-cover"}` | ✅ PASS |
+| OVL-101 `#font-whole` | one Finding, 100, `major`, `#font-whole-cover` | `O:1102-1107` - `covered(findings) == [("#font-whole", "major", 100, "#font-whole-cover"), ...]`, the first of three tuples | ✅ PASS |
+| OVL-102 `#font-lines` | one Finding, 50, `major`, `#font-lines-cover` | `O:1102-1107` - the second tuple, `("#font-lines", "major", 50, "#font-lines-cover")` | ✅ PASS |
+| OVL-103 `#font-veil-55` | one Finding, 100, `major`, `#font-veil-55-cover` | `O:1102-1107` - the third tuple, `("#font-veil-55", "major", 100, "#font-veil-55-cover")` | ✅ PASS |
+| OVL-106 `#child-first`, `#child-last` | one Finding each, 16, `minor`, its cover | `O:1146-1159` - parametrized over the two, `["measured"] == {"hiddenPercent": 16, "coveredBy": f"{selector}-cover"}`, `finding["severity"] == "minor"` | ✅ PASS |
+| OVL-107 a tag before the text it covers | `#under-tag-first` 50 by `#tag-first`; `#tag-first` 50 by `#tag-first-cover` | `O:1168-1177` - both `["measured"] == {...}` dicts | ✅ PASS |
+| OVL-108 an open `details` | one Finding, 50, `#open-details`, `major` | `O:1186-1191` - `["measured"] == {"hiddenPercent": 50, "coveredBy": "#open-details"}`, `finding["severity"] == "major"` | ✅ PASS |
+| OVL-111 `#under-after`, `#under-before` | one Finding each, 50, `major`, the owner of the pseudo-element | `O:1221-1234` - parametrized over the two, `["measured"] == {"hiddenPercent": 50, "coveredBy": f"#{pseudo}-owner"}`, `finding["severity"] == "major"` | ✅ PASS |
+| OVL-114 a page scrolled sideways when it is captured | exactly one Finding, `#far`, 50, `major`, `#far-cover` | `O:983-986` - `covered(findings) == [("#far", "major", 50, "#far-cover")]` | ✅ PASS |
 
 ### P1: Stay silent on overlaps that are meant
 
-`clean(client, selector)` (`O:208-214`) returns the share of the element's box painted in the colour of the covers, read through `inspect_element`, and the Findings on that box. The first value proves the fixture really paints the cover over the text; the second is the criterion.
+`clean(client, selector)` (`O:219-225`) returns the share of the element's box painted in the colour of the covers, read through `inspect_element`, and the Findings on that box. The first value proves the fixture really paints the cover over the text (or, for OVL-91, OVL-96 and OVL-98, that it does not); the second is the criterion.
 
 | Criterion | Spec-defined outcome | `file:line` + assertion | Result |
 | --------- | -------------------- | ----------------------- | ------ |
-| OVL-19 the clean fixture, all Checks | `isError: false`, `[]`, no image, `No findings in 1 viewport.` | `O:200-205` - `result.is_error is False`, `["findings"] == []`, `images(result) == []`, `texts(result) == ["No findings in 1 viewport."]` | ✅ PASS |
-| OVL-20 `#stretched` | no Finding | `O:222` - `await clean(client, "#stretched") == (0, [])` | ✅ PASS |
-| OVL-21 `#under-faded` | no Finding | `O:227` - `== (0, [])` | ✅ PASS |
-| OVL-22 `#veil-45` | no Finding | `O:234-235` - `painted(...)["#737373"] == 0.6`, `await clean(client, "#veil-45") == (0, [])` | ✅ PASS |
-| OVL-23 the five roles | no Finding for each | `O:238-245` - parametrized over `menu`, `listbox`, `tooltip`, `dialog`, `alertdialog`: `await clean(client, f"#under-{role}") == (0.5, [])` | ✅ PASS |
-| OVL-24 `dialog[open]` | no Finding | `O:252` - `== (0.5, [])` | ✅ PASS |
-| OVL-25 open popover, `position: absolute` | no Finding | `O:258` - `== (0.5, [])` | ✅ PASS |
-| OVL-26 `position: fixed` | no Finding | `O:263` - `== (0.5, [])` | ✅ PASS |
-| OVL-27 `position: sticky` | no Finding | `O:268` - `== (0.5, [])` | ✅ PASS |
-| OVL-28 descendant of a `menu` | no Finding | `O:276` - `== (0.5, [])` | ✅ PASS |
-| OVL-29 static child of a fixed element | no Finding | `O:284` - `== (0.5, [])` | ✅ PASS |
-| OVL-30 shadow tree of a `menu` host | no Finding | `O:500-503` - `painted(inspected)[COVER] == 0.5`, `[f for f in findings if f["box"] == inspected["box"]] == []` | ✅ PASS |
-| OVL-31 `#nick`, 9.5% along the width | no Finding | `O:291` - `== (0.095, [])` | ✅ PASS |
-| OVL-32 `#skim`, 5% along the height | no Finding | `O:299` - `== (0.2, [])` | ✅ PASS |
-| OVL-33 `#parent-text`, under its own child | no Finding | `O:304` - `== (0.5, [])` | ✅ PASS |
-| OVL-34 `#under-ghost`, `pointer-events: none` | no Finding | `O:312` - `== (0.5, [])` | ✅ PASS |
-| OVL-35 `#caption` over `#picture` | no Finding for either | `O:321-324` - `painted(...)["#000000"] == 0.24`, both `findings_on(...) == []` | ✅ PASS |
-| OVL-36 `#badge` on `#inbox` | no Finding | `O:332` - `== (0.0533, [])` | ✅ PASS |
-| OVL-37 `visibility: hidden` | no Finding | `O:337` - `== (0.5, [])` | ✅ PASS |
-| OVL-38 `color: transparent` | no Finding | `O:345` - `== (0.5, [])` | ✅ PASS on its fixture; ❌ the rule it states does not hold for a colour of alpha 0 that Chromium does not compute to `rgb()` ("Gaps in `src/` and in the spec text", 1) |
-| OVL-39 `opacity: 0` | no Finding | `O:350` - `== (0.5, [])` | ✅ PASS |
-| OVL-70 a role with spaces and a capital | no Finding | `O:358` - `await clean(client, "#under-spaced-role") == (0.5, [])` | ✅ PASS |
-| OVL-72 under what an ancestor paints | no Finding | `O:366` - `await clean(client, "#under-own-row") == (0.5, [])` | ✅ PASS |
-| OVL-73 hit testing gives a descendant | no Finding | `O:375` - `await clean(client, "#own-link-text") == (0.5, [])` | ✅ PASS |
-| OVL-74 `#opacity-40` | no Finding | `O:382` - `await clean(client, "#opacity-40") == (0.5, [])` | ✅ PASS |
-| OVL-88 opaque `color`, transparent fill | no Finding | `O:390` - `await clean(client, "#transparent-fill") == (0.5, [])` | ✅ PASS |
-| OVL-91 closed menus | no Finding, and nothing painted over the text | `O:393-399` - parametrized over `#under-removed-menu` and `#under-hidden-menu`: `await clean(client, selector) == (0, [])`, the `0` being the share of the box in the colour of the covers | ✅ PASS |
+| OVL-19 the clean fixture, all Checks | `isError: false`, `[]`, no image, `No findings in 1 viewport.` | `O:211-216` - `result.is_error is False`, `["findings"] == []`, `images(result) == []`, `texts(result) == ["No findings in 1 viewport."]` | ✅ PASS |
+| OVL-20 `#stretched` | no Finding | `O:233` - `await clean(client, "#stretched") == (0, [])` | ✅ PASS |
+| OVL-21 `#under-faded` | no Finding | `O:238` - `== (0, [])` | ✅ PASS |
+| OVL-22 `#veil-45` | no Finding | `O:245-246` - `painted(...)["#737373"] == 0.6`, `await clean(client, "#veil-45") == (0, [])` | ✅ PASS |
+| OVL-23 the five roles | no Finding for each | `O:249-256` - parametrized over `menu`, `listbox`, `tooltip`, `dialog`, `alertdialog`: `await clean(client, f"#under-{role}") == (0.5, [])` | ✅ PASS |
+| OVL-24 `dialog[open]` | no Finding | `O:263` - `== (0.5, [])` | ✅ PASS |
+| OVL-25 open popover, `position: absolute` | no Finding | `O:269` - `== (0.5, [])` | ✅ PASS |
+| OVL-26 `position: fixed` | no Finding | `O:274` - `== (0.5, [])` | ✅ PASS |
+| OVL-27 `position: sticky` | no Finding | `O:279` - `== (0.5, [])` | ✅ PASS |
+| OVL-28 descendant of a `menu` | no Finding | `O:287` - `== (0.5, [])` | ✅ PASS |
+| OVL-29 static child of a fixed element | no Finding | `O:295` - `== (0.5, [])` | ✅ PASS |
+| OVL-30 shadow tree of a `menu` host | no Finding | `O:566-569` - `painted(inspected)[COVER] == 0.5`, `[f for f in findings if f["box"] == inspected["box"]] == []` | ✅ PASS |
+| OVL-31 `#nick`, 9.5% along the width | no Finding | `O:302` - `== (0.095, [])` | ✅ PASS |
+| OVL-32 `#skim`, 5% along the height | no Finding | `O:310` - `== (0.2, [])` | ✅ PASS |
+| OVL-33 `#parent-text`, under its own child | no Finding | `O:315` - `== (0.5, [])` | ✅ PASS |
+| OVL-34 `#under-ghost`, `pointer-events: none` | no Finding | `O:323` - `== (0.5, [])` | ✅ PASS |
+| OVL-35 `#caption` over `#picture` | no Finding for either | `O:332-335` - `painted(...)["#000000"] == 0.24`, both `findings_on(...) == []` | ✅ PASS |
+| OVL-36 `#badge` on `#inbox` | no Finding | `O:343` - `== (0.0533, [])` | ✅ PASS |
+| OVL-37 `visibility: hidden` | no Finding | `O:348` - `== (0.5, [])` | ✅ PASS |
+| OVL-38 `color: transparent` | no Finding | `O:356` - `== (0.5, [])` | ✅ PASS. The rule now holds off its fixture too: 18 notations of an alpha of 0 probed, none reported ("Probes of the unmutated code") |
+| OVL-39 `opacity: 0` | no Finding | `O:361` - `== (0.5, [])` | ✅ PASS |
+| OVL-70 a role with spaces and a capital | no Finding | `O:369` - `await clean(client, "#under-spaced-role") == (0.5, [])` | ✅ PASS |
+| OVL-72 under what an ancestor paints | no Finding | `O:377` - `await clean(client, "#under-own-row") == (0.5, [])` | ✅ PASS |
+| OVL-73 hit testing gives a descendant | no Finding | `O:386` - `await clean(client, "#own-link-text") == (0.5, [])` | ✅ PASS |
+| OVL-74 `#opacity-40` | no Finding | `O:393` - `await clean(client, "#opacity-40") == (0.5, [])` | ✅ PASS |
+| OVL-88 opaque `color`, transparent fill | no Finding | `O:401` - `await clean(client, "#transparent-fill") == (0.5, [])` | ✅ PASS |
+| OVL-91 closed menus | no Finding, and nothing painted over the text | `O:404-410` - parametrized over `#under-removed-menu` and `#under-hidden-menu`: `await clean(client, selector) == (0, [])` | ✅ PASS |
+| OVL-96 a cover faded out by `filter: opacity(0)` | no Finding | `O:419` - `await clean(client, "#under-filter-faded") == (0, [])` | ✅ PASS |
+| OVL-97 a text faded out by `filter: opacity(0)` | no Finding | `O:426` - `await clean(client, "#filter-faded-text") == (0.5, [])` | ✅ PASS |
+| OVL-98 a text above the layer a `filter` makes | no Finding | `O:436-438` - `painted(inspected)["#c8c8c8"] == 0.1667` (the cover shows around the glyphs, under them), `await clean(client, "#above-filter-layer") == (0, [])` | ✅ PASS |
+| OVL-99 an alpha of 0 outside `rgb()` | no Finding for each of the three | `O:441-450` - parametrized over `#transparent-oklch`, `#transparent-mix`, `#transparent-none`: `await clean(client, selector) == (0.5, [])` | ✅ PASS |
+| OVL-104 `#font-veil-45` | no Finding | `O:1117-1118` - `await findings_on(client, FONT, "#font-veil-45", findings) == []`; the list of `O:1103-1107` holds that the page has three Findings and no fourth | ✅ PASS |
+| OVL-105 `#child-and-nick` | no Finding | `O:460` - `await clean(client, "#child-and-nick") == (0.45, [])` | ✅ PASS |
 
 ### P1: Severity
 
 | Criterion | Spec-defined outcome | `file:line` + assertion | Result |
 | --------- | -------------------- | ----------------------- | ------ |
-| OVL-40 25% is `major`, 24.5% is `minor` | `#quarter` `major`, `#almost-quarter` `minor` | `O:509-513` - `quarter[...]["hiddenPercent"] == 25`, `quarter["severity"] == "major"`, `almost["severity"] == "minor"` | ✅ PASS |
-| OVL-41 `#layered-half` | `minor` | `O:530` - `share_and_severity(...) == (50, "minor")` | ✅ PASS |
-| OVL-42 `#layered-corner` | `info` | `O:536` - `== (10, "info")` | ✅ PASS |
-| OVL-43 `#layer-ancestor` | `minor` | `O:542-544` - `["coveredBy"] == "#layer-cover"`, `== (50, "minor")` | ✅ PASS |
-| OVL-44 `#shared-layer` | `major` | `O:550` - `== (50, "major")` | ✅ PASS |
-| OVL-45 `#z-zero` | `major` | `O:554` - `== (50, "major")` | ✅ PASS |
-| OVL-46 `#z-static` | `major` | `O:560-562` - `["coveredBy"] == "#z-static-next"`, `== (50, "major")` | ✅ PASS |
+| OVL-40 25% is `major`, 24.5% is `minor` | `#quarter` `major`, `#almost-quarter` `minor` | `O:575-579` - `quarter[...]["hiddenPercent"] == 25`, `quarter["severity"] == "major"`, `almost["severity"] == "minor"` | ✅ PASS |
+| OVL-41 `#layered-half` | `minor` | `O:596` - `share_and_severity(...) == (50, "minor")` | ✅ PASS |
+| OVL-42 `#layered-corner` | `info` | `O:602` - `== (10, "info")` | ✅ PASS |
+| OVL-43 `#layer-ancestor` | `minor` | `O:608-610` - `["coveredBy"] == "#layer-cover"`, `== (50, "minor")` | ✅ PASS |
+| OVL-44 `#shared-layer` | `major` | `O:616` - `== (50, "major")` | ✅ PASS |
+| OVL-45 `#z-zero` | `major` | `O:620` - `== (50, "major")` | ✅ PASS |
+| OVL-46 `#z-static` | `major` | `O:626-628` - `["coveredBy"] == "#z-static-next"`, `== (50, "major")` | ✅ PASS |
+| OVL-109 only the cover that is not the Coverer is raised | 50, `#plain-large`, `major` | `O:1200-1205` - `["measured"] == {"hiddenPercent": 50, "coveredBy": "#plain-large"}`, `finding["severity"] == "major"` | ✅ PASS |
+| OVL-110 only the Coverer is raised | 50, `#raised-large`, `minor` | `O:1213-1218` - `["measured"] == {"hiddenPercent": 50, "coveredBy": "#raised-large"}`, `finding["severity"] == "minor"` | ✅ PASS |
+| OVL-115 `major`, `minor`, `info` in one call | `(#c, major, 50, #c-cover)`, `(#b, minor, 10, #b-cover)`, `(#a, info, 10, #a-cover)`; `Found 3 findings in 1 viewport: 1 major, 1 minor, 1 info.` | `O:903-912` - `covered(result.structured_content["findings"]) == [...]`, the three tuples; `texts(result)[0] == "Found 3 findings in 1 viewport: 1 major, 1 minor, 1 info."` | ✅ PASS |
 
 ### P1: Read the Finding
 
 | Criterion | Spec-defined outcome | `file:line` + assertion | Result |
 | --------- | -------------------- | ----------------------- | ------ |
-| OVL-47 the Finding of `#half` | the literal of the spec | `O:116-133` - `findings[0] == {...}`, the whole object, compared key by key with the spec: equal | ✅ PASS |
-| OVL-48 message at 10% | `10% of the text is covered by another element` | `O:137-139` - `["hiddenPercent"] == 10`, `finding["message"] == "10% of the text is covered by another element"` | ✅ PASS |
-| OVL-49 truncation | 24 for 24.5% | `O:518-520` - `["hiddenPercent"] == 24`, `finding["message"] == "24% of the text is covered by another element"` | ✅ PASS |
-| OVL-50 `#mixed` | 20, `#mixed-card`, `minor` | `O:569-574` - `["measured"] == {"hiddenPercent": 20, "coveredBy": "#mixed-card"}`, `finding["severity"] == "minor"` | ✅ PASS |
-| OVL-51 `#two-covers` | 60, `#large-cover` | `O:581-585` - `["measured"] == {"hiddenPercent": 60, "coveredBy": "#large-cover"}` | ✅ PASS |
-| OVL-52 `#tie` | 40, `#tie-first` | `O:593-597` - `["measured"] == {"hiddenPercent": 40, "coveredBy": "#tie-first"}` | ✅ PASS |
-| OVL-53 both selectors work in `inspect_element` | `isError: false`, same `box` for `selector` | `O:728-735` - for the 4 Findings of the bug fixture and the 34 of the bounds fixture (`len(findings) == count`): `inspected["box"] == finding["box"]`, and `inspect` (`O:186`, `result.is_error is False`) on `coveredBy` | ✅ PASS |
-| OVL-77 an element the scroll brings over a text | exactly one Finding, `#far`, 50, `#far-cover` | `O:796-801` - `(finding,) = ...["findings"]`, `finding["selector"] == "#far"`, `["measured"] == {"hiddenPercent": 50, "coveredBy": "#far-cover"}` | ✅ PASS |
-| OVL-79 the Coverer of a sample | the fifteen tuples in order, `#striped` covered by `#solid-cover` | `O:831-840` - `covered(findings) == [("#striped", "major", 25, "#solid-cover"), ("#row-striped", "major", 40, "#row-solid-cover"), *fillers 0 to 11, ("#speck", "minor", 10, "#speck-cover")]` | ✅ PASS. Its list gained the tuple of OVL-84 in this fix pass and lost none: the outcome is tighter, not looser |
-| OVL-84 the rows of a sample | `#row-striped`: 40, `major`, `#row-solid-cover` | `O:849-854` - `["measured"] == {"hiddenPercent": 40, "coveredBy": "#row-solid-cover"}`, `finding["severity"] == "major"` | ✅ PASS |
-| OVL-85 a page under the cap | exactly one Finding, `#striped`, 25, `major`, `#stripes` | `O:862-863` - `covered(findings) == [("#striped", "major", 25, "#stripes")]` | ✅ PASS |
+| OVL-47 the Finding of `#half` | the literal of the spec | `O:127-144` - `findings[0] == {...}`, the whole object, compared key by key with the spec: equal | ✅ PASS |
+| OVL-48 message at 10% | `10% of the text is covered by another element` | `O:148-150` - `["hiddenPercent"] == 10`, `finding["message"] == "10% of the text is covered by another element"` | ✅ PASS |
+| OVL-49 truncation | 24 for 24.5% | `O:584-586` - `["hiddenPercent"] == 24`, `finding["message"] == "24% of the text is covered by another element"` | ✅ PASS |
+| OVL-50 `#mixed` | 20, `#mixed-card`, `minor` | `O:635-640` - `["measured"] == {"hiddenPercent": 20, "coveredBy": "#mixed-card"}`, `finding["severity"] == "minor"` | ✅ PASS |
+| OVL-51 `#two-covers` | 60, `#large-cover` | `O:647-651` - `["measured"] == {"hiddenPercent": 60, "coveredBy": "#large-cover"}` | ✅ PASS |
+| OVL-52 `#tie` | 40, `#tie-first` | `O:659-663` - `["measured"] == {"hiddenPercent": 40, "coveredBy": "#tie-first"}` | ✅ PASS |
+| OVL-53 both selectors work in `inspect_element` | `isError: false`, same `box` for `selector` | `O:846-853` - for the 4 Findings of the bug fixture and the 39 of the bounds fixture (`len(findings) == count`): `inspected["box"] == finding["box"]`, and `inspect` (`O:197`, `result.is_error is False`) on `coveredBy` | ✅ PASS |
+| OVL-77 an element the scroll brings over a text | exactly one Finding, `#far`, 50, `#far-cover` | `O:945-950` - `(finding,) = ...["findings"]`, `finding["selector"] == "#far"`, `["measured"] == {"hiddenPercent": 50, "coveredBy": "#far-cover"}` | ✅ PASS |
+| OVL-79 the Coverer of a sample | the fifteen tuples in order, `#striped` covered by `#solid-cover` | `O:1007-1016` - `covered(findings) == [...]` | ✅ PASS |
+| OVL-84 the rows of a sample | `#row-striped`: 40, `major`, `#row-solid-cover` | `O:1025-1030` - `["measured"] == {"hiddenPercent": 40, "coveredBy": "#row-solid-cover"}`, `finding["severity"] == "major"` | ✅ PASS |
+| OVL-85 a page under the cap | exactly one Finding, `#striped`, 25, `major`, `#stripes` | `O:1038-1039` - `covered(findings) == [("#striped", "major", 25, "#stripes")]` | ✅ PASS |
+| OVL-112 `evidence.computed` of a positioned text | `{"position": "relative", "z-index": "1"}` for `#positioned`, `{"position": "relative", "z-index": "auto"}` for `#relative` | `O:1237-1247` - parametrized over the two, `finding["evidence"]["computed"] == {"position": "relative", "z-index": z_index}` | ✅ PASS |
+| OVL-113 Hidden ink right of the viewport | `(#near, major, 50, #near-cover)`, `(#right, major, 50, #right-cover)`, `(#edge, major, 50, #edge-cover)`, `(#far, major, 50, #far-cover)` | `O:969-975` - `covered(findings) == [...]`, the four tuples | ✅ PASS |
+| OVL-116 Hidden ink under a tenth does not count | `(#striped, major, 25, #stripes)` and nine fillers | `O:1061-1062` - `covered(findings) == striped("#stripes", 9)` | ✅ PASS |
+| OVL-117 Hidden ink of a text without a Finding counts | `(#striped, major, 25, #solid-cover)` and nine fillers | `O:1071-1072` - `covered(findings) == striped("#solid-cover", 9)` | ✅ PASS |
+| OVL-118 a step of 2 up to 80,000 pixels | `(#striped, major, 25, #solid-cover)` and 24 fillers | `O:1080-1081` - `covered(findings) == striped("#solid-cover", 24)` | ✅ PASS |
+| OVL-119 a step of 3 from 80,000 pixels on | `(#striped, major, 25, #stripes)` and 40 fillers | `O:1090-1091` - `covered(findings) == striped("#stripes", 40)` | ✅ PASS |
 
 ### P1: With the other Checks
 
 | Criterion | Spec-defined outcome | `file:line` + assertion | Result |
 | --------- | -------------------- | ----------------------- | ------ |
-| OVL-54 four Checks by default | `overlap` runs with the other three | `O:143-149` - the four `(selector, "overlap")` pairs on a call without `checks`; `O:769-776` - `low-contrast-real` and `overlap` in one default call; the default run of the other two is held by their own modules, which pass | ✅ PASS |
-| OVL-55 unknown Check | `Unknown check "nope". Valid checks: low-contrast-real, offscreen-overflow, overlap, text-clipped.` | `tests/test_detect_visual_bugs.py:340-344` - the literal `in text`; the same literal at `D:351-355`, `D:362-366` (`zzz`) and `D:374-378` | ✅ PASS |
-| OVL-56 the other three Checks on the bug fixture | `[]` | `O:153-154` - `(await detect(client, BUG, checks=others))["findings"] == []` | ✅ PASS |
-| OVL-57 order across Checks | `(#a, overlap)`, `(#b, low-contrast-real)`, `(#b, overlap)`, `(#c, overlap)` | `O:769-776` - `{severity} == {"minor"}`, the four pairs in order | ✅ PASS |
-| OVL-58 the description names `overlap` | names it and says what it reports | `O:157-163` - `` "`overlap` (text another element is painted over" in " ".join(tool.description.split()) `` | ✅ PASS |
-| OVL-59 earlier tests unchanged | pass, only the four literals differ | by reading: `git diff --name-status 8aa017c..HEAD -- tests` lists nine new fixtures, the new `tests/test_overlap.py` and `tests/test_detect_visual_bugs.py`, whose diff since `eb9778b` is the four `Valid checks:` literals (now at `D:342`, `D:353`, `D:364`, `D:376`) and nothing else; `helpers.py`, `conftest.py` and every earlier fixture and test module are untouched; the gate passes | ✅ PASS |
-| OVL-60 a hundred covered texts | `isError: false`, 100 Findings | `O:780-788` - `result.is_error is False`, `len(findings) == 100`, and the 100 tuples `(#text-n, major, 50, #cover-n)` | ✅ PASS |
+| OVL-54 four Checks by default | `overlap` runs with the other three | `O:154-160` - the four `(selector, "overlap")` pairs on a call without `checks`; `O:887-894` - `low-contrast-real` and `overlap` in one default call; the default run of the other two is held by their own modules, which pass | ✅ PASS |
+| OVL-55 unknown Check | `Unknown check "nope". Valid checks: low-contrast-real, offscreen-overflow, overlap, text-clipped.` | `tests/test_detect_visual_bugs.py:340-344` - the literal `in text`; the same list at `D:353`, `D:364` and `D:376` | ✅ PASS |
+| OVL-56 the other three Checks on the bug fixture | `[]` | `O:164-165` - `(await detect(client, BUG, checks=others))["findings"] == []` | ✅ PASS |
+| OVL-57 order across Checks | `(#a, overlap)`, `(#b, low-contrast-real)`, `(#b, overlap)`, `(#c, overlap)` | `O:887-894` - `{severity} == {"minor"}`, the four pairs in order | ✅ PASS |
+| OVL-58 the description names `overlap` | names it and says what it reports | `O:169-174` - `` "`overlap` (text another element is painted over" in " ".join(tool.description.split()) `` | ✅ PASS |
+| OVL-59 earlier tests unchanged | pass, only the four literals differ | by reading: `git diff --name-status 8aa017c..HEAD -- tests` lists the overlap fixtures, the new `tests/test_overlap.py` and `tests/test_detect_visual_bugs.py`, whose diff is the four `Valid checks:` literals (now at `D:342`, `D:353`, `D:364`, `D:376`) and nothing else; the gate passes | ✅ PASS |
+| OVL-60 a hundred covered texts | `isError: false`, 100 Findings | `O:916-924` - `result.is_error is False`, `len(findings) == 100`, and the 100 tuples `(#text-n, major, 50, #cover-n)` | ✅ PASS |
 
 ### P2: Check contract, configuration and documents (file evidence, by reading)
 
 | Criterion | Evidence | Result |
 | --------- | -------- | ------ |
-| OVL-61 one module, one function, registered | `src/squint_mcp/checks/overlap.py:85` - `def check(capture: Capture) -> list[Finding]`; `src/squint_mcp/checks/__init__.py:23` - `"overlap": overlap.check` | ✅ PASS |
+| OVL-61 one module, one function, registered | `src/squint_mcp/checks/overlap.py:88` - `def check(capture: Capture) -> list[Finding]`; `src/squint_mcp/checks/__init__.py:23` - `"overlap": overlap.check` | ✅ PASS |
 | OVL-62 no `playwright` in the Checks or in `vision.py` | `grep -rn playwright src/squint_mcp/checks src/squint_mcp/vision.py src/squint_mcp/covered.py` finds nothing (exit 1) | ✅ PASS |
 | OVL-63 thresholds and roles in `config`, each cited | `src/squint_mcp/config.py:129` `OVERLAP_MIN_HIDDEN_PERCENT = 10` ("Squint default", with the reason, `:126-128`); `:133` `OVERLAP_MAJOR_HIDDEN_PERCENT = 25` ("Squint default", `:131-132`); `:138` `SILENT_LAYER_ROLES` ("WAI-ARIA 1.2", `:135-137`) | ✅ PASS |
-| OVL-64 no literal of them in the Check | `src/squint_mcp/checks/overlap.py:46` and `:59` read both thresholds from `config`; no role name appears in the file. The numbers left are the `* 100` of a percentage (`:46`, `:59`, `:66`) and `== 0` for alpha and ink (`:31`, `:40`) | ✅ PASS |
-| OVL-65 CHANGELOG | `CHANGELOG.md:12`, under `## [Unreleased]` (`:7`): the Check, 10% and 25%, one level lower under a raised layer, and what is not reported: declared layers, `fixed` and `sticky`, covers that paint nothing | ✅ PASS |
+| OVL-64 no literal of them in the Check | `src/squint_mcp/checks/overlap.py:49` and `:62` read both thresholds from `config`; no role name appears in the file. The numbers left are the `* 100` of a percentage (`:49`, `:62`, `:69`) and `== 0` for alpha and ink (`:34`, `:43`) | ✅ PASS |
+| OVL-65 CHANGELOG | `CHANGELOG.md:12`, under `## [Unreleased]`: the Check, 10% and 25%, one level lower under a raised layer, what is not reported (declared layers, `fixed` and `sticky`, covers that paint nothing) and, new in this round, the known limits of F16 | ✅ PASS |
 | OVL-66 README | `README.md:45` - "`detect_visual_bugs` runs four Checks: ... and `overlap` (...)" | ✅ PASS |
 | OVL-67 roadmap `concluída` | Pending by design: a closing step after a PASS. `docs/ROADMAP.md:110` says `pendente`, which is right today | ⏳ Pending the verdict |
 
@@ -208,165 +238,208 @@ Every line number below was located again in this pass, in `tests/test_overlap.p
 
 | Criterion | Spec-defined outcome | `file:line` + assertion | Result |
 | --------- | -------------------- | ----------------------- | ------ |
-| OVL-68 two viewports | each Finding of the first has one in the second | `O:169-179` - `len(desktop) == 4`, `desktop <= mobile` over `(selector, check)` | ✅ PASS |
-| OVL-69 `text-clipped-clean.html` | `[]` | `O:762-763` - `(await detect(client, url, checks=ONLY))["findings"] == []` | ✅ PASS |
+| OVL-68 two viewports | each Finding of the first has one in the second | `O:180-190` - `len(desktop) == 4`, `desktop <= mobile` over `(selector, check)` | ✅ PASS |
+| OVL-69 `text-clipped-clean.html` | `[]` | `O:880-881` - `(await detect(client, url, checks=ONLY))["findings"] == []` | ✅ PASS |
+| OVL-120 a covered text low on a page of layers, six calls in a row | every call: exactly one Finding, `#low`, 50, `major`, `#low-cover` | `O:935-937` - `for _ in range(6): ... assert covered(findings) == [("#low", "major", 50, "#low-cover")]` | ✅ PASS. The criterion is about a timing fault, so its test is a sample of six calls and not a proof: see "F17 and AD-007" |
 
-**Status**: 90 of 90 criteria due now have an assertion on the outcome the spec defines, and every one passes; OVL-67 waits for the verdict. ❌ One rule a criterion states does not hold on a page no fixture has (OVL-38, below). ⚠️ 3 spec-precision gaps flagged. ❌ Gaps present in the sensor (below).
+**Status**: 119 of 119 criteria due now have an assertion on the outcome the spec defines, and every one passes; OVL-67 waits for the verdict. No criterion fails off its fixture inside the scope of this slice: the two rules the third pass found broken (a `filter` that changes colours, an alpha of 0 outside `rgb()`) now hold on every probe page of this pass. ⚠️ 2 spec-precision gaps flagged (below). ❌ Gaps present in the sensor (below).
 
-### The twelve new criteria, read critically
+### The 29 new criteria, read critically
 
-Each was checked for two things: that it states a rule the Terms or the Assumptions already held, and that its fixture makes the outcome depend on that rule alone. The geometry of each was worked out again from the fixture.
+Each was checked for two things: that it states a rule the Terms or the Assumptions hold, and that its fixture makes the outcome depend on that rule. The geometry of each was worked out again from the fixture.
 
 | Criterion | The rule it states | Its fixture | Verdict |
 | --------- | ------------------ | ----------- | ------- |
-| OVL-80 | Terms, "Text ink" and "Hidden ink": each text is measured with nothing outside it painted, however many texts share the place | `#stack-0` at 40px to 240px and three more, each 40px further right and painted over the one before. Of `#stack-0`, 80px to 240px are hidden: 160 of 200 columns, 80%; `#stack-1` is on top of 40 of them, `#stack-2` of 40 and `#stack-3` of 80. `#stack-3` loses its last 50px to the cover: 25% | Faithful. The fourth text is the first of any fixture in a second round, and the third the first on the third channel |
-| OVL-81 | The same: a share does not depend on where on the page the text starts | `#shifted` from 300px to 500px, its cover over 480px to 500px: 10% | Faithful. It shares a screenshot with texts that start at 40px, which is what makes the column matter |
-| OVL-82 | Terms, "Text ink": "when nothing outside the element is painted over it" | `#tag`, a box from 140px to 280px with its glyphs at 240px to 280px, over the last 100px of `#under-tag`; `#tag-cover` over the second glyph | Faithful, for a tag that stands after the text in the document. The other order has no outcome: mutant V7 |
-| OVL-83 | Terms, "Own text" | `#around`: 5 glyphs, a `b` of 10, 5 glyphs; the cover over its last 20px is 400 of the 4000 pixels that are its own, and would be 400 of 8000 with the child's | Faithful |
-| OVL-87 | Assumptions, "Text hidden on purpose": a glyph colour "with alpha 0" | `color: rgba(0, 0, 0, 0.5)`, half covered | Faithful |
-| OVL-88, OVL-89 | The same row: the colour that paints the glyphs is the fill colour | `color` opaque with a transparent fill, and the reverse | Faithful; both sides |
-| OVL-90 | Terms, "Hidden ink": "if ... only its Silent layers were painted": one that is not painted hides nothing | `#closed-menu`, `role="menu"` and `visibility: hidden`, over the half `#plain-cover` hides | Faithful. It is the test that kills N11 |
-| OVL-91 | Goals: the clean fixture holds "closed and open menus" | A menu of `display: none` and one of `visibility: hidden`, each placed over half of a text | Faithful, and weak: nothing is painted and hit testing never gives a hidden element, so it is hard to break. N11, the mutant it was written next to, passes it (`1 failed, 2 passed`: the two cases of this criterion), and so does every survivor of this pass. It holds the Goal, not a rule; OVL-90 holds the rule |
-| OVL-84 | Terms, "Coverer": "every nth pixel of every nth row" | `#row-stripes` on the odd rows of the page over 120px: 10 rows of 120 columns, 1200 pixels, none tested; `#row-solid-cover`, 400 | Faithful |
-| OVL-85 | Terms, "Coverer": "When a Capture has more than 20,000 pixels" | The row of `#striped` alone: 1000 pixels, all tested, 600 under `#stripes` | Faithful. The cap is pinned from both sides, at 1000 and at 26,610 pixels; how n grows past 2 is not (mutant V16) |
-| OVL-86 | OVL-01 on a page that is not at its top when it is captured | A script of the page scrolls 900px while it loads | Faithful, for a scroll down. A scroll sideways has no outcome: mutant V17 |
+| OVL-92, OVL-93, OVL-95 | Assumptions, "A `filter`": ink is measured with the functions that change colours left out | A row of `grayscale(1)` around the text, `hue-rotate(180deg)` on the text, `invert(1)` on the root; each text half under an opaque cover | Faithful. All three filters are one function. A list of functions, which is what the row of the Assumptions is about, is in no fixture: mutants F6 and F8 |
+| OVL-94 | The same row: "an element keeps a `filter` while it is measured, so it goes on holding what is positioned inside it" | `#holder`, `position: static` with `filter: sepia(1)`, is the containing block of `#held-cover` | Faithful. With the filter set to `none` the cover leaves the text (mutant F2: no Finding) |
+| OVL-96, OVL-97 | The same row: `opacity()` is applied | A cover and a text of `filter: opacity(0)` | Faithful. `opacity()` is the only one of the three kept functions with a fixture: `blur()` and `drop-shadow()` have none (mutants F4 and F5) |
+| OVL-98 | The same row: "being painted as one layer" | `#layered-cover`, `z-index: 5` inside `#filter-layer` (`invert(1)`), under a text of `z-index: 1`. The test first asserts that the cover is painted under the glyphs (1000 of the 6000 pixels of the box in its inverted grey) | Faithful |
+| OVL-99, OVL-100 | Assumptions, "Text hidden on purpose": the alpha in every notation | `oklch()` with an alpha of 0, of `none`, of 0.5 and without one; a `color-mix()` that computes to `color(srgb 0 0 0 / 0)` | Faithful, on both sides. The code has one rule for every notation, so there is no branch per notation to leave out |
+| OVL-101 to OVL-104 | Terms, "Seen" and "Text ink": the bound is relative to the pixel | The system `sans-serif` font at 16px; every share is of whole glyphs | Faithful, and independent of the platform's pixels: under a veil of 0.55 every pixel of Text ink (128 or more of 255) shows 0.45 of its ink, under one of 0.45 it shows 0.55. Not run on the CI's Linux: the branch was never pushed |
+| OVL-105, OVL-106 | Terms, "Text ink": "when nothing outside the element is painted over it" | A child over 80px of the text, at its start and at its end; an Other element over 10px (200 of 2400 pixels, 8.3%) and over 20px (400 of 2400, 16.6%) | Faithful, both sides of the threshold and both ends. The child is a direct child in every case: a deeper descendant is in no fixture (mutant U1) |
+| OVL-107 | Terms, "Text ink", with the tag before the text in the document | The row of OVL-82 in the other order | Faithful |
+| OVL-108 | Terms, "Silent layer": a `dialog` element with the `open` attribute | A `details` element with `open`, positioned over half of the text | Faithful |
+| OVL-109, OVL-110 | Assumptions, "Several elements cover one text": the Raised-layer rule reads the Coverer | A raised cover over 20px and a plain one over 80px, and the reverse | Faithful. In both the Coverer is the second of the two covers in the document: mutant R1 |
+| OVL-111 | Out of Scope, the row for a pseudo-element: reported when no element that shows it is measured | `::after` and `::before` of an owner whose two glyphs are all seen | Faithful |
+| OVL-112 | Assumptions, "`evidence.computed`" | A covered text of `position: relative` with `z-index: 1` and with none | Faithful |
+| OVL-113, OVL-114 | Terms, "Coverer": "with the page scrolled so that the point is in the viewport" | A page 3000px wide and 2000px high: a text right of the viewport, one where the page cannot scroll a whole viewport further (2880px to 2980px, scroll limit 1560px), one right and below, a `fixed` bar that a scroll of 1440px brings over the second; and a page scrolled 1500px sideways while it loads | Faithful. The clamp at the end of the page is held on both axes: sideways by `#edge`, down by `#low` of OVL-120 (mutants S1 and S2) |
+| OVL-115 | Assumptions, "Order of Findings"; `info` is first used here | Three texts that stand in the document from `info` to `major` | Faithful |
+| OVL-116, OVL-117 | Terms, "Coverer": which Hidden ink counts towards the 20,000 | 19,000 + 1520 pixels (four texts at 9.5%, each with a menu over its first half so that it is measured) and 19,000 + 2000 (a transparent text half covered) | Faithful. 1000 + 9 × 2000 = 19,000; 4 × 380 = 1520 |
+| OVL-118, OVL-119 | Terms, "Coverer": n is the smallest whole number for which the pixels divided by n × n are at most 20,000 | 49,000 pixels (n = 2: 12,250) and 81,000 (n = 2 gives 20,250, n = 3 gives 9000) | Faithful. The stripes are on the odd columns 41 to 99: at n = 3 they are found on 45, 51, ..., 99 (10 columns) and the solid cover on 222 to 237 (6). The bound itself, exactly 20,000 pixels, is in no fixture (mutant H1) |
+| OVL-120 | Assumptions, "A screenshot that shows a part of the page unpainted" | A page 1850px high with 36 rows that are layers of their own and one covered text at its foot; six calls | Faithful as a sample. See "F17 and AD-007" |
 
-### The two edits of existing spec text
+### The Out of Scope rows of this round against the code
 
-**The sentence added to "Coverer"** ("The Hidden ink to test is that of the elements whose Hidden share is at least 10%, those that get no Finding included; an element under that share is not hit tested and its Hidden ink does not count") says what the code does: `src/squint_mcp/capture.py:212` hit tests a text when `hidden * 100 >= OVERLAP_MIN_HIDDEN_PERCENT * ink`, whatever the Check later makes of it, and `:219` sums the Hidden ink of those texts alone. It closes spec-precision gap 1 of the second pass. It has no criterion: mutant N14, which the second pass could not call a gap, now is one (sensor section).
+| Row | Probe | What the code does | Agrees? |
+| --- | ----- | ------------------ | ------- |
+| A pseudo-element painted outside the box of its element, when an element that shows it is itself measured | `pp-pseudo`: the owner half covered (`#b-under`); the pseudo-element painted by a child without text of an element that is half covered (`#d-under`); the owner all seen with a glyph of a third text in its line (`#f-under`); the pseudo-element inside the box of its owner, which is half covered (`#g-under`) | No Finding for `#b-under`, `#d-under` and `#f-under`; `(#g-under, major, 50, #g-owner)` | ✅ The reworded row says exactly this: spec-precision gap 1 of the third pass is closed |
+| Text on an element with `mix-blend-mode` | `pf-filters`, `#f-blend` (`difference`) and `#f-blend-mult` (`multiply`), each half covered | No Finding under `difference`; `(#f-blend-mult, major, 50, ...)` under `multiply` | ✅ |
+| A cover with a `backdrop-filter` that changes colours | `pf-filters`, `#f-backdrop`: a clear cover of `backdrop-filter: invert(1)` over half of a text | `(#f-backdrop, major, 50, #f-backdrop-cover)` | ✅ reported, as the row says |
+| A page whose Content Security Policy refuses inline styles ("Not verified") | `pcsp`: a covered text and a grey text of contrast 2.95, styled from a file, under `style-src file:`; the same page without the policy as a control | With the policy: `No findings in 1 viewport.` from all four Checks. Without it: `(overlap, #t, major, 50)` and `(low-contrast-real, #grey, major)` | ✅ the row's guess is right, and it is now verified: such a page comes back clean from `overlap` and from `low-contrast-real`. Outside this slice, as the row says, and worth its follow-up: a strict style policy is common on production sites |
+| A page that moves when it is scrolled | not probed | - | - |
 
-**The row added to Out of Scope** (a pseudo-element of another measured text) does not describe exactly the case the code misses. Probes `q4-pseudo`, `q4b-pseudo-covered` and `q4c-pseudo-nick` (this pass's own pages for what the second report called `p2c` and `p2b`) give what the row says: the text is reported while the element that paints the pseudo-element is seen, missed once at least 10% of that element's own text is unseen, and reported again with 2.5% unseen. Two more probes give a miss the row does not cover:
+### Probes of the unmutated code
 
-- `q4d-pseudo-inner`: the pseudo-element is painted by a child, without own text, of an element whose own text is half covered. The row asks that the element that paints it "has own text". The text under it gets no Finding.
-- `q4f-pseudo-gap`: the element that paints the pseudo-element has all of its own text seen, and a glyph of a third text shows in the gap between two of its glyphs. The row says "with less than 10% of that own text unseen, the text is reported". It is not: the tool returns no Finding at all.
+Sixteen pages of this pass, outside the repository, called with the in-memory MCP client as `tests/helpers.py` does, `checks` equal to `["overlap"]` at 1440 × 900. Ahem at 20px on rows 50px apart, each text half under an opaque cover unless the row says otherwise.
 
-Both follow from how the code decides: the text is missed whenever the element around the pseudo-element is measured in the same screenshot, and phase 1 keeps an element for measuring when at least 10% of its ink is unseen or when glyphs of another text stand inside its own-text boxes (`src/squint_mcp/covered.py:216-227`), with what is inside it painted too (`src/squint_mcp/js/covered_text.js:227`). The row is spec-precision gap 1 below.
+| Probe | What it holds | Result | By the spec |
+| ----- | ------------- | ------ | ----------- |
+| `pf-filters` | 22 rows. Lists of functions: `grayscale(1) opacity(0.3)`, `grayscale(1) opacity(0.6)`, `opacity(0.4) grayscale(1)`, `opacity(0.6) grayscale(1) opacity(0.6)`, `saturate(2) blur(20px)`, `drop-shadow(...) grayscale(1)`, `invert(1) hue-rotate(90deg)`. `url(#m)` to an SVG `feColorMatrix`. `blur(20px)` and `brightness(0.5)` alone. A filter on the cover, on a pseudo-element that is the cover, on two nested elements, in a shadow tree. `-webkit-filter`. A filter declared `!important`, in an `@layer` with `!important`, and held by an animation with `forwards`. A cover whose `drop-shadow()` hides 40px of the text beside the 60px its box hides | Reported at 50%: every text that keeps at least half of its ink (16 rows, the cover with the shadow among them). No Finding: the five texts a kept function fades or blurs below half, and the one under `mix-blend-mode: difference` | ✅ every row |
+| `pc-colours` | 26 rows. An alpha of 0 as `rgb(0 0 0 / 0)`, `#0000`, `hsl()`, `hwb()`, `lab()`, `lch()`, `oklab()`, `color(display-p3 ...)`, `color(xyz ...)`, `color(srgb ... / 0%)`, `color-mix(in oklab, ...)`, a relative colour, `light-dark()`, `calc()`, `lch(... / none)`, on `-webkit-text-fill-color` alone, through `currentcolor`, and with a `-webkit-text-stroke`. Opaque and translucent: `lab(0 0 0)`, `color(display-p3 0 0 0)`, `lch(0 0 0 / 0.01)`, a `color-mix()` of alpha 0.6, a relative colour of alpha 0.5, `hsl(... / 0.5)`, `oklch(none 0 0)`, a transparent `color` under an opaque fill | No Finding for the 18 of alpha 0; 50% for the 8 others. No call fails | ✅ every row |
+| `pp-pseudo` | The four cases of the Out of Scope row (above) | as the row says | ✅ |
+| `pw-wide` | A page 3000 × 2000: a text in its last corner, where neither scroll reaches a whole viewport; a text whose Hidden ink crosses the right edge of the first viewport; one that crosses its lower edge | 50% and its own cover for all three | ✅ |
+| `pw-both` | A page scrolled 1500px sideways and 900px down while it loads | `(#far, major, 50, #far-cover)` | ✅ |
+| `pu-depth` | A text with a badge that is its grandchild and a cover over its last 20px; a text half under a grandchild of an element of `role` `menu` | `(#g, minor, 16, #g-cover)`; no Finding for the second | ✅ |
+| `pr-raised` | The rows of OVL-109 and OVL-110 with the larger cover first in the document | `(#u1, major, 50, #plain-large-first)`, `(#u2, minor, 50, #raised-large-first)` | ✅ |
+| `ph-cap` | The row of `#striped`, nine fillers and a text a quarter covered: exactly 20,000 pixels of Hidden ink | `(#striped, major, 25, #stripes)`: every pixel tested | ✅ |
+| `pb-border` | A text half under the left border, 100px wide, of an element with two glyphs of its own beside it | `(#under-border, major, 50, #bordered)` | ✅ |
+| `pz-zoom` | `zoom: 2` on `body`; a row of `transform: scale(1.5)` | 50% and its cover for both | ✅ |
+| `pr-raf-shim`, `pr-raf-never` | A page that replaces `requestAnimationFrame` by a timer, and one that replaces it by a function that never calls back | The first: `(#t, major, 50, #t-cover)`. The second: `Timed out after 30s.` | ⚠️ see "F17 and AD-007" |
+| `pw-rtl-plain`, `pw-rtl` | A right-to-left page that does not scroll, and one 3000px wide that scrolls to the left, each with a covered text in the first viewport | The first: `(#rtl-plain, major, 50, #rtl-plain-cover)`. The second: no Finding | ⚠️ spec-precision gap 2 |
+| `pcsp`, `pcsp-control` | The Content Security Policy row (above) | as the row guesses | ✅ |
 
-### Gaps in `src/` and in the spec text
+On every page inside the scope of this slice the unmutated code gives the outcome the Terms and the Assumptions define. That is new: the third pass found two rules broken off their fixtures.
 
-Found by probing unmutated code through the MCP boundary on pages of this pass (the sensor section says how the probes were run).
+### Spec-precision gaps
 
-1. ❌ **A glyph colour of alpha 0 that Chromium does not compute to `rgb()` is reported (OVL-38; Assumptions, "Text hidden on purpose").** On probe `q15-alpha0` a text of `color: oklch(0 0 0 / 0)`, half covered, gets `(#oklch, major, 50, #oklch-cover)`; the same text with `color: rgb(0 0 0 / 0%)` gets none. `src/squint_mcp/checks/overlap.py:25-31` reads the alpha from `rgba(r, g, b, a)` alone, and `inspect_element` shows Chromium computes the first colour to `oklch(0 0 0 / 0)`. Probe `q20-color-mix` gives the same false Finding for `color-mix(in oklab, rgb(0 0 0) 0%, transparent)` (computed `oklab(0 0 0 / 0)`), for `color-mix(in srgb, rgb(0 0 0) 0%, transparent)` (computed `color(srgb 0 0 0 / 0)`) and for `color(display-p3 0 0 0 / 0)`. The criterion's condition is "painted with a colour of alpha 0", and its fixture is `color: transparent`. This is the first place in three passes where the code, unmutated, falls short of a rule a criterion states. It is a false Finding on text nobody is meant to see, and needs both conditions: text made transparent through a colour function other than `rgb()` (a `color-mix()` is how an opacity modifier of a utility framework is commonly written), and another element over a tenth of it.
-2. ⚠️ **Spec-precision gap 1: the Out of Scope row for a pseudo-element** (above). By the Terms the text of `q4d-pseudo-inner` and of `q4f-pseudo-gap` has a Hidden share of 50% and a Coverer, so OVL-01 asks for a Finding, and no row of Out of Scope takes it back. One wider sentence closes it: the text is not reported when the element that shows the pseudo-element, the one that paints it or an element around that one, is itself measured.
-3. ⚠️ **Spec-precision gap 2: a limit the design accepts and the spec does not list, again.** `.specs/features/overlap/design.md:263`: "An ancestor with `mix-blend-mode` or a `filter` ... The channels do not hold what the highlights painted: no Text ink, no Finding ... Known limit". On probe `q21-filter` a text half under a cover, in a row of `filter: grayscale(1)` or of `filter: invert(1)`, gets no Finding; the same row without the filter gets `(#plain, major, 50, #plain-cover)`. A filter on the text itself does the same (`q22-gradient`, `#own-filter`); one that keeps the colours, `drop-shadow`, does not (`#shadow` is reported). By the Terms such a text has Text ink, a Hidden share of 50% and a Coverer, so OVL-01 asks for a Finding. Out of Scope has no row for it and the CHANGELOG does not name it among what the Check does not report. The second pass flagged the same thing for the pseudo-element limit of `design.md:259`, and the fix pass listed that one limit and not this one. Of the gaps of this section it is the one a real page is most likely to meet: a filter that changes colours on a section, or `filter: invert(1)` on the root as a dark mode, leaves the Check silent on everything inside. It needs the maintainer's word: a row in Out of Scope and a line in the CHANGELOG, or a change to how ink is told apart.
-4. ⚠️ **Spec-precision gap 3: where an `info` Finding stands.** `info` is first used by this slice (Assumptions, "Severity under a Raised layer"), the story of the severity criteria asks for "the likely intended ones last", and no criterion has an `info` Finding in an asserted order or in a summary line. Unmutated, probe `q13-info` gives the `minor` Finding before the `info` one, though it stands after it in the document, and `Found 2 findings in 1 viewport: 1 minor, 1 info.`: right. Mutant V13 shows nothing holds it.
-
-Observations, not gaps:
-
-- On probe `q15-child-and-nick` a text with its first 80px under its own child and its last 20px under an Other element is reported at 16%, not 10%: the share is of the 2400 pixels the element shows when it is painted alone, child included. That is what the Terms say ("when nothing outside the element is painted over it"); a reader who expects a share of all ten glyphs will be surprised.
-- A heading painted with a gradient (`background-clip: text` and `-webkit-text-fill-color: transparent`) is never reported: probe `q22-gradient`, `#gradient`, half covered, gets no Finding. That is the rule as the Assumptions have it (a glyph colour of alpha 0 is "hidden on purpose"), and its reason, "not text a reader was meant to see", does not fit this text. For the maintainer to know, not a gap against the spec.
-- Unmutated code gives the outcome of the Terms on every other probe of this pass: a Coverer that is not the raised one of two (`q1-raised`), a shadow host that paints the cover itself (`q2-host`), a text right of the viewport (`q3-wide`), a page scrolled sideways on load (`q18-scrolled-sideways`), a tag before its text in the document (`q7-tagfirst`), an open `details` (`q10-details`), a text half clipped away (`q17-clipped`) or half off the page (`q19-off-page`), a font with anti-aliased edges covered whole (`q6-font`: 100%), 49,000 hidden pixels (`q16-step`), and the sentence added to "Coverer" (`q14-totest`).
-- `tests/test_overlap.py:83` reads the first text block, not the first block. `tests/test_detect_visual_bugs.py:263` holds that the two are the same.
-- That `inspect_element` does not return `z-index` (Assumptions, "`evidence.computed`") is held by a test of slice 2: `tests/test_inspect_element.py:167-169`, `set(content["computed"]) == COMPUTED_PROPERTIES`.
-- Not observable through the tool boundary, and not counted, as in the earlier passes: that covered text is measured only on request (time, not result), `_settle_layout` (Windows and the generic `monospace` font only), and where the page is left scrolled after hit testing (N7).
-- The whole suite takes 756s here. `.specs/features/overlap/spike/` and its `extend-exclude` line in `pyproject.toml` are still there, as the closing step of `tasks.md` expects.
+1. ⚠️ **The row of Out of Scope that counts the changes reaching every Capture was not updated for AD-007.** `spec.md:55` still says "Two changes reach every Capture and are in scope: text is rasterized in grayscale, and a Capture settles the layout before it measures". The wait of F17 is a third, and it changes how long `inspect_element` takes and when it fails (below). The Assumptions row for it is marked "Taken by the agent ... the maintainer confirms or reverts it": the only row of the table that is not confirmed.
+2. ⚠️ **A right-to-left page that scrolls sideways is in no row of Out of Scope.** On `pw-rtl` a text in the first viewport, half under a cover, gets no Finding, and `inspect_element` reads its box as all white: on such a page the screenshot starts left of where the boxes are counted from, for every tool. The limit is older than this slice and the plan of slice 7 names it (`.specs/features/offscreen-overflow/plan.md:103`, "their boxes then start at a negative x that the pixels do not have"); this spec does not. By the Terms the text has a Hidden share of 50% and a Coverer, so OVL-01 asks for a Finding. A row in Out of Scope closes it; the fix belongs to the Capture and to another slice.
 
 ---
 
 ## Discrimination Sensor
 
-Run in temporary git worktrees of `a11b13e` under the session's temp directory, outside the repository, each with its own `uv sync`. One mutant at a time per worktree, applied by a script that requires the replaced text to occur exactly once, restores the worktree with `git checkout -- .` and checks it clean after each. Each mutation was written by this Verifier from the description in the earlier report, not copied from an earlier script. A mutant expected to die was run against the test of its rule; "Test" is the test that failed, with what it reported. Every failure counted as a kill is an assertion on a value, read from the output; none is a timeout. A mutant with no test of its own was run against all of `tests/test_overlap.py` (88 tests) and, when that passed, against the four other modules that can reach the mutated code (`tests/test_detect_visual_bugs.py`, `test_low_contrast_real.py`, `test_text_clipped.py`, `test_offscreen_overflow.py`: 150 tests) before it was called a survivor.
+Run in scratch copies of `src/squint_mcp` at `a8feee6`, one copy per mutant, in the session's temp directory outside the repository. A copy is put first on `PYTHONPATH`, where it shadows the editable install, and pytest runs from the repository root against the real tests and fixtures; before each run the runner imports `squint_mcp` in the same environment and refuses to go on unless it comes from the copy. Each mutation is one text replacement that must match its file exactly once. Each was written by this Verifier, the twelve of the third pass from their descriptions in that report. A mutant with a test of its rule was run against that test; "Killed by" is the test that failed, with what it reported, read from the output. Every kill counted is an assertion on a value (a `ValueError` on unpacking is the tests' own "exactly one Finding"); none is a timeout or a tool error. A mutant with no test of its rule, or one that passed it, was run against all of `tests/test_overlap.py` (122 tests) and then against the four other modules that reach the code (`tests/test_detect_visual_bugs.py`, `test_low_contrast_real.py`, `test_text_clipped.py`, `test_offscreen_overflow.py`: 150 tests) before it was called a survivor. Line numbers are those of `a8feee6`.
 
-### The eleven survivors of the second pass
+### The twelve survivors of the third pass
 
 | # | File:line | Mutation | Outcome |
 | - | --------- | -------- | ------- |
-| N1b | `src/squint_mcp/covered.py:116` | a text is cut out of the screenshot of its group at the left of that screenshot (the column offset dropped) | ✅ Killed - `test_a_text_that_starts_at_a_column_of_its_own_is_measured_there`: no Finding on `#shifted` |
-| N2 | `src/squint_mcp/capture.py:205` | a measured text is read on the page as the first round has it, whatever its own round | ✅ Killed - `test_four_texts_stacked_in_one_place_are_each_measured`: `#stack-3` at 100%, not 25% |
-| N3 | `src/squint_mcp/js/covered_text.js:143` | the third highlight colour is black | ✅ Killed - the same test: no Finding on `#stack-1` or `#stack-2` |
-| N5 | `src/squint_mcp/js/covered_text.js:253` | every row is hit tested: only the columns are sampled | ✅ Killed - `test_the_rows_of_the_page_are_sampled_as_its_columns_are`: `#row-stripes`, not `#row-solid-cover` |
-| N8 | `src/squint_mcp/js/covered_text.js:16` | the scroll down the page when the Capture is taken is read as 0 | ✅ Killed - `test_a_page_that_is_scrolled_when_it_is_captured_is_measured`: no Finding |
-| N9 | `src/squint_mcp/js/covered_text.js:101-106` | the region of a text is its own text only, without its box and what is inside it | ✅ Killed - `test_a_text_under_the_box_of_a_tag_whose_glyphs_stand_beside_it_is_measured`: no Finding on `#under-tag` |
-| N10 | `src/squint_mcp/checks/overlap.py:31` | glyphs count as transparent at any alpha under 1 | ✅ Killed - `test_covered_text_painted_half_transparent_is_reported`: no Finding on `#translucent` |
-| N11 | `src/squint_mcp/js/covered_text.js:152` | an element of `visibility: hidden` is shown with the others when a text is painted alone or with its Silent layers | ✅ Killed - `test_a_silent_layer_that_is_not_painted_hides_nothing`: no Finding on `#under-closed-menu`. Both cases of `test_text_under_a_closed_menu_is_not_reported` pass under it |
-| N13 | `src/squint_mcp/covered.py:303` | the step is never under 2 | ✅ Killed - `test_every_hidden_pixel_of_a_page_under_the_cap_is_hit_tested`: `#solid-cover`, not `#stripes` |
-| N22 | `src/squint_mcp/checks/overlap.py:30` | the alpha is read from `color`, not from `-webkit-text-fill-color` | ✅ Killed - `test_covered_text_of_an_opaque_colour_and_a_transparent_fill_is_not_reported` (a Finding on `#transparent-fill`, 50%, `major`) and `test_covered_text_of_a_transparent_colour_and_an_opaque_fill_is_reported` (no Finding on `#filled`) |
-| N28 | `src/squint_mcp/covered.py:212` | phase 1 counts as ink of a text every glyph of its channel inside its bounds | ✅ Killed - `test_the_text_of_a_child_is_not_ink_of_the_element_around_it`: no Finding on `#around` |
+| V1 | `src/squint_mcp/checks/overlap.py:66` | the severity is lowered when any cover is in a Raised layer, not when the Coverer is | ✅ Killed - `test_a_raised_cover_that_hides_less_than_another_does_not_lower_the_severity`: `'minor' == 'major'` |
+| V14 | `src/squint_mcp/checks/overlap.py:80` | `evidence.computed` is always `{"position": "static", "z-index": "auto"}` | ✅ Killed - both cases of `test_the_finding_carries_the_position_and_the_z_index_of_a_positioned_text` |
+| V3 | `src/squint_mcp/js/covered_text.js:295` | hit testing never scrolls the page sideways | ✅ Killed - `test_covered_texts_right_of_the_viewport_name_their_covers`: `#near` alone of the four |
+| V17 | `src/squint_mcp/js/covered_text.js:15` | the scroll across the page when the Capture is taken is read as 0 | ✅ Killed - `test_a_page_that_is_scrolled_sideways_when_it_is_captured_is_measured`: `[]` |
+| V4 | `src/squint_mcp/js/covered_text.js:234` | the pseudo-elements of the texts stay painted in the glyphs-only screenshot | ✅ Killed - both cases of `test_text_under_a_pseudo_element_of_an_element_with_text_is_reported`: no Finding |
+| V10 | `src/squint_mcp/js/covered_text.js:68` | any element with an `open` attribute is a Silent layer | ✅ Killed - `test_text_under_an_open_element_that_is_not_a_dialog_is_reported`: no Finding |
+| V15 | `src/squint_mcp/js/covered_text.js:243` | a text is painted alone without what is inside it | ✅ Killed - both cases of `test_the_share_is_of_the_ink_a_text_shows_beside_what_is_inside_it` and `test_text_under_its_own_descendant_and_a_nick_beside_it_is_not_reported` (a Finding on `#child-and-nick`) |
+| V6 | `src/squint_mcp/covered.py:272` | Hidden ink is not cut to Text ink | ✅ Killed - `test_covered_text_in_a_font_with_anti_aliased_edges_is_measured_by_its_ink`: `#font-whole` at 188%, not 100% |
+| V7 | `src/squint_mcp/covered.py:246` | two texts share a screenshot unless the later one's region touches the earlier one's text | ✅ Killed - `test_a_tag_that_stands_before_the_text_it_covers_is_measured_apart_from_it`: no Finding on `#under-tag-first` |
+| V16 | `src/squint_mcp/covered.py:303` | the step grows with the pixels, not with their square root | ✅ Killed - `test_a_page_of_over_twice_the_cap_is_still_tested_at_every_second_pixel` |
+| V13 | `src/squint_mcp/tools/detect_visual_bugs.py:116` | an `info` Finding is ordered as a `minor` one | ✅ Killed - `test_an_info_finding_comes_after_the_minor_ones_and_is_counted_apart`: `#a` before `#b` |
+| N14 | `src/squint_mcp/capture.py:224` | every text with Hidden ink is hit tested, also under the reporting threshold | ✅ Killed - `test_hidden_ink_of_a_text_under_a_tenth_hidden_does_not_count_to_the_cap` |
 
-**11/11 killed**, each by the test written for it.
-
-### The mutants of earlier passes whose fixtures grew
-
-| # | File:line | Mutation | Fixture that grew | Outcome |
-| - | --------- | -------- | ----------------- | ------- |
-| J10 | `src/squint_mcp/js/covered_text.js:259-262` | a text the step passes over whole is not tested | sampled | ✅ Still killed - `test_a_text_the_hit_test_step_passes_over_whole_still_names_its_cover`: no Finding on `#speck` |
-| C8 | `src/squint_mcp/covered.py:303` | every hidden pixel is hit tested (no cap) | sampled | ✅ Still killed - `test_the_cover_named_is_the_one_over_most_of_the_pixels_hit_tested` (`#stripes`, not `#solid-cover`) and `test_the_rows_of_the_page_are_sampled_as_its_columns_are` (`#row-stripes`) |
-| N6 | `src/squint_mcp/js/covered_text.js:254` | the columns of the sample are counted from the start of each run | sampled | ✅ Still killed - `test_the_cover_named_is_the_one_over_most_of_the_pixels_hit_tested`: `#stripes` |
-| C5 | `src/squint_mcp/covered.py:242` | every measured text in one group | bounds | ✅ Still killed - `test_two_covered_texts_painted_over_each_other_are_each_measured`: `#under-label` at 28%, not 50% |
-| C11 | `src/squint_mcp/capture.py:205` | a measured text is read on the first channel, whatever its own | bounds | ✅ Still killed - the same test: `#label` at 100%, not 50% |
-| J8 | `src/squint_mcp/js/covered_text.js:171` | an element the scroll moved is not passed over | scrolled (unchanged; a second scrolled fixture was added) | ✅ Still killed - `test_an_element_the_scroll_brings_over_a_text_is_not_what_covers_it`: `#fixed-bar`, not `#far-cover` |
-
-**6/6 still killed.** The bounds fixture went from 35,380 to 55,180 pixels of Hidden ink and stays at a step of 2; `#tie` and `#two-covers` keep their Coverer.
-
-Four more mutants of the earlier passes whose kill rests on the two rows of the bounds fixture that a sample could tip, `#tie` and `#two-covers`, were run again too, since that fixture grew twice: A5 (on a tie, the last cover in the document), A11 (the first cover, whatever it hides), J17 (the covers not put in document order) and N18 (only the first run of each row sent to hit testing). All four are still killed, by `test_of_two_covers_that_hide_as_much_the_first_in_the_document_is_named` (`#tie-second`) or `test_the_cover_over_most_of_the_hidden_ink_is_the_one_named` (`#small-cover`). The other kills of the earlier passes were not run again.
-
-Unmutated, a scratch worktree passes `tests/test_overlap.py`: 88 passed.
-
-### A7, A8, N7 and N14, judged again
-
-All four were applied again; all four pass `tests/test_overlap.py` and the four other modules.
-
-| # | File:line | Mutation | Judgement of this pass |
-| - | --------- | -------- | ---------------------- |
-| A7 | `src/squint_mcp/checks/overlap.py:40` | the `ink == 0` guard dropped | ⚠️ Equivalent. `covered.hidden_ink` cuts Hidden ink out of Text ink (`src/squint_mcp/covered.py:269-274`), so no ink means none hidden; the Capture hit tests a text only `if hidden` (`src/squint_mcp/capture.py:212`), `covers` stays empty and `overlap.py:50` returns |
-| A8 | `src/squint_mcp/checks/overlap.py:46` | the reporting threshold dropped from the Check | ⚠️ Equivalent. The Capture fills `covers` only at or over the same threshold, with the same expression and the same constant (`capture.py:212`); under it `overlap.py:50` returns |
-| N7 | `src/squint_mcp/js/covered_text.js:293` | the scroll is not restored after hit testing | ⚠️ Equivalent. `hit` is called once, as the last thing `_measure_covered_text` does (`capture.py:220`); `capture` then reads nothing more of the page and closes its context (`capture.py:303-305`), and each viewport gets a new context and a new page (`capture.py:253-260`). Nothing reads where the page is left |
-| N14 | `src/squint_mcp/capture.py:212` | every text with Hidden ink is hit tested, also under the reporting threshold | ❌ A gap now. The sentence added to "Coverer" says such a text "is not hit tested and its Hidden ink does not count". On probe `q14-totest` (19,000 pixels of Hidden ink in texts at or over a tenth, 1520 in four texts under it) the unmutated code names `#stripes`, as that sentence has it, and the mutant `#solid-cover`. The spec now defines the outcome and no test holds it |
+**12/12 killed**, each by the test written for it. The kills of the first two passes were not run again, and neither were A7, A8, N7 and V2, which the third pass judged equivalent: `git diff a11b13e..HEAD -- src` touches none of their lines.
 
 ### New mutations of this pass
 
-None of these was tried in an earlier pass. They were chosen as the changes a careless edit would most plausibly make and as the rules of the Terms and the Assumptions that, by reading, had no criterion.
+None of these was tried in an earlier pass. They aim at the three changes of this round to `src/` and at the neighbours of the rules the new fixtures pin: the other axis, the other order, the other side, the next value of a threshold.
+
+**The filter change (F9), `src/squint_mcp/js/covered_text.js:50-56`**
+
+| # | Line | Mutation | Outcome |
+| - | ---- | -------- | ------- |
+| F1 | `:53` | no `filter` is touched (the code before the fix) | ✅ Killed - both cases of `test_covered_text_under_a_filter_that_changes_colours_is_reported` (no Finding) and `test_covered_text_of_a_page_with_a_filter_on_its_root_is_reported` (`[]`) |
+| F2 | `:54` | a `filter` with nothing to keep becomes `none`, not `opacity(1)` | ✅ Killed - `test_a_cover_that_the_filter_of_its_block_places_stays_over_its_text` (no Finding) and `test_text_above_the_layer_that_a_filter_makes_is_not_reported` (a Finding) |
+| F3 | `:50` | `opacity()` is not kept | ✅ Killed - `test_text_under_a_cover_that_a_filter_fades_out_is_not_reported` and `test_covered_text_that_a_filter_fades_out_is_not_reported` (a Finding each) |
+| F4 | `:50` | `blur()` is not kept | ❌ Survived - `O` (122) and the four other modules (150) pass |
+| F5 | `:50` | `drop-shadow()` is not kept | ❌ Survived - `O` and the four other modules pass |
+| F6 | `:53` | a `filter` that holds a function to keep is left whole, with its functions that change colours | ❌ Survived - `O` and the four other modules pass |
+| F7 | `:55` | the new `filter` is set without `!important` | ❌ Survived - `O` and the four other modules pass |
+| F8 | `:55` | only the first of the kept functions is set | ❌ Survived - `O` and the four other modules pass |
+
+**The alpha change (F10), `src/squint_mcp/checks/overlap.py:28-34`**
+
+| # | Line | Mutation | Outcome |
+| - | ---- | -------- | ------- |
+| A1 | `:34` | an alpha of `none` is opaque | ✅ Killed - `test_covered_text_of_an_alpha_of_zero_in_any_notation_is_not_reported[#transparent-none]`: a Finding |
+| A2 | `:28` | only an alpha after a slash is read, not the fourth value of `rgba()` | ✅ Killed - `test_covered_text_painted_transparent_is_not_reported` and `test_covered_text_of_an_opaque_colour_and_a_transparent_fill_is_not_reported`: a Finding each |
+| A3 | `:28` | only the fourth value of `rgba()` is read (the code before the fix) | ✅ Killed - the three cases of `test_covered_text_of_an_alpha_of_zero_in_any_notation_is_not_reported` |
+| A4 | `:34` | glyphs count as transparent at any alpha under 1 | ✅ Killed - `test_covered_text_painted_half_transparent_is_reported` and `test_covered_text_of_an_alpha_above_zero_in_any_notation_is_reported[#translucent-oklch]`: no Finding |
+
+**The wait before a screenshot (F17), `src/squint_mcp/capture.py:37-40` and `:119`**
+
+| # | Line | Mutation | Outcome |
+| - | ---- | -------- | ------- |
+| P1 | `:119` | no wait (the code before the fix) | ✅ Killed - `test_a_covered_text_low_on_a_page_of_layers_is_reported_on_every_call` failed in 5 runs of 5, each with `[] == [('#low', 'major', 50, '#low-cover')]` |
+| P2 | `:39` | one animation frame, not two | ⚠️ Survived - the test of OVL-120 passed in 5 runs of 5, then `O` and the four other modules pass. Not a gap: see "F17 and AD-007" |
+
+**Neighbours of the rules the new fixtures pin**
 
 | # | File:line | Mutation | Outcome |
 | - | --------- | -------- | ------- |
-| V1 | `src/squint_mcp/checks/overlap.py:63` | the severity is lowered when any cover is in a Raised layer, not when the Coverer is | ❌ Survived - `O` and the four other modules pass |
-| V14 | `src/squint_mcp/checks/overlap.py:77` | `evidence.computed` is always `{"position": "static", "z-index": "auto"}` | ❌ Survived - `O` and the four other modules pass |
-| V2 | `src/squint_mcp/js/covered_text.js:173` | a shadow host is not named when its tree gives nothing at the point (`?? i` dropped) | ⚠️ Survived - equivalent (below) |
-| V3 | `src/squint_mcp/js/covered_text.js:282` | hit testing never scrolls the page sideways | ❌ Survived - `O` and the four other modules pass |
-| V17 | `src/squint_mcp/js/covered_text.js:15` | the scroll across the page when the Capture is taken is read as 0 | ❌ Survived - `O` and the four other modules pass |
-| V4 | `src/squint_mcp/js/covered_text.js:221` | the pseudo-elements of the texts stay painted in the glyphs-only screenshot of phase 1 | ❌ Survived - `O` and the four other modules pass |
-| V5 | `src/squint_mcp/js/covered_text.js:218` | the background of the texts stays painted in that screenshot | ✅ Killed - `test_only_the_covered_texts_of_the_bounds_fixture_are_reported`: `#under-tag` missing |
-| V10 | `src/squint_mcp/js/covered_text.js:55` | any element with an `open` attribute is a Silent layer, not a `dialog` only | ❌ Survived - `O` and the four other modules pass |
-| V11 | `src/squint_mcp/js/covered_text.js:303` | only the ancestors of a cover can raise it, not the cover itself | ✅ Killed - `test_half_hidden_by_a_positioned_cover_with_a_z_index_is_minor`: `(50, "major")`, not `(50, "minor")` |
-| V15 | `src/squint_mcp/js/covered_text.js:230` | a text is painted alone without what is inside it | ❌ Survived - `O` and the four other modules pass |
-| V6 | `src/squint_mcp/covered.py:272` | Hidden ink is not cut to Text ink: every unseen pixel counts, also one with under half of its ink | ❌ Survived - `O` and the four other modules pass |
-| V7 | `src/squint_mcp/covered.py:246` | two texts share a screenshot unless the later one's region touches the earlier one's text: the other direction is dropped | ❌ Survived - `O` and the four other modules pass |
-| V16 | `src/squint_mcp/covered.py:303` | the step grows with the pixels, not with their square root | ❌ Survived - `O` and the four other modules pass |
-| V8 | `src/squint_mcp/capture.py:219` | the step is taken from the text with the most Hidden ink, not from the sum | ✅ Killed - `test_the_cover_named_is_the_one_over_most_of_the_pixels_hit_tested`: `#stripes`, not `#solid-cover` |
-| V9 | `src/squint_mcp/capture.py:198` | hit testing asks the page as phase 2 left it, not as it is painted | ✅ Killed - `test_each_covered_text_yields_one_finding`: no Finding |
-| V12 | `src/squint_mcp/capture.py:296-302` | covered text is measured before the three layers of the other Checks are taken | ✅ Killed - `test_the_summary_counts_the_findings_of_the_bug_fixture`: 6 Findings, not 4 |
-| V13 | `src/squint_mcp/tools/detect_visual_bugs.py:116` | an `info` Finding is ordered as a `minor` one | ❌ Survived - `O` and the four other modules pass. The line is of slice 3; `info` is first produced by this slice |
+| R1 | `src/squint_mcp/checks/overlap.py:66` | the Raised layer is read from the last cover in the document, not from the Coverer | ❌ Survived - both tests of OVL-109 and OVL-110 pass, then `O` and the four other modules |
+| S1 | `src/squint_mcp/js/covered_text.js:300` | a point is looked up where the page was asked to scroll sideways, not where it is | ✅ Killed - `test_covered_texts_right_of_the_viewport_name_their_covers`: no Finding on `#edge` |
+| S2 | `src/squint_mcp/js/covered_text.js:300` | the same, down the page | ✅ Killed - `test_a_covered_text_low_on_a_page_of_layers_is_reported_on_every_call`: `coveredBy` is the cover of the twentieth row, not `#low-cover` |
+| S3 | `src/squint_mcp/js/covered_text.js:177` | an element the scroll moved sideways is not passed over | ✅ Killed - `test_covered_texts_right_of_the_viewport_name_their_covers`: `#fixed-bar` for `#right` |
+| S4 | `src/squint_mcp/js/covered_text.js:178` | an element the scroll moved down the page is not passed over | ✅ Killed - `test_an_element_the_scroll_brings_over_a_text_is_not_what_covers_it`: `#fixed-bar`, not `#far-cover` |
+| T1a | `src/squint_mcp/js/covered_text.js:234` | only `::before` is hidden in the glyphs-only screenshot | ✅ Killed - `test_text_under_a_pseudo_element_of_an_element_with_text_is_reported[after]` |
+| T1b | `src/squint_mcp/js/covered_text.js:234` | only `::after` is hidden there | ✅ Killed - the same test, `[before]` |
+| B1 | `src/squint_mcp/js/covered_text.js:232` | the borders of the texts stay painted in that screenshot | ❌ Survived - `O` and the four other modules pass |
+| U1 | `src/squint_mcp/js/covered_text.js:37-43` | what is inside an element is its children, not all of its descendants | ❌ Survived - `O` and the four other modules pass |
+| G2 | `src/squint_mcp/covered.py:245` | two texts share a screenshot unless the earlier one's region touches the later one's text (V7 the other way) | ✅ Killed - `test_a_text_under_the_box_of_a_tag_whose_glyphs_stand_beside_it_is_measured`: no Finding on `#under-tag` |
+| E1 | `src/squint_mcp/covered.py:98` | a pixel is seen from half of the ink of a full pixel on, not from half of its own | ✅ Killed - `test_text_in_such_a_font_mostly_seen_through_a_veil_is_not_reported` (a Finding on `#font-veil-45`) and `test_text_mostly_seen_through_a_veil_is_not_reported` (`#veil-45` at 10%) |
+| H1 | `src/squint_mcp/covered.py:303` | a page of exactly 20,000 pixels of Hidden ink is sampled too (`floor(...) + 1` for `ceil(...)`) | ❌ Survived - `O` and the four other modules pass |
+| H2 | `src/squint_mcp/covered.py:303` | the step is never above 2 | ✅ Killed - `test_a_page_of_over_four_times_the_cap_is_tested_at_every_third_pixel`: `#solid-cover`, not `#stripes` |
 
-**Sensor depth**: expanded (42 mutants this pass: the 11 survivors of the second pass, 10 mutants of earlier passes run again, A7, A8, N7 and N14 judged again, and 17 new ones: 2 in the Check, 8 in the page script, 3 in the arithmetic, 3 in the Capture's wiring, 1 in the tool)
-**Sensor outcome**: second-pass survivors 11/11 killed; mutants of regrown fixtures 6/6 still killed; new mutants 5/17 killed, 12 survived: 11 gaps and 1 equivalent (V2); N14, judged again, is a gap now: 12 gaps - ❌
+**Mutants the tasks name in a "Done when" that no table above holds**
+
+| # | File:line | Mutation | Outcome |
+| - | --------- | -------- | ------- |
+| K2 | `src/squint_mcp/checks/overlap.py:34` | every colour that is not written as `rgb()` is transparent | ✅ Killed - both cases of `test_covered_text_of_an_alpha_above_zero_in_any_notation_is_reported`: no Finding |
+| K3 | `src/squint_mcp/checks/overlap.py:34` | every colour with a slash in it is transparent | ✅ Killed - the same test, `[#translucent-oklch]`: no Finding |
+| K4 | `src/squint_mcp/checks/overlap.py:66` | the Raised layer is read from the first cover in the document | ✅ Killed - the tests of OVL-109 (`'minor' == 'major'`) and OVL-110 (`'major' == 'minor'`) |
+| K5 | `src/squint_mcp/capture.py:231` | the Hidden ink of a transparent text is left out of the sum the step is taken from | ✅ Killed - `test_hidden_ink_of_a_text_that_gets_no_finding_counts_to_the_cap`: `#stripes`, not `#solid-cover` |
+
+F1 was also run against the test of OVL-94, as F9 claims: killed, no Finding on `#held`.
+
+**Sensor depth**: expanded (43 mutants this pass: the 12 survivors of the third pass, 27 new ones (8 in the filter change, 4 in the alpha change, 2 in the wait, 13 on the neighbours of the new fixtures) and 4 the tasks name)
+**Sensor outcome**: third-pass survivors 12/12 killed; new mutants 17/27 killed, 10 survived: 9 gaps and 1 that no test can tell from the code (P2); mutants the tasks name 4/4 killed - ❌
 
 ### The survivors, decided by probes through the MCP boundary
 
-Twenty-six probe pages were written for this pass, outside the repository and the worktrees, and called with the in-memory MCP client, as `tests/helpers.py` does, with `checks` equal to `["overlap"]` at 1440 × 900, unmutated and under each survivor. They use Ahem at 20px on rows 50px apart, as the fixtures do, unless the row says otherwise.
+Each survivor was called on a probe page of this pass, with the same client as the unmutated code.
 
-| Probe | The page | Unmutated | Mutant | Under the mutant |
-| ----- | -------- | --------- | ------ | ---------------- |
-| `q6-font` | Two lines of Arial at 16px: one wholly under a cover, one under a cover from 80px into it on | `(#full, major, 100, #full-cover)`, `(#part, major, 54, #part-cover)` | V6 | `#full` at 192%, `#part` at 108% |
-| `q15-child-and-nick` | `#t`: its first 80px under its own child, its last 10px under `#nick`. `#u`: the same child, its last 20px under `#u-cover` | `(#u, minor, 16, #u-cover)` only | V15 | `(#t, major, 45, #nick)`, `(#u, major, 50, #u-cover)` |
-| `q3-wide` | A page 3000px wide; a text 2000px from its left, half covered | `(#t, major, 50, #cover)` | V3 | no Finding |
-| `q18-scrolled-sideways` | The same page, with a script that scrolls it 1500px sideways while it loads | `(#t, major, 50, #cover)` | V17 | no Finding |
-| `q7-tagfirst` | The row of `#under-tag` of the bounds fixture with the tag first in the document | `(#tag, major, 50, #tag-cover)`, `(#under, major, 50, #tag)` | V7 | no Finding on `#under` |
-| `q10-details` | A text half under a positioned `details` element with the `open` attribute | `(#t, major, 50, #details)` | V10 | no Finding |
-| `q1-raised` | A text with `#small`, of `z-index: 1`, over its first 20px and `#large`, with no `z-index`, over its last 80px | `(#t, major, 50, #large)` | V1 | `minor` |
-| `q13-info` | `#a`, with a cover of `z-index: 1` over its last 20px, then `#b`, with a plain cover over its last 20px | `(#b, minor, 10, #b-cover)`, `(#a, info, 10, #a-cover)`; `Found 2 findings in 1 viewport: 1 minor, 1 info.` | V13 | `#a` before `#b` |
-| `q4-pseudo` | A text half under the `::after` of `#owner`, which has two glyphs of its own beside the text, all seen, and paints the pseudo-element outside its box | `(#below, major, 50, #owner)` | V4 | no Finding |
-| `q14-own-styles` | A covered text of `position: relative` and `z-index: 1` | `evidence.computed` is `{"position": "relative", "z-index": "1"}` | V14 | `{"position": "static", "z-index": "auto"}` by construction |
-| `q14-totest` | `#striped` with its stripes and its solid cover, nine texts half covered, and four texts with 100px under a menu and 19px under a card | `(#striped, major, 25, #stripes)` | N14 | `coveredBy` `#solid-cover` |
-| `q16-step` | `#striped` with twenty-four texts half covered: 49,000 pixels of Hidden ink, a step of 2 | `(#striped, major, 25, #solid-cover)` | V16 | `coveredBy` `#stripes`, at a step of 3 |
-| `q2-host` | A text half under a shadow host that paints the cover itself; its tree holds one `slot` | `(#t, major, 50, #host)` | V2 | the same |
+| Mutant | Probe | Unmutated | Under the mutant | By the spec |
+| ------ | ----- | --------- | ---------------- | ----------- |
+| F4 | `pf-filters`: a text of `filter: blur(20px)` and one of `saturate(2) blur(20px)`, each half covered | no Finding for either | `(#f-blur, major, 50, ...)`, `(#f-blur-list, major, 50, ...)` | Assumptions, "A `filter`": `blur()` is applied; Terms, "Text ink": text faded below half by a `filter` has none |
+| F5 | `pf-filters`: a cover whose box hides 60px of a text and whose `drop-shadow()` hides 40px more | `(#f-cover-shadow, major, 50, ...)` | 30% | the same row: `drop-shadow()` is applied; what it hides is not seen |
+| F6 | `pf-filters`: `grayscale(1) opacity(0.6)` and `drop-shadow(...) grayscale(1)` on a text | 50% for both | no Finding for either | the same row: "the functions of every `filter` that change colours left out" |
+| F7 | `pf-filters`: a row of `filter: grayscale(1) !important`, one whose filter is in an `@layer` with `!important`, one whose filter an animation holds | 50% for all three | no Finding for any | OVL-92's rule, on a page that declares its filter with more weight than an inline style |
+| F8 | `pf-filters`: a text of `opacity(0.6) grayscale(1) opacity(0.6)`, which shows 36 parts in 100 of its ink | no Finding | `(#f-two-kept, major, 50, ...)` | the same row: the kept functions stay, "in their order" (`covered_text.js:46-47`); Terms, "Text ink" |
+| R1 | `pr-raised`: the rows of OVL-109 and OVL-110 with the larger cover first in the document | `(#u1, major, ...)`, `(#u2, minor, ...)` | `#u1` `minor`, `#u2` `major` | Assumptions, "Several elements cover one text": the Raised-layer rule reads the Coverer |
+| B1 | `pb-border`: a text half under the left border of an element with two glyphs of its own beside it | `(#under-border, major, 50, #bordered)` | no Finding | OVL-01; Terms, "Text ink" |
+| U1 | `pu-depth`: a text with a badge that is its grandchild and a cover over its last 20px; a text half under a grandchild of a `menu` | `(#g, minor, 16, #g-cover)`; no Finding for the second | `(#g, major, 50, #g-cover)`, `(#m-under, major, 50, #deep-item)` | Terms, "Other element" and "Silent layer": descendants, not children |
+| H1 | `ph-cap`: exactly 20,000 pixels of Hidden ink | `(#striped, major, 25, #stripes)` | `coveredBy` `#solid-cover` | Terms, "Coverer": "more than 20,000 pixels"; OVL-85: "no more than 20,000" |
 
-**V2 is equivalent.** In Chromium `ShadowRoot.elementsFromPoint` answers with the elements of the document at the point as well as those of its own tree: asked directly on `q2-host`, the document and the shadow root of `#host` both answer `#host`, `#t`, the row, `body`, `html`. So the search inside a host always comes back to the host itself, which is not of that root and is returned (`covered_text.js:172-175`), and `?? i` has nothing to catch. The server launches no other browser.
+**The gaps.** Nine mutants change what the tool returns on a page a fixture can hold, and no test fails. Five are in the thirteen lines F9 added: the fixtures hold a `filter` of one function that changes colours, `opacity(0)`, and the two things an element with a `filter` goes on doing, and they do not hold a list of functions, `blur()`, `drop-shadow()` or a filter the page declares `!important`. F6 is the one with reach: a list is how a `filter` is commonly written, and under F6 every text inside one that mixes the two kinds is missed. The other four each take a second condition (a text blurred or faded away that is also covered, a shadow that hides ink, an `!important`). R1, U1, H1 and B1 are neighbours of rules the round pinned from two sides and not from a third: the order of the two covers in the document, the depth of what is inside a text or a layer, the bound itself of the cap, and the border next to the background (V5) and the pseudo-elements (V4) of a text.
 
-**The gaps.** V1, V3, V4, V6, V7, V10, V13, V14, V15, V16, V17 and N14 each change what the tool returns on a page, and each page is a fixture a test through the MCP boundary can hold. Three have a wide reach: V6 overstates the share of every text in a real font (192% for 100% on the probe), V15 overstates the share of a text with a child painted over part of it as soon as another element touches that text, and V3 loses every Finding right of the viewport. V7, V10, V1 and V4 need a page built a certain way; V13 is the order of a result; V14, V16 and N14 change a detail of a Finding on a rare page. V13 mutates a line of an earlier slice, the sort of the tool: it is counted because this slice is the first to return an `info` Finding and its story asks for those last. The Fix Plans rank them.
+**P2 is not a gap.** One frame and two frames give the same answer here on every call measured (below). No test through the tool boundary can hold the difference, and the criterion (OVL-120) does not ask for two.
 
-**What the probes say of the code.** Unmutated, it gives on every probe of this table the outcome the Terms define. The survivors are behaviours the code has and no test holds, not defects. The three places where the code or the spec text itself falls short are in "Gaps in `src/` and in the spec text" above.
+**Is the pattern of the third report still there?** In part. Where that report named a mutant, this round pinned its neighbours too: the child at the start and at the end, `::before` and `::after`, the raised cover as the smaller and as the larger, the scroll down and sideways with the clamp at the end of the page on both axes, steps of 2 and of 3, ink that counts and ink that does not. Nine of the thirteen neighbour mutants of this pass died, and the four that did not each needed one more dimension than the fixtures have. Where the round wrote new code, the pattern is unchanged: the fixtures of F9 are the pages of the third report's probes (a grey-scaled row, an inverted root, a filter on the text) plus three for the design's own claims, and five of the eight mutants of those thirteen lines live. The alpha change is the counter-example: one rule for every notation, four mutants, four kills.
 
-**Isolation**: `git status --porcelain` of the real tree was empty before the sensor and is empty after it, apart from this report and the lessons store written afterwards. `HEAD` is `a11b13e` on `feat/overlap` both times, and `git worktree list` shows the main tree alone, as before. Nine worktrees were used: four for the batches of mutants and five added as the queue grew, for probes and for single mutants. A probe was never run in a worktree with a mutant applied by another run: the probe script refuses a worktree that is not clean. All nine were removed: `git worktree remove --force` dropped them from git and stopped on the long paths of their virtual environments, so the directories were then deleted by path and `git worktree prune` was run. `git stash` was not used. Two runner processes were stopped by the Verifier once only repeats of finished mutants (V10 and V13, already run to the end in other worktrees) were left in their queues; their worktrees were restored with `git checkout -- .` and checked clean, no result of an interrupted run is used, and no process of the sensor is left running.
+**What the probes say of the code.** Unmutated, it gives on every probe of this table the outcome the spec defines. The survivors are behaviours the code has and no test holds, not defects.
+
+**Isolation**: `git status --porcelain` of the real tree was empty before the sensor and is empty after it, apart from this report and the lessons store written afterwards. `HEAD` is `a8feee6` on `feat/overlap` both times and `git worktree list` shows the main tree alone: no worktree was added. `git stash` was not used. Every mutant lived in its own copy under the session's temp directory; pytest ran with `-p no:cacheprovider` and without bytecode files. Up to four runs were under way at once: no test failed for a timeout in any of them. No process of the sensor is left running.
+
+---
+
+## F17 and AD-007
+
+F17 was not asked for by the third report. The author found, while running new tests against their mutants, that a screenshot taken right after a change of style sometimes shows a band of the page beyond the viewport unpainted, and made `_screenshot` wait two animation frames first (`src/squint_mcp/capture.py:37-40`, `:119`). The maintainer was away; AD-007 and the Assumptions row say so and leave the decision open. This is what this pass measured.
+
+| Question | Evidence of this pass | Answer |
+| -------- | --------------------- | ------ |
+| Is the fault real? | `detect_visual_bugs` called 30 times in a row on `overlap-low.html` with the wait taken out (mutant P1): 10 calls return the Finding of `#low`, 20 return `[]`. The test of OVL-120 failed in 5 runs of 5 under P1 | Yes: two calls in three here. It is a fault of the product, not of the tests: a covered text low on a page of layers loses its Finding on some calls |
+| Does the wait end it? | The same 30 calls on the code as committed: 30 Findings. The test of OVL-120 passed in the gate and in each of the full runs of `tests/test_overlap.py` the sensor made with up to four browsers at work (nine runs whose mutant is nowhere near the wait: 54 calls, 54 Findings) | Yes, as far as a sample can say |
+| Does the test hold the fix? | P1 killed 5 times of 5. At two misses in three, six calls all hit less than once in 700 runs | Yes, as a sample of six: no page brings the fault about on every call, and the criterion says so |
+| Are two frames needed? | With one frame (mutant P2): 30 Findings in 30 calls, the test passed 5 times of 5, and all 272 tests pass | Not shown. AD-007 lists what was tried and dropped; one frame is not on the list. The second frame is about half of the cost |
+| What does it cost? | The suite took 1041s here (17:21) for 359 tests, against 756s for 325 in the third pass. AD-007 gives an eighth to a fifth more time per Capture | As AD-007 says |
+| Can the wait fail? | Probe `pr-raf-never`: a page whose script replaces `window.requestAnimationFrame` by a function that never calls back. With the wait: `Timed out after 30s.` With the wait taken out (P1): `(#t, major, 50, #t-cover)` in 2.3s. A page that replaces it by a timer (`pr-raf-shim`) is measured as before | Yes. `page.evaluate` runs in the page's own world and calls whatever the page has put under that name. AD-007 names the risk ("none is known"); it is now shown. It reaches every tool that takes a Capture, `inspect_element` included |
+| Is it in scope? | `spec.md:55` puts in scope "two changes [that] reach every Capture"; this is a third | The row needs the maintainer's word, with the Assumptions row |
+
+**Judgement.** The fix is right and the decision to take it was sound: the fault is real, it is in code every Check has read since slice 4 (the three fills of AD-004 are screenshots taken right after a change of style too), and without it the new tests could not be trusted. It should stay. Two things are open for the maintainer. First, the wait has no bound of its own: a timer raced against the two frames, inside the same `page.evaluate`, would turn the 30s failure into a few milliseconds more on a page that never paints a frame. Second, the row of `spec.md:55`. Whether to wait one frame or two is a matter of margin against a fault no test can pin; this pass could not tell them apart.
+
+Not verified by anyone: the branch was never pushed, so neither the timing of this fault nor the system font of `overlap-font.html` has met the CI's Linux.
 
 ---
 
@@ -378,140 +451,116 @@ Not performed: the feature has no user interface. Its surface is the MCP tool, w
 
 ## Code Quality
 
+The diff of this round under `src/` is 13 lines in `js/covered_text.js`, 11 in `checks/overlap.py` and 14 in `capture.py`.
+
 | Principle | Status |
 | --------- | ------ |
-| Minimum code | ✅ |
-| Surgical changes | ✅ neither fix pass changes a file under `src/`; `inspect_element` and `ping` are untouched by the feature |
-| No scope creep | ✅ the two changes that reach every Capture are the ones the spec puts in scope (AD-006, issue #18) |
-| Matches patterns | ✅ one module per Check, thresholds in `config` with their source, the browser only in `capture.py`, tests through the tool |
-| Spec-anchored outcome check (asserted values match spec) | ✅ for the 90 criteria due now |
-| Per-layer Coverage Expectation met | ⚠️ every criterion has its assertion; the behaviours listed as gaps in the sensor section have none |
-| Every test maps to a spec requirement - no unclaimed tests | ✅ the thirteen new tests map to OVL-80 to OVL-91 (OVL-91 has two cases) |
-| Documented guidelines followed: `CONTRIBUTING.md` and `docs/SPEC.md`, Testing Decisions (one seam, real Chromium) | ✅ |
+| Minimum code | ✅ one loop over the elements with one regular expression; one regular expression for every colour notation in place of the one for `rgb()`; one `evaluate` before a screenshot. No option, no abstraction |
+| Surgical changes | ✅ nothing around the three changes was touched; `inspect_element` and `ping` are untouched as files |
+| No scope creep | ⚠️ F17 reaches every tool and was not in the fix plans. It is justified by a fault this pass reproduced, and recorded in AD-007, in the Assumptions and in the CHANGELOG; `spec.md:55` was not brought in line |
+| Matches patterns | ✅ the page script holds what only the page can know, the Check stays a function of a Capture, the comment on each change says why and cites its decision |
+| Spec-anchored outcome check (asserted values match spec) | ✅ for the 119 criteria due now |
+| Per-layer Coverage Expectation met | ⚠️ every criterion has its assertion; the nine behaviours listed as gaps in the sensor section have none |
+| Every test maps to a spec requirement - no unclaimed tests | ✅ the 34 new tests map to OVL-92 to OVL-120; `test_the_reach_fixture_has_these_findings_in_this_order` is the "one test asserts the whole list" of F12 |
+| Documented guidelines followed: `CONTRIBUTING.md` and `docs/SPEC.md`, Testing Decisions (one seam, real Chromium, no unit test of a helper) | ✅ every new test calls a tool through the in-memory client; no helper of `covered.py` or of the page script is called directly |
+
+Observations, not gaps:
+
+- `_is_transparent` (`src/squint_mcp/checks/overlap.py:31-34`) calls `float()` on what follows the slash. On the 26 colours of probe `pc-colours` Chromium writes a number or `none` there and no call fails. A token that is neither would fail the whole call, not one Finding.
+- The cover script matches the functions to keep in the text of the computed `filter` (`covered_text.js:50`). A `url()` filter is taken out with the functions that change colours (probe `#f-url`: reported), whatever the SVG filter does. The Assumptions row says "and the like"; it does not name `url()`.
+- The rule "a glyph colour of alpha 0 is hidden on purpose" also silences a text painted by its `-webkit-text-stroke` alone (probe `#t-stroke`) and, as the third pass noted, a heading painted with a gradient. That is the rule as the Assumptions have it.
+- The highlights repaint glyphs whatever their alpha: a text of `lch(0 0 0 / 0.01)`, which nobody can read, is reported at 50% (probe `#o-lch-low`). Also the rule as written: only an alpha of 0 is "hidden on purpose".
+- `tests/test_overlap.py:94` reads the first text block, not the first block. `tests/test_detect_visual_bugs.py` holds that the two are the same.
 
 ---
 
 ## Edge Cases
 
-- [x] OVL-68: the Findings of 1440 × 900 are also those of 390 × 844 (`tests/test_overlap.py:169-179`)
-- [x] OVL-69: an element behind the clipped part of a text does not cover it (`tests/test_overlap.py:762-763`)
+- [x] OVL-68: the Findings of 1440 × 900 are also those of 390 × 844 (`tests/test_overlap.py:180-190`)
+- [x] OVL-69: an element behind the clipped part of a text does not cover it (`tests/test_overlap.py:880-881`)
+- [x] OVL-120: a covered text low on a page of layers is reported on six calls in a row (`tests/test_overlap.py:935-937`)
 
 ---
 
 ## Gate Check
 
 - **Gate command**: `uv run pyright && uv run ruff check && uv run ruff format --check && uv run pytest`, each command run with its own exit status recorded
-- **Gate outcome**: pyright exit 0 (0 errors, 0 warnings); ruff check exit 0; ruff format --check exit 0 (104 files); pytest exit 0 - 325 passed, 0 failed, 0 skipped, in 756.14s
+- **Gate outcome**: pyright exit 0 (0 errors, 0 warnings, 0 informations); ruff check exit 0 (All checks passed); ruff format --check exit 0 (104 files already formatted); pytest exit 0 - 359 passed, 0 failed, 0 skipped, in 1041.78s
 - **Test count before feature**: 237
 - **Test count after the first pass**: 302
 - **Test count after the second pass**: 312
-- **Test count now**: 325
-- **Delta**: +88 over the feature, all in `tests/test_overlap.py`; +13 in the second fix pass
+- **Test count after the third pass**: 325
+- **Test count now**: 359
+- **Delta**: +122 over the feature, all in `tests/test_overlap.py`; +34 in the third fix round
 - **Skipped tests**: none
 - **Failures**: none
-- **Test integrity**: no test removed or weakened. `git diff 0a25cca..HEAD -- tests/test_overlap.py` removes one line, the count of the bounds fixture, which goes from 23 to 34 with the eleven new Findings; the pinned list of selectors grows by the same eleven and the list of OVL-79 by one tuple. The fixtures that existed lose no case (`git diff 0a25cca..HEAD -- tests/fixtures` removes comment lines only). `tests/test_detect_visual_bugs.py` is untouched since `aef0799`, and the only assertions of the earlier slices that changed since `eb9778b` are the four `Valid checks:` literals OVL-55 supersedes
+- **Test integrity**: no test removed or weakened. `git diff b08856a..HEAD -- tests/test_overlap.py` removes one line, the count of the bounds fixture, which goes from 34 to 39 with the five new Findings; the pinned list of selectors grows by the same five. `git diff b08856a..HEAD -- tests/fixtures` removes three comment lines of the bounds fixture (its pixel count, rewritten) and nothing else; the clean fixture only gains rows, and the whole-page test of OVL-19 passes on it. No other test module changed in this round, and the only assertions of the earlier slices that changed since `eb9778b` are the four `Valid checks:` literals OVL-55 supersedes
 
 ---
 
 ## Fix Plans
 
-Ranked by how likely a real page is to meet the gap. Fixes 1, 4 and 12 need a decision of the maintainer and may change `src/` or the spec; the others are a fixture case, a criterion and a test each, with the code as it is. The probe pages named are described in the sensor section; each fix can start from its probe.
+The loop is at its bound, so these go to the maintainer. Fixes 1 to 5 are a fixture row, a criterion and a test each, with the code as it is; each can start from the probe page named in the sensor section. Fixes 6 and 7 are decisions. Ranked by how likely a later change is to walk into the gap.
 
-### Fix 1: Text under a filter that changes colours gets no Finding, and the spec does not say so
+### Fix 1: The filter rule beyond a filter of one function (F4, F5, F6, F7, F8)
 
-- **Root cause**: ink is told apart by the colour a highlight paints (`src/squint_mcp/js/covered_text.js:143`, `src/squint_mcp/covered.py:190-196`). A `filter` on the text or on an ancestor changes that colour, so the text has no ink in any layer. `design.md:263` accepts it; Out of Scope and the CHANGELOG do not list it.
-- **Fix task**: the maintainer decides. Either a row in Out of Scope ("Known limit of this Check") and a line in the CHANGELOG, with a case in the clean fixture that holds the silence (a covered text in a row of `filter: grayscale(1)`); or a change to the Capture (the filters of the page switched off while ink is measured) and a case in the bounds fixture that holds the Finding.
-- **Done when**: the spec and the code say the same of probe `q21-filter`, and a test holds it.
-- **How likely**: likely. A grey-scaled section, a dimmed card, `filter: invert(1)` on the root as a dark mode. Every covered text inside is missed, silently.
-- **Priority**: Major
+- **Root cause**: the fixtures of F9 hold `grayscale(1)`, `hue-rotate(180deg)`, `sepia(1)`, `invert(1)` and `opacity(0)`, each alone and each from a plain rule. The sentence of the Assumptions is about lists ("the functions of every `filter` that change colours left out ... and those that keep them ... applied"), and the code has an order, three kept functions and a priority that nothing reads.
+- **Fix task**: five rows. In the bounds fixture: a text of `filter: grayscale(1) opacity(0.6)`, half covered, reported at 50% (F6); a row of `filter: grayscale(1) !important`, its text half covered, reported at 50% (F7); a cover whose box hides 60px and whose `drop-shadow()` hides 40px more, reported at 50% (F5). In the clean fixture: a text of `filter: blur(20px)`, half covered, no Finding (F4); a text of `filter: opacity(0.6) grayscale(1) opacity(0.6)`, half covered, no Finding (F8).
+- **Done when**: each test fails under its mutant: `blur` or `drop-shadow` taken out of the expression at `covered_text.js:50`, a filter with a kept function skipped at `:53`, `"important"` dropped or `kept[0]` set at `:55`.
+- **How likely**: a list of filter functions is how a filter is commonly written. The code is right today on all 22 rows of probe `pf-filters`.
+- **Priority**: Major for F6, Minor for the others
 
-### Fix 2: Hidden ink is not held inside Text ink on a font with anti-aliased edges (V6)
+### Fix 2: What is inside a text or a layer, deeper than a child (U1)
 
-- **Root cause**: every fixture of the Check is in Ahem at whole pixels, where each pixel of a glyph has all of its ink or none. The pixels of a real glyph that have under half of their ink are not Text ink, and nothing shows that they are kept out of Hidden ink too.
-- **Fix task**: a case with a text in a system font (`font-family: sans-serif`, 16px) wholly under an opaque cover; a criterion for one Finding with `hiddenPercent` equal to 100, which holds on any platform since every pixel of its Text ink is unseen.
-- **Done when**: the test fails with the ink mask dropped at `covered.py:272` (192 on Windows with Arial).
-- **How likely**: every page that is not a fixture. The code is right today; a change to `hidden_ink` could double every share and no test would fail.
-- **Priority**: Major
-
-### Fix 3: A text is measured with what is inside it (V15)
-
-- **Root cause**: the one fixture with a child over its parent's text (`#parent-text`) has no Other element over that text, so the Finding is withheld by hit testing whether the child was painted with the text or not.
-- **Fix task**: two cases from probe `q15-child-and-nick`. A text with a child over its first 80px and an Other element over its last 10px: no Finding. The same with the Other element over its last 20px: one Finding, `minor`, with `hiddenPercent` equal to 16 (400 of the 2400 pixels the element shows alone), covered by the Other element.
-- **Done when**: both tests fail with `members.add(i)` for `add(i)` at `covered_text.js:230` (45%, `major`, and 50%, `major`).
-- **How likely**: likely. A button or a tab with a badge or an icon positioned inside it is everywhere; the gap opens once anything else touches its text.
-- **Priority**: Major
-
-### Fix 4: A glyph colour of alpha 0 outside `rgb()` is reported (OVL-38)
-
-- **Root cause**: `src/squint_mcp/checks/overlap.py:25-31` matches `rgb()` and `rgba()` only. Chromium computes `oklch()`, `oklab()`, `lab()`, `lch()`, `color()` and every `color-mix()` to another notation.
-- **Fix task**: read the alpha of every notation Chromium computes a colour to (the newer ones write it after a slash, and it is 1 when there is none), with cases in the clean fixture for `color: oklch(0 0 0 / 0)` and `color: color-mix(in srgb, rgb(0 0 0) 0%, transparent)`, half covered: no Finding. Or, with the maintainer's word, a row in Out of Scope.
-- **Done when**: probes `q15-alpha0` and `q20-color-mix` return no Finding and a test holds it.
-- **How likely**: uncommon. It takes text made transparent through such a colour and a cover over a tenth of it. The harm is a false Finding.
+- **Root cause**: in every fixture the element inside a text (a badge, a link) and the element inside a Silent layer that covers a text are direct children.
+- **Fix task**: two rows from probe `pu-depth`. A text with a badge that is its grandchild over its first 80px and a cover over its last 20px: one Finding, 16%, `minor`. A text half under a grandchild of an element of `role` `menu`: no Finding.
+- **Done when**: both tests fail with `subtreeOf` returning the element and its children only (`covered_text.js:37-43`): 50% `major`, and a Finding.
+- **How likely**: a badge wrapped in a span, a menu item two levels down: common markup.
 - **Priority**: Minor
 
-### Fix 5: Hit testing sideways (V3, V17)
+### Fix 3: The Raised layer read from the Coverer when it is first in the document (R1)
 
-- **Root cause**: both scrolled fixtures scroll down. No covered text of any fixture is right of the viewport, and no page is scrolled sideways when it is captured.
-- **Fix task**: a page 3000px wide with a text 2000px from its left, half covered (`q3-wide`): one Finding, 50%, with its Coverer. The same page with a script that scrolls it 1500px sideways while it loads (`q18-scrolled-sideways`): the same Finding.
-- **Done when**: the first test fails with `left: 0` at `covered_text.js:282`, the second with `startX` read as 0 at `covered_text.js:15`.
-- **How likely**: now and then. A page wider than its viewport is what `offscreen-overflow` exists for, and what sticks out is often over something. A page scrolled sideways on load is rare.
-- **Priority**: Major (every Finding right of the viewport is lost)
-
-### Fix 6: A cover with text of its own that stands before the text in the document (V7)
-
-- **Root cause**: OVL-82 has the tag after the text it covers. `groups` keeps two texts apart by two tests, one for each order, and the fixture needs only the first.
-- **Fix task**: the row of `#under-tag` again with the tag first in the document (`q7-tagfirst`); a criterion for two Findings at 50%.
-- **Done when**: the test fails with `or _crosses(other.region, text.bounds)` dropped at `covered.py:246` (no Finding on the text under the tag).
-- **How likely**: now and then. A positioned label or badge written before the text it lands on is common; it must also have a tenth of its own text unseen.
-- **Priority**: Minor
-
-### Fix 7: An `open` attribute on an element that is not a `dialog` (V10)
-
-- **Root cause**: OVL-24 holds the side that is silent. Nothing with `open` that is not a `dialog` covers a text in any fixture.
-- **Fix task**: a text half under a positioned `details` element with `open` (`q10-details`): one Finding, 50%, `major`, covered by it.
-- **Done when**: the test fails with the test of `localName` dropped at `covered_text.js:55`.
-- **How likely**: now and then. A dropdown built on `details` and left open covers what is under it.
-- **Priority**: Minor
-
-### Fix 8: Two covers of which only the smaller is in a Raised layer (V1)
-
-- **Root cause**: in every fixture with two covers over one text neither is raised. Assumptions, "Several elements cover one text": the Raised-layer rule reads the Coverer.
-- **Fix task**: a text with a cover of `z-index: 1` over its first 20px and a plain one over its last 80px (`q1-raised`): one Finding, 50%, `major`, covered by the plain one.
-- **Done when**: the test fails with `any(cover.raised for cover in covered.covers)` at `overlap.py:63` (`minor`).
+- **Root cause**: in both rows of OVL-109 and OVL-110 the Coverer is the second of the two covers in the document.
+- **Fix task**: the two rows again with the larger cover first (probe `pr-raised`): `major` with the plain one as Coverer, `minor` with the raised one.
+- **Done when**: the tests fail with `covered.covers[-1].raised` at `overlap.py:66`.
 - **How likely**: rare.
 - **Priority**: Minor
 
-### Fix 9: Where an `info` Finding stands (V13, spec-precision gap 3)
+### Fix 4: A text under the border of an element with text (B1)
 
-- **Root cause**: `info` is first used here and no criterion has one in an asserted order or in a summary line.
-- **Fix task**: a criterion and a small fixture (`q13-info`): a text with a raised cover over its last 20px, then a text with a plain cover over its last 20px. `findings` in the order `minor`, `info`, and the first block equal to `Found 2 findings in 1 viewport: 1 minor, 1 info.`
-- **Done when**: the test fails with `info` sorted as `minor` at `tools/detect_visual_bugs.py:116`.
-- **How likely**: any page with a raised cover over under a quarter of a text. The code is right today and is of an earlier slice.
+- **Root cause**: V5 (the background) and V4 (the pseudo-elements) have fixtures; the border the same rule resets has none.
+- **Fix task**: a text half under the left border, 100px wide, of an element with two glyphs of its own beside it, all seen (probe `pb-border`): one Finding, 50%, covered by that element.
+- **Done when**: the test fails with `border-color: transparent` taken out of the rule at `covered_text.js:232`.
+- **How likely**: now and then: a bordered label or tab over a neighbour.
 - **Priority**: Minor
 
-### Fix 10: The pseudo-elements of a text in the glyphs-only screenshot (V4)
+### Fix 5: The cap itself (H1)
 
-- **Root cause**: the Out of Scope row promises a Finding for a text under the pseudo-element of an element whose own text is seen. No fixture has a pseudo-element painted by an element with own text.
-- **Fix task**: a text half under the `::after` of an element with two glyphs of its own beside it, all seen (`q4-pseudo`): one Finding, 50%, covered by that element.
-- **Done when**: the test fails with the rule for `::before` and `::after` removed at `covered_text.js:221`.
+- **Root cause**: the fixtures hold 19,000 and 21,000 pixels; "more than 20,000" and "no more than 20,000" meet at a value nothing has.
+- **Fix task**: a page of exactly 20,000 pixels of Hidden ink built on the row of `#striped` (probe `ph-cap`): its Coverer is `#stripes`.
+- **Done when**: the test fails with `math.floor(...) + 1` for `math.ceil(...)` at `covered.py:303`.
+- **How likely**: rare, and it changes only which of two covers is named.
+- **Priority**: Minor
+
+### Fix 6: AD-007, the wait before a screenshot (a decision)
+
+- **Root cause**: the wait is `requestAnimationFrame` of the page's own world, with no bound, and the spec counts two changes that reach every Capture where there are three.
+- **Fix task**: the maintainer confirms AD-007 or reverts `51ff006`. If it stays: race the two frames against a timer inside the same `evaluate`, so that a page that never calls a frame back is still measured; bring `spec.md:55` in line; decide whether one frame is enough.
+- **Done when**: probe `pr-raf-never` returns its Finding, and a test holds it (a fixture whose script replaces `requestAnimationFrame` by a function that never calls back).
+- **How likely**: rare. When it happens every tool fails on that page.
+- **Priority**: Minor
+
+### Fix 7: A right-to-left page that scrolls sideways (spec-precision gap 2, a decision)
+
+- **Root cause**: on such a page the screenshot and the boxes do not start at the same place; `inspect_element` reads the wrong pixels there too. Older than this slice.
+- **Fix task**: a row in Out of Scope ("Known limit of the Capture"), and an issue for the Capture.
+- **Done when**: the spec and probe `pw-rtl` say the same.
 - **How likely**: rare.
 - **Priority**: Minor
 
-### Fix 11: What the criteria leave of the sample and of the evidence (N14, V16, V14)
+### Outside this slice: a Content Security Policy that refuses inline styles
 
-- **Root cause**: the sentence added to "Coverer" has no criterion; the two totals of the fixtures, 1000 and 26,610 pixels, give the same step under `n × n` and under `n`; `evidence.computed` is asserted on one element whose `position` and `z-index` are the defaults.
-- **Fix task**: three cases. A page with 19,000 pixels of Hidden ink in texts at or over a tenth and 1520 in texts under it (`q14-totest`): the Coverer of `#striped` is `#stripes`. A page with 49,000 pixels (`q16-step`): the Coverer of `#striped` is `#solid-cover`. A covered text of `position: relative` and `z-index: 1`: `evidence.computed` equal to `{"position": "relative", "z-index": "1"}`.
-- **Done when**: the tests fail with the bound dropped at `capture.py:212`, with the square root dropped at `covered.py:303`, and with the two values written as constants at `overlap.py:77`.
-- **How likely**: rare. The first two change only which of two covers is named on a page within a few hundred pixels of a step of the sample.
-- **Priority**: Minor
-
-### Fix 12: The row of Out of Scope for a pseudo-element (spec-precision gap 1)
-
-- **Root cause**: the row gives the condition of the probes that showed the limit, not the one the code decides on.
-- **Fix task**: reword it: the text is not reported when the element that shows the pseudo-element (the one that paints it, or an element around that one) is itself measured, which is when at least 10% of its own text is unseen or glyphs of another text stand in its lines. Or give a text that shows a positioned pseudo-element a screenshot of its own, as the `ponytail:` comment of `covered.py:235-238` says.
-- **Done when**: the row and probes `q4b-pseudo-covered`, `q4d-pseudo-inner` and `q4f-pseudo-gap` agree.
-- **How likely**: rare.
-- **Priority**: Minor
+Not a fix of this feature; the row of Out of Scope asks for a follow-up and this pass gives it its evidence. Probe `pcsp`: under `style-src file:` the page returns `No findings in 1 viewport.`; without the policy the same page returns one `overlap` and one `low-contrast-real` Finding, both `major`. The styles a Capture injects are refused, no text has ink, and the result reads as a clean page. `design.md` already names the remedy to try (`bypass_csp` on the browser context).
 
 ---
 
@@ -519,13 +568,13 @@ Ranked by how likely a real page is to meet the gap. Fixes 1, 4 and 12 need a de
 
 | Requirement | Previous Status | New Status |
 | ----------- | --------------- | ---------- |
-| OVL-01 | Implemented | ⚠️ Verified as asserted; Fix 1 and Fix 12 settle the pages where it is not met |
-| OVL-02 to OVL-23, OVL-25 to OVL-32, OVL-34 to OVL-37, OVL-39 to OVL-46, OVL-48 to OVL-66, OVL-68 to OVL-81, OVL-83 to OVL-91 | Implemented | ✅ Verified |
-| OVL-24 | Implemented | ⚠️ Verified as written; Fix 7 pins the other side |
-| OVL-33 | Implemented | ⚠️ Verified as written; Fix 3 pins a child's cover next to another element's |
-| OVL-38 | Implemented | ❌ Needs Fix (Fix 4): holds for `rgb()` and `rgba()` only |
-| OVL-47 | Implemented | ⚠️ Verified as written; Fix 11 pins `evidence.computed` off its defaults |
-| OVL-82 | Implemented | ⚠️ Verified as written; Fix 6 pins the other order of the document |
+| OVL-01 to OVL-66, OVL-68 to OVL-91 | Implemented | ✅ Verified |
+| OVL-38 | ❌ Needs Fix in the third pass | ✅ Verified: the rule holds for every notation probed |
+| OVL-92, OVL-93, OVL-95 to OVL-97 | Implemented | ⚠️ Verified as written; Fix 1 pins the rule beyond a filter of one function |
+| OVL-94, OVL-98 to OVL-104, OVL-107, OVL-108, OVL-111 to OVL-119 | Implemented | ✅ Verified |
+| OVL-105, OVL-106 | Implemented | ⚠️ Verified as written; Fix 2 pins a descendant deeper than a child |
+| OVL-109, OVL-110 | Implemented | ⚠️ Verified as written; Fix 3 pins the other order of the two covers |
+| OVL-120 | Implemented | ✅ Verified as a sample of six calls; Fix 6 is the decision on AD-007 |
 | OVL-67 | Pending | Pending the verdict |
 
 `spec.md` was not edited by the Verifier.
@@ -534,21 +583,21 @@ Ranked by how likely a real page is to meet the gap. Fixes 1, 4 and 12 need a de
 
 ## Summary
 
-**Overall**: ❌ Not Ready
+**Overall**: ❌ Not Ready by the spec's own third success criterion; the first two are met
 
-**Spec-anchored check**: 90/90 criteria due now match the spec outcome on their fixtures; OVL-67 pending the verdict; 1 rule not met off its fixture (OVL-38); 3 spec-precision gaps
-**Sensor**: second-pass survivors 11/11 killed; regrown fixtures 6/6 still killed; 17 new mutants, 5 killed, 12 survived: 11 gaps, 1 equivalent; N14 a gap now
-**Gate**: 325 passed, 0 failed; pyright, ruff check and ruff format clean
+**Spec-anchored check**: 119/119 criteria due now match the spec outcome; OVL-67 pending the verdict; no rule broken off its fixture inside the scope of the slice; 2 spec-precision gaps
+**Sensor**: third-pass survivors 12/12 killed; 27 new mutants, 17 killed, 10 survived: 9 gaps and 1 no test can tell; the 4 further mutants the tasks name, 4 killed
+**Gate**: 359 passed, 0 failed; pyright, ruff check and ruff format clean
 
-**What works**: everything the earlier passes found working, and now four texts in one place, a text at a column of its own, a tag's box beside its glyphs, own text around a child's, the alpha and the property of the glyph colour, a Silent layer that is not painted, the rows of the sample, a page under the cap and a page scrolled down when it is captured. On the twenty-six probes of this pass the unmutated code gives the outcome of the Terms everywhere but in the three places below: among them a collision of two lines of a real font (`q23-real-collision`: 38% and 23%), a text half clipped away, a text half off the page, a text right of the viewport, and a real font covered whole at exactly 100%.
+**What works**: everything the earlier passes found working, and now a covered text under a filter that changes colours (on the text, around it, on the root, in a list, in a shadow tree, declared `!important`), a glyph colour of alpha 0 in eighteen ways of writing it, a font with anti-aliased edges, a text with a child over part of it, a cover with text before its text, an open `details`, a raised cover that is or is not the Coverer, pseudo-elements, a page wider than its viewport up to its last corner, a page scrolled on both axes when it is captured, the place of an `info` Finding, and the size of the sample at 19,000, 20,000, 21,000, 49,000 and 81,000 pixels.
 
-**What could have failed and did not**: the 21 earlier mutants run again (all killed), the reading of the twelve new criteria against their fixtures (all faithful), the two reworded criteria (neither looser), the test integrity check (nothing removed or weakened), and A7, A8 and N7 (still equivalent, for reasons re-derived from the code).
+**What could have failed and did not**: the twelve survivors of the third pass (all killed by an assertion on a value), every mutant the tasks name in a "Done when" (all killed), the reading of the 29 new criteria against their fixtures (all faithful), the Out of Scope rows of this round against the code (all agree), the test integrity check (nothing removed or weakened), and sixteen probe pages against the unmutated code.
 
 **Issues found**:
 
-1. Text under a colour-changing `filter` gets no Finding; the design accepts it, the spec and the CHANGELOG do not say it (Fix 1, a decision).
-2. A glyph colour of alpha 0 outside `rgb()` is reported, against the rule of OVL-38 (Fix 4, code or a decision).
-3. Ten behaviours without a test (twelve surviving mutants), all correct in the code today (Fix 2, 3 and 5 to 11): Hidden ink inside Text ink on a real font, a text measured with what is inside it, hit testing sideways, a cover with text before its text in the document, `open` on an element that is not a `dialog`, a raised cover that is not the Coverer, the place of an `info` Finding, pseudo-elements in the glyphs-only screenshot, `evidence.computed` off its defaults, and two rules of the sample's size.
-4. The Out of Scope row for a pseudo-element is narrower than what the code misses (Fix 12, wording).
+1. Five behaviours of the filter fix without a test: a list of functions, `blur()`, `drop-shadow()`, the order of the kept functions, `!important` (Fix 1).
+2. Four neighbours of the new fixtures without a test: a descendant deeper than a child, the Coverer first in the document, a border, the cap itself (Fix 2 to 5).
+3. The wait of AD-007 has no bound and fails every tool on a page that never calls an animation frame back; `spec.md:55` counts two changes where there are three (Fix 6, a decision).
+4. A right-to-left page that scrolls sideways is in no row of Out of Scope (Fix 7, wording).
 
-**Next steps**: this was the last re-verification of the loop, so the decision is the maintainer's. Fix 1 and Fix 4 are the two that a user can meet today and need the maintainer's word either way. The rest can go one of two ways: route Fix 2, 3 and 5 to 11 to an implementer for one more round, asking this time for a fixture per side, per axis and per order of each rule rather than per mutant shown; or accept the feature with the residual this report lists and keep the list with it. OVL-67 stays pending until a PASS.
+**Next steps**: the loop is at its bound of three rounds, so this goes to the maintainer, with three things to decide. (1) AD-007: confirm it, and whether to bound the wait. (2) The nine gaps: accept the feature with the residual this report lists, or have Fix 1 to 5 done, about nine fixture rows and no change to `src/`. (3) The stopping rule: four passes of fresh mutants found 11, 11, 12 and 9 alive; "no surviving mutant" against a sensor that writes new ones each time may not be a bar a round can meet, and the maintainer may want to say which mutants count. OVL-67 stays pending until a PASS.
