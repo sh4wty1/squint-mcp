@@ -27,6 +27,7 @@ SCROLLED_ON_LOAD = fixture_url("overlap-scrolled-on-load.html")
 SAMPLED = fixture_url("overlap-sampled.html")
 EXACT = fixture_url("overlap-exact.html")
 INVERTED = fixture_url("overlap-inverted.html")
+LOW = fixture_url("overlap-low.html")
 FONT = fixture_url("overlap-font.html")
 REACH = fixture_url("overlap-reach.html")
 ONLY = ["overlap"]
@@ -896,6 +897,19 @@ async def test_a_page_of_a_hundred_covered_texts_is_checked(client: Client) -> N
     assert covered(findings) == [
         (f"#text-{place}", "major", 50, f"#cover-{place}") for place in range(100)
     ]
+
+
+async def test_a_covered_text_low_on_a_page_of_layers_is_reported_on_every_call(
+    client: Client,
+) -> None:
+    # On this page Chromium now and then hands back a screenshot with the foot
+    # of the page not painted yet: `#low`, read from it, has no ink and gets no
+    # Finding, on about six calls in ten when a screenshot is taken at once
+    # after a change. Which calls is a matter of timing, so the tool is called
+    # several times.
+    for _ in range(6):
+        findings = (await detect(client, LOW, checks=ONLY))["findings"]
+        assert covered(findings) == [("#low", "major", 50, "#low-cover")]
 
 
 async def test_an_element_the_scroll_brings_over_a_text_is_not_what_covers_it(

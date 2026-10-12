@@ -856,10 +856,10 @@ Baseline: 312 tests pass (2026-10-11). The whole suite takes about eleven minute
 
 The Verifier's third pass ([`validation.md`](validation.md), 2026-10-11) is the first to find the code short of the spec: text under a `filter` that changes colours gets no Finding, and a glyph colour of alpha 0 written outside `rgb()` gets one. It also left twelve mutants alive, and gave the reason: each round closed the mutants it was shown and not their neighbours. The maintainer decided on 2026-10-11 what this round does. The filter limit is fixed in the Capture (F9). The alpha of a glyph colour is read in every notation Chromium computes a colour to (F10). The other ten gaps get one more round, wider than the two before (F11 to F15): a case for each side, each axis and each order of a rule, not only for the mutant shown. F16 lists in the spec the limits the design accepts.
 
-The eight tasks add the criteria OVL-92 to OVL-119. F9 and F10 change `src/`; the others change fixtures, tests and the spec. A new test is done when it fails under the mutant it is for, applied to a scratch copy of `src/`. This is the third and last round of the loop: a FAIL after it goes back to the maintainer.
+The tasks add the criteria OVL-92 to OVL-120. F9, F10 and F17 change `src/`; the others change fixtures, tests and the spec. F17 was not planned: it fixes a fault of the Capture found while the tests of F9 and F12 were run against their mutants, and comes after F12. A new test is done when it fails under the mutant it is for, applied to a scratch copy of `src/`. This is the third and last round of the loop: a FAIL after it goes back to the maintainer.
 
 ```
-F9 → F10 → F11 → F12 → F13 → F14 → F15 → F16
+F9 → F10 → F11 → F12 → F17 → F13 → F14 → F15 → F16
 ```
 
 Baseline: 325 tests pass (2026-10-11). The whole suite takes about twelve and a half minutes. The matrix and the gate commands at the top of this file apply.
@@ -1009,7 +1009,7 @@ Spiked before F9 (2026-10-11, real Chromium, pages outside the repository): with
 - [ ] Each test asserts the whole list of Findings of its page, in order
 - [ ] The test of OVL-113 fails under V3 (hit testing never scrolls sideways) and with an element the scroll moved sideways not passed over (`covered_text.js:164`); the test of OVL-114 fails under V17
 - [ ] Gate check passes: Build
-- [ ] Test count: 350 tests pass; none deleted
+- [ ] Test count: 354 tests pass; none deleted
 
 **Tests**: integration
 **Gate**: build
@@ -1038,7 +1038,7 @@ Spiked before F9 (2026-10-11, real Chromium, pages outside the repository): with
 - [ ] The test asserts the whole list of Findings and the first content block
 - [ ] The test fails under V13 (`info` ordered as `minor`, `tools/detect_visual_bugs.py`)
 - [ ] Gate check passes: Build
-- [ ] Test count: 351 tests pass; none deleted
+- [ ] Test count: 355 tests pass; none deleted
 
 **Tests**: integration
 **Gate**: build
@@ -1067,7 +1067,7 @@ Spiked before F9 (2026-10-11, real Chromium, pages outside the repository): with
 - [ ] The comment of each fixture gives its pixels of Hidden ink and the step they are tested at
 - [ ] Each test fails under its mutant: N14 (OVL-116), only the texts that get a Finding counted (OVL-117), V16 (OVL-118), the step never above 2 (OVL-119)
 - [ ] Gate check passes: Build
-- [ ] Test count: 355 tests pass; none deleted
+- [ ] Test count: 359 tests pass; none deleted
 
 **Tests**: integration
 **Gate**: build
@@ -1095,14 +1095,44 @@ Spiked before F9 (2026-10-11, real Chromium, pages outside the repository): with
 
 - [ ] The reworded row and the three probes agree: each text the row says is missed gets no Finding, each it says is reported gets one
 - [ ] Every row of the Risks of `design.md` that accepts a missed or a false Finding has a row in Out of Scope
-- [ ] `validate_spec.py --strict` exits 0 on the spec with its 28 new criteria
+- [ ] `validate_spec.py --strict` exits 0 on the spec with its 29 new criteria
 - [ ] Gate check passes: Build
-- [ ] Test count: 355 tests pass; none deleted
+- [ ] Test count: 359 tests pass; none deleted
 
 **Tests**: none
 **Gate**: build
 
 **Commit**: `docs(overlap): list the limits the design accepts in the spec`
+
+---
+
+### F17: Let the page paint before a screenshot is taken
+
+- [x] Done
+
+**What**: Found while the tests of F9 and F12 were run against their mutants, not by the Verifier. On a page with several layers of its own (`overlap-clean.html`: a sticky element, a faded text, a link with a `z-index`), Chromium now and then hands back a screenshot beyond the viewport in which a band of the page is not painted yet: the second screenshot of a pair, taken right after the colour of the highlights changes. A text in that band then has no ink in one picture, measures as not hidden and gets no Finding. Measured on the code as it is, with every screenshot taken twice and compared: the last screenshot of covered-text measuring differs from its retake in 6 of 10 Captures of the clean fixture, and a text half covered at the foot of that page measures 0 hidden pixels in 5 of 6 Captures, all but the first of a browser. `_screenshot` now lets the page paint two animation frames first (AD-007); taking every screenshot twice is right too and costs twice as much, a Chromium flag does not end the fault, and a small screenshot taken first makes it sure. The fixture `overlap-low.html` holds a covered text low on such a page, and its test calls the tool three times (OVL-120).
+**Where**: `src/squint_mcp/capture.py`, `tests/test_overlap.py` (with `tests/fixtures/overlap-low.html`), `.specs/STATE.md` (AD-007), `CHANGELOG.md`
+**Depends on**: None
+**Reuses**: the rows of `overlap-clean.html` that bring the fault about
+**Requirement**: OVL-120
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [x] On the code before the change the test of OVL-120 fails in most runs (a timing fault of Chromium: no test fails on it every time); with the change it passes ten runs in a row
+- [x] With the change, the row `#child-and-nick` of the clean fixture fails under V15 on every Capture
+- [x] The cost is measured and recorded in AD-007 and in the CHANGELOG
+- [x] Gate check passes: Build
+- [x] Test count: 352 tests pass; none deleted
+
+**Tests**: integration
+**Gate**: build
+
+**Commit**: `fix(capture): let the page paint before a screenshot is taken`
 
 ---
 
@@ -1117,5 +1147,6 @@ Spiked before F9 (2026-10-11, real Chromium, pages outside the repository): with
 | OVL-113, OVL-114 | F13 |
 | OVL-115 | F14 |
 | OVL-116 to OVL-119 | F15 |
+| OVL-120 | F17 |
 
-28 of 28 mapped; with the tables above, 119 of 119.
+29 of 29 mapped; with the tables above, 120 of 120.

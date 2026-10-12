@@ -32,6 +32,12 @@ _SCROLL_WIDTH = (_JS / "scroll_width.js").read_text(encoding="utf-8")
 _COVERED_TEXT = (_JS / "covered_text.js").read_text(encoding="utf-8")
 # Calls a method of the object the cover script leaves on the page.
 _COVERED_CALL = "([method, ...args]) => globalThis.__squintCovered[method](...args)"
+# Resolves once the page has painted two frames: whatever changed before the call
+# is on the screen by then.
+_PAINTED = (
+    "() => new Promise((done) =>"
+    " requestAnimationFrame(() => requestAnimationFrame(done)))"
+)
 
 
 class BrowserSession:
@@ -104,7 +110,13 @@ async def _settle_layout(page: Page) -> None:
 
 
 async def _screenshot(page: Page, clip: covered.Bounds | None = None) -> Image.Image:
-    """The full page, or the part of it inside `clip`, in page coordinates."""
+    """The full page, or the part of it inside `clip`, in page coordinates.
+
+    Taken right after a change of style, a screenshot now and then shows a part
+    of the page beyond the viewport not painted yet, and what is read there is
+    a page with nothing on it (AD-007): the page paints two frames first.
+    """
+    await page.evaluate(_PAINTED)
     if clip is None:
         shot = await page.screenshot(full_page=True)
     else:
