@@ -166,7 +166,7 @@ The Verifier is dispatched in the fifth session, after T11 and the Build of phas
 
 ### T3: Say in the evidence which Face the element asked for
 
-- [ ] Done
+- [x] Done
 
 **What**: The test of FNT-27, then `"font-style"` in `CAPTURE_COMPUTED_PROPERTIES` (its comment says what the property is for) and in the styles the Finding carries: `font-family`, `font-weight` and `font-style`.
 **Where**: `src/squint_mcp/config.py` (with the evidence of the Check and the test)
@@ -181,11 +181,11 @@ The Verifier is dispatched in the fifth session, after T11 and the Build of phas
 
 **Done when**:
 
-- [ ] Red before the code: the test fails on `evidence.computed`, which has no `font-style`
-- [ ] The test compares the Finding of `#heading` with the whole literal of the spec
-- [ ] `INSPECT_COMPUTED_PROPERTIES` is unchanged, so `inspect_element` does not return `font-style`
+- [x] Red before the code: the test fails on `evidence.computed`, which has no `font-style`
+- [x] The test compares the Finding of `#heading` with the whole literal of the spec
+- [x] `INSPECT_COMPUTED_PROPERTIES` is unchanged, so `inspect_element` does not return `font-style`
 - [ ] Gate check passes: Full; then Build for phase 1, in the background
-- [ ] Test count: the count after T2 plus one; none deleted
+- [x] Test count: the count after T2 plus one; none deleted
 
 **Tests**: integration
 **Gate**: full, then build for the phase

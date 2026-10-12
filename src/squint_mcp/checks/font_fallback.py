@@ -3,7 +3,7 @@
 from squint_mcp.models import Capture, Element, Evidence, Finding
 
 # The styles that say which face the element asked for.
-_EVIDENCE_PROPERTIES = ("font-family", "font-weight")
+_EVIDENCE_PROPERTIES = ("font-family", "font-weight", "font-style")
 
 
 def _finding(

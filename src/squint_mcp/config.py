@@ -69,13 +69,15 @@ INSPECT_COMPUTED_PROPERTIES = (
 # Source: Squint default. What a Capture collects for every element: the inspect
 # properties plus `direction`, which tells a Check on which edge text is cut,
 # `-webkit-text-fill-color`, the colour that paints the glyphs: that of `color`
-# unless the page sets it, and `z-index`, which with `position` decides what is
-# painted above an element.
+# unless the page sets it, `z-index`, which with `position` decides what is
+# painted above an element, and `font-style`, which with `font-family` and
+# `font-weight` says which face of a family an element asks for.
 CAPTURE_COMPUTED_PROPERTIES = (
     *INSPECT_COMPUTED_PROPERTIES,
     "direction",
     "-webkit-text-fill-color",
     "z-index",
+    "font-style",
 )
 
 # Source: docs/SPEC.md, Images: "At most five crops per call".

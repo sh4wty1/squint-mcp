@@ -265,7 +265,7 @@ The maintainer accepted the spec on 2026-10-12 and took every default of the tab
 | FNT-24 | P1: Stay silent when the text is in the font it asks for | T4 | Pending |
 | FNT-25 | P1: Stay silent when the text is in the font it asks for | T4 | Pending |
 | FNT-26 | P1: Stay silent when the text is in the font it asks for | T6 | Pending |
-| FNT-27 | P1: Read the Finding | T3 | Pending |
+| FNT-27 | P1: Read the Finding | T3 | Implemented |
 | FNT-28 | P1: Read the Finding | T2 | Implemented |
 | FNT-29 | P1: Read the Finding | T5 | Pending |
 | FNT-30 | P1: Read the Finding | T6 | Pending |

@@ -83,6 +83,40 @@ async def test_the_message_of_one_element_says_element(client: Client) -> None:
     )
 
 
+async def test_the_finding_says_which_face_the_element_asked_for(
+    client: Client,
+) -> None:
+    findings = (await detect(client, BUG, checks=ONLY))["findings"]
+    (finding,) = await findings_on(client, BUG, "#heading", findings)
+    assert finding == {
+        "check": "font-fallback",
+        "category": "visual-bug",
+        "severity": "minor",
+        "message": (
+            'The font "Brand" did not load: the text of 3 elements is rendered in a '
+            "fallback font"
+        ),
+        "selector": "#heading",
+        "text": "XXXXXXXXXX",
+        "box": {"x": 40, "y": 20, "w": 200, "h": 30},
+        "viewport": {"width": 1440, "height": 900},
+        "evidence": {
+            "computed": {
+                "font-family": "Brand, Ahem",
+                "font-weight": "400",
+                "font-style": "normal",
+            },
+            "measured": {"family": "Brand", "elements": 3, "textWidthPx": 200},
+            "cropIndex": 0,
+        },
+        "suggestion": (
+            'Fix the source the page loads "Brand" from, or take the family out of '
+            "font-family"
+        ),
+        "source": "Squint heuristic",
+    }
+
+
 async def test_font_fallback_runs_when_no_check_is_named(client: Client) -> None:
     findings = (await detect(client, BUG))["findings"]
     assert [(finding["selector"], finding["check"]) for finding in findings] == [
