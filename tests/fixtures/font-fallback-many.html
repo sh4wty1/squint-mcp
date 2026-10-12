@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: a thousand texts in a font that did not load</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 2 glyphs at 20px are 40px wide.
+         1,000 texts of two glyphs, 24 to a row at 1440px: all ask for `Brand`,
+         which did not load, and are in Ahem. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      /* A `src` that starts with `no-such-` names no file. */
+      @font-face {
+        font-family: Brand;
+        src: url("no-such-brand.woff2");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      .text {
+        float: left;
+        width: 60px;
+        font-family: Brand, Ahem;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      for (let i = 0; i < 1000; i++) {
+        const text = document.createElement("div");
+        text.id = `text-${i}`;
+        text.className = "text";
+        text.textContent = "XX";
+        document.body.append(text);
+      }
+    </script>
+  </body>
+</html>

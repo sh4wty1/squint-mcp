@@ -22,6 +22,8 @@ CLEAN = fixture_url("font-fallback-clean.html")
 BOUNDS = fixture_url("font-fallback-bounds.html")
 SHAPING = fixture_url("font-fallback-shaping.html")
 MONOSPACE = fixture_url("font-fallback-monospace.html")
+ORDER = fixture_url("font-fallback-order.html")
+MANY = fixture_url("font-fallback-many.html")
 
 ONLY = ["font-fallback"]
 
@@ -481,3 +483,24 @@ async def test_the_width_is_of_the_layout_the_box_is_of(client: Client) -> None:
     assert findings == await findings_on(client, MONOSPACE, "#code", findings)
     assert (family(finding), elements(finding)) == ("Brand", 1)
     assert width(finding) == round(finding["box"]["w"], 2)
+
+
+async def test_findings_of_this_check_and_another_come_in_document_order(
+    client: Client,
+) -> None:
+    findings = (await detect(client, ORDER))["findings"]
+    assert {finding["severity"] for finding in findings} == {"minor"}
+    assert [(f["selector"], f["check"]) for f in findings] == [
+        ("#a", "font-fallback"),
+        ("#b", "font-fallback"),
+        ("#b", "low-contrast-real"),
+        ("#c", "low-contrast-real"),
+    ]
+
+
+async def test_a_page_of_a_thousand_texts_gets_one_finding(client: Client) -> None:
+    result = await call(client, MANY, checks=ONLY)
+    assert result.is_error is False
+    assert result.structured_content is not None
+    (finding,) = result.structured_content["findings"]
+    assert elements(finding) == 1000

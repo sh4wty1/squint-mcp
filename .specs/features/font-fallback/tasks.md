@@ -359,7 +359,7 @@ The Verifier is dispatched in the fifth session, after T11 and the Build of phas
 
 ### T9: Hold the Check with the other Checks and on a page of a thousand texts
 
-- [ ] Done
+- [x] Done
 
 **What**: The fixtures `font-fallback-order.html` and `font-fallback-many.html`, and the tests of the order of Findings across Checks and of the 1,000 elements. No change to `src/`.
 **Where**: `tests/test_font_fallback.py` (with the two fixtures)
@@ -374,10 +374,10 @@ The Verifier is dispatched in the fifth session, after T11 and the Build of phas
 
 **Done when**:
 
-- [ ] The test of FNT-36 asserts the whole list of `(selector, check)` pairs in order (L-020), and every Finding is `minor`
-- [ ] The test of FNT-39 asserts `isError: false`, exactly one Finding and `elements` equal to 1000
+- [x] The test of FNT-36 asserts the whole list of `(selector, check)` pairs in order (L-020), and every Finding is `minor`
+- [x] The test of FNT-39 asserts `isError: false`, exactly one Finding and `elements` equal to 1000
 - [ ] Gate check passes: Full; then Build for phase 3, in the background
-- [ ] Test count: the count after T8 plus two; none deleted
+- [x] Test count: the count after T8 plus two; none deleted
 
 **Tests**: integration
 **Gate**: full, then build for the phase
