@@ -20,6 +20,7 @@ pytestmark = pytest.mark.anyio
 BUG = fixture_url("font-fallback-bug.html")
 CLEAN = fixture_url("font-fallback-clean.html")
 BOUNDS = fixture_url("font-fallback-bounds.html")
+SHAPING = fixture_url("font-fallback-shaping.html")
 
 ONLY = ["font-fallback"]
 
@@ -439,3 +440,34 @@ async def test_the_widths_of_the_text_nodes_of_an_element_are_added(
 ) -> None:
     finding = await sits_on(client, BOUNDS, "#split")
     assert (width(finding), elements(finding)) == (140, 1)
+
+
+async def test_a_text_put_in_capitals_that_loaded_is_not_counted(
+    client: Client,
+) -> None:
+    finding = await of_family(client, SHAPING, "Mixed")
+    assert finding["selector"] == "#lower-mixed"
+    assert finding == await sits_on(client, SHAPING, "#lower-mixed")
+    assert elements(finding) == 1
+    assert await reported(client, SHAPING, families=(), on=("#upper-mixed",)) == []
+
+
+async def test_an_element_that_asks_for_the_italic_face_that_failed_is_reported(
+    client: Client,
+) -> None:
+    finding = await of_family(client, SHAPING, "Slant")
+    assert finding == await sits_on(client, SHAPING, "#slant-italic")
+    assert elements(finding) == 1
+    assert finding["evidence"]["computed"] == {
+        "font-family": "Slant, Wide",
+        "font-weight": "400",
+        "font-style": "italic",
+    }
+    assert await reported(client, SHAPING, families=(), on=("#slant-normal",)) == []
+
+
+async def test_the_width_holds_the_spacing_of_letters_and_words(
+    client: Client,
+) -> None:
+    finding = await sits_on(client, SHAPING, "#spaced")
+    assert width(finding) == 226

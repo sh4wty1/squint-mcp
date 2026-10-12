@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: the styles that shape a text in a font that did not load</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are 200px wide.
+         `Wide` is Ahem half as large again: a glyph is 30px wide. Both load. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      @font-face {
+        font-family: Wide;
+        src: url("Ahem.ttf");
+        size-adjust: 150%;
+      }
+      /* One family per rule. A `src` that starts with `no-such-` names no file. */
+      /* A Face that loads and one that does not, by `unicode-range`: capitals
+         load, small letters do not. */
+      @font-face {
+        font-family: Mixed;
+        src: url("Ahem.ttf");
+        unicode-range: U+0041-005A;
+      }
+      @font-face {
+        font-family: Mixed;
+        src: url("no-such-mixed-lower.woff2");
+        unicode-range: U+0061-007A;
+      }
+      /* A Face that loads and one that does not, by style. */
+      @font-face {
+        font-family: Slant;
+        font-style: normal;
+        src: url("Ahem.ttf");
+      }
+      @font-face {
+        font-family: Slant;
+        font-style: italic;
+        src: url("no-such-slant-italic.woff2");
+      }
+      @font-face {
+        font-family: "Spaced Brand";
+        src: url("no-such-spaced-brand.woff2");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      .text {
+        margin: 20px 0 0 40px;
+        width: 200px;
+      }
+
+      /* `Mixed`: small letters are in `Wide`, 300px, as in their Tail. */
+      #upper-mixed,
+      #lower-mixed {
+        font-family: Mixed, Wide;
+      }
+      /* Written in small letters and painted in capitals, which loaded: 200px. */
+      #upper-mixed {
+        text-transform: uppercase;
+      }
+
+      /* `Slant`: upright text is in the font it asks for, 200px; italic text
+         asks for the Face that failed and is in `Wide`, 300px. */
+      #slant-normal,
+      #slant-italic {
+        font-family: Slant, Wide;
+      }
+      #slant-italic {
+        font-style: italic;
+      }
+
+      /* Nine glyphs and a space of 20px, 2px after each of the ten characters
+         and 6px at the space: 226px on one line. */
+      #spaced {
+        font-family: "Spaced Brand", Ahem;
+        letter-spacing: 2px;
+        word-spacing: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="upper-mixed" class="text">xxxxxxxxxx</div>
+    <div id="lower-mixed" class="text">xxxxxxxxxx</div>
+    <div id="slant-normal" class="text">XXXXXXXXXX</div>
+    <div id="slant-italic" class="text">XXXXXXXXXX</div>
+    <div class="text"><span id="spaced">XXXX XXXXX</span></div>
+  </body>
+</html>

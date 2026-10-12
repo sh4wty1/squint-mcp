@@ -287,9 +287,9 @@ The maintainer accepted the spec on 2026-10-12 and took every default of the tab
 | FNT-46 | P2: Check contract, Capture and documents | T12 | Pending |
 | FNT-47 | Edge cases | T2 | Implemented |
 | FNT-48 | Edge cases | T5 | Implemented |
-| FNT-49 | P1: Stay silent when the text is in the font it asks for | T7 | Pending |
-| FNT-50 | P1: Report a font that did not load | T7 | Pending |
-| FNT-51 | P1: Read the Finding | T7 | Pending |
+| FNT-49 | P1: Stay silent when the text is in the font it asks for | T7 | Implemented |
+| FNT-50 | P1: Report a font that did not load | T7 | Implemented |
+| FNT-51 | P1: Read the Finding | T7 | Implemented |
 | FNT-52 | P1: Stay silent when the text is in the font it asks for | T6 | Implemented |
 | FNT-53 | P1: Stay silent when the text is in the font it asks for | T5 | Implemented |
 | FNT-54 | P1: Read the Finding | T6 | Implemented |

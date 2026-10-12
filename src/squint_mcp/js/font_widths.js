@@ -2,8 +2,9 @@
 // for each element whose own text asks first for a family with a Face that failed,
 // how wide that text is set on one line: in its `font-family` and in that list
 // without its first name (AD-008). The widths are read from copies of the text put
-// outside the flow, all in one layout; no style of the page is changed.
-() => {
+// outside the flow, all in one layout; no style of the page is changed. `shaping`
+// names the properties a copy takes from its element besides the `font-` ones.
+({ shaping }) => {
   // The names of a `font-family` as the computed value writes them: split at the
   // commas outside strings, a backslash taking the character after it.
   const namesOf = (fontFamily) => {
@@ -70,17 +71,18 @@
   ]);
 
   // A copy of one text node, on one line, in the list of families given.
-  // ponytail: a copy carries the `font-` properties of the element and nothing
-  // else of it. What a pseudo-element such as `::first-letter` sets, and a font
-  // property that differs along the text, are not in it.
-  const copyOf = (node, shaping, fontFamily) => {
+  // ponytail: a copy carries the `font-` properties of the element and those
+  // of `shaping`, and nothing else of it. What a pseudo-element such as
+  // `::first-letter` sets, and a property that differs along the text, are not
+  // in it.
+  const copyOf = (node, shaped, fontFamily) => {
     const copy = document.createElement("span");
     copy.textContent = node.nodeValue;
     important(copy, [
       ["all", "initial"],
       ["position", "absolute"],
       ["white-space", "nowrap"],
-      ...shaping,
+      ...shaped,
       ["font-family", fontFamily],
     ]);
     host.append(copy);
@@ -100,14 +102,17 @@
     // ponytail: the Tail can start with a family the page declares and no text had
     // used; its copy then asks for that font, one request the page had not made.
     const tail = names.slice(1).join(", ") || "initial";
-    const shaping = [...style]
-      .filter((name) => name.startsWith("font-") && name !== "font-family")
-      .map((name) => [name, style.getPropertyValue(name)]);
+    const shaped = [
+      ...[...style].filter(
+        (name) => name.startsWith("font-") && name !== "font-family",
+      ),
+      ...shaping,
+    ].map((name) => [name, style.getPropertyValue(name)]);
     measured.push({
       index,
       family,
-      own: nodes.map((node) => copyOf(node, shaping, style.fontFamily)),
-      tail: nodes.map((node) => copyOf(node, shaping, tail)),
+      own: nodes.map((node) => copyOf(node, shaped, style.fontFamily)),
+      tail: nodes.map((node) => copyOf(node, shaped, tail)),
     });
   });
 

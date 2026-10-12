@@ -80,6 +80,17 @@ CAPTURE_COMPUTED_PROPERTIES = (
     "font-style",
 )
 
+# Source: Squint default (AD-008). What changes the width of a text or the
+# characters painted, besides the `font-` properties, which the page script
+# takes from the computed style: a copy of a text carries them.
+TEXT_SHAPING_PROPERTIES = (
+    "letter-spacing",
+    "word-spacing",
+    "text-transform",
+    "text-rendering",
+    "direction",
+)
+
 # Source: docs/SPEC.md, Images: "At most five crops per call".
 MAX_CROPS = 5
 

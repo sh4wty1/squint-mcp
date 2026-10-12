@@ -300,7 +300,7 @@ The Verifier is dispatched in the fifth session, after T11 and the Build of phas
 
 ### T7: Measure a text with the styles that shape it
 
-- [ ] Done
+- [x] Done
 
 **What**: The fixture `font-fallback-shaping.html` with the cases of FNT-49 to FNT-51, and its tests; then `TEXT_SHAPING_PROPERTIES` in config with the value and the source of the design, passed to the script as `shaping` and set on each copy with the computed value of the element.
 **Where**: `src/squint_mcp/js/font_widths.js` (with the config, the call in the Capture, the shaping fixture and its tests)
@@ -315,11 +315,11 @@ The Verifier is dispatched in the fifth session, after T11 and the Build of phas
 
 **Done when**:
 
-- [ ] Red before the code: the test of FNT-49 fails on a Finding of `Mixed` on `#upper-mixed`, and that of FNT-51 on a `textWidthPx` of 200
-- [ ] The test of FNT-50 is a pin: it fails on a scratch copy in which the copies do not carry `font-style`
-- [ ] The script holds no list of property names of its own: the `font-` longhands come from the computed style and the rest from `shaping`
-- [ ] Gate check passes: Full
-- [ ] Test count: the count after T6 plus the tests of this task (three at least); none deleted
+- [x] Red before the code: the test of FNT-49 fails on a Finding of `Mixed` on `#upper-mixed`, and that of FNT-51 on a `textWidthPx` of 200 (the fixture holds `#lower-mixed` after `#upper-mixed`, the same text without the transform: alone, `#upper-mixed` asks for the capitals only, the Face of the small letters stays `unloaded` and `Mixed` is not a Failed family; the Finding of `Mixed` sits on `#lower-mixed` and counts one element)
+- [x] The test of FNT-50 is a pin: it fails on a scratch copy in which the copies do not carry `font-style`
+- [x] The script holds no list of property names of its own: the `font-` longhands come from the computed style and the rest from `shaping`
+- [x] Gate check passes: Full
+- [x] Test count: the count after T6 plus the tests of this task (three at least); none deleted
 
 **Tests**: integration
 **Gate**: full

@@ -258,7 +258,9 @@ async def _measure_fonts(page: Page, elements: list[Element]) -> list[Face]:
     """Give the elements whose own text asks first for a family with a face that
     failed their `line_widths`, and return the faces of the page (AD-008).
     """
-    found = await page.evaluate(_FONT_WIDTHS)
+    found = await page.evaluate(
+        _FONT_WIDTHS, {"shaping": list(config.TEXT_SHAPING_PROPERTIES)}
+    )
     for index, widths in found["widths"].items():
         elements[int(index)].line_widths = LineWidths.model_validate(widths)
     return [Face.model_validate(face) for face in found["faces"]]
