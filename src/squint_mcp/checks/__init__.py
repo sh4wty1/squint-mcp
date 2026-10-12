@@ -7,6 +7,7 @@ Adding a Check is one module in this package and one entry in `CHECKS`.
 from collections.abc import Callable
 
 from squint_mcp.checks import (
+    font_fallback,
     low_contrast_real,
     offscreen_overflow,
     overlap,
@@ -21,6 +22,7 @@ CHECKS: dict[str, Check] = {
     "low-contrast-real": low_contrast_real.check,
     "offscreen-overflow": offscreen_overflow.check,
     "overlap": overlap.check,
+    "font-fallback": font_fallback.check,
 }
 
 # The Checks that read `Element.covered_text`, which a Capture measures only when

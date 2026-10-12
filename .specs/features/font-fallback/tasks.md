@@ -102,7 +102,7 @@ The Verifier is dispatched in the fifth session, after T11 and the Build of phas
 
 ### T1: Make `font-fallback` a Check name
 
-- [ ] Done
+- [x] Done
 
 **What**: A module `checks/font_fallback.py` whose `check` returns no Finding yet, its entry in `CHECKS`, and the docstring of `detect_visual_bugs` naming the Check: a font the page declares that did not load, one Finding per family. Before them: the literal of FNT-34 in the four assertions of `tests/test_detect_visual_bugs.py` (lines 342, 353, 364 and 376), and a new `tests/test_font_fallback.py` with the test of the description.
 **Where**: `src/squint_mcp/checks/font_fallback.py` (with the registry, the tool's docstring, the four literals and the new test module)
@@ -117,11 +117,11 @@ The Verifier is dispatched in the fifth session, after T11 and the Build of phas
 
 **Done when**:
 
-- [ ] Red before the code: the four tests that hold the list of valid Checks and the test of the description fail
-- [ ] `git diff` of `tests/test_detect_visual_bugs.py` shows those four lines and nothing else
-- [ ] The test of FNT-37 asserts that the description names `font-fallback`, says it reports a font the page declares that did not load, and says one Finding per family
-- [ ] Gate check passes: Full, with `tests/test_detect_visual_bugs.py` added to the pytest call
-- [ ] Test count: 369 collected (368 plus the test of the description); none deleted
+- [x] Red before the code: the four tests that hold the list of valid Checks and the test of the description fail
+- [x] `git diff` of `tests/test_detect_visual_bugs.py` shows those four lines and nothing else (two lines each: the literal passes 88 columns, and the formatter joins `in text` to its second line)
+- [x] The test of FNT-37 asserts that the description names `font-fallback`, says it reports a font the page declares that did not load, and says one Finding per family
+- [x] Gate check passes: Full, with `tests/test_detect_visual_bugs.py` added to the pytest call
+- [x] Test count: 369 collected (368 plus the test of the description); none deleted
 
 **Tests**: integration
 **Gate**: full

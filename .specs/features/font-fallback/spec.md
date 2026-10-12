@@ -272,13 +272,13 @@ The maintainer accepted the spec on 2026-10-12 and took every default of the tab
 | FNT-31 | P1: Read the Finding | T6 | Pending |
 | FNT-32 | P1: Read the Finding | T6 | Pending |
 | FNT-33 | P1: With the other Checks | T2 | Pending |
-| FNT-34 | P1: With the other Checks | T1 | Pending |
+| FNT-34 | P1: With the other Checks | T1 | Implemented |
 | FNT-35 | P1: With the other Checks | T2 | Pending |
 | FNT-36 | P1: With the other Checks | T9 | Pending |
-| FNT-37 | P1: With the other Checks | T1 | Pending |
-| FNT-38 | P1: With the other Checks | T1 | Pending |
+| FNT-37 | P1: With the other Checks | T1 | Implemented |
+| FNT-38 | P1: With the other Checks | T1 | Implemented |
 | FNT-39 | P1: With the other Checks | T9 | Pending |
-| FNT-40 | P2: Check contract, Capture and documents | T1 | Pending |
+| FNT-40 | P2: Check contract, Capture and documents | T1 | Implemented |
 | FNT-41 | P2: Check contract, Capture and documents | T2 | Pending |
 | FNT-42 | P2: Check contract, Capture and documents | T2 | Pending |
 | FNT-43 | P2: Check contract, Capture and documents | T2 | Pending |

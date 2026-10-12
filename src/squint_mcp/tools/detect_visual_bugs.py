@@ -61,11 +61,12 @@ async def detect_visual_bugs(
     horizontally by its own box), `low-contrast-real` (text whose contrast
     against the background painted behind it, sampled from the pixels, is below
     WCAG 2.2 SC 1.4.3), `offscreen-overflow` (the element that sets the width
-    of a page that scrolls horizontally, one per viewport) and `overlap` (text
+    of a page that scrolls horizontally, one per viewport), `overlap` (text
     another element is painted over, with the share of it that is hidden and
-    the element that covers it). Returns `findings`, most severe first and then
-    in the order of the page, and `captures`, one per viewport, whose
-    `stabilized` is false when the network never went idle. Each
+    the element that covers it) and `font-fallback` (a font the page declares
+    that did not load, one Finding per family). Returns `findings`, most severe
+    first and then in the order of the page, and `captures`, one per viewport,
+    whose `stabilized` is false when the network never went idle. Each
     Finding names its element by a `selector` that is unique on the page and
     works in `inspect_element`, and carries the styles and measurements that
     back it. The five most severe Findings also get a crop of their element:
