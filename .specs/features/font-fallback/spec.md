@@ -64,7 +64,7 @@ Explicitly excluded. Documented to prevent scope creep.
 
 Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 
-The maintainer accepted the spec on 2026-10-12 and took every default of the table below: all of them are confirmed. The same day the maintainer accepted what the design asked for: the criteria FNT-49 to FNT-51, on a fixture of their own, and one row of Out of Scope ("A Tail that starts with a family the page declares and no text has used").
+The maintainer accepted the spec on 2026-10-12 and took every default of the table below: all of them are confirmed. The same day the maintainer accepted what the design asked for: the criteria FNT-49 to FNT-51, on a fixture of their own, and one row of Out of Scope ("A Tail that starts with a family the page declares and no text has used"). With the tasks, still on 2026-10-12, the maintainer accepted FNT-52 to FNT-54: three rules that the Terms state and no criterion held (text that paints no box, a Face that is `unloaded`, the widths of several text nodes added), each on one case more of `font-fallback-bounds.html`, and the two rows FNT-15 gains for them.
 
 | Assumption / decision | Chosen default | Rationale | Confirmed? |
 | --- | --- | --- | --- |
@@ -133,7 +133,7 @@ The maintainer accepted the spec on 2026-10-12 and took every default of the tab
 12. WHEN an element whose First family loaded has a child that falls back (in `font-fallback-bounds.html`, `#clean-parent`, `font-family: Ahem`, with Own text and a child `#fallen-child` of `font-family: "Child Brand", Ahem`) THEN the Check SHALL return one Finding for the family, on `#fallen-child`, with `evidence.measured.elements` equal to 1. <!-- FNT-12 -->
 13. WHEN `detect_visual_bugs` is called on `font-fallback-bug.html` with `viewports` of 1440 × 900 and 390 × 844 THEN `#narrow` (`font-family: "Narrow Only", Ahem`, of `display: none` while the viewport is more than 600px wide; `Narrow Only` has a `src` that names no file) SHALL get one Finding whose `viewport` is 390 × 844, with `evidence.measured.family` equal to `Narrow Only`, and none whose `viewport` is 1440 × 900. <!-- FNT-13 -->
 14. WHEN the Tail of an element that falls back is the generic `monospace` family and the page is taller than the viewport (`font-fallback-monospace.html`, a page 3900px high at 1440 × 900: `#code`, an inline element that holds fifteen glyphs on one line and nothing else, of `font-family: Brand, monospace`, with `Brand` declared with a `src` that names no file) THEN `detect_visual_bugs` called with `checks` equal to `["font-fallback"]` SHALL return exactly one Finding, on `#code`, with `evidence.measured.family` equal to `Brand`, `evidence.measured.elements` equal to 1 and `evidence.measured.textWidthPx` equal to the `w` of its `box` rounded to two decimal places: both widths are read in the layout the boxes of the Capture are of (AD-006). <!-- FNT-14 -->
-15. WHEN `detect_visual_bugs` is called on `font-fallback-bounds.html` with `checks` equal to `["font-fallback"]` THEN the `(selector, evidence.measured.family, evidence.measured.elements)` of `findings` SHALL be, in this order, `(#half-bold, Half, 1)`, `(#mixed-lower, Mixed, 1)`, `(#lower, Missing Brand, 2)`, `(#scripted, Scripted, 1)`, `(#seen, Veiled Brand, 1)`, `(#own-parent, Parent Brand, 1)`, `(#fallen-child, Child Brand, 1)`, `(#long, Long Brand, 1)`, `(#twice-normal, Twice, 2)` and `([data-testid="shadow-text"], Shadow Brand, 2)`, all with `severity` equal to `minor`. <!-- FNT-15 -->
+15. WHEN `detect_visual_bugs` is called on `font-fallback-bounds.html` with `checks` equal to `["font-fallback"]` THEN the `(selector, evidence.measured.family, evidence.measured.elements)` of `findings` SHALL be, in this order, `(#half-bold, Half, 1)`, `(#mixed-lower, Mixed, 1)`, `(#lower, Missing Brand, 2)`, `(#scripted, Scripted, 1)`, `(#seen, Veiled Brand, 1)`, `(#shown, Unshown Brand, 1)`, `(#own-parent, Parent Brand, 1)`, `(#fallen-child, Child Brand, 1)`, `(#long, Long Brand, 1)`, `(#split, Split Brand, 1)`, `(#twice-normal, Twice, 2)` and `([data-testid="shadow-text"], Shadow Brand, 2)`, all with `severity` equal to `minor`. <!-- FNT-15 -->
 16. WHEN the Face that failed is the italic one of a family and an element asks for it (in `font-fallback-shaping.html`, `Slant` has a Face of `font-style: normal` from the file of Ahem and one of `font-style: italic` with a `src` that names no file; `#slant-normal` and after it `#slant-italic`, of `font-style: italic`, both have `font-family: Slant, Wide`) THEN the Check SHALL return one Finding for the family, on `#slant-italic`, with `evidence.measured.elements` equal to 1 and `evidence.computed` equal to `{"font-family": "Slant, Wide", "font-weight": "400", "font-style": "italic"}`. <!-- FNT-50 -->
 
 **Independent Test**: Call `detect_visual_bugs` on `font-fallback-bug.html` and read the two Findings: `Brand` on three elements, `Icon Set` on one.
@@ -160,6 +160,8 @@ The maintainer accepted the spec on 2026-10-12 and took every default of the tab
 10. IF no Face of the First family of an element has a `status` of `error` THEN the Check SHALL return no Finding for that family; in `font-fallback-clean.html` the Faces of these families, each declared with a `src` that names no file, are `unloaded`: `Unused` (no `font-family` names it), `After Generic` (`#after-generic`, `font-family: sans-serif, "After Generic"`), `Never Shown` (`#none`, of `display: none`) and `Blank` (`#blank`, whose text is whitespace). <!-- FNT-25 -->
 11. WHEN a Failed family has an element of `visibility: hidden` before the first element that falls back in it (in `font-fallback-bounds.html`, `#veiled`, `font-family: "Veiled Brand", Ahem` and `visibility: hidden`, and after it `#seen`, with the same `font-family`) THEN the Finding of the family SHALL sit on `#seen` and have `evidence.measured.elements` equal to 1. <!-- FNT-26 -->
 12. IF the `text-transform` of an element puts its characters in the `unicode-range` of a Face that loaded (`#upper-mixed` in `font-fallback-shaping.html`, `font-family: Mixed, Wide`, the text `xxxxxxxxxx` and `text-transform: uppercase`: 200px wide, 300px in its Tail; `Mixed` is declared as in FNT-09) THEN the Check SHALL return no Finding on the element and SHALL not count it. <!-- FNT-49 -->
+13. WHEN a Failed family has an element of `display: none` before the first element that falls back in it (in `font-fallback-bounds.html`, `#unshown`, `font-family: "Unshown Brand", Ahem` and `display: none`, and after it `#shown`, with the same `font-family`) THEN the Finding of the family SHALL sit on `#shown` and have `evidence.measured.elements` equal to 1: text that paints no box is not judged, though its two Line widths are equal. <!-- FNT-52 -->
+14. IF the First family of an element has a Face, none of its Faces has a `status` of `error` and the element renders in its Tail (`#out-of-range` in `font-fallback-bounds.html`, `font-family: "Upper Only", Ahem` and the text `xxxxxxxxxx`; the one Face of `Upper Only` is for `U+0041-005A`, has a `src` that names no file and stays `unloaded`, since no character of the text is in its range: 200px wide, 200px in its Tail) THEN the Check SHALL return no Finding for the family. <!-- FNT-53 -->
 
 **Independent Test**: Call `detect_visual_bugs` on `font-fallback-clean.html`: four faces of the page failed and nothing is reported.
 
@@ -180,6 +182,7 @@ The maintainer accepted the spec on 2026-10-12 and took every default of the tab
 5. WHEN the element a Finding sits on is not of normal weight (`#half-bold` in `font-fallback-bounds.html`) THEN `evidence.computed` SHALL equal `{"font-family": "Half, Wide", "font-weight": "700", "font-style": "normal"}` and `evidence.measured.textWidthPx` SHALL be 300, the width of its ten glyphs in `Wide`. <!-- FNT-31 -->
 6. WHEN the `selector` of any Finding of `font-fallback-bug.html` or `font-fallback-bounds.html` is passed to `inspect_element` with the same `url` and `viewport` THEN `inspect_element` SHALL return `isError: false` with a `box` equal to the Finding's `box`. <!-- FNT-32 -->
 7. WHEN the element a Finding sits on has a `letter-spacing` and a `word-spacing` (`#spaced` in `font-fallback-shaping.html`, an inline element of `font-family: "Spaced Brand", Ahem`, `letter-spacing: 2px` and `word-spacing: 6px` with the text `XXXX XXXXX`) THEN `evidence.measured.textWidthPx` SHALL be 226: nine glyphs of 20px, a space of 20px, 2px after each of the ten characters and 6px at the space. <!-- FNT-51 -->
+8. WHEN the Own text of the element a Finding sits on is more than one text node (`#split` in `font-fallback-bounds.html`, `font-family: "Split Brand", Ahem`, which holds the text `XXX`, a child `#split-child` of `font-family: Ahem` with the text `XX`, and the text `XXXX`) THEN `evidence.measured.textWidthPx` SHALL be 140, the widths of its two text nodes added, and `evidence.measured.elements` SHALL be 1. <!-- FNT-54 -->
 
 **Independent Test**: Read the Finding of `#heading` and compare it with the literal above.
 
@@ -236,65 +239,68 @@ The maintainer accepted the spec on 2026-10-12 and took every default of the tab
 
 | Requirement ID | Story | Phase | Status |
 | --- | --- | --- | --- |
-| FNT-01 | P1: Report a font that did not load | Design | In Design |
-| FNT-02 | P1: Report a font that did not load | Design | In Design |
-| FNT-03 | P1: Report a font that did not load | Design | In Design |
-| FNT-04 | P1: Report a font that did not load | Design | In Design |
-| FNT-05 | P1: Report a font that did not load | Design | In Design |
-| FNT-06 | P1: Report a font that did not load | Design | In Design |
-| FNT-07 | P1: Report a font that did not load | Design | In Design |
-| FNT-08 | P1: Report a font that did not load | Design | In Design |
-| FNT-09 | P1: Report a font that did not load | Design | In Design |
-| FNT-10 | P1: Report a font that did not load | Design | In Design |
-| FNT-11 | P1: Report a font that did not load | Design | In Design |
-| FNT-12 | P1: Report a font that did not load | Design | In Design |
-| FNT-13 | P1: Report a font that did not load | Design | In Design |
-| FNT-14 | P1: Report a font that did not load | Design | In Design |
-| FNT-15 | P1: Report a font that did not load | Design | In Design |
-| FNT-16 | P1: Stay silent when the text is in the font it asks for | Design | In Design |
-| FNT-17 | P1: Stay silent when the text is in the font it asks for | Design | In Design |
-| FNT-18 | P1: Stay silent when the text is in the font it asks for | Design | In Design |
-| FNT-19 | P1: Stay silent when the text is in the font it asks for | Design | In Design |
-| FNT-20 | P1: Stay silent when the text is in the font it asks for | Design | In Design |
-| FNT-21 | P1: Stay silent when the text is in the font it asks for | Design | In Design |
-| FNT-22 | P1: Stay silent when the text is in the font it asks for | Design | In Design |
-| FNT-23 | P1: Stay silent when the text is in the font it asks for | Design | In Design |
-| FNT-24 | P1: Stay silent when the text is in the font it asks for | Design | In Design |
-| FNT-25 | P1: Stay silent when the text is in the font it asks for | Design | In Design |
-| FNT-26 | P1: Stay silent when the text is in the font it asks for | Design | In Design |
-| FNT-27 | P1: Read the Finding | Design | In Design |
-| FNT-28 | P1: Read the Finding | Design | In Design |
-| FNT-29 | P1: Read the Finding | Design | In Design |
-| FNT-30 | P1: Read the Finding | Design | In Design |
-| FNT-31 | P1: Read the Finding | Design | In Design |
-| FNT-32 | P1: Read the Finding | Design | In Design |
-| FNT-33 | P1: With the other Checks | Design | In Design |
-| FNT-34 | P1: With the other Checks | Design | In Design |
-| FNT-35 | P1: With the other Checks | Design | In Design |
-| FNT-36 | P1: With the other Checks | Design | In Design |
-| FNT-37 | P1: With the other Checks | Design | In Design |
-| FNT-38 | P1: With the other Checks | Design | In Design |
-| FNT-39 | P1: With the other Checks | Design | In Design |
-| FNT-40 | P2: Check contract, Capture and documents | Design | In Design |
-| FNT-41 | P2: Check contract, Capture and documents | Design | In Design |
-| FNT-42 | P2: Check contract, Capture and documents | Design | In Design |
-| FNT-43 | P2: Check contract, Capture and documents | Design | In Design |
-| FNT-44 | P2: Check contract, Capture and documents | Design | In Design |
-| FNT-45 | P2: Check contract, Capture and documents | Design | In Design |
-| FNT-46 | P2: Check contract, Capture and documents | Design | In Design |
-| FNT-47 | Edge cases | Design | In Design |
-| FNT-48 | Edge cases | Design | In Design |
-| FNT-49 | P1: Stay silent when the text is in the font it asks for | Design | In Design |
-| FNT-50 | P1: Report a font that did not load | Design | In Design |
-| FNT-51 | P1: Read the Finding | Design | In Design |
+| FNT-01 | P1: Report a font that did not load | T2 | Pending |
+| FNT-02 | P1: Report a font that did not load | T2 | Pending |
+| FNT-03 | P1: Report a font that did not load | T2 | Pending |
+| FNT-04 | P1: Report a font that did not load | T2 | Pending |
+| FNT-05 | P1: Report a font that did not load | T5 | Pending |
+| FNT-06 | P1: Report a font that did not load | T5 | Pending |
+| FNT-07 | P1: Report a font that did not load | T2 | Pending |
+| FNT-08 | P1: Report a font that did not load | T5 | Pending |
+| FNT-09 | P1: Report a font that did not load | T5 | Pending |
+| FNT-10 | P1: Report a font that did not load | T5 | Pending |
+| FNT-11 | P1: Report a font that did not load | T6 | Pending |
+| FNT-12 | P1: Report a font that did not load | T6 | Pending |
+| FNT-13 | P1: Report a font that did not load | T2 | Pending |
+| FNT-14 | P1: Report a font that did not load | T8 | Pending |
+| FNT-15 | P1: Report a font that did not load | T5 | Pending |
+| FNT-16 | P1: Stay silent when the text is in the font it asks for | T4 | Pending |
+| FNT-17 | P1: Stay silent when the text is in the font it asks for | T4 | Pending |
+| FNT-18 | P1: Stay silent when the text is in the font it asks for | T4 | Pending |
+| FNT-19 | P1: Stay silent when the text is in the font it asks for | T4 | Pending |
+| FNT-20 | P1: Stay silent when the text is in the font it asks for | T6 | Pending |
+| FNT-21 | P1: Stay silent when the text is in the font it asks for | T6 | Pending |
+| FNT-22 | P1: Stay silent when the text is in the font it asks for | T6 | Pending |
+| FNT-23 | P1: Stay silent when the text is in the font it asks for | T4 | Pending |
+| FNT-24 | P1: Stay silent when the text is in the font it asks for | T4 | Pending |
+| FNT-25 | P1: Stay silent when the text is in the font it asks for | T4 | Pending |
+| FNT-26 | P1: Stay silent when the text is in the font it asks for | T6 | Pending |
+| FNT-27 | P1: Read the Finding | T3 | Pending |
+| FNT-28 | P1: Read the Finding | T2 | Pending |
+| FNT-29 | P1: Read the Finding | T5 | Pending |
+| FNT-30 | P1: Read the Finding | T6 | Pending |
+| FNT-31 | P1: Read the Finding | T6 | Pending |
+| FNT-32 | P1: Read the Finding | T6 | Pending |
+| FNT-33 | P1: With the other Checks | T2 | Pending |
+| FNT-34 | P1: With the other Checks | T1 | Pending |
+| FNT-35 | P1: With the other Checks | T2 | Pending |
+| FNT-36 | P1: With the other Checks | T9 | Pending |
+| FNT-37 | P1: With the other Checks | T1 | Pending |
+| FNT-38 | P1: With the other Checks | T1 | Pending |
+| FNT-39 | P1: With the other Checks | T9 | Pending |
+| FNT-40 | P2: Check contract, Capture and documents | T1 | Pending |
+| FNT-41 | P2: Check contract, Capture and documents | T2 | Pending |
+| FNT-42 | P2: Check contract, Capture and documents | T2 | Pending |
+| FNT-43 | P2: Check contract, Capture and documents | T2 | Pending |
+| FNT-44 | P2: Check contract, Capture and documents | T11 | Pending |
+| FNT-45 | P2: Check contract, Capture and documents | T11 | Pending |
+| FNT-46 | P2: Check contract, Capture and documents | T12 | Pending |
+| FNT-47 | Edge cases | T2 | Pending |
+| FNT-48 | Edge cases | T5 | Pending |
+| FNT-49 | P1: Stay silent when the text is in the font it asks for | T7 | Pending |
+| FNT-50 | P1: Report a font that did not load | T7 | Pending |
+| FNT-51 | P1: Read the Finding | T7 | Pending |
+| FNT-52 | P1: Stay silent when the text is in the font it asks for | T6 | Pending |
+| FNT-53 | P1: Stay silent when the text is in the font it asks for | T5 | Pending |
+| FNT-54 | P1: Read the Finding | T6 | Pending |
 
-**Coverage:** 51 total, 0 mapped to tasks, 51 unmapped until the Tasks phase.
+**Coverage:** 54 total, 54 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
 
 ---
 
 ## Success Criteria
 
-- [ ] All 51 requirements verified by the Verifier, FNT-40 to FNT-46 from file evidence.
+- [ ] All 54 requirements verified by the Verifier, FNT-40 to FNT-46 from file evidence.
 - [ ] The gate passes: typecheck, lint, format check and the whole test suite.
 - [ ] The first run of the suite on the CI's Linux passes the tests of this slice with no assertion changed for it.
 - [ ] The discrimination sensor leaves alive none of the mutants that a validation report or a task names, nor any of the code the last fix round changed, in the Check and in what the Capture gains for it (Assumptions, "When the discrimination sensor is satisfied").

@@ -87,6 +87,7 @@ Ahem at 20px: ten glyphs are 200px wide. `Wide` is Ahem with `size-adjust: 150%`
 - The premises of the fixtures the spec names were run too, on both platforms: a failed family that stands second, after a name nothing declares, has a face of `error` (FNT-18); so has a face a script loads and no element names (FNT-19), and both faces of a family when one element asks for each (FNT-48). Own text of five glyphs beside a child of five is 100px on one line (FNT-11); `XXXX XXXX XXXX` in a block 100px wide is 280px on one line (FNT-30); fifteen glyphs in `Brand, monospace` inside an inline element are 180.03px, in the family, in its tail and as the width of the element's box (FNT-14).
 - Measured in place (the `font-family` of the element changed and put back) and on a copy of the text outside the flow, the two widths agree in every case.
 - Twice in a row, every figure is the same.
+- Measured with the tasks (2026-10-12), on both platforms, for FNT-52 to FNT-54: an element of `display: none` whose first family failed through another element has no box and the same width with the family and without it, 200 and 200; text that is all outside the `unicode-range` of the one face of its first family leaves the face `unloaded` and is 200 wide both ways; `XXX` and `XXXX` on each side of a child, in a family that failed, are 60 and 80, 140 together.
 - An element in an open shadow tree uses a family the document declares, and falls back the same way.
 
 ### `font-display`
