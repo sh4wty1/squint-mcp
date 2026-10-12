@@ -1020,7 +1020,7 @@ Spiked before F9 (2026-10-11, real Chromium, pages outside the repository): with
 
 ### F14: Pin where an `info` Finding stands
 
-- [ ] Done
+- [x] Done
 
 **What**: The fixture `overlap-info.html`, three covered texts that stand in the document from the least severe to the most (`info`, `minor`, `major`), and its test: the order of `findings` and the summary line (OVL-115).
 **Where**: `tests/test_overlap.py` (with `tests/fixtures/overlap-info.html`)
@@ -1035,10 +1035,10 @@ Spiked before F9 (2026-10-11, real Chromium, pages outside the repository): with
 
 **Done when**:
 
-- [ ] The test asserts the whole list of Findings and the first content block
-- [ ] The test fails under V13 (`info` ordered as `minor`, `tools/detect_visual_bugs.py`)
-- [ ] Gate check passes: Build
-- [ ] Test count: 355 tests pass; none deleted
+- [x] The test asserts the whole list of Findings and the first content block
+- [x] The test fails under V13 (`info` ordered as `minor`, `tools/detect_visual_bugs.py`)
+- [x] Gate check passes: Build
+- [x] Test count: 355 tests pass; none deleted
 
 **Tests**: integration
 **Gate**: build

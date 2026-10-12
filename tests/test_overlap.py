@@ -21,6 +21,7 @@ BUG = fixture_url("overlap-bug.html")
 CLEAN = fixture_url("overlap-clean.html")
 BOUNDS = fixture_url("overlap-bounds.html")
 ORDER = fixture_url("overlap-order.html")
+INFO = fixture_url("overlap-info.html")
 MANY = fixture_url("overlap-many.html")
 SCROLLED = fixture_url("overlap-scrolled.html")
 SCROLLED_ON_LOAD = fixture_url("overlap-scrolled-on-load.html")
@@ -887,6 +888,24 @@ async def test_findings_of_overlap_and_another_check_come_in_document_order(
         ("#b", "overlap"),
         ("#c", "overlap"),
     ]
+
+
+async def test_an_info_finding_comes_after_the_minor_ones_and_is_counted_apart(
+    client: Client,
+) -> None:
+    # The texts stand in the document as `#a`, `#b` and `#c`, from the least
+    # severe to the most: `#a` would come before `#b` if `info` were placed as
+    # `minor` is.
+    result = await call(client, INFO, checks=ONLY)
+    assert result.structured_content is not None
+    assert covered(result.structured_content["findings"]) == [
+        ("#c", "major", 50, "#c-cover"),
+        ("#b", "minor", 10, "#b-cover"),
+        ("#a", "info", 10, "#a-cover"),
+    ]
+    assert (
+        texts(result)[0] == "Found 3 findings in 1 viewport: 1 major, 1 minor, 1 info."
+    )
 
 
 async def test_a_page_of_a_hundred_covered_texts_is_checked(client: Client) -> None:

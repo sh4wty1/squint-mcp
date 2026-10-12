@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: covered texts of three severities</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are a block of
+         200 x 20 text pixels, 5px under the top of their 30px line: 4000 pixels, of
+         which a tenth is 400 and a quarter 1000.
+
+         Three covered texts that stand in the document from the least severe to
+         the most: a result lists them the other way round. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      /* A row holds one text, from 40px to 240px, and its cover, an opaque box
+         placed from the left of the row. */
+      .row {
+        position: relative;
+        margin-top: 20px;
+        height: 30px;
+      }
+      .text {
+        margin-left: 40px;
+        width: 200px;
+      }
+      .cover {
+        position: absolute;
+        top: 0;
+        height: 30px;
+        background: rgb(200, 0, 0);
+      }
+      /* The last 20px, by a cover with a `z-index` above 0: 10%, and one level
+         under `minor`. */
+      #a-cover {
+        left: 220px;
+        width: 20px;
+        z-index: 1;
+      }
+      /* The last 20px: 10%, `minor`. */
+      #b-cover {
+        left: 220px;
+        width: 20px;
+      }
+      /* The last 100px: 50%, `major`. */
+      #c-cover {
+        left: 140px;
+        width: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="row">
+      <div id="a" class="text">XXXXXXXXXX</div>
+      <div id="a-cover" class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="b" class="text">XXXXXXXXXX</div>
+      <div id="b-cover" class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="c" class="text">XXXXXXXXXX</div>
+      <div id="c-cover" class="cover"></div>
+    </div>
+  </body>
+</html>
