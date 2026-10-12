@@ -257,6 +257,10 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 11. WHEN a Capture has no more than 20,000 pixels of Hidden ink to test THEN every one of them SHALL be hit tested: on `overlap-exact.html`, which holds the row of `#striped` of `overlap-sampled.html` alone (1000 pixels of Hidden ink, 600 of them under `#stripes`, on the odd columns of the page, and 400 under `#solid-cover`), `detect_visual_bugs` called with `checks` equal to `["overlap"]` SHALL return exactly one Finding, on `#striped`, with `evidence.measured.hiddenPercent` equal to 25, `severity` equal to `major` and `evidence.measured.coveredBy` equal to `#stripes`. <!-- OVL-85 -->
 12. WHEN the covered element is positioned THEN `evidence.computed` SHALL hold its computed `position` and `z-index`: in `overlap-reach.html`, `{"position": "relative", "z-index": "1"}` for `#positioned` (of `position: relative` and `z-index: 1`, half under a cover with a `z-index` of 2) and `{"position": "relative", "z-index": "auto"}` for `#relative` (of `position: relative`, half under a cover that comes after it in the document). <!-- OVL-112 -->
 13. WHEN Hidden ink lies right of the viewport THEN hit testing SHALL reach it with the page scrolled sideways, as it does down the page: on `overlap-wide.html`, a page 3000px wide and 2000px high whose four texts each have the last 100px of their 200px under a cover of their own (`#near`, 40px from the left of the page; `#right`, 2000px from it; `#edge`, 2780px from it, where the page cannot be scrolled a whole viewport further; `#far`, 2000px from the left and 1000px down) and whose `#fixed-bar`, of `position: fixed`, lies over the Hidden ink of `#right` once the page is scrolled 1440px sideways, `detect_visual_bugs` called with `checks` equal to `["overlap"]` and a viewport of 1440 × 900 SHALL return `findings` whose `(selector, severity, evidence.measured.hiddenPercent, evidence.measured.coveredBy)` are, in this order, `(#near, major, 50, #near-cover)`, `(#right, major, 50, #right-cover)`, `(#edge, major, 50, #edge-cover)` and `(#far, major, 50, #far-cover)`. <!-- OVL-113 -->
+14. WHEN an element has Hidden ink and a Hidden share under 10% THEN its Hidden ink SHALL not count towards the 20,000 pixels of the Term "Coverer": on `overlap-count-under.html` (19,000 pixels of Hidden ink in `#striped`, the text of OVL-85, and in nine texts each half under a cover of its own, and 1520 in four texts, `#under-0` to `#under-3`, each with an element of `role` `menu` over its first 100px and a cover over its last 19px, 9.5%) `detect_visual_bugs` called with `checks` equal to `["overlap"]` SHALL return `findings` whose `(selector, severity, evidence.measured.hiddenPercent, evidence.measured.coveredBy)` are, in this order, `(#striped, major, 25, #stripes)` and `(#filler-n, major, 50, #filler-cover-n)` for n from 0 to 8: every pixel of Hidden ink is hit tested. <!-- OVL-116 -->
+15. WHEN an element has a Hidden share of at least 10% and gets no Finding THEN its Hidden ink SHALL count towards the 20,000 pixels: on `overlap-count-unreported.html` (the 19,000 pixels of OVL-116 and 2000 in `#unseen`, of `color: transparent`, half under a cover) `detect_visual_bugs` called with `checks` equal to `["overlap"]` SHALL return `findings` whose `(selector, severity, evidence.measured.hiddenPercent, evidence.measured.coveredBy)` are, in this order, `(#striped, major, 25, #solid-cover)` and `(#filler-n, major, 50, #filler-cover-n)` for n from 0 to 8: every second pixel of every second row is hit tested. <!-- OVL-117 -->
+16. WHEN a Capture has more than 20,000 and no more than 80,000 pixels of Hidden ink to test THEN every second pixel of every second row SHALL be hit tested: on `overlap-step-two.html` (49,000 pixels, in `#striped` and in 24 texts each half under a cover of its own) `detect_visual_bugs` called with `checks` equal to `["overlap"]` SHALL return `findings` whose `(selector, severity, evidence.measured.hiddenPercent, evidence.measured.coveredBy)` are, in this order, `(#striped, major, 25, #solid-cover)` and `(#filler-n, major, 50, #filler-cover-n)` for n from 0 to 23. <!-- OVL-118 -->
+17. WHEN a Capture has more than 80,000 and no more than 180,000 pixels of Hidden ink to test THEN every third pixel of every third row SHALL be hit tested: on `overlap-step-three.html` (81,000 pixels, in `#striped` and in 40 texts each half under a cover of its own), where `#stripes` is found on the 10 odd columns of its 60 that are multiples of 3 and `#solid-cover` on 6, `detect_visual_bugs` called with `checks` equal to `["overlap"]` SHALL return `findings` whose `(selector, severity, evidence.measured.hiddenPercent, evidence.measured.coveredBy)` are, in this order, `(#striped, major, 25, #stripes)` and `(#filler-n, major, 50, #filler-cover-n)` for n from 0 to 39. <!-- OVL-119 -->
 
 **Independent Test**: Read the Finding of `#half` and compare it with the literal above.
 
@@ -429,14 +433,18 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 | OVL-113 | P1: Read the Finding | F13 | Implemented |
 | OVL-114 | P1: Report text that another element covers | F13 | Implemented |
 | OVL-115 | P1: Severity | F14 | Implemented |
+| OVL-116 | P1: Read the Finding | F15 | Implemented |
+| OVL-117 | P1: Read the Finding | F15 | Implemented |
+| OVL-118 | P1: Read the Finding | F15 | Implemented |
+| OVL-119 | P1: Read the Finding | F15 | Implemented |
 | OVL-120 | Edge cases | F17 | Implemented |
 
-**Coverage:** 116 total, 116 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
+**Coverage:** 120 total, 120 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
 
 ---
 
 ## Success Criteria
 
-- [ ] All 116 requirements verified by the Verifier, OVL-61 to OVL-67 from file evidence.
+- [ ] All 120 requirements verified by the Verifier, OVL-61 to OVL-67 from file evidence.
 - [ ] The gate passes: typecheck, lint, format check and the whole test suite.
 - [ ] The discrimination sensor leaves no surviving mutant in the Check, in what the Capture gains for it and in the rules of Silent and Raised layers.

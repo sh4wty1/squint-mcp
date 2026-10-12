@@ -27,6 +27,10 @@ SCROLLED = fixture_url("overlap-scrolled.html")
 SCROLLED_ON_LOAD = fixture_url("overlap-scrolled-on-load.html")
 SAMPLED = fixture_url("overlap-sampled.html")
 EXACT = fixture_url("overlap-exact.html")
+COUNT_UNDER = fixture_url("overlap-count-under.html")
+COUNT_UNREPORTED = fixture_url("overlap-count-unreported.html")
+STEP_TWO = fixture_url("overlap-step-two.html")
+STEP_THREE = fixture_url("overlap-step-three.html")
 INVERTED = fixture_url("overlap-inverted.html")
 LOW = fixture_url("overlap-low.html")
 FONT = fixture_url("overlap-font.html")
@@ -1033,6 +1037,58 @@ async def test_every_hidden_pixel_of_a_page_under_the_cap_is_hit_tested(
     # each of them tested, and 600 of them are under `#stripes`.
     findings = (await detect(client, EXACT, checks=ONLY))["findings"]
     assert covered(findings) == [("#striped", "major", 25, "#stripes")]
+
+
+def striped(coverer: str, fillers: int) -> list[tuple[str, str, int, str]]:
+    """The Findings of a page built on the row of `#striped`: that text, whose
+    cover says at which step the page was hit tested, and its texts half under
+    a cover of their own."""
+    return [
+        ("#striped", "major", 25, coverer),
+        *(
+            (f"#filler-{place}", "major", 50, f"#filler-cover-{place}")
+            for place in range(fillers)
+        ),
+    ]
+
+
+async def test_hidden_ink_of_a_text_under_a_tenth_hidden_does_not_count_to_the_cap(
+    client: Client,
+) -> None:
+    # 19,000 hidden pixels in the texts that are reported and 1520 in four that
+    # have 9.5% of their ink hidden: counted, those would take the page over the
+    # cap, and at every second pixel `#solid-cover` would be the one found.
+    findings = (await detect(client, COUNT_UNDER, checks=ONLY))["findings"]
+    assert covered(findings) == striped("#stripes", 9)
+
+
+async def test_hidden_ink_of_a_text_that_gets_no_finding_counts_to_the_cap(
+    client: Client,
+) -> None:
+    # 19,000 hidden pixels in the texts that are reported and 2000 in `#unseen`,
+    # which is half hidden and transparent: it gets no Finding and is hit tested
+    # all the same, which takes the page over the cap.
+    findings = (await detect(client, COUNT_UNREPORTED, checks=ONLY))["findings"]
+    assert covered(findings) == striped("#solid-cover", 9)
+
+
+async def test_a_page_of_over_twice_the_cap_is_still_tested_at_every_second_pixel(
+    client: Client,
+) -> None:
+    # 49,000 hidden pixels: a step of 2 leaves a quarter of them, under the cap.
+    # At every third pixel `#stripes` would be the one found.
+    findings = (await detect(client, STEP_TWO, checks=ONLY))["findings"]
+    assert covered(findings) == striped("#solid-cover", 24)
+
+
+async def test_a_page_of_over_four_times_the_cap_is_tested_at_every_third_pixel(
+    client: Client,
+) -> None:
+    # 81,000 hidden pixels: a quarter of them is over the cap, a ninth is not.
+    # The stripes are found on their 10 odd columns that are multiples of 3 and
+    # `#solid-cover` on 6; at every second pixel the stripes are found at none.
+    findings = (await detect(client, STEP_THREE, checks=ONLY))["findings"]
+    assert covered(findings) == striped("#stripes", 40)
 
 
 async def test_covered_text_in_a_font_with_anti_aliased_edges_is_measured_by_its_ink(

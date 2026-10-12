@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: hidden ink of a text that gets no finding counts towards the hit-test cap</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are a block of
+         200 x 20 text pixels, 5px under the top of their 30px line: 4000 pixels. A
+         cover is a box as high as the line.
+
+         The page holds 19,000 pixels of hidden ink in texts that get a Finding and
+         2000 more in one that gets none, its glyphs being transparent: half of its
+         ink is hidden all the same, so it is hit tested and counts. That is 21,000
+         pixels, more than the 20,000 a Capture hit tests: every second pixel of
+         every second row is tested. Without that text every one would be. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      /* A row holds one text, which starts 40px from its left, and what is painted
+         over it, placed from the left of the row. */
+      .row {
+        position: relative;
+        margin-top: 20px;
+        height: 30px;
+      }
+      .text {
+        margin-left: 40px;
+        width: 200px;
+      }
+      .cover {
+        position: absolute;
+        top: 0;
+        height: 30px;
+        background: rgb(200, 0, 0);
+      }
+      /* Stripes one pixel wide over the first 60px of the text, from 40px to 100px:
+         clear on the even columns of the page and opaque on the odd ones, 41 to
+         99. 30 columns of 20 rows: 600 pixels. */
+      #stripes {
+        left: 40px;
+        width: 60px;
+        background: repeating-linear-gradient(
+          to right,
+          transparent 0 1px,
+          rgb(200, 0, 0) 1px 2px
+        );
+      }
+      /* The last 20px of the same text: 400 pixels. With the stripes 1000 of its
+         4000 pixels are hidden: 25%.
+         At every second pixel of every second row the stripes are found at
+         none and this cover at 100. */
+      #solid-cover {
+        left: 220px;
+        width: 20px;
+      }
+      /* The last 100px of each of the texts under these two: 2000 pixels each,
+         18,000 together. */
+      .filler-cover {
+        left: 140px;
+        width: 100px;
+      }
+      /* 50% of a text that is not there to be read. */
+      #unseen {
+        color: transparent;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="row">
+      <div id="striped" class="text">XXXXXXXXXX</div>
+      <div id="stripes" class="cover"></div>
+      <div id="solid-cover" class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="unseen" class="text">XXXXXXXXXX</div>
+      <div id="unseen-cover" class="cover filler-cover"></div>
+    </div>
+    <script>
+      for (let i = 0; i < 9; i++) {
+        const row = document.createElement("div");
+        row.className = "row";
+        row.innerHTML =
+          `<div id="filler-${i}" class="text">XXXXXXXXXX</div>` +
+          `<div id="filler-cover-${i}" class="cover filler-cover"></div>`;
+        document.body.append(row);
+      }
+    </script>
+  </body>
+</html>

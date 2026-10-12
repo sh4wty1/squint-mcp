@@ -1049,7 +1049,7 @@ Spiked before F9 (2026-10-11, real Chromium, pages outside the repository): with
 
 ### F15: Pin which Hidden ink counts towards the cap and how the step grows
 
-- [ ] Done
+- [x] Done
 
 **What**: Four fixtures built around the row of `#striped`, whose Coverer says at which step the page was hit tested, with a test each: `overlap-count-under.html`, 19,000 pixels of Hidden ink in texts at or over a tenth and 1520 in texts under it (OVL-116); `overlap-count-unreported.html`, 19,000 pixels in texts that get a Finding and 2000 in a text that gets none (OVL-117); `overlap-step-two.html`, 49,000 pixels (OVL-118); `overlap-step-three.html`, 81,000 pixels (OVL-119).
 **Where**: `tests/test_overlap.py` (with the four fixtures)
@@ -1064,10 +1064,10 @@ Spiked before F9 (2026-10-11, real Chromium, pages outside the repository): with
 
 **Done when**:
 
-- [ ] The comment of each fixture gives its pixels of Hidden ink and the step they are tested at
-- [ ] Each test fails under its mutant: N14 (OVL-116), only the texts that get a Finding counted (OVL-117), V16 (OVL-118), the step never above 2 (OVL-119)
-- [ ] Gate check passes: Build
-- [ ] Test count: 359 tests pass; none deleted
+- [x] The comment of each fixture gives its pixels of Hidden ink and the step they are tested at
+- [x] Each test fails under its mutant: N14 (OVL-116), only the texts that get a Finding counted (OVL-117), V16 (OVL-118), the step never above 2 (OVL-119)
+- [x] Gate check passes: Build
+- [x] Test count: 359 tests pass; none deleted
 
 **Tests**: integration
 **Gate**: build
