@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: what is inside a text or a layer, deeper than a child</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are a block of
+         200 x 20 text pixels, 5px under the top of their 30px line: 4000 pixels. A
+         cover is an opaque box as high as the line.
+
+         In `overlap-reach.html` and `overlap-clean.html` what is inside a text,
+         and what is inside a layer, is a child of it. Here it is a child of a
+         child. The page holds 400 pixels of hidden ink to test. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      /* A row holds one text, from 40px to 240px, and what is painted over it,
+         placed from the left of the row. */
+      .row {
+        position: relative;
+        margin-top: 20px;
+        height: 30px;
+      }
+      .text {
+        margin-left: 40px;
+        width: 200px;
+      }
+      .cover {
+        position: absolute;
+        top: 0;
+        height: 30px;
+        background: rgb(200, 0, 0);
+      }
+      /* The row of `#child-first` of `overlap-reach.html` with the badge one
+         element deeper: it is over the first 80px of the text, which shows 2400
+         pixels of itself beside it, and the cover over the last 20px hides 400
+         of those: 16.6%. With the badge taken for a cover the text would be
+         half hidden. */
+      #grandchild-first {
+        position: relative;
+      }
+      #grandchild-badge {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 80px;
+        height: 30px;
+        background: rgb(200, 200, 200);
+      }
+      #grandchild-first-cover {
+        left: 220px;
+        width: 20px;
+      }
+      /* Over the last 100px of the text, and two elements down inside a menu:
+         what a layer hides is meant, however deep in it. */
+      #deep-item {
+        left: 140px;
+        width: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="row">
+      <div id="grandchild-first" class="text">XXXXXXXXXX<span><span id="grandchild-badge"></span></span></div>
+      <div id="grandchild-first-cover" class="cover"></div>
+    </div>
+    <div class="row">
+      <div id="under-deep-item" class="text">XXXXXXXXXX</div>
+      <div role="menu">
+        <div><div id="deep-item" class="cover"></div></div>
+      </div>
+    </div>
+  </body>
+</html>

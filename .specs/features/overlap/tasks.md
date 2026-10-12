@@ -1221,3 +1221,31 @@ Baseline: 359 tests pass (2026-10-11). The whole suite takes about seventeen and
 **Gate**: build
 
 **Commit**: `test(overlap): pin the filter rule beyond a filter of one function`
+
+---
+
+### F20: Pin what is inside a text or a layer, deeper than a child
+
+- [x] Done
+
+**What**: Fix 2 of the report (mutant U1). The fixture `overlap-nested.html`, with a test each: a text with a badge that is the child of a child of it over its first 80px and a cover over its last 20px (OVL-127), and a text half under the child of a child of a menu (OVL-128).
+**Where**: `tests/test_overlap.py` (with `tests/fixtures/overlap-nested.html`), `.specs/features/overlap/spec.md`
+**Depends on**: F19 (the count of tests)
+**Reuses**: the row of `#child-first` of `overlap-reach.html` and the row of `#under-menu-item` of `overlap-clean.html`
+**Requirement**: OVL-127, OVL-128
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [x] Both tests fail under U1 (`subtreeOf` gives an element and its children only, `covered_text.js:37-43`): 50% and `major` for `#grandchild-first`, and a Finding for `#under-deep-item`
+- [x] Gate check passes: Build
+- [x] Test count: 365 tests pass; none deleted
+
+**Tests**: integration
+**Gate**: build
+
+**Commit**: `test(overlap): pin what is inside a text or a layer, deeper than a child`

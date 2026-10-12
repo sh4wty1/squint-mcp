@@ -33,6 +33,7 @@ STEP_TWO = fixture_url("overlap-step-two.html")
 STEP_THREE = fixture_url("overlap-step-three.html")
 INVERTED = fixture_url("overlap-inverted.html")
 FILTERS = fixture_url("overlap-filters.html")
+NESTED = fixture_url("overlap-nested.html")
 LOW = fixture_url("overlap-low.html")
 NO_FRAMES = fixture_url("overlap-no-frames.html")
 FONT = fixture_url("overlap-font.html")
@@ -1285,4 +1286,29 @@ async def test_covered_text_that_its_filter_leaves_without_ink_is_not_reported(
     inspected = await inspect(client, FILTERS, selector)
     assert painted(inspected)[COVER] == 0.5
     findings = (await detect(client, FILTERS, checks=ONLY))["findings"]
+    assert [f for f in findings if f["box"] == inspected["box"]] == []
+
+
+async def test_a_badge_two_elements_down_inside_a_text_is_part_of_it(
+    client: Client,
+) -> None:
+    # The row of `#child-first` of the reach fixture with the badge inside a
+    # child of the text: it is over 80px of it and a cover over 20px, 400 of
+    # the 2400 pixels the text shows of itself. With only the children of a
+    # text taken for what is inside it, the text would be half hidden.
+    findings = (await detect(client, NESTED, checks=ONLY))["findings"]
+    assert covered(findings) == [
+        ("#grandchild-first", "minor", 16, "#grandchild-first-cover")
+    ]
+
+
+async def test_text_under_an_element_two_elements_down_inside_a_menu_is_not_reported(
+    client: Client,
+) -> None:
+    # `#deep-item` is the child of a child of a menu and over half of the text,
+    # which would be reported at 50% if a layer were its root and the children
+    # of that root.
+    inspected = await inspect(client, NESTED, "#under-deep-item")
+    assert painted(inspected)[COVER] == 0.5
+    findings = (await detect(client, NESTED, checks=ONLY))["findings"]
     assert [f for f in findings if f["box"] == inspected["box"]] == []
