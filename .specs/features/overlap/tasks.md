@@ -991,7 +991,7 @@ Spiked before F9 (2026-10-11, real Chromium, pages outside the repository): with
 
 ### F13: Hit test a page that is wider than its viewport
 
-- [ ] Done
+- [x] Done
 
 **What**: The fixture `overlap-wide.html`, a page 3000px wide and 2700px high with a covered text in its first viewport, one right of it, one in the last 120px of its width, one right of and below the first viewport and a `fixed` element that a scroll sideways brings over the second (OVL-113), and the fixture `overlap-scrolled-sideways-on-load.html`, a page 3000px wide that a script scrolls 1500px sideways while it loads (OVL-114), with their tests.
 **Where**: `tests/test_overlap.py` (with `tests/fixtures/overlap-wide.html` and `tests/fixtures/overlap-scrolled-sideways-on-load.html`)
@@ -1006,10 +1006,10 @@ Spiked before F9 (2026-10-11, real Chromium, pages outside the repository): with
 
 **Done when**:
 
-- [ ] Each test asserts the whole list of Findings of its page, in order
-- [ ] The test of OVL-113 fails under V3 (hit testing never scrolls sideways) and with an element the scroll moved sideways not passed over (`covered_text.js:164`); the test of OVL-114 fails under V17
-- [ ] Gate check passes: Build
-- [ ] Test count: 354 tests pass; none deleted
+- [x] Each test asserts the whole list of Findings of its page, in order
+- [x] The test of OVL-113 fails under V3 (hit testing never scrolls sideways) and with an element the scroll moved sideways not passed over (`covered_text.js:164`); the test of OVL-114 fails under V17
+- [x] Gate check passes: Build
+- [x] Test count: 354 tests pass; none deleted
 
 **Tests**: integration
 **Gate**: build

@@ -161,6 +161,7 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 40. WHEN the box of an Other element hides ink of a text, the own text of that Other element stands beside the text and the Other element stands before the text in the document (in `overlap-reach.html`, the row of OVL-82 with the tag first: `#tag-first`, an opaque box over the last 100px of `#under-tag-first` with two glyphs of its own to the right of that text, and `#tag-first-cover` over the second of them) THEN the Check SHALL return one Finding for each of the two: for `#under-tag-first` with `evidence.measured.hiddenPercent` equal to 50 and `evidence.measured.coveredBy` equal to `#tag-first`, and for `#tag-first` with `evidence.measured.hiddenPercent` equal to 50 and `evidence.measured.coveredBy` equal to `#tag-first-cover`. <!-- OVL-107 -->
 41. WHEN the element that hides ink of a text has the `open` attribute and is not a `dialog` element (`#under-details` in `overlap-reach.html`, half covered by `#open-details`, a `details` element with the `open` attribute) THEN the Check SHALL return one Finding for the text with `evidence.measured.hiddenPercent` equal to 50, `evidence.measured.coveredBy` equal to `#open-details` and `severity` equal to `major`. <!-- OVL-108 -->
 42. WHEN ink of a text is hidden by a pseudo-element of an Other element that has own text, all of it seen (in `overlap-reach.html`: `#under-after`, the last 100px of its text under a box that the `::after` of `#after-owner` paints outside its own box, and `#under-before`, the same under the `::before` of `#before-owner`; each owner has two glyphs of its own beside the text) THEN the Check SHALL return one Finding for the text with `evidence.measured.hiddenPercent` equal to 50, `severity` equal to `major` and `evidence.measured.coveredBy` equal to the owner of the pseudo-element. <!-- OVL-111 -->
+43. WHEN the page is scrolled sideways when the Capture is taken (`overlap-scrolled-sideways-on-load.html`, a page 3000px wide that a script of the page scrolls 1500px sideways while it loads: `#far` is 2000px from the left of the page, the last 100px of its 200px of text under `#far-cover`) THEN `detect_visual_bugs` called with `checks` equal to `["overlap"]` and a viewport of 1440 × 900 SHALL return exactly one Finding, on `#far`, with `evidence.measured.hiddenPercent` equal to 50, `severity` equal to `major` and `evidence.measured.coveredBy` equal to `#far-cover`. <!-- OVL-114 -->
 
 **Independent Test**: Call `detect_visual_bugs` on `overlap-bug.html` and read the four Findings, the collision among them.
 
@@ -254,6 +255,7 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 10. WHEN the hit tests of a Capture are a sample THEN the rows of the page SHALL be sampled as its columns are: in `overlap-sampled.html`, tested at every second pixel of every second row, `#row-stripes`, painted as stripes 1px high on the odd rows of the page over the first 120px of the text of `#row-striped`, hides 1200 pixels of its ink, none of them tested, and `#row-solid-cover`, over its last 20px, hides 400, and the Finding of `#row-striped` SHALL have `evidence.measured.hiddenPercent` equal to 40, `severity` equal to `major` and `evidence.measured.coveredBy` equal to `#row-solid-cover`. <!-- OVL-84 -->
 11. WHEN a Capture has no more than 20,000 pixels of Hidden ink to test THEN every one of them SHALL be hit tested: on `overlap-exact.html`, which holds the row of `#striped` of `overlap-sampled.html` alone (1000 pixels of Hidden ink, 600 of them under `#stripes`, on the odd columns of the page, and 400 under `#solid-cover`), `detect_visual_bugs` called with `checks` equal to `["overlap"]` SHALL return exactly one Finding, on `#striped`, with `evidence.measured.hiddenPercent` equal to 25, `severity` equal to `major` and `evidence.measured.coveredBy` equal to `#stripes`. <!-- OVL-85 -->
 12. WHEN the covered element is positioned THEN `evidence.computed` SHALL hold its computed `position` and `z-index`: in `overlap-reach.html`, `{"position": "relative", "z-index": "1"}` for `#positioned` (of `position: relative` and `z-index: 1`, half under a cover with a `z-index` of 2) and `{"position": "relative", "z-index": "auto"}` for `#relative` (of `position: relative`, half under a cover that comes after it in the document). <!-- OVL-112 -->
+13. WHEN Hidden ink lies right of the viewport THEN hit testing SHALL reach it with the page scrolled sideways, as it does down the page: on `overlap-wide.html`, a page 3000px wide and 2000px high whose four texts each have the last 100px of their 200px under a cover of their own (`#near`, 40px from the left of the page; `#right`, 2000px from it; `#edge`, 2780px from it, where the page cannot be scrolled a whole viewport further; `#far`, 2000px from the left and 1000px down) and whose `#fixed-bar`, of `position: fixed`, lies over the Hidden ink of `#right` once the page is scrolled 1440px sideways, `detect_visual_bugs` called with `checks` equal to `["overlap"]` and a viewport of 1440 × 900 SHALL return `findings` whose `(selector, severity, evidence.measured.hiddenPercent, evidence.measured.coveredBy)` are, in this order, `(#near, major, 50, #near-cover)`, `(#right, major, 50, #right-cover)`, `(#edge, major, 50, #edge-cover)` and `(#far, major, 50, #far-cover)`. <!-- OVL-113 -->
 
 **Independent Test**: Read the Finding of `#half` and compare it with the literal above.
 
@@ -423,14 +425,16 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 | OVL-110 | P1: Severity | F12 | Implemented |
 | OVL-111 | P1: Report text that another element covers | F12 | Implemented |
 | OVL-112 | P1: Read the Finding | F12 | Implemented |
+| OVL-113 | P1: Read the Finding | F13 | Implemented |
+| OVL-114 | P1: Report text that another element covers | F13 | Implemented |
 | OVL-120 | Edge cases | F17 | Implemented |
 
-**Coverage:** 113 total, 113 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
+**Coverage:** 115 total, 115 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
 
 ---
 
 ## Success Criteria
 
-- [ ] All 113 requirements verified by the Verifier, OVL-61 to OVL-67 from file evidence.
+- [ ] All 115 requirements verified by the Verifier, OVL-61 to OVL-67 from file evidence.
 - [ ] The gate passes: typecheck, lint, format check and the whole test suite.
 - [ ] The discrimination sensor leaves no surviving mutant in the Check, in what the Capture gains for it and in the rules of Silent and Raised layers.

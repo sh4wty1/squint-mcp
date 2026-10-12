@@ -30,6 +30,8 @@ INVERTED = fixture_url("overlap-inverted.html")
 LOW = fixture_url("overlap-low.html")
 FONT = fixture_url("overlap-font.html")
 REACH = fixture_url("overlap-reach.html")
+WIDE = fixture_url("overlap-wide.html")
+SCROLLED_SIDEWAYS_ON_LOAD = fixture_url("overlap-scrolled-sideways-on-load.html")
 ONLY = ["overlap"]
 # The colour of the covers of the fixtures.
 COVER = "#c80000"
@@ -931,6 +933,33 @@ async def test_a_page_that_is_scrolled_when_it_is_captured_is_measured(
     # The page scrolls itself 900px while it loads: what it says of a box is
     # then 900px short of where the box is on the page.
     findings = (await detect(client, SCROLLED_ON_LOAD, checks=ONLY))["findings"]
+    assert covered(findings) == [("#far", "major", 50, "#far-cover")]
+
+
+async def test_covered_texts_right_of_the_viewport_name_their_covers(
+    client: Client,
+) -> None:
+    # The page is 3000px wide. Hit testing scrolls it sideways to reach `#right`
+    # and `#far`, which brings `#fixed-bar` over the half of `#right` that its
+    # cover hides, and as far as it goes to reach `#edge`, short of a whole
+    # viewport.
+    findings = (await detect(client, WIDE, checks=ONLY))["findings"]
+    assert covered(findings) == [
+        ("#near", "major", 50, "#near-cover"),
+        ("#right", "major", 50, "#right-cover"),
+        ("#edge", "major", 50, "#edge-cover"),
+        ("#far", "major", 50, "#far-cover"),
+    ]
+
+
+async def test_a_page_that_is_scrolled_sideways_when_it_is_captured_is_measured(
+    client: Client,
+) -> None:
+    # The page scrolls itself 1500px sideways while it loads: what it says of a
+    # box is then 1500px short of where the box is on the page.
+    findings = (await detect(client, SCROLLED_SIDEWAYS_ON_LOAD, checks=ONLY))[
+        "findings"
+    ]
     assert covered(findings) == [("#far", "major", 50, "#far-cover")]
 
 

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: a page that is scrolled sideways when it is captured</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are a block of
+         200 x 20 text pixels, 5px under the top of their 30px line: 4000 pixels.
+
+         The page is 3000px wide. Its one text is 2000px from its left, and the
+         page scrolls itself 1500px sideways while it loads: when it is captured
+         the text is 500px from the left of the viewport, and every box the page
+         gives is 1500px short of its place on the page. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        width: 3000px;
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      /* The row holds the text, from 40px to 240px of the row, and its cover,
+         placed from the left of the row. */
+      #row {
+        position: absolute;
+        top: 20px;
+        left: 1960px;
+        width: 240px;
+        height: 30px;
+      }
+      #far {
+        margin-left: 40px;
+        width: 200px;
+      }
+      /* An opaque box over the last 100px of the text: 2000 pixels, 50%. */
+      #far-cover {
+        position: absolute;
+        top: 0;
+        left: 140px;
+        width: 100px;
+        height: 30px;
+        background: rgb(200, 0, 0);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="row">
+      <div id="far">XXXXXXXXXX</div>
+      <div id="far-cover"></div>
+    </div>
+    <script>
+      // The page is 1500px to the right by the time it is captured. Never a smooth
+      // scroll, which would still be on its way.
+      window.scrollTo({ left: 1500, behavior: "instant" });
+    </script>
+  </body>
+</html>
