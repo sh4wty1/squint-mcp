@@ -22,7 +22,15 @@ from playwright.async_api import Error as PlaywrightError
 from playwright.async_api import TimeoutError as PlaywrightTimeoutError
 
 from squint_mcp import config, covered
-from squint_mcp.models import Capture, Cover, CoveredText, Element, Viewport
+from squint_mcp.models import (
+    Capture,
+    Cover,
+    CoveredText,
+    Element,
+    Face,
+    LineWidths,
+    Viewport,
+)
 
 _JS = Path(__file__).parent / "js"
 _STABILIZE = (_JS / "stabilize.js").read_text(encoding="utf-8")
@@ -30,6 +38,7 @@ _COLLECT_ELEMENTS = (_JS / "collect_elements.js").read_text(encoding="utf-8")
 _FILL_TEXT = (_JS / "fill_text.js").read_text(encoding="utf-8")
 _SCROLL_WIDTH = (_JS / "scroll_width.js").read_text(encoding="utf-8")
 _COVERED_TEXT = (_JS / "covered_text.js").read_text(encoding="utf-8")
+_FONT_WIDTHS = (_JS / "font_widths.js").read_text(encoding="utf-8")
 # Calls a method of the object the cover script leaves on the page.
 _COVERED_CALL = "([method, ...args]) => globalThis.__squintCovered[method](...args)"
 # Resolves once the page has painted two frames: whatever changed before the call
@@ -245,6 +254,16 @@ async def _measure_covered_text(
             )
 
 
+async def _measure_fonts(page: Page, elements: list[Element]) -> list[Face]:
+    """Give the elements whose own text asks first for a family with a face that
+    failed their `line_widths`, and return the faces of the page (AD-008).
+    """
+    found = await page.evaluate(_FONT_WIDTHS)
+    for index, widths in found["widths"].items():
+        elements[int(index)].line_widths = LineWidths.model_validate(widths)
+    return [Face.model_validate(face) for face in found["faces"]]
+
+
 async def capture(
     session: BrowserSession,
     url: str,
@@ -252,12 +271,15 @@ async def capture(
     selector: str,
     *,
     covered_text: bool = False,
+    fonts: bool = False,
 ) -> Capture:
     """Open `url` in a fresh context, stabilize it and capture it.
 
     The Capture holds the elements matched by `selector`, which reaches into
     open shadow roots; `*` is every element of the page. With `covered_text`,
-    the elements whose own text may be covered also say how much of it is.
+    the elements whose own text may be covered also say how much of it is. With
+    `fonts`, the Capture holds the faces of the page, and the elements whose
+    font may not have loaded say how wide their own text is on one line.
     """
     scheme = urlsplit(url).scheme
     if scheme not in ("http", "https", "file"):
@@ -312,6 +334,11 @@ async def capture(
         black = await _filled(page, "rgb(0, 0, 0)")
         white = await _filled(page, "rgb(255, 255, 255)")
         elements = [Element.model_validate(element) for element in collected]
+        faces = None
+        if fonts:
+            # After the pixels, so that nothing it does can reach them; before
+            # covered text, which scrolls the page.
+            faces = await _measure_fonts(page, elements)
         if covered_text:
             # Last: it repaints the page, hides parts of it and scrolls it.
             await _measure_covered_text(page, elements, pixels)
@@ -327,4 +354,5 @@ async def capture(
         background=background,
         # Only glyphs differ between the two fills, by how much they cover a pixel.
         ink=ImageChops.difference(black, white).convert("L"),
+        faces=faces,
     )

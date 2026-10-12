@@ -11,7 +11,7 @@ from pydantic import BaseModel, Field
 
 from squint_mcp import config
 from squint_mcp.capture import BrowserSession, capture
-from squint_mcp.checks import CHECKS, COVERED_TEXT_CHECKS
+from squint_mcp.checks import CHECKS, COVERED_TEXT_CHECKS, FONT_CHECKS
 from squint_mcp.models import Capture, Finding, Severity, Viewport
 from squint_mcp.vision import crop_png
 
@@ -90,6 +90,8 @@ async def detect_visual_bugs(
     session = ctx.request_context.lifespan_context
     # Covered text about doubles a Capture: only when a Check reads it.
     covered_text = not COVERED_TEXT_CHECKS.isdisjoint(names)
+    # The fonts of a page are read only when a Check judges them (AD-008).
+    fonts = not FONT_CHECKS.isdisjoint(names)
     try:
         # One clock for the whole call. asyncio.timeout cancels once, so the
         # cleanup of the capture under way still gets to run.
@@ -97,7 +99,9 @@ async def detect_visual_bugs(
             # ponytail: one viewport after another, each paying a page load and
             # the idle wait; capture them concurrently if calls get slow.
             captures = [
-                await capture(session, url, viewport, "*", covered_text=covered_text)
+                await capture(
+                    session, url, viewport, "*", covered_text=covered_text, fonts=fonts
+                )
                 for viewport in viewports
             ]
     except TimeoutError as error:

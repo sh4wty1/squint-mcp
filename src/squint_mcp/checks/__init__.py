@@ -28,3 +28,7 @@ CHECKS: dict[str, Check] = {
 # The Checks that read `Element.covered_text`, which a Capture measures only when
 # asked (AD-005).
 COVERED_TEXT_CHECKS = frozenset({"overlap"})
+
+# The Checks that read `Capture.faces` and `Element.line_widths`, which a Capture
+# measures only when asked (AD-008).
+FONT_CHECKS = frozenset({"font-fallback"})

@@ -132,7 +132,7 @@ The Verifier is dispatched in the fifth session, after T11 and the Build of phas
 
 ### T2: Report a family that did not load
 
-- [ ] Done
+- [x] Done
 
 **What**: The fixture `font-fallback-bug.html` and its tests, then what makes them pass. `models.py`: `Face`, `LineWidths`, `Element.line_widths` and `Capture.faces` as in the design. `js/font_widths.js`: the Faces, read before any copy is made; for each element with a text node that is not whitespace as a direct child and whose First family has a Face of `error`, two copies of each such node (its `font-family`, its Tail, or `initial` for a list of one name) carrying every `font-` longhand of the element; one host, one layout, the host removed in the same call. `capture.py`: the keyword `fonts` and `_measure_fonts`, after the three fills and before covered text. `checks/__init__.py`: `FONT_CHECKS`; the tool asks for fonts when a Check of it is among the names. `checks/font_fallback.py`: rules 1, 2 and 4 of the design, and of rule 3 the Failed family and `own == tail`. Left to later tasks, each with the test that asks for it: `font-style` in the evidence (T3), "Judged element" (T4), names in another case (T5), the `shaping` argument (T7).
 **Where**: `src/squint_mcp/checks/font_fallback.py` (with the models, the page script, the Capture, the registry, the tool, the bug fixture and the test module)
@@ -147,15 +147,15 @@ The Verifier is dispatched in the fifth session, after T11 and the Build of phas
 
 **Done when**:
 
-- [ ] Red before the code: every test of the task fails but that of FNT-35, which holds before and after. The tests of FNT-04 and FNT-47 assert that the result has Findings, so that neither holds on an empty one
-- [ ] The test of FNT-02 asserts the whole list of `(selector, severity, family, elements)` in order (L-020); the test of FNT-01 that `#lead` and `#note` get no Finding of their own
-- [ ] The test of FNT-13 reads both viewports in one call: `#narrow` has one Finding at 390 × 844 and none at 1440 × 900
-- [ ] The host and every copy are styled through the style object, each declaration `!important` after `all: initial`; no style of the page is changed
-- [ ] A Capture taken without `fonts` makes the same page calls as before this task
-- [ ] `checks/font_fallback.py` imports neither `playwright` nor `config`, and compares the two widths with `==`
-- [ ] The three limits the design accepts are marked `ponytail:` in the script (a Tail that asks for a font no text had used; a name with a hexadecimal escape; what a copy does not carry)
-- [ ] Gate check passes: Full
-- [ ] Test count: 369 plus the tests of this task (ten at least, one per criterion); none deleted
+- [x] Red before the code: every test of the task fails but that of FNT-35, which holds before and after. The tests of FNT-04 and FNT-47 assert that the result has Findings, so that neither holds on an empty one
+- [x] The test of FNT-02 asserts the whole list of `(selector, severity, family, elements)` in order (L-020); the test of FNT-01 that `#lead` and `#note` get no Finding of their own
+- [x] The test of FNT-13 reads both viewports in one call: `#narrow` has one Finding at 390 × 844 and none at 1440 × 900
+- [x] The host and every copy are styled through the style object, each declaration `!important` after `all: initial`; no style of the page is changed
+- [x] A Capture taken without `fonts` makes the same page calls as before this task
+- [x] `checks/font_fallback.py` imports neither `playwright` nor `config`, and compares the two widths with `==`
+- [x] The three limits the design accepts are marked `ponytail:` in the script (a Tail that asks for a font no text had used; a name with a hexadecimal escape; what a copy does not carry)
+- [x] Gate check passes: Full
+- [x] Test count: 369 plus the tests of this task (ten at least, one per criterion); none deleted
 
 **Tests**: integration
 **Gate**: full

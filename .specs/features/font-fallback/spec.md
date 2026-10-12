@@ -239,19 +239,19 @@ The maintainer accepted the spec on 2026-10-12 and took every default of the tab
 
 | Requirement ID | Story | Phase | Status |
 | --- | --- | --- | --- |
-| FNT-01 | P1: Report a font that did not load | T2 | Pending |
-| FNT-02 | P1: Report a font that did not load | T2 | Pending |
-| FNT-03 | P1: Report a font that did not load | T2 | Pending |
-| FNT-04 | P1: Report a font that did not load | T2 | Pending |
+| FNT-01 | P1: Report a font that did not load | T2 | Implemented |
+| FNT-02 | P1: Report a font that did not load | T2 | Implemented |
+| FNT-03 | P1: Report a font that did not load | T2 | Implemented |
+| FNT-04 | P1: Report a font that did not load | T2 | Implemented |
 | FNT-05 | P1: Report a font that did not load | T5 | Pending |
 | FNT-06 | P1: Report a font that did not load | T5 | Pending |
-| FNT-07 | P1: Report a font that did not load | T2 | Pending |
+| FNT-07 | P1: Report a font that did not load | T2 | Implemented |
 | FNT-08 | P1: Report a font that did not load | T5 | Pending |
 | FNT-09 | P1: Report a font that did not load | T5 | Pending |
 | FNT-10 | P1: Report a font that did not load | T5 | Pending |
 | FNT-11 | P1: Report a font that did not load | T6 | Pending |
 | FNT-12 | P1: Report a font that did not load | T6 | Pending |
-| FNT-13 | P1: Report a font that did not load | T2 | Pending |
+| FNT-13 | P1: Report a font that did not load | T2 | Implemented |
 | FNT-14 | P1: Report a font that did not load | T8 | Pending |
 | FNT-15 | P1: Report a font that did not load | T5 | Pending |
 | FNT-16 | P1: Stay silent when the text is in the font it asks for | T4 | Pending |
@@ -266,26 +266,26 @@ The maintainer accepted the spec on 2026-10-12 and took every default of the tab
 | FNT-25 | P1: Stay silent when the text is in the font it asks for | T4 | Pending |
 | FNT-26 | P1: Stay silent when the text is in the font it asks for | T6 | Pending |
 | FNT-27 | P1: Read the Finding | T3 | Pending |
-| FNT-28 | P1: Read the Finding | T2 | Pending |
+| FNT-28 | P1: Read the Finding | T2 | Implemented |
 | FNT-29 | P1: Read the Finding | T5 | Pending |
 | FNT-30 | P1: Read the Finding | T6 | Pending |
 | FNT-31 | P1: Read the Finding | T6 | Pending |
 | FNT-32 | P1: Read the Finding | T6 | Pending |
-| FNT-33 | P1: With the other Checks | T2 | Pending |
+| FNT-33 | P1: With the other Checks | T2 | Implemented |
 | FNT-34 | P1: With the other Checks | T1 | Implemented |
-| FNT-35 | P1: With the other Checks | T2 | Pending |
+| FNT-35 | P1: With the other Checks | T2 | Implemented |
 | FNT-36 | P1: With the other Checks | T9 | Pending |
 | FNT-37 | P1: With the other Checks | T1 | Implemented |
 | FNT-38 | P1: With the other Checks | T1 | Implemented |
 | FNT-39 | P1: With the other Checks | T9 | Pending |
 | FNT-40 | P2: Check contract, Capture and documents | T1 | Implemented |
-| FNT-41 | P2: Check contract, Capture and documents | T2 | Pending |
-| FNT-42 | P2: Check contract, Capture and documents | T2 | Pending |
-| FNT-43 | P2: Check contract, Capture and documents | T2 | Pending |
+| FNT-41 | P2: Check contract, Capture and documents | T2 | Implemented |
+| FNT-42 | P2: Check contract, Capture and documents | T2 | Implemented |
+| FNT-43 | P2: Check contract, Capture and documents | T2 | Implemented |
 | FNT-44 | P2: Check contract, Capture and documents | T11 | Pending |
 | FNT-45 | P2: Check contract, Capture and documents | T11 | Pending |
 | FNT-46 | P2: Check contract, Capture and documents | T12 | Pending |
-| FNT-47 | Edge cases | T2 | Pending |
+| FNT-47 | Edge cases | T2 | Implemented |
 | FNT-48 | Edge cases | T5 | Pending |
 | FNT-49 | P1: Stay silent when the text is in the font it asks for | T7 | Pending |
 | FNT-50 | P1: Report a font that did not load | T7 | Pending |
