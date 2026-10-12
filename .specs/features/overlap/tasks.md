@@ -9,7 +9,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ---
 
 **Design**: `.specs/features/overlap/design.md`
-**Status**: Approved by the maintainer on 2026-10-11. T1 to T13 and the fixes of the first two validation passes (F1 to F8) are done; the third pass failed, and its fixes (F9 to F16, at the end of this file) are the last round of the loop
+**Status**: Approved by the maintainer on 2026-10-11. T1 to T13 and the fixes of the first two validation passes (F1 to F8) are done; the third pass failed, and its fixes (F9 to F17, at the end of this file) are the last round of the loop and wait for the fourth pass
 
 ---
 
@@ -862,7 +862,7 @@ The tasks add the criteria OVL-92 to OVL-120. F9, F10 and F17 change `src/`; the
 F9 → F10 → F11 → F12 → F17 → F13 → F14 → F15 → F16
 ```
 
-Baseline: 325 tests pass (2026-10-11). The whole suite takes about twelve and a half minutes. The matrix and the gate commands at the top of this file apply.
+Baseline: 325 tests pass (2026-10-11). The whole suite takes about twelve and a half minutes. The matrix and the gate commands at the top of this file apply. F9 to F12 and F17 each passed a Build gate of their own; F13 to F16, which add tests, fixtures and spec text only, passed one Build gate together (359 tests) and were committed one by one. With F17 the suite takes about seventeen and a half minutes.
 
 Spiked before F9 (2026-10-11, real Chromium, pages outside the repository): with a `filter` set to `none` while ink is measured, three boxes of a probe page move (an element with a `filter` holds what is positioned inside it, `fixed` included) and another element is on top at 120 of its points. With only the functions that change colours taken out of the `filter`, and `opacity(1)` left when none remains, no box moves and no point changes hands, on that page and on one with the filter on the root.
 
@@ -1078,10 +1078,10 @@ Spiked before F9 (2026-10-11, real Chromium, pages outside the repository): with
 
 ### F16: List in the spec the limits the design accepts
 
-- [ ] Done
+- [x] Done
 
-**What**: The Out of Scope row for a pseudo-element reworded to the condition the code decides on (the element that shows the pseudo-element, or one around it, is itself measured), and a row for each limit the Risks of `design.md` accept and the spec did not list: an element with `mix-blend-mode`, a cover with a `backdrop-filter` that changes colours, a page that moves when it is scrolled. The CHANGELOG names the same limits among what the Check does not report.
-**Where**: `.specs/features/overlap/spec.md`, `CHANGELOG.md`
+**What**: The Out of Scope row for a pseudo-element reworded to the condition the code decides on (the element that shows the pseudo-element, or one around it, is itself measured), and a row for each limit the Risks of `design.md` accept and the spec did not list: an element with `mix-blend-mode`, a page that moves when it is scrolled, a Content Security Policy that refuses inline styles. With them, one limit found while the filter fix was spiked and listed in both: a cover with a `backdrop-filter` that changes colours. The CHANGELOG names the same limits among what the Check does not report.
+**Where**: `.specs/features/overlap/spec.md`, `.specs/features/overlap/design.md`, `CHANGELOG.md`
 **Depends on**: F9 (the row of `design.md` it corrects)
 **Reuses**: probes `q4b-pseudo-covered`, `q4d-pseudo-inner` and `q4f-pseudo-gap` of the report, written again outside the repository
 **Requirement**: none (spec-precision gaps 1 and 2 of the report)
@@ -1093,11 +1093,11 @@ Spiked before F9 (2026-10-11, real Chromium, pages outside the repository): with
 
 **Done when**:
 
-- [ ] The reworded row and the three probes agree: each text the row says is missed gets no Finding, each it says is reported gets one
-- [ ] Every row of the Risks of `design.md` that accepts a missed or a false Finding has a row in Out of Scope
-- [ ] `validate_spec.py --strict` exits 0 on the spec with its 29 new criteria
-- [ ] Gate check passes: Build
-- [ ] Test count: 359 tests pass; none deleted
+- [x] The reworded row and the three probes agree: each text the row says is missed gets no Finding, each it says is reported gets one
+- [x] Every row of the Risks of `design.md` that accepts a missed or a false Finding has a row in Out of Scope
+- [x] `validate_spec.py --strict` exits 0 on the spec with its 29 new criteria
+- [x] Gate check passes: Build
+- [x] Test count: 359 tests pass; none deleted
 
 **Tests**: none
 **Gate**: build
