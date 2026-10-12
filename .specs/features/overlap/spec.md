@@ -402,7 +402,7 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 | OVL-64 | P2: Check contract, configuration and documents | T9 | Implemented |
 | OVL-65 | P2: Check contract, configuration and documents | T13 | Implemented |
 | OVL-66 | P2: Check contract, configuration and documents | T13 | Implemented |
-| OVL-67 | P2: Check contract, configuration and documents | closing step | Pending |
+| OVL-67 | P2: Check contract, configuration and documents | closing step | Implemented |
 | OVL-68 | Edge cases | T9 | Implemented |
 | OVL-69 | Edge cases | T12 | Implemented |
 | OVL-70 | P1: Stay silent on overlaps that are meant | F1 | Implemented |

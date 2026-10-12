@@ -9,7 +9,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ---
 
 **Design**: `.specs/features/overlap/design.md`
-**Status**: Approved by the maintainer on 2026-10-11. T1 to T13 and the fixes of the first two validation passes (F1 to F8) are done; the third pass failed, and its fixes (F9 to F17, at the end of this file) were the last round of the loop. The fourth pass failed on surviving mutants alone, with the loop at its bound: the maintainer decided on 2026-10-12, and the fixes of that decision (F18 to F24, at the end of this file) are done
+**Status**: Approved by the maintainer on 2026-10-11. T1 to T13 and the fixes of the first two validation passes (F1 to F8) are done; the third pass failed, and its fixes (F9 to F17, at the end of this file) were the last round of the loop. The fourth pass failed on surviving mutants alone, with the loop at its bound: the maintainer decided on 2026-10-12, and the fixes of that decision (F18 to F24, at the end of this file) are done. The fifth pass is a PASS, and the closing step is done but for the pull request, which waits for the maintainer
 
 ---
 
