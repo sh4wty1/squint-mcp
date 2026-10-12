@@ -1305,3 +1305,31 @@ Baseline: 359 tests pass (2026-10-11). The whole suite takes about seventeen and
 **Gate**: build
 
 **Commit**: `test(overlap): pin a text under the border of an element with text`
+
+---
+
+### F23: Pin the cap itself
+
+- [x] Done
+
+**What**: Fix 5 of the report (mutant H1). The fixture `overlap-cap.html`, exactly 20,000 pixels of Hidden ink built on the row of `#striped`, and its test (OVL-132): every one of them is hit tested.
+**Where**: `tests/test_overlap.py` (with `tests/fixtures/overlap-cap.html`), `.specs/features/overlap/spec.md`
+**Depends on**: F22 (the count of tests)
+**Reuses**: the rows of `overlap-count-under.html` and the `striped` helper of the tests
+**Requirement**: OVL-132
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [x] The test fails under H1 (`math.floor(...) + 1` for `math.ceil(...)`, `covered.py:303`: `#solid-cover`) and with the step computed for one pixel more; it passes with the step computed for one pixel less: the page holds 20,000 pixels and not one more or less
+- [x] Gate check passes: Build
+- [x] Test count: 368 tests pass; none deleted
+
+**Tests**: integration
+**Gate**: build
+
+**Commit**: `test(overlap): pin the cap of the hit tests itself`

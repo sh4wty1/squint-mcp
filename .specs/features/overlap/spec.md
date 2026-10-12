@@ -275,6 +275,7 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 15. WHEN an element has a Hidden share of at least 10% and gets no Finding THEN its Hidden ink SHALL count towards the 20,000 pixels: on `overlap-count-unreported.html` (the 19,000 pixels of OVL-116 and 2000 in `#unseen`, of `color: transparent`, half under a cover) `detect_visual_bugs` called with `checks` equal to `["overlap"]` SHALL return `findings` whose `(selector, severity, evidence.measured.hiddenPercent, evidence.measured.coveredBy)` are, in this order, `(#striped, major, 25, #solid-cover)` and `(#filler-n, major, 50, #filler-cover-n)` for n from 0 to 8: every second pixel of every second row is hit tested. <!-- OVL-117 -->
 16. WHEN a Capture has more than 20,000 and no more than 80,000 pixels of Hidden ink to test THEN every second pixel of every second row SHALL be hit tested: on `overlap-step-two.html` (49,000 pixels, in `#striped` and in 24 texts each half under a cover of its own) `detect_visual_bugs` called with `checks` equal to `["overlap"]` SHALL return `findings` whose `(selector, severity, evidence.measured.hiddenPercent, evidence.measured.coveredBy)` are, in this order, `(#striped, major, 25, #solid-cover)` and `(#filler-n, major, 50, #filler-cover-n)` for n from 0 to 23. <!-- OVL-118 -->
 17. WHEN a Capture has more than 80,000 and no more than 180,000 pixels of Hidden ink to test THEN every third pixel of every third row SHALL be hit tested: on `overlap-step-three.html` (81,000 pixels, in `#striped` and in 40 texts each half under a cover of its own), where `#stripes` is found on the 10 odd columns of its 60 that are multiples of 3 and `#solid-cover` on 6, `detect_visual_bugs` called with `checks` equal to `["overlap"]` SHALL return `findings` whose `(selector, severity, evidence.measured.hiddenPercent, evidence.measured.coveredBy)` are, in this order, `(#striped, major, 25, #stripes)` and `(#filler-n, major, 50, #filler-cover-n)` for n from 0 to 39. <!-- OVL-119 -->
+18. WHEN a Capture has exactly 20,000 pixels of Hidden ink to test THEN every one of them SHALL be hit tested: on `overlap-cap.html` (1000 pixels in `#striped`, the text of OVL-85, 18,000 in nine texts each half under a cover of its own and 1000 in `#last`, with a cover over the last 50px of its 200px of text) `detect_visual_bugs` called with `checks` equal to `["overlap"]` SHALL return `findings` whose `(selector, severity, evidence.measured.hiddenPercent, evidence.measured.coveredBy)` are, in this order, `(#striped, major, 25, #stripes)`, `(#filler-n, major, 50, #filler-cover-n)` for n from 0 to 8 and `(#last, major, 25, #last-cover)`. <!-- OVL-132 -->
 
 **Independent Test**: Read the Finding of `#half` and compare it with the literal above.
 
@@ -464,13 +465,14 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 | OVL-129 | P1: Severity | F21 | Implemented |
 | OVL-130 | P1: Severity | F21 | Implemented |
 | OVL-131 | P1: Report text that another element covers | F22 | Implemented |
+| OVL-132 | P1: Read the Finding | F23 | Implemented |
 
-**Coverage:** 131 total, 131 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
+**Coverage:** 132 total, 132 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
 
 ---
 
 ## Success Criteria
 
-- [ ] All 131 requirements verified by the Verifier, OVL-61 to OVL-67 from file evidence.
+- [ ] All 132 requirements verified by the Verifier, OVL-61 to OVL-67 from file evidence.
 - [ ] The gate passes: typecheck, lint, format check and the whole test suite.
 - [ ] The discrimination sensor leaves no surviving mutant in the Check, in what the Capture gains for it and in the rules of Silent and Raised layers.

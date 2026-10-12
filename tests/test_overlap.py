@@ -27,6 +27,7 @@ SCROLLED = fixture_url("overlap-scrolled.html")
 SCROLLED_ON_LOAD = fixture_url("overlap-scrolled-on-load.html")
 SAMPLED = fixture_url("overlap-sampled.html")
 EXACT = fixture_url("overlap-exact.html")
+CAP = fixture_url("overlap-cap.html")
 COUNT_UNDER = fixture_url("overlap-count-under.html")
 COUNT_UNREPORTED = fixture_url("overlap-count-unreported.html")
 STEP_TWO = fixture_url("overlap-step-two.html")
@@ -1340,3 +1341,16 @@ async def test_text_under_the_border_of_an_element_with_text_is_reported(
     # with half of its ink and nothing hidden.
     findings = (await detect(client, BORDER, checks=ONLY))["findings"]
     assert covered(findings) == [("#under-border", "major", 50, "#bordered")]
+
+
+async def test_a_page_of_exactly_the_cap_is_hit_tested_at_every_hidden_pixel(
+    client: Client,
+) -> None:
+    # 20,000 hidden pixels, the most a Capture tests whole: 600 of the 1000 of
+    # `#striped` are under `#stripes`. At every second pixel of every second
+    # row `#solid-cover` would be the one found.
+    findings = (await detect(client, CAP, checks=ONLY))["findings"]
+    assert covered(findings) == [
+        *striped("#stripes", 9),
+        ("#last", "major", 25, "#last-cover"),
+    ]
