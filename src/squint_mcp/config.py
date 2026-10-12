@@ -15,6 +15,12 @@ NETWORK_IDLE_TIMEOUT_S = 3.0
 # ink measured in two renders of a page cannot be compared.
 CHROMIUM_ARGS = ("--disable-lcd-text",)
 
+# Source: Squint default (AD-007), measured for slice 8. The two frames a Capture
+# lets a page paint before a screenshot take about 30ms, and up to 90ms were
+# measured. A page that never calls an animation frame back is waited on this
+# long before each screenshot and is then captured as it is.
+PAINT_WAIT_MAX_S = 0.25
+
 # Source: Squint default. docs/SPEC.md asks for "a margin around the element";
 # 16px shows the surroundings without doubling the size of a small crop.
 CROP_MARGIN_PX = 16

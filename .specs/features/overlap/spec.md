@@ -52,7 +52,7 @@ Explicitly excluded. Documented to prevent scope creep.
 | More than one Coverer named in a Finding | `evidence.measured` holds numbers and strings, not lists |
 | Any other Check, Profile, Audit, score, `compare_viewports` | Not in this slice |
 | A parameter for thresholds or for the list of Silent layers | `docs/SPEC.md`: behaviour changes only through `url`, `viewports`, `checks` |
-| Changes to the behaviour of `inspect_element` or `ping`, or to the Findings of the other three Checks | Earlier slices are closed. Two changes reach every Capture and are in scope: text is rasterized in grayscale, and a Capture settles the layout before it measures (issue #18). Neither changes a result of the existing fixtures (OVL-59) |
+| Changes to the behaviour of `inspect_element` or `ping`, or to the Findings of the other three Checks | Earlier slices are closed. Three changes reach every Capture and are in scope: text is rasterized in grayscale, a Capture settles the layout before it measures (issue #18), and a Capture lets the page paint before every screenshot (AD-007). None changes a result of the existing fixtures (OVL-59) |
 | Tests outside the MCP tool boundary | `docs/SPEC.md` Testing Decisions: one seam |
 | Pushing the branch and opening the pull request | Remote actions; they need the maintainer's go-ahead |
 
@@ -93,7 +93,7 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 | How the Capture learns Text ink, Hidden ink and the Coverer | On request, from screenshots in which the glyphs of chosen text nodes are repainted through CSS highlights, alone and as painted, and by hit testing: AD-005 and [`design.md`](design.md). Spiked against real Chromium on 2026-10-11: every case of this spec gives the value of its criterion | AD-003 says how a Check gets a new fact; ADR-0002 keeps the browser out of the Check | y |
 | Text rasterization | Chromium is launched with `--disable-lcd-text`, so text is anti-aliased in grayscale in every Capture (AD-006) | With subpixel text the same glyph is rasterized differently alone and as painted: `#veil-55` measured 95% for 100%. The existing suite passes with the flag | y |
 | The layout of a Capture | A Capture takes one small screenshot beyond the viewport before it measures anything (AD-006, issue #18) | On Windows that first screenshot changes the font of the generic `monospace` family and the page is laid out again: boxes read before it are off | y |
-| A screenshot that shows a part of the page unpainted | A Capture lets the page paint two frames before every screenshot (AD-007) | Found in the third fix round, while the new tests were run against their mutants: on a page with several layers of its own, a screenshot taken right after a change of style now and then shows a band of the page beyond the viewport blank. A covered text in that band had no ink in one picture and got no Finding, on about six calls in ten on `overlap-low.html`. Measured: no miss in 60 calls with the two frames; a second screenshot costs twice as much, `--run-all-compositor-stages-before-draw` does not end it, and a small screenshot taken first makes every call miss. An eighth to a fifth more time per Capture | Taken by the agent on 2026-10-11 with the maintainer away; the maintainer confirms or reverts it |
+| A screenshot that shows a part of the page unpainted | A Capture lets the page paint two frames before every screenshot, and waits for them a quarter of a second at most (AD-007) | Found in the third fix round, while the new tests were run against their mutants: on a page with several layers of its own, a screenshot taken right after a change of style now and then shows a band of the page beyond the viewport blank. A covered text in that band had no ink in one picture and got no Finding, on about six calls in ten on `overlap-low.html`. Measured: no miss in 60 calls with the two frames; a second screenshot costs twice as much, `--run-all-compositor-stages-before-draw` does not end it, and a small screenshot taken first makes every call miss. An eighth to a fifth more time per Capture. The frames are asked of the page's own world, where a page can put a function that never calls back: the wait has an end of its own, 250ms (OVL-121), about eight times what the two frames take | y. Taken by the agent on 2026-10-11 with the maintainer away; confirmed by the maintainer on 2026-10-12, with the bound |
 | Fixtures | Ahem at `font-size: 20px` and `line-height: 30px`, as in slice 4: ten glyphs are a block of 200 × 20 pixels of ink. A cover is an opaque box unless a criterion says otherwise, so every share is exact. No text of a fixture is covered by anything its criterion does not name. `overlap-font.html` alone is in the system `sans-serif` font, whose pixels differ from one platform to the next: its outcomes are shares of whole glyphs, which do not | Exact shares need exact pixels | y |
 | Criteria not observable through the tool boundary (OVL-61 to OVL-67) | Verified by the Verifier from file evidence, not by pytest | The source docs forbid a second test seam | y |
 
@@ -315,6 +315,7 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 - WHEN `detect_visual_bugs` is called on `overlap-bug.html` with two viewports THEN each Finding of the first viewport SHALL have a Finding of the same `selector` and `check` in the second. <!-- OVL-68 -->
 - IF hit testing gives an Other element only where the own text of an element is clipped away by an ancestor (`#in-scaled` in `text-clipped-clean.html`, with `#backdrop` behind the part of its text that is cut off) THEN `detect_visual_bugs` called with `checks` equal to `["overlap"]` on that file SHALL return `findings` equal to `[]`. <!-- OVL-69 -->
 - WHEN `detect_visual_bugs` is called six times in a row with `checks` equal to `["overlap"]` on `overlap-low.html` (a page 1850px high at 1440 × 900: thirty-six rows that a browser paints as layers of their own, a sticky element, a text of `opacity: 0`, a link with a `z-index` and a text of `opacity: 0.4` in turn, and under them `#low`, 1820px down the page, the last 100px of its 200px of text under `#low-cover`) THEN every call SHALL return exactly one Finding, on `#low`, with `evidence.measured.hiddenPercent` equal to 50, `severity` equal to `major` and `evidence.measured.coveredBy` equal to `#low-cover`: a part of the page that a screenshot shows unpainted is not read as a page with nothing on it. <!-- OVL-120 -->
+- WHEN a page never calls an animation frame back (`overlap-no-frames.html`, whose script puts a function that never calls back where `window.requestAnimationFrame` is: the last 100px of the 200px of text of `#still` are under `#still-cover`) THEN `detect_visual_bugs` called with `checks` equal to `["overlap"]` SHALL return exactly one Finding, on `#still`, with `evidence.measured.hiddenPercent` equal to 50, `severity` equal to `major` and `evidence.measured.coveredBy` equal to `#still-cover`: the wait before a screenshot has an end of its own. <!-- OVL-121 -->
 
 ---
 
@@ -442,13 +443,14 @@ The maintainer accepted the spec on 2026-10-11, with the three changes the desig
 | OVL-118 | P1: Read the Finding | F15 | Implemented |
 | OVL-119 | P1: Read the Finding | F15 | Implemented |
 | OVL-120 | Edge cases | F17 | Implemented |
+| OVL-121 | Edge cases | F18 | Implemented |
 
-**Coverage:** 120 total, 120 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
+**Coverage:** 121 total, 121 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
 
 ---
 
 ## Success Criteria
 
-- [ ] All 120 requirements verified by the Verifier, OVL-61 to OVL-67 from file evidence.
+- [ ] All 121 requirements verified by the Verifier, OVL-61 to OVL-67 from file evidence.
 - [ ] The gate passes: typecheck, lint, format check and the whole test suite.
 - [ ] The discrimination sensor leaves no surviving mutant in the Check, in what the Capture gains for it and in the rules of Silent and Raised layers.

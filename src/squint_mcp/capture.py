@@ -33,10 +33,13 @@ _COVERED_TEXT = (_JS / "covered_text.js").read_text(encoding="utf-8")
 # Calls a method of the object the cover script leaves on the page.
 _COVERED_CALL = "([method, ...args]) => globalThis.__squintCovered[method](...args)"
 # Resolves once the page has painted two frames: whatever changed before the call
-# is on the screen by then.
+# is on the screen by then. `requestAnimationFrame` is the one of the page's own
+# world, and a page can put a function there that never calls back: the timer
+# ends the wait then, `most` milliseconds on.
 _PAINTED = (
-    "() => new Promise((done) =>"
-    " requestAnimationFrame(() => requestAnimationFrame(done)))"
+    "(most) => new Promise((done) => {"
+    " requestAnimationFrame(() => requestAnimationFrame(done));"
+    " setTimeout(done, most); })"
 )
 
 
@@ -116,7 +119,7 @@ async def _screenshot(page: Page, clip: covered.Bounds | None = None) -> Image.I
     of the page beyond the viewport not painted yet, and what is read there is
     a page with nothing on it (AD-007): the page paints two frames first.
     """
-    await page.evaluate(_PAINTED)
+    await page.evaluate(_PAINTED, config.PAINT_WAIT_MAX_S * 1000)
     if clip is None:
         shot = await page.screenshot(full_page=True)
     else:

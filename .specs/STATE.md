@@ -51,12 +51,12 @@
 - **Status**: active
 
 ### AD-007
-- **Decision**: A Capture lets the page paint two animation frames before every screenshot it takes.
+- **Decision**: A Capture lets the page paint two animation frames before every screenshot it takes, and waits for them 250ms at most.
 - **Reason**: On a page with several layers of its own, a screenshot taken right after a change of style now and then shows a band of the page beyond the viewport not painted. Ink read there is zero: a covered text at the foot of `overlap-low.html` got no Finding on about six calls in ten. With the two frames no miss was measured in 60 calls, and no screenshot differed from one taken again at once. Tried and dropped: every screenshot taken twice (right, at twice the cost), `--run-all-compositor-stages-before-draw` (7 misses in 10), a small screenshot taken first (20 misses in 20).
-- **Trade-off**: An eighth to a fifth more time per Capture, for every tool (165s to 187s on 71 tests; the whole suite from 14:00 to 17:13, 18s of that a new test). A page on which animation frames never come would hang until the total timeout; none is known.
+- **Trade-off**: An eighth to a fifth more time per Capture, for every tool (165s to 187s on 71 tests; the whole suite from 14:00 to 17:13, 18s of that a new test). The frames are asked of the page's own world: a page that puts a function that never calls back where `requestAnimationFrame` is failed every tool with the total timeout until the wait was given its bound (`PAINT_WAIT_MAX_S`), and is now captured after 250ms per screenshot, about 4s more on a page of one covered text. The two frames take about 30ms, and 90ms at most were measured.
 - **Scope**: `src/squint_mcp/capture.py`, every tool.
 - **Date**: 2026-10-11
-- **Status**: active. Taken by the agent in the third fix round of slice 8 with the maintainer away: the maintainer confirms it or reverts its commit.
+- **Status**: active. Taken by the agent in the third fix round of slice 8 with the maintainer away; confirmed by the maintainer on 2026-10-12, who had the wait bounded.
 
 ## Handoff
 

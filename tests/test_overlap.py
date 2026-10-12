@@ -33,6 +33,7 @@ STEP_TWO = fixture_url("overlap-step-two.html")
 STEP_THREE = fixture_url("overlap-step-three.html")
 INVERTED = fixture_url("overlap-inverted.html")
 LOW = fixture_url("overlap-low.html")
+NO_FRAMES = fixture_url("overlap-no-frames.html")
 FONT = fixture_url("overlap-font.html")
 REACH = fixture_url("overlap-reach.html")
 WIDE = fixture_url("overlap-wide.html")
@@ -935,6 +936,16 @@ async def test_a_covered_text_low_on_a_page_of_layers_is_reported_on_every_call(
     for _ in range(6):
         findings = (await detect(client, LOW, checks=ONLY))["findings"]
         assert covered(findings) == [("#low", "major", 50, "#low-cover")]
+
+
+async def test_a_page_that_never_calls_an_animation_frame_back_is_measured(
+    client: Client,
+) -> None:
+    # The page puts a function that never calls back where
+    # `requestAnimationFrame` is: a wait for its frames with no end of its own
+    # would last until the call times out.
+    findings = (await detect(client, NO_FRAMES, checks=ONLY))["findings"]
+    assert covered(findings) == [("#still", "major", 50, "#still-cover")]
 
 
 async def test_an_element_the_scroll_brings_over_a_text_is_not_what_covers_it(

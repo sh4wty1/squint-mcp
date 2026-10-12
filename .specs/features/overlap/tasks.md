@@ -1150,3 +1150,44 @@ Spiked before F9 (2026-10-11, real Chromium, pages outside the repository): with
 | OVL-120 | F17 |
 
 29 of 29 mapped; with the tables above, 120 of 120.
+
+---
+
+## Fixes of the fourth validation pass
+
+The Verifier's fourth pass ([`validation.md`](validation.md), 2026-10-11) found no wrong result of the code and failed on the spec's third success criterion alone: nine mutants no pass had tried survive, five of them in the lines F9 added. The loop was at its bound of three rounds, and the maintainer decided on 2026-10-12 what comes next. AD-007 stays, with a bound on its wait (F18). The nine gaps get their fixture rows, a criterion and a test each, with no change to `src/` (F19 to F23, the Fix 1 to 5 of the report). The third success criterion is restated: a PASS asks that the mutants a report names die, and a pass that confirms it writes no new ones (F24, with the Out of Scope row of the report's Fix 7).
+
+The tasks add the criteria OVL-121 to OVL-132. A new test is done when it fails under the mutant it is for, applied to a scratch copy of `src/`.
+
+```
+F18 → F19 → F20 → F21 → F22 → F23 → F24
+```
+
+Baseline: 359 tests pass (2026-10-11). The whole suite takes about seventeen and a half minutes. The matrix and the gate commands at the top of this file apply. Seven tasks, one batch: they run inline.
+
+### F18: Give the wait before a screenshot an end of its own
+
+- [x] Done
+
+**What**: The two frames of AD-007 are asked of the page's own world, and a page that puts a function that never calls back where `requestAnimationFrame` is failed every tool with `Timed out after 30s.` The wait now races a timer inside the same `evaluate`: `PAINT_WAIT_MAX_S`, 250ms, in config with its source. The two frames take about 30ms (median 28ms, 91ms at most in 180 waits measured on three fixtures). The fixture `overlap-no-frames.html` holds a covered text on such a page, and its test reads the Finding (OVL-121). With them, the row of Out of Scope that counts the changes reaching every Capture (three, not two), the Assumptions row and AD-007, both confirmed by the maintainer.
+**Where**: `src/squint_mcp/capture.py`, `src/squint_mcp/config.py`, `tests/test_overlap.py` (with `tests/fixtures/overlap-no-frames.html`), `.specs/features/overlap/spec.md`, `.specs/STATE.md` (AD-007), `CHANGELOG.md`
+**Depends on**: None
+**Reuses**: the row of `overlap-inverted.html`
+**Requirement**: OVL-121
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [x] The test of OVL-121 fails with the timer taken out of the wait (`Timed out after 30s.`) and passes with it; the call takes about 5s
+- [x] The test of OVL-120 still passes: six calls, six Findings
+- [x] Gate check passes: Build
+- [x] Test count: 360 tests pass; none deleted
+
+**Tests**: integration
+**Gate**: build
+
+**Commit**: `fix(capture): give the wait before a screenshot an end of its own`
