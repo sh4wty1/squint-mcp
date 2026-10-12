@@ -9,7 +9,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ---
 
 **Design**: `.specs/features/overlap/design.md`
-**Status**: Approved by the maintainer on 2026-10-11. T1 to T13 and the fixes of the first two validation passes (F1 to F8) are done; the third pass failed, and its fixes (F9 to F17, at the end of this file) were the last round of the loop. The fourth pass failed on surviving mutants alone and the loop is at its bound: what comes next is the maintainer's to decide ([`validation.md`](validation.md), Fix Plans)
+**Status**: Approved by the maintainer on 2026-10-11. T1 to T13 and the fixes of the first two validation passes (F1 to F8) are done; the third pass failed, and its fixes (F9 to F17, at the end of this file) were the last round of the loop. The fourth pass failed on surviving mutants alone, with the loop at its bound: the maintainer decided on 2026-10-12, and the fixes of that decision (F18 to F24, at the end of this file) are done
 
 ---
 
@@ -1333,3 +1333,47 @@ Baseline: 359 tests pass (2026-10-11). The whole suite takes about seventeen and
 **Gate**: build
 
 **Commit**: `test(overlap): pin the cap of the hit tests itself`
+
+---
+
+### F24: State when the sensor is satisfied and list the limit of a right-to-left page
+
+- [x] Done
+
+**What**: The third success criterion of the spec asked for no surviving mutant, against a sensor that writes new ones on every pass: four passes left 11, 11, 12 and 9 alive. The maintainer decided on 2026-10-12 what a PASS asks from here on: the mutants a report or a task names die, with those of the code the last fix round changed, and the pass that confirms it writes no new ones. The criterion and a row of the Assumptions say so. With them, the Fix 7 of the report: a row of Out of Scope for a right-to-left page that scrolls sideways, which every tool reads from the wrong pixels, and the row of a Content Security Policy that refuses inline styles, which said "not verified" and was verified by the fourth pass.
+**Where**: `.specs/features/overlap/spec.md`
+**Depends on**: F23 (the count of criteria)
+**Reuses**: probes `pw-rtl` and `pcsp` of the report; the first written again outside the repository
+**Requirement**: none (the stopping rule, a decision; spec-precision gap 2 of the report)
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [x] The new row and the probe agree: a text half under a cover in the first viewport of a page 3000px wide gets no Finding when the page is right-to-left and one at 50% when it is not
+- [x] `validate_spec.py --strict` exits 0 on the spec with its 132 criteria
+- [x] Gate check passes: Build
+- [x] Test count: 368 tests pass; none deleted
+
+**Tests**: none
+**Gate**: build
+
+**Commit**: `docs(overlap): say when the sensor is satisfied and list the limit of rtl pages`
+
+---
+
+### Requirement coverage of the fourth fixes
+
+| Requirements | Task |
+| --- | --- |
+| OVL-121 | F18 |
+| OVL-122 to OVL-126 | F19 |
+| OVL-127, OVL-128 | F20 |
+| OVL-129, OVL-130 | F21 |
+| OVL-131 | F22 |
+| OVL-132 | F23 |
+
+12 of 12 mapped; with the tables above, 132 of 132.
