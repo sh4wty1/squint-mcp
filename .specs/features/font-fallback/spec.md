@@ -252,7 +252,7 @@ The maintainer accepted the spec on 2026-10-12 and took every default of the tab
 | FNT-11 | P1: Report a font that did not load | T6 | Implemented |
 | FNT-12 | P1: Report a font that did not load | T6 | Implemented |
 | FNT-13 | P1: Report a font that did not load | T2 | Implemented |
-| FNT-14 | P1: Report a font that did not load | T8 | Pending |
+| FNT-14 | P1: Report a font that did not load | T8 | Implemented |
 | FNT-15 | P1: Report a font that did not load | T5 | Implemented |
 | FNT-16 | P1: Stay silent when the text is in the font it asks for | T4 | Implemented |
 | FNT-17 | P1: Stay silent when the text is in the font it asks for | T4 | Implemented |

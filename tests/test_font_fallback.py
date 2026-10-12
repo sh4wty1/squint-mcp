@@ -21,6 +21,7 @@ BUG = fixture_url("font-fallback-bug.html")
 CLEAN = fixture_url("font-fallback-clean.html")
 BOUNDS = fixture_url("font-fallback-bounds.html")
 SHAPING = fixture_url("font-fallback-shaping.html")
+MONOSPACE = fixture_url("font-fallback-monospace.html")
 
 ONLY = ["font-fallback"]
 
@@ -471,3 +472,12 @@ async def test_the_width_holds_the_spacing_of_letters_and_words(
 ) -> None:
     finding = await sits_on(client, SHAPING, "#spaced")
     assert width(finding) == 226
+
+
+async def test_the_width_is_of_the_layout_the_box_is_of(client: Client) -> None:
+    findings = (await detect(client, MONOSPACE, checks=ONLY))["findings"]
+    (finding,) = findings
+    assert finding["selector"] == "#code"
+    assert findings == await findings_on(client, MONOSPACE, "#code", findings)
+    assert (family(finding), elements(finding)) == ("Brand", 1)
+    assert width(finding) == round(finding["box"]["w"], 2)

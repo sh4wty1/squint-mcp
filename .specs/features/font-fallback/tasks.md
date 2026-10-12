@@ -330,7 +330,7 @@ The Verifier is dispatched in the fifth session, after T11 and the Build of phas
 
 ### T8: Hold the two widths to the layout of the boxes
 
-- [ ] Done
+- [x] Done
 
 **What**: The fixture `font-fallback-monospace.html` as FNT-14 words it (the family is `Brand` and the page 3900px high; the row of the design's spike calls the family `Mono Brand`, and the spec is the one followed) and its test. No change to `src/`: the test is a pin of the order inside `capture()`.
 **Where**: `tests/test_font_fallback.py` (with the monospace fixture)
@@ -345,10 +345,10 @@ The Verifier is dispatched in the fifth session, after T11 and the Build of phas
 
 **Done when**:
 
-- [ ] The test asserts exactly one Finding, on `#code`, with `family` equal to `Brand`, `elements` equal to 1 and `textWidthPx` equal to the `w` of its `box` rounded to two decimal places; it compares no width with a figure
-- [ ] On Windows the test fails on a scratch copy in which `capture()` does not call `_settle_layout`
-- [ ] Gate check passes: Full
-- [ ] Test count: the count after T7 plus one; none deleted
+- [x] The test asserts exactly one Finding, on `#code`, with `family` equal to `Brand`, `elements` equal to 1 and `textWidthPx` equal to the `w` of its `box` rounded to two decimal places; it compares no width with a figure
+- [x] On Windows the test fails on a scratch copy in which `capture()` does not call `_settle_layout`
+- [x] Gate check passes: Full
+- [x] Test count: the count after T7 plus one; none deleted
 
 **Tests**: integration
 **Gate**: full
