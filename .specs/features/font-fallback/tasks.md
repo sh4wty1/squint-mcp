@@ -231,7 +231,7 @@ The Verifier is dispatched in the fifth session, after T11 and the Build of phas
 
 ### T5: Match a family whatever the case of its name
 
-- [ ] Done
+- [x] Done
 
 **What**: The fixture `font-fallback-bounds.html`, whole: every case the spec places in it (FNT-05, FNT-06, FNT-08 to FNT-12, FNT-20 to FNT-22, FNT-26, FNT-29 to FNT-31, FNT-48, FNT-52 to FNT-54). The tests of which family is reported, for which Face and under which name; then family names compared in lower case, in the script and in the Check, and reported as the first Face of the family has them.
 **Where**: `src/squint_mcp/checks/font_fallback.py` (with the page script, the bounds fixture and its tests)
@@ -246,14 +246,14 @@ The Verifier is dispatched in the fifth session, after T11 and the Build of phas
 
 **Done when**:
 
-- [ ] Red before the code: the tests of FNT-06, FNT-15 and FNT-29 fail for want of the Finding of `Missing Brand` on `#lower`
-- [ ] The test of FNT-15 asserts the whole list of `(selector, family, elements)` in order, and `minor` on every Finding (L-020)
-- [ ] The test of FNT-08 fails on a scratch copy in which the copies do not carry `font-weight`
-- [ ] The test of FNT-53 fails on a scratch copy in which the script and the Check both take a Face of any status but `loaded` for one that failed. Changed in one of the two alone the test still passes: the family is compared twice by design
-- [ ] The test of FNT-29 asserts `family` equal to `Missing Brand` and the `font-family` of `evidence.computed` as computed, `"missing brand", Ahem`
-- [ ] No family of the fixture has the name of a font a machine can have installed, and each rule has a family of its own
-- [ ] Gate check passes: Full
-- [ ] Test count: the count after T4 plus the tests of this task (nine at least); none deleted
+- [x] Red before the code: the tests of FNT-06, FNT-15 and FNT-29 fail for want of the Finding of `Missing Brand` on `#lower`
+- [x] The test of FNT-15 asserts the whole list of `(selector, family, elements)` in order, and `minor` on every Finding (L-020)
+- [x] The test of FNT-08 fails on a scratch copy in which the copies do not carry `font-weight`
+- [x] The test of FNT-53 fails on a scratch copy in which the script and the Check both take a Face of any status but `loaded` for one that failed. Changed in one of the two alone the test still passes: the family is compared twice by design
+- [x] The test of FNT-29 asserts `family` equal to `Missing Brand` and the `font-family` of `evidence.computed` as computed, `"missing brand", Ahem`
+- [x] No family of the fixture has the name of a font a machine can have installed, and each rule has a family of its own
+- [x] Gate check passes: Full
+- [x] Test count: the count after T4 plus the tests of this task (nine at least); none deleted
 
 **Tests**: integration
 **Gate**: full

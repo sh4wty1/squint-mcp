@@ -19,6 +19,7 @@ pytestmark = pytest.mark.anyio
 
 BUG = fixture_url("font-fallback-bug.html")
 CLEAN = fixture_url("font-fallback-clean.html")
+BOUNDS = fixture_url("font-fallback-bounds.html")
 
 ONLY = ["font-fallback"]
 
@@ -237,3 +238,107 @@ async def test_a_family_whose_faces_were_never_needed_is_not_reported(
     families = ("Unused", "After Generic", "Never Shown", "Blank")
     on = ("#after-generic",)
     assert await reported(client, CLEAN, families=families, on=on) == []
+
+
+def elements(finding: dict[str, Any]) -> int:
+    return finding["evidence"]["measured"]["elements"]
+
+
+async def of_family(client: Client, url: str, name: str) -> dict[str, Any]:
+    """The one Finding of the Check for the family `name`."""
+    findings = (await detect(client, url, checks=ONLY))["findings"]
+    (finding,) = (finding for finding in findings if family(finding) == name)
+    return finding
+
+
+async def sits_on(client: Client, url: str, selector: str) -> dict[str, Any]:
+    """The one Finding of the Check on the element `selector` matches."""
+    findings = (await detect(client, url, checks=ONLY))["findings"]
+    (finding,) = await findings_on(client, url, selector, findings)
+    return finding
+
+
+async def test_the_findings_of_the_bounds_follow_the_elements(client: Client) -> None:
+    findings = (await detect(client, BOUNDS, checks=ONLY))["findings"]
+    assert [
+        (finding["selector"], family(finding), elements(finding))
+        for finding in findings
+    ] == [
+        ("#half-bold", "Half", 1),
+        ("#mixed-lower", "Mixed", 1),
+        ("#lower", "Missing Brand", 2),
+        ("#scripted", "Scripted", 1),
+        ("#seen", "Veiled Brand", 1),
+        ("#shown", "Unshown Brand", 1),
+        ("#own-parent", "Parent Brand", 1),
+        ("#fallen-child", "Child Brand", 1),
+        ("#long", "Long Brand", 1),
+        ("#split", "Split Brand", 1),
+        ("#twice-normal", "Twice", 2),
+        ('[data-testid="shadow-text"]', "Shadow Brand", 2),
+    ]
+    assert [finding["severity"] for finding in findings] == ["minor"] * 12
+
+
+async def test_a_face_a_script_added_is_reported_when_it_failed(
+    client: Client,
+) -> None:
+    finding = await sits_on(client, BOUNDS, "#scripted")
+    assert family(finding) == "Scripted"
+    assert await of_family(client, BOUNDS, "Scripted") == finding
+
+
+async def test_a_family_written_in_another_case_is_one_family(client: Client) -> None:
+    finding = await of_family(client, BOUNDS, "Missing Brand")
+    assert finding == await sits_on(client, BOUNDS, "#lower")
+    assert elements(finding) == 2
+
+
+async def test_an_element_that_asks_for_the_face_that_failed_is_reported(
+    client: Client,
+) -> None:
+    finding = await sits_on(client, BOUNDS, "#half-bold")
+    assert (family(finding), elements(finding)) == ("Half", 1)
+    assert await of_family(client, BOUNDS, "Half") == finding
+
+
+async def test_a_text_all_in_the_range_of_the_face_that_failed_is_reported(
+    client: Client,
+) -> None:
+    finding = await sits_on(client, BOUNDS, "#mixed-lower")
+    assert (family(finding), elements(finding)) == ("Mixed", 1)
+    assert await of_family(client, BOUNDS, "Mixed") == finding
+
+
+async def test_a_text_in_a_shadow_tree_is_reported_with_the_family_of_the_document(
+    client: Client,
+) -> None:
+    finding = await of_family(client, BOUNDS, "Shadow Brand")
+    assert finding["selector"] == '[data-testid="shadow-text"]'
+    assert elements(finding) == 2
+    assert await sits_on(client, BOUNDS, '[data-testid="shadow-text"]') == finding
+
+
+async def test_the_family_is_named_as_its_face_has_it(client: Client) -> None:
+    finding = await sits_on(client, BOUNDS, "#lower")
+    assert family(finding) == "Missing Brand"
+    assert finding["evidence"]["computed"]["font-family"] == '"missing brand", Ahem'
+
+
+async def test_a_family_whose_faces_all_failed_gets_one_finding(
+    client: Client,
+) -> None:
+    finding = await of_family(client, BOUNDS, "Twice")
+    assert finding == await sits_on(client, BOUNDS, "#twice-normal")
+    assert elements(finding) == 2
+    findings = (await detect(client, BOUNDS, checks=ONLY))["findings"]
+    assert await findings_on(client, BOUNDS, "#twice-bold", findings) == []
+
+
+async def test_a_family_with_no_face_that_failed_is_not_reported(
+    client: Client,
+) -> None:
+    families = ("Upper Only",)
+    assert (
+        await reported(client, BOUNDS, families=families, on=("#out-of-range",)) == []
+    )

@@ -44,8 +44,11 @@
     family: bare(face.family),
     status: face.status,
   }));
+  // In lower case: a family is matched whatever the case of its name.
   const failed = new Set(
-    faces.filter((face) => face.status === "error").map((face) => face.family),
+    faces
+      .filter((face) => face.status === "error")
+      .map((face) => face.family.toLowerCase()),
   );
 
   const important = (element, declarations) => {
@@ -93,7 +96,7 @@
     const style = getComputedStyle(element);
     const names = namesOf(style.fontFamily);
     const family = bare(names[0]);
-    if (!failed.has(family)) return;
+    if (!failed.has(family.toLowerCase())) return;
     // ponytail: the Tail can start with a family the page declares and no text had
     // used; its copy then asks for that font, one request the page had not made.
     const tail = names.slice(1).join(", ") || "initial";
