@@ -9,7 +9,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ---
 
 **Design**: `.specs/features/font-fallback/design.md`
-**Status**: Written on 2026-10-12. The maintainer read it the same day, accepted FNT-52 to FNT-54 and had it committed, then asked for one phase per session. Execute: phase 1 (T1 to T3) is done and its Build passed on `9953077`, the same day
+**Status**: Written on 2026-10-12. The maintainer read it the same day, accepted FNT-52 to FNT-54 and had it committed, then asked for one phase per session. Execute: phase 1 (T1 to T3) is done and its Build passed on `9953077`, and phase 2 (T4 to T6) is done and its Build passed on `357206d`, both the same day
 
 ---
 
@@ -286,7 +286,7 @@ The Verifier is dispatched in the fifth session, after T11 and the Build of phas
 - [x] The test of FNT-54 fails on a scratch copy in which the script measures only the first text node of an element
 - [x] The test of FNT-30 fails on a scratch copy in which a copy is left free to wrap, and asserts both `textWidthPx` equal to 280 and a `box` 100 wide
 - [x] The test of FNT-32 passes every `selector` of the Findings of the bug fixture, at both viewports, and of the bounds fixture to `inspect_element` and compares the `box`
-- [ ] Gate check passes: Full; then Build for phase 2, in the background
+- [x] Gate check passes: Full; then Build for phase 2, in the background
 - [x] Test count: the count after T5 plus the tests of this task (eleven at least); none deleted
 
 **Tests**: integration
