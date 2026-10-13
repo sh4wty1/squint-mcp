@@ -53,7 +53,7 @@ None was given explicitly. What the agent chose without asking is in the next se
 
 ### Declined / Undiscussed Gray Areas → Assumptions
 
-Each is a row of the Assumptions table of the spec with `Confirmed?` at `n`, for the maintainer to confirm or change when reviewing the spec:
+Each is a row of the Assumptions table of the spec. The agent chose them alone, and the maintainer confirmed all twelve as written on 2026-10-13, with the spec:
 
 - The value of N is 20, not measured on real pages.
 - A value joins the nearest Representative among those Near it, not the first one in Rank order as the agent had said in chat.

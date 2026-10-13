@@ -89,20 +89,20 @@ The other fixtures (`tokens-used.html`, `tokens-groups.html`, `tokens-scope.html
 | Limit per Family | At most N Tokens, the full count in `total` | Maintainer, 2026-10-13 | y |
 | ΔE formula and threshold | ΔE2000, Near below 2. CSS Color 4, section 20.2 for the formula and section 14.2.1 (a note) for "using deltaE2000, one JND is 2"; the module compares with `E < JND` | Maintainer, 2026-10-13. The module gives that JND for gamut mapping; reading it as "two colours a viewer cannot tell apart are one token" is ours | y |
 | Lengths | Near when less than 1px apart, for every px length of the result | Maintainer, 2026-10-13. Squint default, no norm found: a Capture has one image pixel per CSS pixel, and whole steps of a scale (12, 13, 14) stay apart | y |
-| The value of N | 20 | Squint default: eight lists of 20 bound a response to 160 Tokens, and a scale longer than 20 says so through `total`. Not measured on real pages | n |
-| Which Group a Value joins | The nearest Representative among those Near it; a tie goes to the Group opened first | In chat the agent said "the first Group whose Representative is Near". Nearest reads better: 16.8px goes with 17px, not with a more used 16px | n |
-| What a Use counts | One element, one Value, one Role; four equal sides are one Use. `uses` of a Token is the sum of its Roles | An element with `padding: 8px` uses 8 once | n |
-| Text colour | The computed `-webkit-text-fill-color`, which paints the glyphs and equals `color` unless the page sets it (AD-004) | "Only where it paints": a gradient text with a transparent fill has no text colour | n |
-| Colours outside sRGB or in another notation | Converted to sRGB and clipped channel by channel | The result is 8-bit hex; gamut mapping is more than a token list needs | n |
-| Radii and box shadows | Counted on every Read element that has one, whatever else it paints | What makes a radius show (background, border, shadow, clipping, an image) is a long list, and a radius on an element with none of them is rare | n |
-| Values of the browser's default stylesheet | Counted like any other: the 8px margin of a `body` the page does not reset is a Use | The page paints with them; the tool cannot tell who declared a value | n |
-| Negative and zero spacing | Not Values | A negative margin is a layout device, zero is the absence of spacing | n |
-| `viewport` input | Optional, one viewport, default 1440x900, as `inspect_element`. The roadmap lists only `url` and `scope?` | Tokens change with media queries | n |
-| Text of the computed shadows | As Chromium serializes them (`rgba(0, 0, 0, 0.2) 0px 1px 3px 0px`) | The criteria quote these texts from memory; Design confirms them on Chromium 153 | n |
-| ΔE2000 is tested below the MCP seam | One test calls the colour-difference function on the 34 pairs of the published test data | The tool takes 8-bit sRGB colours; the test data is in Lab and cannot go through it | n |
-| ΔE values quoted in the criteria | Computed for this spec with a script checked on 12 rows of the test data (worst error 0.00004) | Design recomputes them with the shipped function | n |
+| The value of N | 20 | Squint default: eight lists of 20 bound a response to 160 Tokens, and a scale longer than 20 says so through `total`. Not measured on real pages | y |
+| Which Group a Value joins | The nearest Representative among those Near it; a tie goes to the Group opened first | In chat the agent said "the first Group whose Representative is Near". Nearest reads better: 16.8px goes with 17px, not with a more used 16px | y |
+| What a Use counts | One element, one Value, one Role; four equal sides are one Use. `uses` of a Token is the sum of its Roles | An element with `padding: 8px` uses 8 once | y |
+| Text colour | The computed `-webkit-text-fill-color`, which paints the glyphs and equals `color` unless the page sets it (AD-004) | "Only where it paints": a gradient text with a transparent fill has no text colour | y |
+| Colours outside sRGB or in another notation | Converted to sRGB and clipped channel by channel | The result is 8-bit hex; gamut mapping is more than a token list needs | y |
+| Radii and box shadows | Counted on every Read element that has one, whatever else it paints | What makes a radius show (background, border, shadow, clipping, an image) is a long list, and a radius on an element with none of them is rare | y |
+| Values of the browser's default stylesheet | Counted like any other: the 8px margin of a `body` the page does not reset is a Use | The page paints with them; the tool cannot tell who declared a value | y |
+| Negative and zero spacing | Not Values | A negative margin is a layout device, zero is the absence of spacing | y |
+| `viewport` input | Optional, one viewport, default 1440x900, as `inspect_element`. The roadmap lists only `url` and `scope?` | Tokens change with media queries | y |
+| Text of the computed shadows | As Chromium serializes them (`rgba(0, 0, 0, 0.2) 0px 1px 3px 0px`) | The criteria quote these texts from memory; Design confirms them on Chromium 153 | y |
+| ΔE2000 is tested below the MCP seam | One test calls the colour-difference function on the 34 pairs of the published test data | The tool takes 8-bit sRGB colours; the test data is in Lab and cannot go through it | y |
+| ΔE values quoted in the criteria | Computed for this spec with a script checked on 12 rows of the test data (worst error 0.00004) | Design recomputes them with the shipped function | y |
 
-**Open questions:** none - all resolved or logged above.
+**Open questions:** none - all resolved or logged above. The maintainer confirmed the spec as written on 2026-10-13, the twelve rows the agent had chosen alone included.
 
 ### Implicit-requirement dimensions
 
