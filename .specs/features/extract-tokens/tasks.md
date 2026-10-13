@@ -125,7 +125,7 @@ The Verifier is dispatched in the sixth session, after T29 and the Build of phas
 
 ### T1: Name the three thresholds in the config
 
-- [ ] Done
+- [x] Done
 
 **What**: `TOKENS_NEAR_COLOR_BELOW_DELTA_E = 2.0`, `TOKENS_NEAR_LENGTH_BELOW_PX = 1.0` and `TOKENS_MAX_PER_FAMILY = 20`, each under a comment that gives its source as the Assumptions table of the spec does. The two lists of the Capture are T4.
 **Where**: `src/squint_mcp/config.py`
@@ -137,10 +137,10 @@ The Verifier is dispatched in the sixth session, after T29 and the Build of phas
 
 **Done when**:
 
-- [ ] The comment of the ΔE threshold names CSS Color Module Level 4, section 20.2 for the formula and section 14.2.1 for "one JND is 2", that the module compares with `E < JND`, and that reading it as "one token" is Squint's
-- [ ] The comment of the Length threshold says it is a Squint default with no norm behind it, and why (one image pixel per CSS pixel; whole steps of a scale stay apart)
-- [ ] The comment of the Limit says it is a Squint default, not measured on real pages
-- [ ] Gate check passes: Static
+- [x] The comment of the ΔE threshold names CSS Color Module Level 4, section 20.2 for the formula and section 14.2.1 for "one JND is 2", that the module compares with `E < JND`, and that reading it as "one token" is Squint's
+- [x] The comment of the Length threshold says it is a Squint default with no norm behind it, and why (one image pixel per CSS pixel; whole steps of a scale stay apart)
+- [x] The comment of the Limit says it is a Squint default, not measured on real pages
+- [x] Gate check passes: Static
 
 **Tests**: none
 **Gate**: static
