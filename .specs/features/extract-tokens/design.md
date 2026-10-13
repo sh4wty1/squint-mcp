@@ -1,7 +1,7 @@
 # extract-tokens Design
 
 **Spec**: `.specs/features/extract-tokens/spec.md`
-**Status**: Draft. Written on 2026-10-13; the maintainer approves it before Tasks.
+**Status**: Approved. Written on 2026-10-13 and approved as written by the maintainer the same day, AD-009 with it: the pixel layers are still taken, and the four "Points for the maintainer" stay readings of the design, with no new criterion.
 
 ---
 

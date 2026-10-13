@@ -72,7 +72,7 @@
 - **Trade-off**: Every tool pays for what one tool reads. The collector takes 12% to 27% longer (865ms to 968ms for 1,004 elements, 5.35s to 6.79s for 5,004; 7% to 8% of it the properties, the rest the margin flags) and its output is 37% larger. `extract_tokens` takes four screenshots it does not read, 0.3s to 0.9s of a call of 1s to 2s: the layers stay because making them optional would touch every Check. The conversion of colours and the margin flags use `OffscreenCanvas` and `computedStyleMap` of the page's own world. A Capture has one more argument that changes which elements it holds.
 - **Scope**: `src/squint_mcp/capture.py`, `src/squint_mcp/config.py`, `src/squint_mcp/js/collect_elements.js`, `src/squint_mcp/js/srgb_colors.js`, `src/squint_mcp/models.py`, `src/squint_mcp/tokens.py`, `src/squint_mcp/tools/extract_tokens.py`, every Check that comes to read a colour.
 - **Date**: 2026-10-13
-- **Status**: active. Written with the design of slice 10 (`.specs/features/extract-tokens/design.md`); not yet confirmed by the maintainer.
+- **Status**: active. Written with the design of slice 10 (`.specs/features/extract-tokens/design.md`); confirmed by the maintainer on 2026-10-13.
 
 ## Handoff
 
