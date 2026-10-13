@@ -269,7 +269,7 @@ The other fixtures (`tokens-used.html`, `tokens-groups.html`, `tokens-scope.html
 8. The function that computes ΔE2000 SHALL give, for each of the 34 pairs of the test data of Sharma, Wu and Dalal (2005), the published value to four decimal places. <!-- TOK-74 -->
 9. `config.py` SHALL hold the ΔE2000 threshold (2), the Length threshold (1px) and the Limit (20), each as a named constant with a comment that gives its source as the Assumptions table does. <!-- TOK-75 -->
 10. The README SHALL describe `extract_tokens` (its inputs, the eight Families, what counts as a Use, the two thresholds with their sources, and the Limit), and the CHANGELOG SHALL list it under `Unreleased`. <!-- TOK-76 -->
-11. WHEN the test suite is run THEN every test of `ping`, `inspect_element` and `detect_visual_bugs` SHALL pass with no assertion changed. <!-- TOK-77 -->
+11. WHEN the test suite is run THEN every test of `ping`, `inspect_element` and `detect_visual_bugs` SHALL pass with no assertion changed but the two lists of tool names (`tests/test_ping.py`, `tests/test_inspect_element.py`), which gain `extract_tokens`. <!-- TOK-77 -->
 
 **Independent Test**: list the tools through an in-memory client; run the suite.
 

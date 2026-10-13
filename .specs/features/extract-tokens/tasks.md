@@ -9,7 +9,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ---
 
 **Design**: `.specs/features/extract-tokens/design.md` (approved by the maintainer on 2026-10-13, AD-009 with it)
-**Status**: Draft. Written on 2026-10-13; the maintainer reads it before Execute. Three points wait for the maintainer's word, under "Waiting for the maintainer" at the end of this file: none of them holds phase 1 or phase 2.
+**Status**: Approved by the maintainer on 2026-10-13, as written. The three points that waited for the maintainer's word are answered, under "Waiting for the maintainer" at the end of this file.
 
 ---
 
@@ -324,7 +324,7 @@ The Verifier is dispatched in the sixth session, after T29 and the Build of phas
 - [ ] TOK-09: `viewport` `{width: 1440, height: 900}`, `stabilized` true, `scope` null, `elements` 8, and in each of the eight Families a `total` equal to the length of its `tokens`. The Families are empty here: that clause gains its teeth from T9 to T12
 - [ ] TOK-11: exactly one content block, a text block
 - [ ] `elements` counts Read elements by their box only (the elements of `head` have none); `visibility` and opacity wait for T19
-- [ ] The two lists of tool names (`tests/test_ping.py:36`, `tests/test_inspect_element.py:464`) gain `extract_tokens`, and `test_tools_are_exactly_the_three_documented_ones` becomes `..._the_four_documented_ones`: `git diff` of the two files shows those lines and nothing else. This is the exception TOK-77 needs and does not yet word (point 1 of "Waiting for the maintainer"): without the maintainer's word on it, STOP before this task
+- [ ] The two lists of tool names (`tests/test_ping.py:36`, `tests/test_inspect_element.py:464`) gain `extract_tokens`, and `test_tools_are_exactly_the_three_documented_ones` becomes `..._the_four_documented_ones`: `git diff` of the two files shows those lines and nothing else. This is the exception TOK-77 words
 - [ ] Gate check passes: Full, with `tests/test_ping.py` and `tests/test_inspect_element.py` added to the pytest call
 - [ ] Test count: recorded here; none deleted
 
@@ -1109,7 +1109,7 @@ L-050 asks that every rule of the spec's Terms have a fixture whose outcome chan
 | Family order of `radii`: the Lengths before the others | TOK-36 | T18 |
 | Limit: 20 per Family, the first in Rank order, `total` the full count | TOK-62 to TOK-66 | T26 |
 
-Rules no fixture of the spec tells. No criterion was added and no task covers them: each is the maintainer's to decide (point 2 of "Waiting for the maintainer").
+Rules no fixture of the spec tells. No criterion was added and no task covers them: the maintainer left them so on 2026-10-13 (point 1 of "Waiting for the maintainer").
 
 | Rule | Why no fixture tells it | What would |
 | --- | --- | --- |
@@ -1125,6 +1125,7 @@ The four "Points for the maintainer" of the design stay readings with no criteri
 
 ## Waiting for the maintainer
 
-1. **TOK-77 and the two lists of tool names. Needed before T8 (phase 3).** `tests/test_ping.py:36` and `tests/test_inspect_element.py:464` assert that the server's tools are exactly `detect_visual_bugs`, `inspect_element` and `ping`. TOK-67 adds a fourth, and TOK-77 says every test of `ping` and of `inspect_element` passes with no assertion changed: the two cannot both hold. Each earlier tool changed these lists when it was added, and slice 9 had a criterion for its like (FNT-38). Proposed text for TOK-77, not yet in `spec.md`: "WHEN the test suite is run THEN every test of `ping`, `inspect_element` and `detect_visual_bugs` SHALL pass with no assertion changed but the two lists of tool names (`tests/test_ping.py`, `tests/test_inspect_element.py`), which gain `extract_tokens`." T8 is written for that text.
-2. **The five rules no fixture tells** (table above). Each can become a criterion, with a row in the traceability table and a line in a task of phase 4, 5 or 6; or stay as it is, and the Verifier is told so.
-3. **T28, the run on Linux.** Not in the order the maintainer gave for this phase: added because the spikes ran on Windows only and the CI is Linux. It costs about four minutes and can be struck.
+Nothing waits: the maintainer answered the three points on 2026-10-13. TOK-77 has the proposed text in `spec.md`, with the two lists of tool names as its one exception.
+
+1. **The five rules no fixture tells** (table above). Each can become a criterion, with a row in the traceability table and a line in a task of phase 4, 5 or 6; or stay as it is, and the Verifier is told so. **Answered: they stay as they are, with no new criterion.**
+2. **T28, the run on Linux.** Not in the order the maintainer gave for this phase: added because the spikes ran on Windows only and the CI is Linux. It costs about four minutes and can be struck. **Answered: T28 stays.**
