@@ -308,7 +308,7 @@ No response of another tool reads the list whole: `inspect_element` returns the 
 
 ### T7: Convert the colours outside `rgb()` in the page
 
-- [ ] Done
+- [x] Done
 
 **What**: `srgb_colors.js` as the design gives it, `_srgb_colors(page, elements)` called right after the collector, and `Capture.srgb`.
 **Where**: `src/squint_mcp/js/srgb_colors.js` (with its call in the Capture and the field of the model)
@@ -320,9 +320,9 @@ No response of another tool reads the list whole: `inspect_element` returns the 
 
 **Done when**:
 
-- [ ] Probe: a page with `background-color: color(display-p3 1 0 0)` gives `Capture.srgb` that colour as `color(srgb 1.09302 -0.22669 -0.150073)`; `color(srgb 0.2 0.4 0.6)` reads itself; a page whose colours are all `rgb()` gives `{}` and evaluates no script
-- [ ] The texts are sent sorted, in one call; a text the browser does not convert is left out
-- [ ] `git diff main --stat -- tests/` shows the two files of T2 and T3 and no file of an earlier slice
+- [x] Probe: a page with `background-color: color(display-p3 1 0 0)` gives `Capture.srgb` that colour as `color(srgb 1.09302 -0.22669 -0.150073)`; `color(srgb 0.2 0.4 0.6)` reads itself; a page whose colours are all `rgb()` gives `{}` and evaluates no script
+- [x] The texts are sent sorted, in one call; a text the browser does not convert is left out
+- [x] `git diff main --stat -- tests/` shows the two files of T2 and T3 and no file of an earlier slice
 - [ ] Gate check passes: Capture; then Build for phase 2, in the background: 422 tests, every test of the earlier tools with no assertion changed (TOK-77)
 
 **Tests**: integration
@@ -330,6 +330,16 @@ No response of another tool reads the list whole: `inspect_element` returns the 
 
 **Commit**: `feat(capture): convert colours outside rgb() to sRGB in the page`
 
+
+**Done (2026-10-13)**: probe with `Page.evaluate` wrapped to record every script a Capture evaluates:
+
+- `background-color: color(display-p3 1 0 0)`: `Capture.srgb` is `{"color(display-p3 1 0 0)": "color(srgb 1.09302 -0.22669 -0.150073)"}`; `srgb_colors.js` is evaluated once, with that one text.
+- `background-color: color(srgb 0.2 0.4 0.6)`: it reads itself, `color(srgb 0.2 0.4 0.6)`.
+- A page of `#1a73e8`, `red` and `hsl(120 50% 50% / 0.5)`, which Chromium writes as `rgb()` and `rgba()`: `{}`, and `srgb_colors.js` is not evaluated.
+- Four colours on two elements, one of them twice: one call, the texts sorted (`color(display-p3 1 0 0 / 0.5)`, `color(display-p3 1 0 0)`, `lab(50 40 -20)`, `oklch(0.7 0.1 200)`), each converted (`color(srgb 1.09302 -0.22669 -0.150073 / 0.5)`, `color(srgb 1.09302 -0.22669 -0.150073)`, `color(srgb 0.670292 0.354655 0.604598)`, `color(srgb 0.251614 0.694282 0.717111)`).
+- The script alone, on `color(display-p3 1 0 0)`, `lab(50 40 -20)` and `not a colour`: the third is `null`. No computed colour was found that Chromium does not convert, so the line of `_srgb_colors` that leaves a `null` out was read, not seen running.
+
+`git diff main --stat -- tests/` shows `tests/fixtures/ciede2000testdata.txt` and `tests/test_color.py` alone.
 ---
 
 ### Phase 3: The tool, on `tokens-page.html`

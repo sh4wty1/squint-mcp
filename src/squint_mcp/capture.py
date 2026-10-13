@@ -39,6 +39,7 @@ _FILL_TEXT = (_JS / "fill_text.js").read_text(encoding="utf-8")
 _SCROLL_WIDTH = (_JS / "scroll_width.js").read_text(encoding="utf-8")
 _COVERED_TEXT = (_JS / "covered_text.js").read_text(encoding="utf-8")
 _FONT_WIDTHS = (_JS / "font_widths.js").read_text(encoding="utf-8")
+_SRGB_COLORS = (_JS / "srgb_colors.js").read_text(encoding="utf-8")
 # Calls a method of the object the cover script leaves on the page.
 _COVERED_CALL = "([method, ...args]) => globalThis.__squintCovered[method](...args)"
 # Resolves once the page has painted two frames: whatever changed before the call
@@ -266,6 +267,31 @@ async def _measure_fonts(page: Page, elements: list[Element]) -> list[Face]:
     return [Face.model_validate(face) for face in found["faces"]]
 
 
+async def _srgb_colors(page: Page, elements: list[Element]) -> dict[str, str]:
+    """The computed colours of `elements` that Chromium does not write as `rgb()`
+    or `rgba()`, each as the browser converts it to sRGB (AD-009).
+
+    A text the browser does not convert is left out, and a page with no such
+    colour is asked nothing.
+    """
+    texts = sorted(
+        {
+            color
+            for element in elements
+            for name in config.CAPTURE_COLOR_PROPERTIES
+            if not (color := element.computed[name]).startswith("rgb")
+        }
+    )
+    if not texts:
+        return {}
+    converted = await page.evaluate(_SRGB_COLORS, texts)
+    return {
+        text: srgb
+        for text, srgb in zip(texts, converted, strict=True)
+        if srgb is not None
+    }
+
+
 async def capture(
     session: BrowserSession,
     url: str,
@@ -329,6 +355,10 @@ async def capture(
                 "descendants": descendants,
             },
         )
+        elements = [Element.model_validate(element) for element in collected]
+        # Right after the collector and before the pixels: it changes nothing
+        # on the page.
+        srgb = await _srgb_colors(page, elements)
         scroll_width = await page.evaluate(_SCROLL_WIDTH)
         pixels = await _screenshot(page)
         # After the collector, which reads the page's own styles, and after the
@@ -338,7 +368,6 @@ async def capture(
         background = await _filled(page, "transparent")
         black = await _filled(page, "rgb(0, 0, 0)")
         white = await _filled(page, "rgb(255, 255, 255)")
-        elements = [Element.model_validate(element) for element in collected]
         faces = None
         if fonts:
             # After the pixels, so that nothing it does can reach them; before
@@ -354,6 +383,7 @@ async def capture(
         viewport=viewport,
         stabilized=stabilized,
         elements=elements,
+        srgb=srgb,
         scroll_width=scroll_width,
         pixels=pixels,
         background=background,

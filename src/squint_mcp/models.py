@@ -130,6 +130,10 @@ class Capture:
     elements: list[Element]
     """The elements matched by the selector the Capture was taken for and, with
     `descendants`, every element under one of them, in document order."""
+    srgb: dict[str, str]
+    """The computed colours of the elements that Chromium does not write as
+    `rgb()` or `rgba()`, each as the `color(srgb r g b)` or `color(srgb r g b / a)`
+    the browser converts it to. A channel can be outside 0 to 1."""
     scroll_width: int
     """How wide the page scrolls, in CSS pixels. The pixels can be wider: they
     also hold what a `body` that is its own scroll container clips."""
