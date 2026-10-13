@@ -1,30 +1,30 @@
-# Prompt da próxima sessão (sessão 5 da fatia 9)
+# Prompt da próxima sessão (sessão 6 da fatia 9)
 
-Escrito em 2026-10-13, ao fim da sessão 4, para o mantenedor continuar de outro computador. O Handoff de `.specs/STATE.md` diz o mesmo estado; este arquivo guarda o prompt pronto para colar. Se ele fica no branch até o pull request é decisão do mantenedor.
+Escrito em 2026-10-13, ao fim da sessão 5. O Handoff de `.specs/STATE.md` diz o mesmo estado; este arquivo guarda o prompt pronto para colar. Se ele fica no branch até o pull request é decisão do mantenedor.
 
 ```
-/tlc-spec-driven validate: task #9, fase 5
+/tlc-spec-driven resume: task #9, decisões, push e pull request
 
-Fatia 9 do docs/ROADMAP.md: o Check `font-fallback`. Nesta sessão só a sessão 5 da tabela do Execution Plan do tasks.md: o Verifier, as rodadas de conserto se houver, e o T12 num PASS.
+Fatia 9 do docs/ROADMAP.md: o Check `font-fallback`. A fatia está fechada localmente: a segunda passada do Verifier é um PASS, o T12 marcou a fatia como concluída e o `validate_state.py font-fallback` sai com 0. Nesta sessão só o que vem depois da quinta: as minhas decisões pendentes, o push dos commits novos e o pull request, cada um com o meu aval.
 
 Antes de começar:
-1. Confirme que está no branch `feat/font-fallback`, com a árvore limpa e igual a `origin/feat/font-fallback` (o branch foi enviado ao remoto em 2026-10-13, sem pull request). O último commit é o que gravou .specs/features/font-fallback/next-session.md, logo depois de `ed5bfee`: confira com `git log --oneline -2`. Reconcilie o Handoff de .specs/STATE.md com o git.
-2. Se este computador não é o da sessão 4: `uv sync`, `uv run playwright install chromium`, e rode o gate Full da tabela de gates uma vez antes de qualquer outra coisa (45 testes no módulo da fatia). A imagem do Docker não está nesta máquina: só é preciso baixá-la se uma rodada de conserto mudar `src/` ou `tests/`. Os finais de linha da árvore seguem o `core.autocrlf` desta máquina: mantenha os que o checkout der em cada arquivo.
-3. Leia de .specs/features/font-fallback/tasks.md o cabeçalho até o fim do Execution Plan e a fase 5 inteira (T12), sem reler as fases 1 a 4; da spec.md os Goals e os Success Criteria; da skill, o papel do Verifier em sub-agents.md e o validate.md. Não leia `src/` nem `tests/` na janela principal: quem lê é o Verifier. O contexto desta sessão deve ficar abaixo de 30%.
-4. Rode o `validate_tasks.py` no tasks.md antes de despachar o Verifier (os três avisos de `Tests: none` em T10 a T12 são esperados).
+1. Confirme que está no branch `feat/font-fallback`, com a árvore limpa e 8 commits à frente de `origin/feat/font-fallback` (que está em `ab1dbab`). O último commit é o do Handoff, logo depois de `79a929a` (o T12): confira com `git log --oneline -3`. Reconcilie o Handoff de .specs/STATE.md com o git.
+2. Se este computador não é o da sessão 5: `uv sync`, `uv run playwright install chromium`, e rode o gate Full da tabela de gates uma vez (53 testes no módulo da fatia). Os finais de linha da árvore seguem o `core.autocrlf` desta máquina: mantenha os que o checkout der em cada arquivo.
+3. Leia o Handoff de .specs/STATE.md (o item "Open in slice 9") e, de .specs/features/font-fallback/validation.md, o cabeçalho e as seções "I-1", "The spec edits", "FNT-61 and FNT-62" e "Residuals". Não leia `src/` nem `tests/` na janela principal. O contexto desta sessão deve ficar abaixo de 30%.
 
-O que pesa nesta fase:
-- O Verifier é um sub-agente novo (autor ≠ verificador), sobre o intervalo `0b9ae25..HEAD`, com a spec.md como fonte da verdade e o validate.md como checklist. Ele cobre 53 critérios, FNT-40 a FNT-45 por evidência de arquivo; o FNT-46 é do T12, depois do PASS.
-- O Build da fase 4 passou em `82fa6cc` (2026-10-13: pyright, ruff check, ruff format e 413 testes, 24 min 11 s) e o módulo da fatia passou no Linux (45 testes, registrado sob o T10). São o gate dos Success Criteria: não precisam rodar de novo se `src/` e `tests/` não mudarem. Os commits depois de `82fa6cc` só tocam .specs/.
-- O sensor de discriminação roda numa cópia de `src/squint_mcp` num diretório temporário, com `PYTHONPATH` apontando para ela, nunca com `git stash` nem na árvore. Ele não pode deixar vivo nenhum mutante que uma task nomeia (o quarto Success Criterion e a Assumption "When the discrimination sensor is satisfied"). Ao fim, o `git status --porcelain` tem de ser o de antes.
-- Sub-agentes não conseguem escrever arquivos `.md` com a ferramenta Write: o Verifier escreve o `validation.md` por script, ou devolve o texto e a janela principal escreve.
-- A lacuna do FNT-36 que o Handoff registra (o teste não distingue as duas ordens) é para o Verifier julgar. O comentário de `_settle_layout` é do mantenedor: não toque.
-- Um FAIL vira tasks de conserto, cada uma num commit próprio, e o Verifier roda de novo: três rodadas no máximo antes de me perguntar. Nenhum teste é enfraquecido, pulado ou apagado.
-- Se uma rodada mudar `src/` ou `tests/`, rode de novo o gate Linux e escreva o resultado sob o T10, e rode de novo o Build em segundo plano (uns 24 minutos), sem pytest em paralelo.
-- Num PASS, o T12 marca a fatia 9 como concluída em docs/ROADMAP.md (FNT-46), com a coluna Status da spec atualizada no mesmo commit e a mensagem que a task traz. Confira os finais de linha por contagem de bytes. Scripts com aspas vão para arquivo, não para heredoc.
-- A sessão fecha quando o `validate_state.py font-fallback` sai com 0. As lições só são destiladas de falhas concretas (`lessons.py`); um PASS limpo não registra nada.
-- O terceiro Success Criterion (a primeira rodada no Linux do CI) só se vê no pull request: o CI roda em push para `main` e em pull_request, e nenhuma rodada dele viu o branch ainda.
-- Os commits desta sessão ficam locais: não faça push nem abra pull request sem o meu aval.
+Primeiro as decisões, uma pergunta por vez, antes de qualquer push:
+- I-1: uma família que falhou e tem barra invertida no nome não recebe Finding (`src/squint_mcp/js/font_widths.js:45`). O Verifier leu como issue e deu PASS; lido como lacuna do FNT-01, a passada falha. Escolho entre uma issue, um critério com o conserto numa rodada própria, ou um limite conhecido (marca `ponytail:` e linha nos Risks do design, como o escape hexadecimal).
+- Os oito critérios FNT-55 a FNT-62 e as quatro edições de texto aceito da spec (E1 a E5 do relatório), escritos pela rodada de conserto sem a minha leitura: aceito ou mando reescrever.
+- FNT-62 nomeia Calibri e FreeSerif no Tail de `#swift`, e FNT-61 depende do kerning da `serif` da máquina: aceito, ou troco por um arquivo de fonte no repositório, ou tiro `text-rendering` da lista.
+- Se o `next-session.md` fica no branch para o pull request, e se `design.md` e a linha 399 do tasks.md são atualizados antes dele.
 
-Ao terminar: troque o Handoff de .specs/STATE.md, faça o commit dele, e me entregue o prompt da próxima sessão (o push dos commits novos e o pull request, com o meu aval), neste mesmo formato e com o hash do último commit.
+O que pesa nesta sessão:
+- Se eu escolher consertar o I-1, isso muda `src/`: é uma rodada própria. Task de conserto com o teste antes do código (vermelho pelo motivo certo), um commit; o gate Linux rodado de novo e escrito sob o T10; o Build em segundo plano (uns 20 minutos, sem pytest em paralelo); e um Verifier novo sobre a rodada, com o sensor na cópia de `src/squint_mcp` e o `git status --porcelain` igual antes e depois. O `validation.md` e o T12 só valem de novo depois do PASS dessa rodada. Nenhum teste é enfraquecido, pulado ou apagado.
+- Se uma edição da spec for recusada, o critério reescrito é verificado de novo antes do push.
+- O push e o pull request são dois avais separados: peça cada um. O pull request vai para `main` (o da fatia 8 foi o #19); as issues ficam no GitHub de `sh4wty1/squint-mcp`, via `gh`.
+- Depois de abrir o pull request, leia o CI dele: o terceiro Success Criterion da spec (a primeira rodada no Linux do CI passa os testes da fatia sem assertiva mudada) só se vê ali. Se um teste da fatia falhar no CI, é um achado: conserta-se a premissa do fixture, nunca a assertiva.
+- Os residuais da fatia 8 e os itens "Found outside" do Handoff seguem sem issue: abrir é decisão minha, não faça por conta própria.
+- `docs/ROADMAP.md` e `.specs/STATE.md` são CRLF, os arquivos de .specs/features/font-fallback/ são LF: mantenha e confira por contagem de bytes. Scripts com aspas vão para arquivo, não para heredoc. O `lessons.py` só roda depois de um Verifier terminar, e só para falhas concretas.
+
+Ao terminar: troque o Handoff de .specs/STATE.md, faça o commit dele, e me entregue o prompt da próxima sessão (a fatia 10, `extract_tokens`, ou o que tiver ficado aberto), neste mesmo formato e com o hash do último commit.
 ```
