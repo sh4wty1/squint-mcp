@@ -619,7 +619,7 @@ Baseline: 413 tests are collected and the 45 of the module pass on `ab1dbab` (20
 
 ### F1: Hold what falls back from the other side
 
-- [ ] Done
+- [x] Done
 
 **What**: The fixture `font-fallback-judged.html` with three cases, and a test each: an element in a loaded Face of a Failed family that is wider than its Tail (FNT-55), an element of `visibility: collapse` before the first that falls back (FNT-56) and an element whose Own text is five spaces that `white-space: pre` keeps (FNT-57). No change to `src/`: every test is a pin.
 **Where**: `tests/test_font_fallback.py` (with `tests/fixtures/font-fallback-judged.html`)
@@ -634,12 +634,12 @@ Baseline: 413 tests are collected and the 45 of the module pass on `ab1dbab` (20
 
 **Done when**:
 
-- [ ] The fixture is new: no fixture and no assertion of T1 to T9 changes
-- [ ] The comment of the fixture gives the status of its Faces, as read from the page in Chromium on Windows and in the Playwright image
-- [ ] Each test fails under its mutant on a scratch copy and passes on the copy without it: C16b (FNT-55), C5 (FNT-56), S7 and S8 (FNT-57)
-- [ ] C16a, the other side of the equality, still dies (FNT-20)
-- [ ] Gate check passes: Full
-- [ ] Test count: 48 in the module, 416 collected; none deleted
+- [x] The fixture is new: no fixture and no assertion of T1 to T9 changes
+- [x] The comment of the fixture gives the status of its Faces, as read from the page in Chromium on Windows and in the Playwright image
+- [x] Each test fails under its mutant on a scratch copy and passes on the copy without it: C16b (FNT-55), C5 (FNT-56), S7 and S8 (FNT-57)
+- [x] C16a, the other side of the equality, still dies (FNT-20)
+- [x] Gate check passes: Full
+- [x] Test count: 48 in the module, 416 collected; none deleted
 
 **Tests**: integration
 **Gate**: full

@@ -24,6 +24,7 @@ SHAPING = fixture_url("font-fallback-shaping.html")
 MONOSPACE = fixture_url("font-fallback-monospace.html")
 ORDER = fixture_url("font-fallback-order.html")
 MANY = fixture_url("font-fallback-many.html")
+JUDGED = fixture_url("font-fallback-judged.html")
 
 ONLY = ["font-fallback"]
 
@@ -504,3 +505,26 @@ async def test_a_page_of_a_thousand_texts_gets_one_finding(client: Client) -> No
     assert result.structured_content is not None
     (finding,) = result.structured_content["findings"]
     assert elements(finding) == 1000
+
+
+async def test_a_text_wider_in_a_face_that_loaded_than_in_its_tail_is_not_counted(
+    client: Client,
+) -> None:
+    finding = await of_family(client, JUDGED, "Broad")
+    assert (finding["selector"], elements(finding)) == ("#broad-bold", 1)
+    assert finding == await sits_on(client, JUDGED, "#broad-bold")
+    assert await reported(client, JUDGED, families=(), on=("#broad-normal",)) == []
+
+
+async def test_text_whose_visibility_is_collapse_is_not_judged(client: Client) -> None:
+    finding = await of_family(client, JUDGED, "Folded Brand")
+    assert (finding["selector"], elements(finding)) == ("#unfolded", 1)
+    assert finding == await sits_on(client, JUDGED, "#unfolded")
+    assert await reported(client, JUDGED, families=(), on=("#folded",)) == []
+
+
+async def test_own_text_that_is_only_whitespace_is_not_judged(client: Client) -> None:
+    finding = await of_family(client, JUDGED, "Space Brand")
+    assert (finding["selector"], elements(finding)) == ("#after-spaces", 1)
+    assert finding == await sits_on(client, JUDGED, "#after-spaces")
+    assert await reported(client, JUDGED, families=(), on=("#spaces",)) == []
