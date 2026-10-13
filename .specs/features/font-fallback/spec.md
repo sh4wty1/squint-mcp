@@ -282,8 +282,8 @@ The maintainer accepted the spec on 2026-10-12 and took every default of the tab
 | FNT-41 | P2: Check contract, Capture and documents | T2 | Implemented |
 | FNT-42 | P2: Check contract, Capture and documents | T2 | Implemented |
 | FNT-43 | P2: Check contract, Capture and documents | T2 | Implemented |
-| FNT-44 | P2: Check contract, Capture and documents | T11 | Pending |
-| FNT-45 | P2: Check contract, Capture and documents | T11 | Pending |
+| FNT-44 | P2: Check contract, Capture and documents | T11 | Implemented |
+| FNT-45 | P2: Check contract, Capture and documents | T11 | Implemented |
 | FNT-46 | P2: Check contract, Capture and documents | T12 | Pending |
 | FNT-47 | Edge cases | T2 | Implemented |
 | FNT-48 | Edge cases | T5 | Implemented |

@@ -421,7 +421,7 @@ The Verifier is dispatched in the fifth session, after T11 and the Build of phas
 
 ### T11: Document the Check
 
-- [ ] Done
+- [x] Done
 
 **What**: The CHANGELOG entry under the unreleased version (one Finding per family, always `minor`, only the first family of `font-family` and only when the page declares it, and what is not reported: a family that is only named, a font that loaded and is not used, text of pseudo-elements, text of `visibility: hidden`), and the README naming five Checks.
 **Where**: `CHANGELOG.md` (with the README)
@@ -436,10 +436,10 @@ The Verifier is dispatched in the fifth session, after T11 and the Build of phas
 
 **Done when**:
 
-- [ ] The CHANGELOG entry says each of the things FNT-44 lists
-- [ ] The README gives the number of Checks as five and says what `font-fallback` reports
+- [x] The CHANGELOG entry says each of the things FNT-44 lists
+- [x] The README gives the number of Checks as five and says what `font-fallback` reports
 - [ ] Gate check passes: Full; then Build for phase 4, in the background. It is the gate of the spec's Success Criteria, and the Verifier waits for it
-- [ ] Test count: the count after T9; none deleted
+- [x] Test count: the count after T9; none deleted
 
 **Tests**: none
 **Gate**: full, then build for the phase
