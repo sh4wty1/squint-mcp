@@ -650,7 +650,7 @@ Baseline: 413 tests are collected and the 45 of the module pass on `ab1dbab` (20
 
 ### F2: Pin the names a family is read and reported under
 
-- [ ] Done
+- [x] Done
 
 **What**: The fixture `font-fallback-names.html` with three cases, and a test each: a family whose two Faces write its name in two cases (FNT-58), a family whose name holds a comma (FNT-59) and one whose name holds a quotation mark, which a computed `font-family` writes with a backslash (FNT-60). No change to `src/`: every test is a pin. The hexadecimal escape stays the limit the design accepts.
 **Where**: `tests/test_font_fallback.py` (with `tests/fixtures/font-fallback-names.html`)
@@ -665,12 +665,12 @@ Baseline: 413 tests are collected and the 45 of the module pass on `ab1dbab` (20
 
 **Done when**:
 
-- [ ] The fixture is new: no fixture and no assertion of T1 to T9 changes
-- [ ] The comment of the fixture gives the name each Face has in `document.fonts` and the computed `font-family` of `#inch`, as read from the page on both platforms
-- [ ] Each test fails under its mutants on a scratch copy and passes on the copy without them: C2 (FNT-58), S1b (FNT-59), S1a and S2b (FNT-60)
-- [ ] The case of FNT-59 holds no backslash and that of FNT-60 no comma: S1b leaves the test of FNT-60 passing, S1a and S2b that of FNT-59
-- [ ] Gate check passes: Full
-- [ ] Test count: 51 in the module, 419 collected; none deleted
+- [x] The fixture is new: no fixture and no assertion of T1 to T9 changes
+- [x] The comment of the fixture gives the name each Face has in `document.fonts` and the computed `font-family` of `#inch`, as read from the page on both platforms
+- [x] Each test fails under its mutants on a scratch copy and passes on the copy without them: C2 (FNT-58), S1b (FNT-59), S1a and S2b (FNT-60)
+- [x] The case of FNT-59 holds no backslash and that of FNT-60 no comma: S1b leaves the test of FNT-60 passing, S1a and S2b that of FNT-59
+- [x] Gate check passes: Full
+- [x] Test count: 51 in the module, 419 collected; none deleted
 
 **Tests**: integration
 **Gate**: full

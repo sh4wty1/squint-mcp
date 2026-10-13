@@ -306,9 +306,9 @@ On 2026-10-13 the Verifier's first pass ([`validation.md`](validation.md)) found
 | FNT-55 | P1: Stay silent when the text is in the font it asks for | F1 | Implemented |
 | FNT-56 | P1: Stay silent when the text is in the font it asks for | F1 | Implemented |
 | FNT-57 | P1: Stay silent when the text is in the font it asks for | F1 | Implemented |
-| FNT-58 | P1: Read the Finding | F2 | Pending |
-| FNT-59 | P1: Report a font that did not load | F2 | Pending |
-| FNT-60 | P1: Report a font that did not load | F2 | Pending |
+| FNT-58 | P1: Read the Finding | F2 | Implemented |
+| FNT-59 | P1: Report a font that did not load | F2 | Implemented |
+| FNT-60 | P1: Report a font that did not load | F2 | Implemented |
 | FNT-61 | P1: Read the Finding | F3 | Pending |
 | FNT-62 | P1: Read the Finding | F3 | Pending |
 

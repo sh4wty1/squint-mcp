@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: the names of a font that did not load</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are 200px wide.
+         It loads. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      /* One family per rule. A `src` that starts with `no-such-` names no file. The
+         Faces, read from `document.fonts` in Chromium 153 on Windows and on Linux
+         when this fixture was written (the tool does not show them): Ahem is
+         `loaded` and the other four are `error`, under the names Dual, DUAL,
+         Acme, Inc and Vinyl 12" in this order, each without quotes. */
+      /* One family whose two Faces write its name in two cases. Both fail. */
+      @font-face {
+        font-family: Dual;
+        font-weight: 400;
+        src: url("no-such-dual-normal.woff2");
+      }
+      @font-face {
+        font-family: DUAL;
+        font-weight: 700;
+        src: url("no-such-dual-bold.woff2");
+      }
+      /* A name with a comma in it. */
+      @font-face {
+        font-family: "Acme, Inc";
+        src: url("no-such-acme-inc.woff2");
+      }
+      /* A name with a quotation mark in it. The computed `font-family` of `#inch`
+         writes it with a backslash: "Vinyl 12\"", Ahem. */
+      @font-face {
+        font-family: 'Vinyl 12"';
+        src: url("no-such-vinyl.woff2");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      .text {
+        margin: 20px 0 0 40px;
+        width: 200px;
+      }
+
+      /* Each asks for another Face of the one family. */
+      #dual-normal,
+      #dual-bold {
+        font-family: Dual, Ahem;
+      }
+      #dual-bold {
+        font-weight: 700;
+      }
+
+      #comma {
+        font-family: "Acme, Inc", Ahem;
+      }
+
+      #inch {
+        font-family: 'Vinyl 12"', Ahem;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="dual-normal" class="text">XXXXXXXXXX</div>
+    <div id="dual-bold" class="text">XXXXXXXXXX</div>
+    <div id="comma" class="text">XXXXXXXXXX</div>
+    <div id="inch" class="text">XXXXXXXXXX</div>
+  </body>
+</html>

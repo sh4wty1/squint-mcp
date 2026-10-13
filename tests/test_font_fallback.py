@@ -25,6 +25,7 @@ MONOSPACE = fixture_url("font-fallback-monospace.html")
 ORDER = fixture_url("font-fallback-order.html")
 MANY = fixture_url("font-fallback-many.html")
 JUDGED = fixture_url("font-fallback-judged.html")
+NAMES = fixture_url("font-fallback-names.html")
 
 ONLY = ["font-fallback"]
 
@@ -528,3 +529,29 @@ async def test_own_text_that_is_only_whitespace_is_not_judged(client: Client) ->
     assert (finding["selector"], elements(finding)) == ("#after-spaces", 1)
     assert finding == await sits_on(client, JUDGED, "#after-spaces")
     assert await reported(client, JUDGED, families=(), on=("#spaces",)) == []
+
+
+async def test_a_family_is_named_as_the_first_of_its_faces_has_it(
+    client: Client,
+) -> None:
+    finding = await sits_on(client, NAMES, "#dual-normal")
+    assert (family(finding), elements(finding)) == ("Dual", 2)
+    assert await reported(client, NAMES, families=("DUAL",), on=("#dual-bold",)) == []
+
+
+async def test_a_family_name_that_holds_a_comma_is_read_whole(client: Client) -> None:
+    families = ("Acme, Inc",)
+    assert await reported(client, NAMES, families=families, on=("#comma",)) == [
+        ("#comma", "Acme, Inc")
+    ]
+
+
+async def test_a_family_name_written_with_a_backslash_is_matched_to_its_face(
+    client: Client,
+) -> None:
+    families = ('Vinyl 12"',)
+    assert await reported(client, NAMES, families=families, on=("#inch",)) == [
+        ("#inch", 'Vinyl 12"')
+    ]
+    finding = await sits_on(client, NAMES, "#inch")
+    assert finding["evidence"]["computed"]["font-family"] == '"Vinyl 12\\"", Ahem'
