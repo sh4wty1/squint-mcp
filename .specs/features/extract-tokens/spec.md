@@ -288,87 +288,87 @@ Covered by the stories: a `scope` that matches nothing (TOK-57), that is not a s
 
 | Requirement ID | Story | Phase | Status |
 | --- | --- | --- | --- |
-| TOK-01 | P1: Read the tokens of a page | - | Pending |
-| TOK-02 | P1: Read the tokens of a page | - | Pending |
-| TOK-03 | P1: Read the tokens of a page | - | Pending |
-| TOK-04 | P1: Read the tokens of a page | - | Pending |
-| TOK-05 | P1: Read the tokens of a page | - | Pending |
-| TOK-06 | P1: Read the tokens of a page | - | Pending |
-| TOK-07 | P1: Read the tokens of a page | - | Pending |
-| TOK-08 | P1: Read the tokens of a page | - | Pending |
-| TOK-09 | P1: Read the tokens of a page | - | Pending |
-| TOK-10 | P1: Read the tokens of a page | - | Pending |
-| TOK-11 | P1: Read the tokens of a page | - | Pending |
-| TOK-12 | P1: Read the tokens of a page | - | Pending |
-| TOK-13 | P1: Read the tokens of a page | - | Pending |
-| TOK-14 | P1: Read the tokens of a page | - | Pending |
-| TOK-15 | P1: Count a value only where it paints | - | Pending |
-| TOK-16 | P1: Count a value only where it paints | - | Pending |
-| TOK-17 | P1: Count a value only where it paints | - | Pending |
-| TOK-18 | P1: Count a value only where it paints | - | Pending |
-| TOK-19 | P1: Count a value only where it paints | - | Pending |
-| TOK-20 | P1: Count a value only where it paints | - | Pending |
-| TOK-21 | P1: Count a value only where it paints | - | Pending |
-| TOK-22 | P1: Count a value only where it paints | - | Pending |
-| TOK-23 | P1: Count a value only where it paints | - | Pending |
-| TOK-24 | P1: Count a value only where it paints | - | Pending |
-| TOK-25 | P1: Count a value only where it paints | - | Pending |
-| TOK-26 | P1: Count a value only where it paints | - | Pending |
-| TOK-27 | P1: Count a value only where it paints | - | Pending |
-| TOK-28 | P1: Count a value only where it paints | - | Pending |
-| TOK-29 | P1: Count a value only where it paints | - | Pending |
-| TOK-30 | P1: Count a value only where it paints | - | Pending |
-| TOK-31 | P1: Count a value only where it paints | - | Pending |
-| TOK-32 | P1: Count a value only where it paints | - | Pending |
-| TOK-33 | P1: Count a value only where it paints | - | Pending |
-| TOK-34 | P1: Count a value only where it paints | - | Pending |
-| TOK-35 | P1: Count a value only where it paints | - | Pending |
-| TOK-36 | P1: Count a value only where it paints | - | Pending |
-| TOK-37 | P1: Count a value only where it paints | - | Pending |
-| TOK-38 | P1: Count a value only where it paints | - | Pending |
-| TOK-39 | P1: Count a value only where it paints | - | Pending |
-| TOK-40 | P1: Count a value only where it paints | - | Pending |
-| TOK-41 | P1: Fold values that are nearly equal | - | Pending |
-| TOK-42 | P1: Fold values that are nearly equal | - | Pending |
-| TOK-43 | P1: Fold values that are nearly equal | - | Pending |
-| TOK-44 | P1: Fold values that are nearly equal | - | Pending |
-| TOK-45 | P1: Fold values that are nearly equal | - | Pending |
-| TOK-46 | P1: Fold values that are nearly equal | - | Pending |
-| TOK-47 | P1: Fold values that are nearly equal | - | Pending |
-| TOK-48 | P1: Fold values that are nearly equal | - | Pending |
-| TOK-49 | P1: Fold values that are nearly equal | - | Pending |
-| TOK-50 | P1: Fold values that are nearly equal | - | Pending |
-| TOK-51 | P1: Fold values that are nearly equal | - | Pending |
-| TOK-52 | P1: Narrow the reading to a part of the page | - | Pending |
-| TOK-53 | P1: Narrow the reading to a part of the page | - | Pending |
-| TOK-54 | P1: Narrow the reading to a part of the page | - | Pending |
-| TOK-55 | P1: Narrow the reading to a part of the page | - | Pending |
-| TOK-56 | P1: Narrow the reading to a part of the page | - | Pending |
-| TOK-57 | P1: Narrow the reading to a part of the page | - | Pending |
-| TOK-58 | P1: Narrow the reading to a part of the page | - | Pending |
-| TOK-59 | P1: Narrow the reading to a part of the page | - | Pending |
-| TOK-60 | P1: Narrow the reading to a part of the page | - | Pending |
-| TOK-61 | P1: Narrow the reading to a part of the page | - | Pending |
-| TOK-62 | P2: Bound the response | - | Pending |
-| TOK-63 | P2: Bound the response | - | Pending |
-| TOK-64 | P2: Bound the response | - | Pending |
-| TOK-65 | P2: Bound the response | - | Pending |
-| TOK-66 | P2: Bound the response | - | Pending |
-| TOK-67 | P2: Tool contract, config and documents | - | Pending |
-| TOK-68 | P2: Tool contract, config and documents | - | Pending |
-| TOK-69 | P2: Tool contract, config and documents | - | Pending |
-| TOK-70 | P2: Tool contract, config and documents | - | Pending |
-| TOK-71 | P2: Tool contract, config and documents | - | Pending |
-| TOK-72 | P2: Tool contract, config and documents | - | Pending |
-| TOK-73 | P2: Tool contract, config and documents | - | Pending |
-| TOK-74 | P2: Tool contract, config and documents | - | Pending |
-| TOK-75 | P2: Tool contract, config and documents | - | Pending |
-| TOK-76 | P2: Tool contract, config and documents | - | Pending |
-| TOK-77 | P2: Tool contract, config and documents | - | Pending |
-| TOK-78 | Edge Cases | - | Pending |
-| TOK-79 | Edge Cases | - | Pending |
+| TOK-01 | P1: Read the tokens of a page | Phase 3, T9 | Pending |
+| TOK-02 | P1: Read the tokens of a page | Phase 3, T10 | Pending |
+| TOK-03 | P1: Read the tokens of a page | Phase 3, T10 | Pending |
+| TOK-04 | P1: Read the tokens of a page | Phase 3, T10 | Pending |
+| TOK-05 | P1: Read the tokens of a page | Phase 3, T10 | Pending |
+| TOK-06 | P1: Read the tokens of a page | Phase 3, T11 | Pending |
+| TOK-07 | P1: Read the tokens of a page | Phase 3, T12 | Pending |
+| TOK-08 | P1: Read the tokens of a page | Phase 3, T12 | Pending |
+| TOK-09 | P1: Read the tokens of a page | Phase 3, T8 | Pending |
+| TOK-10 | P1: Read the tokens of a page | Phase 3, T13 | Pending |
+| TOK-11 | P1: Read the tokens of a page | Phase 3, T8 | Pending |
+| TOK-12 | P1: Read the tokens of a page | Phase 3, T13 | Pending |
+| TOK-13 | P1: Read the tokens of a page | Phase 3, T13 | Pending |
+| TOK-14 | P1: Read the tokens of a page | Phase 3, T13 | Pending |
+| TOK-15 | P1: Count a value only where it paints | Phase 4, T14 | Pending |
+| TOK-16 | P1: Count a value only where it paints | Phase 4, T14 | Pending |
+| TOK-17 | P1: Count a value only where it paints | Phase 4, T14 | Pending |
+| TOK-18 | P1: Count a value only where it paints | Phase 4, T14 | Pending |
+| TOK-19 | P1: Count a value only where it paints | Phase 4, T14 | Pending |
+| TOK-20 | P1: Count a value only where it paints | Phase 4, T14 | Pending |
+| TOK-21 | P1: Count a value only where it paints | Phase 4, T14 | Pending |
+| TOK-22 | P1: Count a value only where it paints | Phase 4, T19 | Pending |
+| TOK-23 | P1: Count a value only where it paints | Phase 4, T19 | Pending |
+| TOK-24 | P1: Count a value only where it paints | Phase 4, T19 | Pending |
+| TOK-25 | P1: Count a value only where it paints | Phase 4, T16 | Pending |
+| TOK-26 | P1: Count a value only where it paints | Phase 4, T16 | Pending |
+| TOK-27 | P1: Count a value only where it paints | Phase 4, T16 | Pending |
+| TOK-28 | P1: Count a value only where it paints | Phase 4, T17 | Pending |
+| TOK-29 | P1: Count a value only where it paints | Phase 4, T17 | Pending |
+| TOK-30 | P1: Count a value only where it paints | Phase 4, T17 | Pending |
+| TOK-31 | P1: Count a value only where it paints | Phase 4, T17 | Pending |
+| TOK-32 | P1: Count a value only where it paints | Phase 4, T17 | Pending |
+| TOK-33 | P1: Count a value only where it paints | Phase 4, T17 | Pending |
+| TOK-34 | P1: Count a value only where it paints | Phase 4, T17 | Pending |
+| TOK-35 | P1: Count a value only where it paints | Phase 4, T18 | Pending |
+| TOK-36 | P1: Count a value only where it paints | Phase 4, T18 | Pending |
+| TOK-37 | P1: Count a value only where it paints | Phase 4, T18 | Pending |
+| TOK-38 | P1: Count a value only where it paints | Phase 4, T18 | Pending |
+| TOK-39 | P1: Count a value only where it paints | Phase 4, T15 | Pending |
+| TOK-40 | P1: Count a value only where it paints | Phase 4, T15 | Pending |
+| TOK-41 | P1: Fold values that are nearly equal | Phase 5, T20 | Pending |
+| TOK-42 | P1: Fold values that are nearly equal | Phase 5, T20 | Pending |
+| TOK-43 | P1: Fold values that are nearly equal | Phase 5, T20 | Pending |
+| TOK-44 | P1: Fold values that are nearly equal | Phase 5, T20 | Pending |
+| TOK-45 | P1: Fold values that are nearly equal | Phase 5, T21 | Pending |
+| TOK-46 | P1: Fold values that are nearly equal | Phase 5, T21 | Pending |
+| TOK-47 | P1: Fold values that are nearly equal | Phase 5, T21 | Pending |
+| TOK-48 | P1: Fold values that are nearly equal | Phase 5, T22 | Pending |
+| TOK-49 | P1: Fold values that are nearly equal | Phase 5, T22 | Pending |
+| TOK-50 | P1: Fold values that are nearly equal | Phase 5, T22 | Pending |
+| TOK-51 | P1: Fold values that are nearly equal | Phase 5, T22 | Pending |
+| TOK-52 | P1: Narrow the reading to a part of the page | Phase 6, T24 | Pending |
+| TOK-53 | P1: Narrow the reading to a part of the page | Phase 6, T24 | Pending |
+| TOK-54 | P1: Narrow the reading to a part of the page | Phase 6, T24 | Pending |
+| TOK-55 | P1: Narrow the reading to a part of the page | Phase 6, T24 | Pending |
+| TOK-56 | P1: Narrow the reading to a part of the page | Phase 6, T24 | Pending |
+| TOK-57 | P1: Narrow the reading to a part of the page | Phase 6, T25 | Pending |
+| TOK-58 | P1: Narrow the reading to a part of the page | Phase 6, T25 | Pending |
+| TOK-59 | P1: Narrow the reading to a part of the page | Phase 6, T25 | Pending |
+| TOK-60 | P1: Narrow the reading to a part of the page | Phase 6, T25 | Pending |
+| TOK-61 | P1: Narrow the reading to a part of the page | Phase 6, T25 | Pending |
+| TOK-62 | P2: Bound the response | Phase 6, T26 | Pending |
+| TOK-63 | P2: Bound the response | Phase 6, T26 | Pending |
+| TOK-64 | P2: Bound the response | Phase 6, T26 | Pending |
+| TOK-65 | P2: Bound the response | Phase 6, T26 | Pending |
+| TOK-66 | P2: Bound the response | Phase 6, T26 | Pending |
+| TOK-67 | P2: Tool contract, config and documents | Phase 3, T8 | Pending |
+| TOK-68 | P2: Tool contract, config and documents | Phase 6, T27 | Pending |
+| TOK-69 | P2: Tool contract, config and documents | Phase 6, T27 | Pending |
+| TOK-70 | P2: Tool contract, config and documents | Phase 6, T27 | Pending |
+| TOK-71 | P2: Tool contract, config and documents | Phase 6, T27 | Pending |
+| TOK-72 | P2: Tool contract, config and documents | Phase 6, T27 | Pending |
+| TOK-73 | P2: Tool contract, config and documents | Phase 6, T27 | Pending |
+| TOK-74 | P2: Tool contract, config and documents | Phase 1, T3 | Pending |
+| TOK-75 | P2: Tool contract, config and documents | Phase 1, T1 | Pending |
+| TOK-76 | P2: Tool contract, config and documents | Phase 6, T29 | Pending |
+| TOK-77 | P2: Tool contract, config and documents | Phase 2, T7 | Pending |
+| TOK-78 | Edge Cases | Phase 5, T23 | Pending |
+| TOK-79 | Edge Cases | Phase 5, T23 | Pending |
 
-**Coverage:** 79 total, 0 mapped to tasks, 79 unmapped.
+**Coverage:** 79 total, 79 mapped to tasks, 0 unmapped.
 
 ---
 
