@@ -9,7 +9,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ---
 
 **Design**: `.specs/features/font-fallback/design.md`
-**Status**: Written on 2026-10-12. The maintainer read it the same day, accepted FNT-52 to FNT-54 and had it committed, then asked for one phase per session. Execute: phase 1 (T1 to T3) is done and its Build passed on `9953077`, phase 2 (T4 to T6) is done and its Build passed on `357206d`, and phase 3 (T7 to T9) is done and its Build passed on `ba860c9`, all the same day
+**Status**: Written on 2026-10-12. The maintainer read it the same day, accepted FNT-52 to FNT-54 and had it committed, then asked for one phase per session. Execute: phase 1 (T1 to T3) is done and its Build passed on `9953077`, phase 2 (T4 to T6) is done and its Build passed on `357206d`, and phase 3 (T7 to T9) is done and its Build passed on `ba860c9`, all the same day; phase 4 (T10 and T11) is done and its Build passed on `82fa6cc` on 2026-10-13
 
 ---
 
@@ -438,7 +438,7 @@ The Verifier is dispatched in the fifth session, after T11 and the Build of phas
 
 - [x] The CHANGELOG entry says each of the things FNT-44 lists
 - [x] The README gives the number of Checks as five and says what `font-fallback` reports
-- [ ] Gate check passes: Full; then Build for phase 4, in the background. It is the gate of the spec's Success Criteria, and the Verifier waits for it
+- [x] Gate check passes: Full; then Build for phase 4, in the background. It is the gate of the spec's Success Criteria, and the Verifier waits for it
 - [x] Test count: the count after T9; none deleted
 
 **Tests**: none
