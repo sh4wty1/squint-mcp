@@ -739,3 +739,13 @@ Each of the ten was applied alone to a fresh copy of `src/squint_mcp` outside th
 | CFG-tr | Killed | FNT-62 | `112.69 == 113.84` |
 
 Ten of ten killed, none alive. CFG-dir and CFG-tr were also run in the Playwright image, each against its test: both die there, on `52.81 == 55.39` and on `110.06 == 117.48`. A run with `-x` stops at its first failure: in each, every test of the module before the one named passed, the 45 of T1 to T9 among them, as in the report.
+
+### The second validation pass
+
+A second Verifier, a fresh sub-agent that wrote neither the code nor the first report, ran on `0b9ae25..6cd7076` on 2026-10-13, after the Build passed on `6cd7076` (pyright, ruff check, ruff format and 421 tests, 20 minutes 8 seconds). Its report replaces the first in [`validation.md`](validation.md); the first is whole in `895bd56`. The verdict is PASS: 61 of 61 criteria hold the outcome the spec gives, the 25 mutants that a task or the first report names die (the one of FNT-14 on 5 runs of 5), and the module passed again in the Playwright image (53 passed).
+
+What it leaves for the maintainer, none of which it failed the feature on:
+
+- **I-1, a defect of `src/`.** A Failed family whose name holds a backslash gets no Finding: `src/squint_mcp/js/font_widths.js:45` takes the escapes off the name of a Face, which `document.fonts` gives without any. It is in code of T2 that the round did not touch and on a page no criterion describes, so the sentence above, "found no defect in `src/`", is true of the first pass only. The Verifier reads it as an issue under the Assumption "When the discrimination sensor is satisfied"; read as a gap of FNT-01 it would fail the pass. The maintainer chooses: an issue, a criterion with its fix in a round of its own, or a known limit as the hexadecimal escape is.
+- **Eight residual mutants**, written to attack the eight new tests from another side, on cases no criterion describes; the report gives their rows.
+- **The edits of the spec** (E1 to E5 in the report): the eight criteria and the four edits of accepted text still wait for the maintainer's reading.
