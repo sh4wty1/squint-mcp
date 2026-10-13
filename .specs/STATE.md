@@ -66,6 +66,14 @@
 - **Date**: 2026-10-12
 - **Status**: active. Written with the design of slice 9; confirmed by the maintainer on 2026-10-12.
 
+### AD-009
+- **Decision**: A Capture reads what the tokens of a page are made of on every call, not on request. The collector reads twelve more computed properties (the four border colours, the four corner radii, `box-shadow`, `text-shadow`, `row-gap`, `column-gap`) and gives each element `auto_margins`, the sides whose computed margin is `auto`. `Capture.srgb` holds each computed colour of the elements that Chromium does not write as `rgb()` or `rgba()`, converted to `color(srgb ...)` by the browser itself. `capture(..., descendants=True)` holds the matches of the selector and every element under one of them, open shadow trees included, each once. A tool that reads no pixel still gets the three pixel layers of AD-004.
+- **Reason**: `extract_tokens` reads values and the maintainer decided the Capture gains no third fact on request (`.specs/features/extract-tokens/context.md`). `getComputedStyle` gives a margin as laid out, 620px for `auto`; only `computedStyleMap()` gives the keyword. Chromium keeps a colour in the notation it was written in, and a conversion in Python with the matrices of CSS Color 4 differed from the painted pixel for `rec2020` and by one step for a `display-p3` colour, where the browser's own (`fillStyle` of a detached `OffscreenCanvas` set to `color(from <text> srgb r g b / alpha)`) differed on none of 30 colours. With `descendants`, the selector stays the `scope` the caller wrote, so the errors quote it as written. Spiked for slice 10 on Chromium 153.
+- **Trade-off**: Every tool pays for what one tool reads. The collector takes 12% to 27% longer (865ms to 968ms for 1,004 elements, 5.35s to 6.79s for 5,004; 7% to 8% of it the properties, the rest the margin flags) and its output is 37% larger. `extract_tokens` takes four screenshots it does not read, 0.3s to 0.9s of a call of 1s to 2s: the layers stay because making them optional would touch every Check. The conversion of colours and the margin flags use `OffscreenCanvas` and `computedStyleMap` of the page's own world. A Capture has one more argument that changes which elements it holds.
+- **Scope**: `src/squint_mcp/capture.py`, `src/squint_mcp/config.py`, `src/squint_mcp/js/collect_elements.js`, `src/squint_mcp/js/srgb_colors.js`, `src/squint_mcp/models.py`, `src/squint_mcp/tokens.py`, `src/squint_mcp/tools/extract_tokens.py`, every Check that comes to read a colour.
+- **Date**: 2026-10-13
+- **Status**: active. Written with the design of slice 10 (`.specs/features/extract-tokens/design.md`); not yet confirmed by the maintainer.
+
 ## Handoff
 
 - **Feature**: `extract-tokens` (roadmap slice 10) / `.specs/features/extract-tokens/`. Specify is closed: the spec is confirmed by the maintainer. Design is next.
