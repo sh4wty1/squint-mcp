@@ -210,7 +210,7 @@ Layout of the raw file, for the parser of T3: ASCII, no heading line and no colu
 
 ### T4: Read the twelve properties tokens are made of
 
-- [ ] Done
+- [x] Done
 
 **What**: `CAPTURE_COMPUTED_PROPERTIES` gains the four `border-<side>-color`, the four corner radius properties, `box-shadow`, `text-shadow`, `row-gap` and `column-gap`; `CAPTURE_COLOR_PROPERTIES` names the seven of the list whose computed value is one colour.
 **Where**: `src/squint_mcp/config.py`
@@ -222,15 +222,22 @@ Layout of the raw file, for the parser of T3: ASCII, no heading line and no colu
 
 **Done when**:
 
-- [ ] Probe: on a scratch page, `Element.computed` of an element holds the twelve names with the texts the design measured (`rgba(0, 0, 0, 0.2) 0px 1px 3px 0px` for the shadow of TOK-08, `8px` for a corner, `normal` for no gap)
-- [ ] No response of another tool changes: Checks and `inspect_element` read named properties (design, Integration Points)
-- [ ] Gate check passes: Capture
+- [x] Probe: on a scratch page, `Element.computed` of an element holds the twelve names with the texts the design measured (`rgba(0, 0, 0, 0.2) 0px 1px 3px 0px` for the shadow of TOK-08, `8px` for a corner, `normal` for no gap)
+- [x] No response of another tool changes: Checks and `inspect_element` read named properties (design, Integration Points)
+- [x] Gate check passes: Capture
 
 **Tests**: integration
 **Gate**: capture
 
 **Commit**: `feat(capture): read the properties tokens are made of`
 
+
+**Done (2026-10-13)**: probe on a scratch page (`#card` with the styles of `tokens-page.html`, `#plain` with `text-shadow: 1px 1px 2px #000000`), `capture(...)` with `*`. A Capture reads 36 properties, and the last twelve of `Element.computed` are:
+
+- `#card`: the four `border-<side>-color` `rgb(204, 204, 204)`; the four corner radii `8px`; `box-shadow` `rgba(0, 0, 0, 0.2) 0px 1px 3px 0px`; `text-shadow` `none`; `row-gap` and `column-gap` `8px`.
+- `#plain`: the four border colours `rgb(0, 0, 0)` (its `color`, with no border); the four radii `0px`; `box-shadow` `none`; `text-shadow` `rgb(0, 0, 0) 1px 1px 2px`; `row-gap` and `column-gap` `normal`.
+
+No response of another tool reads the list whole: `inspect_element` returns the names of `INSPECT_COMPUTED_PROPERTIES` (`tools/inspect_element.py:79`) and each Check its own evidence names; the Capture gate passed on this commit.
 ---
 
 ### T5: Tell the sides whose margin is `auto`
