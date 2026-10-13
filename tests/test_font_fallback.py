@@ -555,3 +555,19 @@ async def test_a_family_name_written_with_a_backslash_is_matched_to_its_face(
     ]
     finding = await sits_on(client, NAMES, "#inch")
     assert finding["evidence"]["computed"]["font-family"] == '"Vinyl 12\\"", Ahem'
+
+
+async def test_the_width_is_of_the_text_in_the_direction_of_its_element(
+    client: Client,
+) -> None:
+    finding = await sits_on(client, SHAPING, "#turned")
+    assert family(finding) == "Turned Brand"
+    assert width(finding) == round(finding["box"]["w"], 2)
+
+
+async def test_the_width_is_of_the_text_without_the_ligatures_its_rendering_drops(
+    client: Client,
+) -> None:
+    finding = await sits_on(client, SHAPING, "#swift")
+    assert family(finding) == "Swift Brand"
+    assert width(finding) == round(finding["box"]["w"], 2)

@@ -43,6 +43,14 @@
         font-family: "Spaced Brand";
         src: url("no-such-spaced-brand.woff2");
       }
+      @font-face {
+        font-family: "Turned Brand";
+        src: url("no-such-turned-brand.woff2");
+      }
+      @font-face {
+        font-family: "Swift Brand";
+        src: url("no-such-swift-brand.woff2");
+      }
       html,
       body {
         margin: 0;
@@ -84,6 +92,31 @@
         letter-spacing: 2px;
         word-spacing: 6px;
       }
+
+      /* The two cases below are in fonts of the machine, so no test gives their
+         width as a figure: it is that of the box of the element. */
+
+      /* A block of its own that runs from right to left, in the font the machine
+         has for `serif`. The full stop at its end takes the direction of the block:
+         it goes to the left of the letters, apart from the `Y` it is kerned with on
+         a line that runs from left to right, and the text is wider for it (55.39px
+         against 52.81px, in Times New Roman on Windows and in Liberation Serif on
+         Linux). */
+      #turned {
+        display: inline-block;
+        direction: rtl;
+        font-family: "Turned Brand", serif;
+      }
+
+      /* `optimizeSpeed` sets a text without its ligatures, and no generic family
+         gives a font that has any: Calibri is a font of Windows and FreeSerif one
+         of Linux, and `fi` and `ffi` are ligatures in both. The text is wider
+         without them (113.84px against 112.69px in Calibri, 117.48px against
+         110.06px in FreeSerif). */
+      #swift {
+        font-family: "Swift Brand", Calibri, FreeSerif;
+        text-rendering: optimizeSpeed;
+      }
     </style>
   </head>
   <body>
@@ -92,5 +125,7 @@
     <div id="slant-normal" class="text">XXXXXXXXXX</div>
     <div id="slant-italic" class="text">XXXXXXXXXX</div>
     <div class="text"><span id="spaced">XXXX XXXXX</span></div>
+    <div class="text"><span id="turned">PLAY.</span></div>
+    <div class="text"><span id="swift">fifth office file</span></div>
   </body>
 </html>

@@ -681,7 +681,7 @@ Baseline: 413 tests are collected and the 45 of the module pass on `ab1dbab` (20
 
 ### F3: Pin the direction and the text-rendering a copy takes
 
-- [ ] Done
+- [x] Done
 
 **What**: Two cases after the last of `font-fallback-shaping.html`, and a test each: a block of `direction: rtl` whose text ends in a full stop (FNT-61) and a text of `text-rendering: optimizeSpeed` in a font with ligatures (FNT-62). Both are in fonts of the machine, so each test compares `textWidthPx` with the width of the box of the same Finding, as FNT-14 does, and with no figure. No change to `src/`: both tests are pins.
 **Where**: `tests/test_font_fallback.py` (with `tests/fixtures/font-fallback-shaping.html`)
@@ -696,11 +696,11 @@ Baseline: 413 tests are collected and the 45 of the module pass on `ab1dbab` (20
 
 **Done when**:
 
-- [ ] The two cases come after `#spaced`: nothing already placed moves, and the tests of FNT-49 to FNT-51 pass unchanged
-- [ ] Each test fails under its mutant on a scratch copy, on Windows and in the Playwright image, and passes on the copy without it: CFG-dir (FNT-61), CFG-tr (FNT-62)
-- [ ] CFG-tt, CFG-ls and CFG-ws, the other three names of the list, still die (FNT-49, FNT-51)
-- [ ] Gate check passes: Full
-- [ ] Test count: 53 in the module, 421 collected; none deleted
+- [x] The two cases come after `#spaced`: nothing already placed moves, and the tests of FNT-49 to FNT-51 pass unchanged
+- [x] Each test fails under its mutant on a scratch copy, on Windows and in the Playwright image, and passes on the copy without it: CFG-dir (FNT-61), CFG-tr (FNT-62)
+- [x] CFG-tt, CFG-ls and CFG-ws, the other three names of the list, still die (FNT-49, FNT-51)
+- [x] Gate check passes: Full
+- [x] Test count: 53 in the module, 421 collected; none deleted
 
 **Tests**: integration
 **Gate**: full
