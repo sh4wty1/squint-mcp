@@ -390,7 +390,7 @@ The Verifier is dispatched in the fifth session, after T11 and the Build of phas
 
 ### T10: Run the tests of the slice on Linux
 
-- [ ] Done
+- [x] Done
 
 **What**: `tests/test_font_fallback.py` run in the Playwright image for Docker with the Linux command of the gate table, and the result written under this task: the date, the id of the image and the count of tests passed.
 **Where**: `.specs/features/font-fallback/tasks.md`
@@ -405,10 +405,12 @@ The Verifier is dispatched in the fifth session, after T11 and the Build of phas
 
 **Done when**:
 
-- [ ] Every test of the module passes in the image, and their count is the count collected on Windows
-- [ ] A test that fails there is fixed in the code or in the fixture, in a commit of its own, never by an assertion that depends on the platform; the module then passes again on both
-- [ ] The result is written here
-- [ ] Gate check passes: Linux
+- [x] Every test of the module passes in the image, and their count is the count collected on Windows
+- [x] A test that fails there is fixed in the code or in the fixture, in a commit of its own, never by an assertion that depends on the platform; the module then passes again on both
+- [x] The result is written here
+- [x] Gate check passes: Linux
+
+**Result** (2026-10-13): `45 passed in 160.04s (0:02:40)` in `mcr.microsoft.com/playwright/python:v1.63.0-noble`, image id `sha256:59fe35832a79d1324e778b737760b2afc11cffcbaeba325012f96cabae832a75` (`docker image inspect`; created 2026-09-15), on `c1aeef3` with a clean tree: Python 3.12.3, pytest 9.1.1, Docker engine 28.0.4. The count is the 45 collected on Windows. No test failed there: nothing was fixed and no assertion was changed.
 
 **Tests**: none
 **Gate**: linux
