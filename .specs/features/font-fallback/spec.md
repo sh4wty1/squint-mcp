@@ -294,7 +294,7 @@ On 2026-10-13 the Verifier's first pass ([`validation.md`](validation.md)) found
 | FNT-43 | P2: Check contract, Capture and documents | T2 | Implemented |
 | FNT-44 | P2: Check contract, Capture and documents | T11 | Implemented |
 | FNT-45 | P2: Check contract, Capture and documents | T11 | Implemented |
-| FNT-46 | P2: Check contract, Capture and documents | T12 | Pending |
+| FNT-46 | P2: Check contract, Capture and documents | T12 | Implemented |
 | FNT-47 | Edge cases | T2 | Implemented |
 | FNT-48 | Edge cases | T5 | Implemented |
 | FNT-49 | P1: Stay silent when the text is in the font it asks for | T7 | Implemented |

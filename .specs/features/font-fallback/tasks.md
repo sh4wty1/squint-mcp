@@ -9,7 +9,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ---
 
 **Design**: `.specs/features/font-fallback/design.md`
-**Status**: Written on 2026-10-12. The maintainer read it the same day, accepted FNT-52 to FNT-54 and had it committed, then asked for one phase per session. Execute: phase 1 (T1 to T3) is done and its Build passed on `9953077`, phase 2 (T4 to T6) is done and its Build passed on `357206d`, and phase 3 (T7 to T9) is done and its Build passed on `ba860c9`, all the same day; phase 4 (T10 and T11) is done and its Build passed on `82fa6cc` on 2026-10-13. The Verifier's first pass returned FAIL on its sensor the same day: its fix round, F1 to F3, is at the end of this file
+**Status**: Written on 2026-10-12. The maintainer read it the same day, accepted FNT-52 to FNT-54 and had it committed, then asked for one phase per session. Execute: phase 1 (T1 to T3) is done and its Build passed on `9953077`, phase 2 (T4 to T6) is done and its Build passed on `357206d`, and phase 3 (T7 to T9) is done and its Build passed on `ba860c9`, all the same day; phase 4 (T10 and T11) is done and its Build passed on `82fa6cc` on 2026-10-13. The Verifier's first pass returned FAIL on its sensor the same day: its fix round, F1 to F3, is at the end of this file. The second pass is a PASS, and the closing step (T12) is done but for the push of the new commits and the pull request, which wait for the maintainer
 
 ---
 
@@ -454,7 +454,7 @@ The Verifier is dispatched in the fifth session, after T11 and the Build of phas
 
 ### T12: Mark slice 9 as done
 
-- [ ] Done
+- [x] Done
 
 **What**: After the Verifier's PASS: `docs/ROADMAP.md` shows slice 9 as `concluída`, in the table and in its section, with a link to this feature's directory; the Status column of the spec's traceability table and the Handoff of `.specs/STATE.md` say the same.
 **Where**: `docs/ROADMAP.md` (with the traceability table of the spec and the Handoff)
@@ -469,10 +469,10 @@ The Verifier is dispatched in the fifth session, after T11 and the Build of phas
 
 **Done when**:
 
-- [ ] `validation.md` holds a PASS for the other 61 criteria (53, and the eight of the fix round), and FNT-46 is added to it from file evidence once this task is done
-- [ ] `validate_state.py font-fallback` exits 0
-- [ ] If a fix round changed `src/` or `tests/` after T10, the Linux gate is run again and its result written under T10
-- [ ] Nothing is pushed and no pull request is opened: both wait for the maintainer's go-ahead
+- [x] `validation.md` holds a PASS for the other 61 criteria (53, and the eight of the fix round), and FNT-46 is added to it from file evidence once this task is done
+- [x] `validate_state.py font-fallback` exits 0
+- [x] If a fix round changed `src/` or `tests/` after T10, the Linux gate is run again and its result written under T10
+- [x] Nothing is pushed and no pull request is opened: both wait for the maintainer's go-ahead
 
 **Tests**: none
 **Gate**: full

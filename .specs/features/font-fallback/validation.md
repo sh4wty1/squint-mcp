@@ -17,7 +17,7 @@ Three things the maintainer has to read, none of which changes the verdict:
 2. **The spec was edited by the round and the maintainer has not read the edits.** Four edits of accepted text and eight criteria. Each is judged under "The spec edits". One of them does change the letter of a Term (whitespace in "Judged element"); it says what the approved design and the code already did. This PASS is of the spec as it is at `6cd7076`.
 3. **Eight of the thirteen mutants of this pass, written to attack the eight new tests from another side, pass the 53 tests.** Seven were shown to change what the tool returns on a page no fixture holds; the eighth was not, and cannot be while I-1 stands. Each is in code the round did not change and none shows a new test that does not hold the criterion it claims: by the Assumption they are residuals, listed with their exact rows.
 
-FNT-46 (the roadmap) is the closing step T12, which runs after a PASS: pending T12, not a gap.
+FNT-46 (the roadmap) is the closing step T12, which runs after a PASS: it was pending when the Verifier wrote this report. T12 then ran and added the row of FNT-46 from file evidence, as the task asks; that row, the line of the traceability update and this sentence are the closing step's, and nothing else of the report was changed.
 
 Abbreviations: `F` = `tests/test_font_fallback.py`, `D` = `tests/test_detect_visual_bugs.py`, `C` = `src/squint_mcp/checks/font_fallback.py`, `J` = `src/squint_mcp/js/font_widths.js`.
 
@@ -155,7 +155,7 @@ The statuses of the Faces that the fixtures' comments state are not shown by the
 | FNT-43 | Equality, no tolerance; `config` gains no threshold | `C:67` `if widths.own == widths.tail:`; the module does not import `config` (`C:3`); the diff of `src/squint_mcp/config.py` adds `"font-style"` (`:80`) and `TEXT_SHAPING_PROPERTIES` (`:86-92`), five names and no number | ✅ PASS |
 | FNT-44 | The CHANGELOG lists the Check under the unreleased version, with the six things the criterion names | `CHANGELOG.md:13`, under `## [Unreleased]` (`:7`) and `### Added` (`:9`): "one Finding per family"; "always `minor`"; "Only the first family ... and only when the page declares it"; not reported: "a family that is only named", "a font that loaded and is not used", "text of pseudo-elements", "text of `visibility: hidden`" | ✅ PASS |
 | FNT-45 | The README names `font-fallback` and gives the number of Checks as five | `README.md:45` "`detect_visual_bugs` runs five Checks: ... and `font-fallback` (...)" | ✅ PASS |
-| FNT-46 | The roadmap shows slice 9 as `concluída` | Pending T12, which runs after a PASS | ⏳ Pending T12 |
+| FNT-46 | The roadmap shows slice 9 as `concluída`, in the table and in its section, with a link to this feature's directory | `docs/ROADMAP.md:111` "| 9 | `font-fallback` | — | `tlc-spec-driven` | concluída |" and `docs/ROADMAP.md:163` "- **Status:** concluída. Spec, design e relatório de validação em [`.specs/features/font-fallback/`](../.specs/features/font-fallback/)." Added by the closing step T12 after this PASS, from the file, not by the Verifier | ✅ PASS (T12, file evidence) |
 
 **Status**: ✅ 61 of 61 criteria in scope are covered, each with the outcome the spec gives. No criterion is held by a vague assertion and none is a spec-precision gap: SP-1 of the first report (own text that is only whitespace) is closed by the Term as edited and by FNT-57.
 
@@ -489,7 +489,7 @@ Run here, once, on `6cd7076` with a clean tree, before the sensor.
 | ----------- | --------------- | ---------- |
 | FNT-01 to FNT-39 | Implemented | ✅ Verified |
 | FNT-40 to FNT-45 | Implemented | ✅ Verified (file evidence) |
-| FNT-46 | Pending | Pending T12 |
+| FNT-46 | Pending | ✅ Implemented by T12 after the PASS (file evidence, `docs/ROADMAP.md:111` and `:163`) |
 | FNT-47 to FNT-54 | Implemented | ✅ Verified |
 | FNT-55 to FNT-62 | Implemented | ✅ Verified, as the spec words them at `6cd7076`; their text waits for the maintainer's reading (E5) |
 
