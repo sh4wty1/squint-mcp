@@ -151,7 +151,7 @@ The Verifier is dispatched in the sixth session, after T29 and the Build of phas
 
 ### T2: Fetch the CIEDE2000 test data
 
-- [ ] Done
+- [x] Done
 
 **What**: The file of Sharma, Wu and Dalal, fetched raw (with `curl`, not through WebFetch) from `https://hajim.rochester.edu/ece/sites/gsharma/ciede2000/dataNprograms/ciede2000testdata.txt` and kept as fetched. The maintainer asked for the download in the prompt of the Tasks session.
 **Where**: `tests/fixtures/ciede2000testdata.txt`
@@ -163,15 +163,19 @@ The Verifier is dispatched in the sixth session, after T29 and the Build of phas
 
 **Done when**:
 
-- [ ] A script of the scratchpad reads the file and the 34 rows of the appendix of `design.md` and shows them equal, number for number, seven numbers a row. If a row differs, STOP: the appendix was read through WebFetch, one of the two is wrong, and the maintainer decides which
-- [ ] The layout of the raw file (separators, any heading line, any column the appendix does not have) is written under this task, for the parser of T3
-- [ ] Gate check passes: Static
+- [x] A script of the scratchpad reads the file and the 34 rows of the appendix of `design.md` and shows them equal, number for number, seven numbers a row. If a row differs, STOP: the appendix was read through WebFetch, one of the two is wrong, and the maintainer decides which
+- [x] The layout of the raw file (separators, any heading line, any column the appendix does not have) is written under this task, for the parser of T3
+- [x] Gate check passes: Static
 
 **Tests**: none
 **Gate**: static
 
 **Commit**: `test(color): add the CIEDE2000 test data`
 
+
+**Done (2026-10-13)**: fetched with `curl -sS -L --fail` (HTTP 200, `text/plain`, 1,830 bytes, SHA-256 `44aebb39107128328add54fbef5ac8ee89909e50508f448a1580adea2058a4b8`) and copied byte for byte. A script of the scratchpad read the file and the 34 rows of the appendix as decimals: 34 rows against 34, 238 numbers, none differs, and each is written the same way in both (four decimal places).
+
+Layout of the raw file, for the parser of T3: ASCII, no heading line and no column the appendix lacks; 34 rows of seven fields (L1, a1, b1, L2, a2, b2, ΔE00) separated by one tab each, with no space anywhere; each row ends in a line feed, and one empty line follows the last (35 line feeds). The working tree keeps it with line feeds, as fetched; `core.autocrlf` can give another checkout carriage returns, so the parser splits on whitespace and skips empty lines.
 ---
 
 ### T3: Compute ΔE2000
