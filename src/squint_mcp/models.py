@@ -93,6 +93,9 @@ class Element(BaseModel):
     """The local name of the element, in lower case for an HTML one."""
     box: Box
     box_model: BoxModel
+    auto_margins: list[Literal["top", "right", "bottom", "left"]]
+    """The sides whose computed margin is `auto`; `box_model.margin` holds there
+    the margin as laid out."""
     computed: dict[str, str]
     text: str
     """An excerpt of the text content, whitespace collapsed."""

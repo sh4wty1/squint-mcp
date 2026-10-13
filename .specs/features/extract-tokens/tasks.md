@@ -242,7 +242,7 @@ No response of another tool reads the list whole: `inspect_element` returns the 
 
 ### T5: Tell the sides whose margin is `auto`
 
-- [ ] Done
+- [x] Done
 
 **What**: The field `autoMargins` of the collector, read with `element.computedStyleMap()`, and `Element.auto_margins` with the comment the design gives it.
 **Where**: `src/squint_mcp/js/collect_elements.js` (with the model of an element)
@@ -254,15 +254,22 @@ No response of another tool reads the list whole: `inspect_element` returns the 
 
 **Done when**:
 
-- [ ] Probe: a box of 200px with `margin: 0 auto` gives `["right", "left"]` and a margin of 620px laid out on each of those sides; a box with `margin: 10px` gives `[]`; an element of an open shadow tree with `margin-left: auto` gives `["left"]`
-- [ ] The sides come in the order `top`, `right`, `bottom`, `left`
-- [ ] Gate check passes: Capture
+- [x] Probe: a box of 200px with `margin: 0 auto` gives `["right", "left"]` and a margin of 620px laid out on each of those sides; a box with `margin: 10px` gives `[]`; an element of an open shadow tree with `margin-left: auto` gives `["left"]`
+- [x] The sides come in the order `top`, `right`, `bottom`, `left`
+- [x] Gate check passes: Capture
 
 **Tests**: integration
 **Gate**: capture
 
 **Commit**: `feat(capture): tell the sides whose margin is auto`
 
+
+**Done (2026-10-13)**: probe on a scratch page, `capture(...)` with `*`, a viewport of 1440x900:
+
+- A box of 200px with `margin: 0 auto`: `auto_margins` `["right", "left"]`, margin laid out 0, 620, 0, 620.
+- A box with `margin: 10px`: `[]`, margin 10 on each side.
+- A flex item of 20px with `margin: auto` in a box 60px tall: `["top", "right", "bottom", "left"]`, the order of the four sides; margin laid out 20, 710, 20, 710.
+- An element of 100px in an open shadow tree with `margin-left: auto`: `["left"]`, margin laid out 1340 on the left; its host `[]`.
 ---
 
 ### T6: Hold what is under the matches of a selector

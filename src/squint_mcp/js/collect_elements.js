@@ -1,9 +1,9 @@
 // Runs in the page over the elements matched by the selector and returns them in
 // document order. For each one: its tag name, its border box as painted, in page
-// coordinates, its box model as laid out, the requested computed styles, an excerpt
-// of its text, the boxes and the right edge of its own text, its opacity with that
-// of its ancestors, its scroll and client width and a selector that is unique on
-// the page.
+// coordinates, its box model as laid out, the sides whose margin is `auto`, the
+// requested computed styles, an excerpt of its text, the boxes and the right edge
+// of its own text, its opacity with that of its ancestors, its scroll and client
+// width and a selector that is unique on the page.
 // The elements themselves are kept on the page as `globalThis.__squintElements`, in
 // the order they are returned in: a script that runs later names an element by its
 // place in the Capture, which needs no second selector (AD-005).
@@ -117,6 +117,9 @@
       );
     const border = edges("border", "-width");
     const padding = edges("padding");
+    // getComputedStyle gives a margin of `auto` as laid out, in pixels: only the
+    // typed style still holds the keyword (AD-009).
+    const typed = element.computedStyleMap();
     // The layout border box, before transforms: border and padding are untransformed
     // too (ADR-0003). offsetWidth is an integer, so the rect is kept while it agrees
     // with it: no transform is in play then, and a fractional size stays exact. SVG
@@ -169,6 +172,9 @@
           h: Math.max(0, layoutHeight - border.top - border.bottom - padding.top - padding.bottom),
         },
       },
+      autoMargins: ["top", "right", "bottom", "left"].filter(
+        (side) => typed.get(`margin-${side}`).value === "auto",
+      ),
       computed: Object.fromEntries(
         properties.map((property) => [property, style.getPropertyValue(property)]),
       ),
