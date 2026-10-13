@@ -211,66 +211,78 @@ Playwright's `css=` engine reaches into open shadow trees: `css=#deep` matches t
 Structured content, in camelCase as the other tools. Numbers are JSON numbers: Pydantic writes a `float` of 14 as `14.0`, which equals `14` for every reader.
 
 ```python
-class Variant[V](BaseModel):          # V is float or str
+class Variant[V](BaseModel):  # V is float or str
     value: V
     uses: int
+
 
 class ColorRoles(BaseModel):
     text: int
     background: int
     border: int
 
+
 class SpacingRoles(BaseModel):
     margin: int
     padding: int
     gap: int
 
-class ColorToken(BaseModel):          # colors
-    value: str                        # "#rrggbb" or "#rrggbbaa"
+
+class ColorToken(BaseModel):  # colors
+    value: str  # "#rrggbb" or "#rrggbbaa"
     uses: int
     roles: ColorRoles
     variants: list[Variant[str]]
 
-class TextToken(BaseModel):           # typography.families
+
+class TextToken(BaseModel):  # typography.families
     value: str
     uses: int
 
-class NumberToken(BaseModel):         # typography.weights
+
+class NumberToken(BaseModel):  # typography.weights
     value: float
     uses: int
 
-class LengthToken(BaseModel):         # typography.sizes, typography.lineHeights
-    value: float                      # px
+
+class LengthToken(BaseModel):  # typography.sizes, typography.lineHeights
+    value: float  # px
     uses: int
     variants: list[Variant[float]]
 
-class SpacingToken(BaseModel):        # spacing
-    value: float                      # px
+
+class SpacingToken(BaseModel):  # spacing
+    value: float  # px
     uses: int
     roles: SpacingRoles
     variants: list[Variant[float]]
 
-class RadiusToken(BaseModel):         # radii
-    value: str                        # "4px", "50%", "10px 20px"
+
+class RadiusToken(BaseModel):  # radii
+    value: str  # "4px", "50%", "10px 20px"
     uses: int
     variants: list[Variant[str]]
 
-class ShadowToken(BaseModel):         # shadows
+
+class ShadowToken(BaseModel):  # shadows
     kind: Literal["box", "text"]
     value: str
     uses: int
 
+
 class Family[T](BaseModel):
     total: int
-    tokens: list[T]                   # at most TOKENS_MAX_PER_FAMILY
+    tokens: list[T]  # at most TOKENS_MAX_PER_FAMILY
 
-class Typography(BaseModel):          # camelCase: lineHeights
+
+class Typography(BaseModel):  # camelCase: lineHeights
     families: Family[TextToken]
     sizes: Family[LengthToken]
     weights: Family[NumberToken]
     line_heights: Family[LengthToken]
 
-class Tokens(BaseModel):              # what tokens.extract returns
+
+class Tokens(BaseModel):  # what tokens.extract returns
     elements: int
     colors: Family[ColorToken]
     typography: Typography
@@ -278,7 +290,8 @@ class Tokens(BaseModel):              # what tokens.extract returns
     radii: Family[RadiusToken]
     shadows: Family[ShadowToken]
 
-class ExtractTokensResult(Tokens):    # in tools/extract_tokens.py
+
+class ExtractTokensResult(Tokens):  # in tools/extract_tokens.py
     viewport: Viewport
     stabilized: bool
     scope: str | None
