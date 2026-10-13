@@ -180,7 +180,7 @@ Layout of the raw file, for the parser of T3: ASCII, no heading line and no colu
 
 ### T3: Compute ΔE2000
 
-- [ ] Done
+- [x] Done
 
 **What**: `delta_e_2000(reference, sample)` on two Lab colours, as the appendix of the design writes it, and the one test of TOK-74. `lab_of`, `parse` and `to_hex` are not written here: T9, T15 and T20 add each when a test of the tool asks for it.
 **Where**: `src/squint_mcp/color.py` (with the new test module of the colour difference)
@@ -192,16 +192,18 @@ Layout of the raw file, for the parser of T3: ASCII, no heading line and no colu
 
 **Done when**:
 
-- [ ] Red before the code: the test fails on the import of `squint_mcp.color`
-- [ ] The test reads the file of T2, asserts that it holds 34 pairs, and for each pair that the function, rounded to four decimal places, gives the published value, in both orders of the pair
-- [ ] Gate check passes: Full; then Build for phase 1, in the background: the baseline of the slice
-- [ ] Test count: 422 collected (421 and the test of TOK-74); none deleted
+- [x] Red before the code: the test fails on the import of `squint_mcp.color`
+- [x] The test reads the file of T2, asserts that it holds 34 pairs, and for each pair that the function, rounded to four decimal places, gives the published value, in both orders of the pair
+- [x] Gate check passes: Full; then Build for phase 1, in the background: the baseline of the slice
+- [x] Test count: 422 collected (421 and the test of TOK-74); none deleted
 
 **Tests**: unit
 **Gate**: full, then build for the phase
 
 **Commit**: `feat(color): add the CIEDE2000 colour difference`
 
+
+**Done (2026-10-13)**: the test was red before the code (`ModuleNotFoundError: No module named 'squint_mcp.color'`, at collection) and passes with it; 422 tests are collected. The Build of phase 1 ran on the commit of this task: see "Builds of the sessions" under the Handoff of `.specs/STATE.md`.
 ---
 
 ### Phase 2: The contract of the Capture

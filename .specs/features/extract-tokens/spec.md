@@ -361,7 +361,7 @@ Covered by the stories: a `scope` that matches nothing (TOK-57), that is not a s
 | TOK-71 | P2: Tool contract, config and documents | Phase 6, T27 | Pending |
 | TOK-72 | P2: Tool contract, config and documents | Phase 6, T27 | Pending |
 | TOK-73 | P2: Tool contract, config and documents | Phase 6, T27 | Pending |
-| TOK-74 | P2: Tool contract, config and documents | Phase 1, T3 | Pending |
+| TOK-74 | P2: Tool contract, config and documents | Phase 1, T3 | Implemented |
 | TOK-75 | P2: Tool contract, config and documents | Phase 1, T1 | Implemented |
 | TOK-76 | P2: Tool contract, config and documents | Phase 6, T29 | Pending |
 | TOK-77 | P2: Tool contract, config and documents | Phase 2, T7 | Pending |
