@@ -128,8 +128,8 @@ class Capture:
     viewport: Viewport
     stabilized: bool
     elements: list[Element]
-    """The elements matched by the selector the Capture was taken for, in
-    document order."""
+    """The elements matched by the selector the Capture was taken for and, with
+    `descendants`, every element under one of them, in document order."""
     scroll_width: int
     """How wide the page scrolls, in CSS pixels. The pixels can be wider: they
     also hold what a `body` that is its own scroll container clips."""

@@ -274,11 +274,13 @@ async def capture(
     *,
     covered_text: bool = False,
     fonts: bool = False,
+    descendants: bool = False,
 ) -> Capture:
     """Open `url` in a fresh context, stabilize it and capture it.
 
     The Capture holds the elements matched by `selector`, which reaches into
-    open shadow roots; `*` is every element of the page. With `covered_text`,
+    open shadow roots; `*` is every element of the page. With `descendants`, it
+    also holds every element under a match, each once. With `covered_text`,
     the elements whose own text may be covered also say how much of it is. With
     `fonts`, the Capture holds the faces of the page, and the elements whose
     font may not have loaded say how wide their own text is on one line.
@@ -324,6 +326,7 @@ async def capture(
                 "properties": list(config.CAPTURE_COMPUTED_PROPERTIES),
                 "textLimit": config.TEXT_EXCERPT_MAX_CHARS,
                 "transformMinSizeDiffPx": config.TRANSFORM_MIN_SIZE_DIFF_PX,
+                "descendants": descendants,
             },
         )
         scroll_width = await page.evaluate(_SCROLL_WIDTH)

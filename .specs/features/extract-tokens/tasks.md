@@ -274,7 +274,7 @@ No response of another tool reads the list whole: `inspect_element` returns the 
 
 ### T6: Hold what is under the matches of a selector
 
-- [ ] Done
+- [x] Done
 
 **What**: The argument `descendants` of the collector and of `capture(..., descendants=False)`: the matches and every element under one of them, in the light tree and in open shadow trees, each once, in document order. The comment of `Capture.elements` says so.
 **Where**: `src/squint_mcp/js/collect_elements.js` (with the signature of the Capture and the comment of the model)
@@ -286,15 +286,24 @@ No response of another tool reads the list whole: `inspect_element` returns the 
 
 **Done when**:
 
-- [ ] Probe, on a scratch page shaped as `tokens-scope.html`: `.card` with `descendants` gives `#one`, `#one-child`, `#two`, `#inner`, `#host`, `#deep`, each once and in that order; `#deep` gives that element alone; `#gone` gives one element with no box; `.missing` gives none; `.card` without `descendants` gives the three matches, as today
-- [ ] Without `descendants`, a Capture holds what it held before this task
-- [ ] Gate check passes: Capture
+- [x] Probe, on a scratch page shaped as `tokens-scope.html`: `.card` with `descendants` gives `#one`, `#one-child`, `#two`, `#inner`, `#host`, `#deep`, each once and in that order; `#deep` gives that element alone; `#gone` gives one element with no box; `.missing` gives none; `.card` without `descendants` gives the three matches, as today
+- [x] Without `descendants`, a Capture holds what it held before this task
+- [x] Gate check passes: Capture
 
 **Tests**: integration
 **Gate**: capture
 
 **Commit**: `feat(capture): hold what is under the matches of a selector`
 
+
+**Done (2026-10-13)**: probe on a scratch page shaped as `tokens-scope.html`, the last selector of each element shown:
+
+- `.card` with `descendants`: `#one`, `#one-child`, `#two`, `#inner`, `#host`, `#deep`, `style`, each once (seven elements, seven selectors).
+- `#deep` with `descendants`: `#deep` alone. `#gone`: one element, its box 0 by 0. `.missing`: none.
+- `.card` without `descendants`: `#one`, `#two`, `#inner`, as before this task.
+- `*` holds the same seventeen elements with and without `descendants`.
+
+**Differs from the probe as written above**: `.card` gives a seventh element, `#host > style`. It is the `style` that `stabilize.js` appends to every open shadow root (line 22) before the collector runs: an element under a match, of `display: none` and with no box. A Capture of `*` holds it today, with the one appended to `html`. No rule leaves it out and none was added: it has no box, so no tool that reads elements by their box reads it. T24 is to count Read elements, not the elements of the Capture.
 ---
 
 ### T7: Convert the colours outside `rgb()` in the page
