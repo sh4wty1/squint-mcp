@@ -364,7 +364,7 @@ Covered by the stories: a `scope` that matches nothing (TOK-57), that is not a s
 | TOK-74 | P2: Tool contract, config and documents | Phase 1, T3 | Implemented |
 | TOK-75 | P2: Tool contract, config and documents | Phase 1, T1 | Implemented |
 | TOK-76 | P2: Tool contract, config and documents | Phase 6, T29 | Pending |
-| TOK-77 | P2: Tool contract, config and documents | Phase 2, T7 | Pending |
+| TOK-77 | P2: Tool contract, config and documents | Phase 2, T7 | Implemented |
 | TOK-78 | Edge Cases | Phase 5, T23 | Pending |
 | TOK-79 | Edge Cases | Phase 5, T23 | Pending |
 

@@ -203,7 +203,7 @@ Layout of the raw file, for the parser of T3: ASCII, no heading line and no colu
 **Commit**: `feat(color): add the CIEDE2000 colour difference`
 
 
-**Done (2026-10-13)**: the test was red before the code (`ModuleNotFoundError: No module named 'squint_mcp.color'`, at collection) and passes with it; 422 tests are collected. The Build of phase 1 ran on the commit of this task: see "Builds of the sessions" under the Handoff of `.specs/STATE.md`.
+**Done (2026-10-13)**: the test was red before the code (`ModuleNotFoundError: No module named 'squint_mcp.color'`, at collection) and passes with it; 422 tests are collected. The Build of phase 1 ran on the commit of this task (`ac6313d`): 422 passed in 22 minutes 54 seconds, the baseline of the slice before the Capture changes.
 ---
 
 ### Phase 2: The contract of the Capture
@@ -323,7 +323,7 @@ No response of another tool reads the list whole: `inspect_element` returns the 
 - [x] Probe: a page with `background-color: color(display-p3 1 0 0)` gives `Capture.srgb` that colour as `color(srgb 1.09302 -0.22669 -0.150073)`; `color(srgb 0.2 0.4 0.6)` reads itself; a page whose colours are all `rgb()` gives `{}` and evaluates no script
 - [x] The texts are sent sorted, in one call; a text the browser does not convert is left out
 - [x] `git diff main --stat -- tests/` shows the two files of T2 and T3 and no file of an earlier slice
-- [ ] Gate check passes: Capture; then Build for phase 2, in the background: 422 tests, every test of the earlier tools with no assertion changed (TOK-77)
+- [x] Gate check passes: Capture; then Build for phase 2, in the background: 422 tests, every test of the earlier tools with no assertion changed (TOK-77)
 
 **Tests**: integration
 **Gate**: capture, then build for the phase
@@ -340,6 +340,8 @@ No response of another tool reads the list whole: `inspect_element` returns the 
 - The script alone, on `color(display-p3 1 0 0)`, `lab(50 40 -20)` and `not a colour`: the third is `null`. No computed colour was found that Chromium does not convert, so the line of `_srgb_colors` that leaves a `null` out was read, not seen running.
 
 `git diff main --stat -- tests/` shows `tests/fixtures/ciede2000testdata.txt` and `tests/test_color.py` alone.
+
+The Build of phase 2 ran on the commit of this task (`8bbbbfb`): 422 passed in 20 minutes 47 seconds, with no test of an earlier tool changed (TOK-77). Its box above was ticked after it, in the commit of the Handoff.
 ---
 
 ### Phase 3: The tool, on `tokens-page.html`
