@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: a font that did not load among the other Checks</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are 200px wide.
+         Four Findings, all minor, from two Checks: two on `#b`. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      /* One family per rule. A `src` that starts with `no-such-` names no file. */
+      @font-face {
+        font-family: One;
+        src: url("no-such-one.woff2");
+      }
+      @font-face {
+        font-family: Two;
+        src: url("no-such-two.woff2");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      .text {
+        margin: 20px 0 0 40px;
+        width: 200px;
+      }
+      /* 4.47:1 on white, under 4.5:1. */
+      .grey {
+        color: rgb(119, 119, 119);
+      }
+      #a {
+        font-family: One, Ahem;
+      }
+      #b {
+        font-family: Two, Ahem;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="a" class="text">XXXXXXXXXX</div>
+    <div id="b" class="text grey">XXXXXXXXXX</div>
+    <div id="c" class="text grey">XXXXXXXXXX</div>
+  </body>
+</html>

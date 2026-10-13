@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: fonts the page declares that did not load</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are 200px wide. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      /* Three families whose file is not there. `Icon Set` is declared before
+         `Brand` and used after it: Findings follow the elements, not the faces. */
+      @font-face {
+        font-family: "Icon Set";
+        src: url("no-such-icon-set.woff2");
+      }
+      @font-face {
+        font-family: Brand;
+        src: url("no-such-brand.woff2");
+      }
+      @font-face {
+        font-family: "Narrow Only";
+        src: url("no-such-narrow-only.woff2");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      .text {
+        margin: 20px 0 0 40px;
+        width: 200px;
+      }
+      /* No own text: its three children fall back in `Brand`, one Finding. */
+      #wrap {
+        font-family: Brand, Ahem;
+      }
+      /* The only name of the list: its Tail is the initial value. */
+      #icon {
+        font-family: "Icon Set";
+      }
+      /* The font it asks for. */
+      #fine {
+        font-family: Ahem;
+      }
+      /* Not rendered at 1440px, so its font is not even asked for there. */
+      #narrow {
+        display: none;
+        font-family: "Narrow Only", Ahem;
+      }
+      @media (max-width: 600px) {
+        #narrow {
+          display: block;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="wrap">
+      <div id="heading" class="text">XXXXXXXXXX</div>
+      <div id="lead" class="text">XXXXXXXX</div>
+      <div id="note" class="text">XXXXXX</div>
+    </div>
+    <div id="icon" class="text">home</div>
+    <div id="fine" class="text">XXXXXXXXXX</div>
+    <div id="narrow" class="text">XXXXXXXXXX</div>
+  </body>
+</html>

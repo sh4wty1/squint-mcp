@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: text in the font it asks for, and fonts the page never needed</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are 200px wide.
+         `Wide` is Ahem half as large again: a glyph is 30px wide. Both load. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      @font-face {
+        font-family: Wide;
+        src: url("Ahem.ttf");
+        size-adjust: 150%;
+      }
+      /* Eight Faces whose file is not there: these seven and `Preloaded`, which the
+         script at the end of the page adds. Their status, read from `document.fonts`
+         in Chromium 153 when this fixture was written (the tool does not show it):
+           error:    Second Choice, Hidden Brand, Pseudo Brand, Preloaded
+           unloaded: Unused, After Generic, Never Shown, Blank */
+      @font-face {
+        font-family: "Second Choice";
+        src: url("no-such-second-choice.woff2");
+      }
+      @font-face {
+        font-family: "Hidden Brand";
+        src: url("no-such-hidden-brand.woff2");
+      }
+      @font-face {
+        font-family: "Pseudo Brand";
+        src: url("no-such-pseudo-brand.woff2");
+      }
+      @font-face {
+        font-family: Unused;
+        src: url("no-such-unused.woff2");
+      }
+      @font-face {
+        font-family: "After Generic";
+        src: url("no-such-after-generic.woff2");
+      }
+      @font-face {
+        font-family: "Never Shown";
+        src: url("no-such-never-shown.woff2");
+      }
+      @font-face {
+        font-family: Blank;
+        src: url("no-such-blank.woff2");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      .text {
+        margin: 20px 0 0 40px;
+        width: 200px;
+      }
+      /* Two fonts that loaded. */
+      #ahem {
+        font-family: Ahem;
+      }
+      #wide {
+        font-family: Wide;
+      }
+      /* A stack of system fonts: none of its names has a Face. */
+      #stack {
+        font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      }
+      /* Its first family is only named: it cannot fail to load. */
+      #undeclared {
+        font-family: "Squint No Such Font", Ahem;
+      }
+      /* A family that failed, and is not the first of the list. */
+      #second {
+        font-family: "Squint No Such Font", "Second Choice", Ahem;
+      }
+      /* The only element that asks first for `Hidden Brand` is hidden on purpose. */
+      #hidden {
+        font-family: "Hidden Brand", Ahem;
+        visibility: hidden;
+      }
+      /* No own text: only its pseudo-element asks for `Pseudo Brand`. */
+      #pseudo::before {
+        content: "XXXXXXXXXX";
+        font-family: "Pseudo Brand", Ahem;
+      }
+      /* Behind a generic family: never asked for. */
+      #after-generic {
+        font-family: sans-serif, "After Generic";
+      }
+      /* Not rendered: its font is not asked for. */
+      #none {
+        display: none;
+        font-family: "Never Shown", Ahem;
+      }
+      /* Whitespace needs no font. */
+      #blank {
+        font-family: Blank, Ahem;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="ahem" class="text">XXXXXXXXXX</div>
+    <div id="wide" class="text">XXXXXX</div>
+    <div id="stack" class="text">Squint</div>
+    <div id="undeclared" class="text">XXXXXXXXXX</div>
+    <div id="second" class="text">XXXXXXXXXX</div>
+    <div id="hidden" class="text">XXXXXXXXXX</div>
+    <div id="pseudo" class="text"></div>
+    <div id="after-generic" class="text">Squint</div>
+    <div id="none" class="text">XXXXXXXXXX</div>
+    <div id="blank" class="text"> </div>
+    <script>
+      // A Face no `font-family` names: a script adds it and loads it, and it fails.
+      const preloaded = new FontFace("Preloaded", 'url("no-such-preloaded.woff2")');
+      document.fonts.add(preloaded);
+      preloaded.load().catch(() => {});
+    </script>
+  </body>
+</html>

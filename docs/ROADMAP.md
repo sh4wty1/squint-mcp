@@ -108,7 +108,7 @@ A v0.2 fecha a fase 2 da especificação inicial ([`.docs/START.md`](../.docs/ST
 | 6 | Orçamento de pixels por Capture | — | `tlc-spec-lean` | concluída |
 | 7 | `offscreen-overflow` | — | `tlc-spec-lean` | concluída |
 | 8 | `overlap` | — | `tlc-spec-driven` | concluída |
-| 9 | `font-fallback` | — | `tlc-spec-driven` | pendente |
+| 9 | `font-fallback` | — | `tlc-spec-driven` | concluída |
 | 10 | `extract_tokens` | — | `tlc-spec-driven` | pendente |
 | 11 | Release 0.2.0 | 6 a 10 | `tlc-implement` | pendente |
 
@@ -160,7 +160,7 @@ A v0.2 fecha a fase 2 da especificação inicial ([`.docs/START.md`](../.docs/ST
 - **Não entra:** `layout-shift`; avaliação de qualidade tipográfica.
 - **Dependência:** nenhuma.
 - **Skill:** `tlc-spec-driven`, porque mexe no Capture e no Check.
-- **Status:** pendente.
+- **Status:** concluída. Spec, design e relatório de validação em [`.specs/features/font-fallback/`](../.specs/features/font-fallback/).
 
 ## 10. `extract_tokens`
 

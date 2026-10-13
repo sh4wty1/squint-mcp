@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: a font that did not load, before the generic monospace</title>
+    <style>
+      /* No Ahem here: the text is in the font the machine gives for `monospace`,
+         and no width of this page is the same on every machine. The page is
+         3900px high, 3000px more than the viewport: the first screenshot beyond
+         the viewport can change that font (issue #18). */
+      /* A `src` that starts with `no-such-` names no file. */
+      @font-face {
+        font-family: Brand;
+        src: url("no-such-brand.woff2");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        height: 3900px;
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font-size: 20px;
+        line-height: 30px;
+      }
+      .text {
+        margin: 20px 0 0 40px;
+        width: 200px;
+      }
+      /* Fifteen glyphs on one line, in the Tail of the list. */
+      #code {
+        font-family: Brand, monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="text"><span id="code">abcdefghijklmno</span></div>
+  </body>
+</html>

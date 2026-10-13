@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: which text falls back in a font that did not load</title>
+    <style>
+      /* Ahem: every glyph is a 1em square of ink, so 10 glyphs at 20px are 200px wide.
+         It loads. */
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      /* One family per rule. A `src` that starts with `no-such-` names no file. The
+         status of the Faces, read from `document.fonts` in Chromium 153 on Windows
+         and on Linux when this fixture was written (the tool does not show it):
+           loaded: Ahem, Broad of weight 400
+           error:  Broad of weight 700, Folded Brand, Space Brand */
+      /* A Face that loads and one that does not, by weight. The one that loads is
+         Ahem half as large again: a glyph is 30px wide, wider than in the Tail. */
+      @font-face {
+        font-family: Broad;
+        font-weight: 400;
+        src: url("Ahem.ttf");
+        size-adjust: 150%;
+      }
+      @font-face {
+        font-family: Broad;
+        font-weight: 700;
+        src: url("no-such-broad-bold.woff2");
+      }
+      @font-face {
+        font-family: "Folded Brand";
+        src: url("no-such-folded-brand.woff2");
+      }
+      @font-face {
+        font-family: "Space Brand";
+        src: url("no-such-space-brand.woff2");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      .text {
+        margin: 20px 0 0 40px;
+        width: 200px;
+      }
+
+      /* `Broad`: text of weight 400 is in the Face that loaded, 300px on one line
+         against 200px in its Tail. Bold text asks for the Face that failed and is
+         in Ahem, 200px. */
+      #broad-normal,
+      #broad-bold {
+        font-family: Broad, Ahem;
+      }
+      #broad-normal {
+        font-weight: 400;
+      }
+      #broad-bold {
+        font-weight: 700;
+      }
+
+      /* Not seen, by another word than `hidden`, before the first element that is. */
+      #folded,
+      #unfolded {
+        font-family: "Folded Brand", Ahem;
+      }
+      #folded {
+        visibility: collapse;
+      }
+
+      /* Five spaces that are kept: they paint a box 100px wide and no glyph, before
+         the first element with a text to read. */
+      #spaces,
+      #after-spaces {
+        font-family: "Space Brand", Ahem;
+      }
+      #spaces {
+        white-space: pre;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="broad-normal" class="text">XXXXXXXXXX</div>
+    <div id="broad-bold" class="text">XXXXXXXXXX</div>
+    <div id="folded" class="text">XXXXXXXXXX</div>
+    <div id="unfolded" class="text">XXXXXXXXXX</div>
+    <div id="spaces" class="text">     </div>
+    <div id="after-spaces" class="text">XXXXXXXXXX</div>
+  </body>
+</html>

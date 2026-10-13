@@ -38,6 +38,12 @@ Corroborated across multiple features. Safe to apply as guidance.
 - evidence: mutants J01, J03, src/squint_mcp/js/collect_elements.js:79,33 (DVB-16, DVB-37) (tests,thresholds) (+1 more)
 - last seen: 2026-10-12T02:08:24Z
 
+### L-034 - Name in the spec every character an escaping rule covers, not only the one its example shows
+- signal: `spec_precision_gap` · recurrence: 2 feature(s) · scope: `spec` · harmful: 0
+- features: detect-visual-bugs-text-clipped, font-fallback
+- evidence: mutant M6 (collect_elements.js:17); Assumptions: selector quoting (spec) (+1 more)
+- last seen: 2026-10-13T17:39:24Z
+
 ### L-036 - Pin a rule that judges an element on its own content with a fixture where its child's content would change the outcome
 - signal: `surviving_mutant` · recurrence: 2 feature(s) · scope: `tests,checks` · harmful: 0
 - features: low-contrast-real, overlap
@@ -55,6 +61,18 @@ Corroborated across multiple features. Safe to apply as guidance.
 - features: capture-pixel-budget, overlap
 - evidence: C3 - src/squint_mcp/vision.py:49 (tests,limits) (+2 more)
 - last seen: 2026-10-11T12:46:50Z
+
+### L-050 - Give every rule the Terms or the Assumptions table of a spec define an acceptance criterion with a fixture whose outcome changes when the rule is dropped
+- signal: `spec_precision_gap` · recurrence: 2 feature(s) · scope: `spec` · harmful: 0
+- features: overlap, font-fallback
+- evidence: spec.md:29, spec.md:75 (Terms: Coverer; Assumptions: the role attribute); mutants J4, J5, J8, J10 (spec) (+2 more)
+- last seen: 2026-10-13T17:39:23Z
+
+### L-065 - Pin a rule that reads one chosen item of a list with a fixture where another item of the list would give another outcome
+- signal: `surviving_mutant` · recurrence: 2 feature(s) · scope: `tests,checks` · harmful: 0
+- features: overlap, font-fallback
+- evidence: V1 src/squint_mcp/checks/overlap.py:63 (tests,checks) (+1 more)
+- last seen: 2026-10-13T17:39:23Z
 
 ## Candidates (under observation - do NOT load as guidance yet)
 
@@ -228,12 +246,6 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: mutant M4 (text_clipped.py:64) (tests,geometry)
 - last seen: 2026-10-07T17:41:29Z
 
-### L-034 - Name in the spec every character an escaping rule covers, not only the one its example shows
-- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `spec` · harmful: 0
-- features: detect-visual-bugs-text-clipped
-- evidence: mutant M6 (collect_elements.js:17); Assumptions: selector quoting (spec)
-- last seen: 2026-10-07T17:41:29Z
-
 ### L-035 - Give every component of a sort order its own acceptance criterion whose outcome changes when that component is dropped
 - signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `spec,ordering` · harmful: 0
 - features: low-contrast-real
@@ -305,12 +317,6 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - features: offscreen-overflow
 - evidence: C12 - tests/test_offscreen_overflow.py:176 (verification.md precision gap 1a) (tests,measurement)
 - last seen: 2026-10-10T03:17:44Z
-
-### L-050 - Give every rule the Terms or the Assumptions table of a spec define an acceptance criterion with a fixture whose outcome changes when the rule is dropped
-- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `spec` · harmful: 0
-- features: overlap
-- evidence: spec.md:29, spec.md:75 (Terms: Coverer; Assumptions: the role attribute); mutants J4, J5, J8, J10 (spec) (+1 more)
-- last seen: 2026-10-11T14:57:13Z
 
 ### L-051 - Test a rule that normalizes a string before matching it with a value in another case, with surrounding spaces and with several tokens
 - signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,checks` · harmful: 0
@@ -394,12 +400,6 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,checks` · harmful: 0
 - features: overlap
 - evidence: V10 src/squint_mcp/js/covered_text.js:55 (tests,checks)
-- last seen: 2026-10-11T14:57:12Z
-
-### L-065 - Pin a rule that reads one chosen item of a list with a fixture where another item of the list would give another outcome
-- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,checks` · harmful: 0
-- features: overlap
-- evidence: V1 src/squint_mcp/checks/overlap.py:63 (tests,checks)
 - last seen: 2026-10-11T14:57:12Z
 
 ### L-066 - Give a value a feature is the first to produce an outcome in every order and message that ranks or counts by it
@@ -497,6 +497,60 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - features: overlap
 - evidence: mutant W7 (P1), src/squint_mcp/capture.py:122 (OVL-120, validation pass 5) (tests,timing)
 - last seen: 2026-10-12T06:37:06Z
+
+### L-082 - Pin an equality of two measured values with a fixture where the first is greater and a fixture where it is smaller, not from one side only
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,checks` · harmful: 0
+- features: font-fallback
+- evidence: validation.md pass 1 (895bd56): mutant C16b, checks/font_fallback.py, == read as >= (tests,checks)
+- last seen: 2026-10-13T17:39:23Z
+
+### L-083 - Test a rule that asks for one keyword of a style with a third keyword of that style, not only with its opposite
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,checks` · harmful: 0
+- features: font-fallback
+- evidence: validation.md pass 1 (895bd56): mutant C5, checks/font_fallback.py, visibility != visible read as == hidden (tests,checks)
+- last seen: 2026-10-13T17:39:23Z
+
+### L-084 - Test code that splits a string at a separator with a value that holds the separator inside quotes
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,parsing` · harmful: 0
+- features: font-fallback
+- evidence: validation.md pass 1 (895bd56): mutant S1b, js/font_widths.js, a comma inside a quoted family name (tests,parsing)
+- last seen: 2026-10-13T17:39:23Z
+
+### L-085 - Write in the Terms of the spec every condition the design adds to a term, so that the two do not define it differently
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `spec,design` · harmful: 0
+- features: font-fallback
+- evidence: validation.md pass 1 (895bd56): SP-1, mutants S7 and S8, own text that is only whitespace and paints a box (spec,design)
+- last seen: 2026-10-13T17:39:24Z
+
+### L-086 - Give every item of a config list an acceptance criterion whose outcome changes when the item is taken out
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `spec,config` · harmful: 0
+- features: font-fallback
+- evidence: validation.md pass 1 (895bd56): mutants CFG-dir and CFG-tr, config.py, TEXT_SHAPING_PROPERTIES (spec,config)
+- last seen: 2026-10-13T17:39:24Z
+
+### L-087 - Unescape a value only where it is read in serialized form, and test each place the value is read from with a character the unescaping rewrites
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,parsing` · harmful: 0
+- features: font-fallback
+- evidence: validation.md pass 2 (range 0b9ae25..6cd7076): I-1 and mutant N60-unescape-quotes-only, js/font_widths.js:45, a Face name unescaped as if it were serialized (tests,parsing)
+- last seen: 2026-10-13T17:39:24Z
+
+### L-088 - Test a rule over whitespace with a tab and a no-break space, not only with spaces
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,checks` · harmful: 0
+- features: font-fallback
+- evidence: validation.md pass 2 (range 0b9ae25..6cd7076): mutant N57-spaces-only, js/font_widths.js, whitespace read as spaces only (tests,checks)
+- last seen: 2026-10-13T17:39:24Z
+
+### L-089 - Test code that replaces every occurrence in a string with a value that holds two of them
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,parsing` · harmful: 0
+- features: font-fallback
+- evidence: validation.md pass 2 (range 0b9ae25..6cd7076): mutant N60-first-escape-only, js/font_widths.js, only the first escape taken off (tests,parsing)
+- last seen: 2026-10-13T17:39:24Z
+
+### L-090 - Test a value that code passes through with two different values, so that a constant in its place changes the outcome
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,capture` · harmful: 0
+- features: font-fallback
+- evidence: validation.md pass 2 (range 0b9ae25..6cd7076): mutants N61-always-rtl and N62-always-optimize-speed, js/font_widths.js (tests,capture)
+- last seen: 2026-10-13T17:39:24Z
 
 ## Quarantined (failed when applied - ignore)
 

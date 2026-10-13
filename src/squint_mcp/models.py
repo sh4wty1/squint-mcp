@@ -64,6 +64,26 @@ class CoveredText(BaseModel):
     """In document order."""
 
 
+class Face(BaseModel):
+    """An entry of `document.fonts` when the Capture was taken."""
+
+    family: str
+    """Without quotes."""
+    status: Literal["unloaded", "loading", "loaded", "error"]
+
+
+class LineWidths(BaseModel):
+    """How wide the own text of an element is set on one line (AD-008)."""
+
+    family: str
+    """The first name of its computed `font-family`, without quotes."""
+    own: float
+    """In its computed `font-family`."""
+    tail: float
+    """In that list without its first name; in the initial `font-family` when
+    no name is left."""
+
+
 class Element(BaseModel):
     """One element as collected inside the page."""
 
@@ -93,6 +113,9 @@ class Element(BaseModel):
     covered_text: CoveredText | None = None
     """None when the Capture was not asked for it, and for a text that cannot
     reach the reporting threshold."""
+    line_widths: LineWidths | None = None
+    """None when the Capture was not asked for fonts, and for an element with
+    no own text or whose first family has no face that failed."""
 
 
 @dataclass(frozen=True)
@@ -113,6 +136,9 @@ class Capture:
     """The full page in RGB with no text painted."""
     ink: Image.Image
     """How much text ink each pixel gets, 0 to 255, in mode L."""
+    faces: list[Face] | None = None
+    """The faces of `document.fonts`, in its order; None when the Capture was
+    not asked for fonts."""
 
 
 Severity = Literal["critical", "major", "minor", "info"]

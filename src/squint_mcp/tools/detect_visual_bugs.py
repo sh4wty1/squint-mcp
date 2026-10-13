@@ -11,7 +11,7 @@ from pydantic import BaseModel, Field
 
 from squint_mcp import config
 from squint_mcp.capture import BrowserSession, capture
-from squint_mcp.checks import CHECKS, COVERED_TEXT_CHECKS
+from squint_mcp.checks import CHECKS, COVERED_TEXT_CHECKS, FONT_CHECKS
 from squint_mcp.models import Capture, Finding, Severity, Viewport
 from squint_mcp.vision import crop_png
 
@@ -61,11 +61,12 @@ async def detect_visual_bugs(
     horizontally by its own box), `low-contrast-real` (text whose contrast
     against the background painted behind it, sampled from the pixels, is below
     WCAG 2.2 SC 1.4.3), `offscreen-overflow` (the element that sets the width
-    of a page that scrolls horizontally, one per viewport) and `overlap` (text
+    of a page that scrolls horizontally, one per viewport), `overlap` (text
     another element is painted over, with the share of it that is hidden and
-    the element that covers it). Returns `findings`, most severe first and then
-    in the order of the page, and `captures`, one per viewport, whose
-    `stabilized` is false when the network never went idle. Each
+    the element that covers it) and `font-fallback` (a font the page declares
+    that did not load, one Finding per family). Returns `findings`, most severe
+    first and then in the order of the page, and `captures`, one per viewport,
+    whose `stabilized` is false when the network never went idle. Each
     Finding names its element by a `selector` that is unique on the page and
     works in `inspect_element`, and carries the styles and measurements that
     back it. The five most severe Findings also get a crop of their element:
@@ -89,6 +90,8 @@ async def detect_visual_bugs(
     session = ctx.request_context.lifespan_context
     # Covered text about doubles a Capture: only when a Check reads it.
     covered_text = not COVERED_TEXT_CHECKS.isdisjoint(names)
+    # The fonts of a page are read only when a Check judges them (AD-008).
+    fonts = not FONT_CHECKS.isdisjoint(names)
     try:
         # One clock for the whole call. asyncio.timeout cancels once, so the
         # cleanup of the capture under way still gets to run.
@@ -96,7 +99,9 @@ async def detect_visual_bugs(
             # ponytail: one viewport after another, each paying a page load and
             # the idle wait; capture them concurrently if calls get slow.
             captures = [
-                await capture(session, url, viewport, "*", covered_text=covered_text)
+                await capture(
+                    session, url, viewport, "*", covered_text=covered_text, fonts=fonts
+                )
                 for viewport in viewports
             ]
     except TimeoutError as error:
