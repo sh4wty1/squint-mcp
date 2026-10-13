@@ -412,6 +412,8 @@ The Verifier is dispatched in the fifth session, after T11 and the Build of phas
 
 **Result** (2026-10-13): `45 passed in 160.04s (0:02:40)` in `mcr.microsoft.com/playwright/python:v1.63.0-noble`, image id `sha256:59fe35832a79d1324e778b737760b2afc11cffcbaeba325012f96cabae832a75` (`docker image inspect`; created 2026-09-15), on `c1aeef3` with a clean tree: Python 3.12.3, pytest 9.1.1, Docker engine 28.0.4. The count is the 45 collected on Windows. No test failed there: nothing was fixed and no assertion was changed.
 
+**Second run** (2026-10-13, after the first fix round): `53 passed in 153.82s (0:02:33)` in the same image, id `sha256:59fe35832a79d1324e778b737760b2afc11cffcbaeba325012f96cabae832a75`, on `76640b8` with a clean tree: Python 3.12.3, pytest 9.1.1, Docker engine 28.0.4. The count is the 53 collected on Windows: the 45 of the first run and the eight of F1 to F3. No test failed there: nothing was fixed and no assertion was changed.
+
 **Tests**: none
 **Gate**: linux
 
@@ -718,3 +720,22 @@ Baseline: 413 tests are collected and the 45 of the module pass on `ab1dbab` (20
 | FNT-61, FNT-62 | F3 |
 
 8 of 8 mapped; with the table of "Requirement Coverage", 62 of 62.
+
+### The mutants of the report, run again
+
+Each of the ten was applied alone to a fresh copy of `src/squint_mcp` outside the repository, as the report gives the row, and the whole module was run against the copy with `-x` (2026-10-13, Windows, on `76640b8` with a clean tree; a plugin checked that `squint_mcp` came from the copy). The copy without a mutant passed first: 53 passed in 161.60s. `src/` is as it was on `ab1dbab`.
+
+| Mutant | Result | The test that fails | Its assertion |
+| --- | --- | --- | --- |
+| C16b | Killed | FNT-55 | `('#broad-normal', 2) == ('#broad-bold', 1)` |
+| C5 | Killed | FNT-56 | `('#folded', 2) == ('#unfolded', 1)` |
+| C2 | Killed | FNT-58 | `('DUAL', 2) == ('Dual', 2)` |
+| S1b | Killed | FNT-59 | `[] == [('#comma', 'Acme, Inc')]` |
+| S1a | Killed | FNT-60 | `[] == [('#inch', 'Vinyl 12"')]` |
+| S2b | Killed | FNT-60 | `[] == [('#inch', 'Vinyl 12"')]` |
+| S7 | Killed | FNT-57 | `('#spaces', 2) == ('#after-spaces', 1)` |
+| S8 | Killed | FNT-57 | `('#spaces', 2) == ('#after-spaces', 1)` |
+| CFG-dir | Killed | FNT-61 | `52.81 == 55.39` |
+| CFG-tr | Killed | FNT-62 | `112.69 == 113.84` |
+
+Ten of ten killed, none alive. CFG-dir and CFG-tr were also run in the Playwright image, each against its test: both die there, on `52.81 == 55.39` and on `110.06 == 117.48`. A run with `-x` stops at its first failure: in each, every test of the module before the one named passed, the 45 of T1 to T9 among them, as in the report.
