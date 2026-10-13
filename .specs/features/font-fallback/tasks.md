@@ -396,7 +396,7 @@ The Verifier is dispatched in the fifth session, after T11 and the Build of phas
 **Where**: `.specs/features/font-fallback/tasks.md`
 **Depends on**: T9
 **Reuses**: the image `mcr.microsoft.com/playwright/python:v1.63.0-noble`, the same Chromium 153 as Windows
-**Requirement**: the third Goal of the spec and its third Success Criterion: FNT-01 to FNT-39 and FNT-47 to FNT-54 have the same outcome on Windows and on Linux
+**Requirement**: the third Goal of the spec and its third Success Criterion: FNT-01 to FNT-39 and FNT-47 to FNT-62 have the same outcome on Windows and on Linux
 
 **Tools**:
 
@@ -593,7 +593,7 @@ FNT-15 gained the rows of `#shown` and `#split`.
 
 ## Fixes of the first validation pass
 
-The Verifier's first pass ([`validation.md`](validation.md), 2026-10-13) covered 53 of 53 criteria, found no defect in `src/` and killed the eleven mutants the tasks name. It failed the feature on its sensor: ten mutants of its own pass the 45 tests, on rules that the Terms, the Assumptions or the design state, that the code implements and that no criterion held. The three tasks below add the criteria FNT-55 to FNT-62, their fixture cases and their tests through the MCP boundary. None changes `src/`. A new test is done when it fails under the mutant it is for, applied to a scratch copy of `src/squint_mcp` as the report gives the row, and passes on the copy without it.
+The Verifier's first pass ([`validation.md`](validation.md), 2026-10-13) covered 53 of 53 criteria, found no defect in `src/` (the second pass found one, I-1, below) and killed the eleven mutants the tasks name. It failed the feature on its sensor: ten mutants of its own pass the 45 tests, on rules that the Terms, the Assumptions or the design state, that the code implements and that no criterion held. The three tasks below add the criteria FNT-55 to FNT-62, their fixture cases and their tests through the MCP boundary. None changes `src/`. A new test is done when it fails under the mutant it is for, applied to a scratch copy of `src/squint_mcp` as the report gives the row, and passes on the copy without it.
 
 ```
 F1 → F2 → F3
@@ -749,3 +749,15 @@ What it leaves for the maintainer, none of which it failed the feature on:
 - **I-1, a defect of `src/`.** A Failed family whose name holds a backslash gets no Finding: `src/squint_mcp/js/font_widths.js:45` takes the escapes off the name of a Face, which `document.fonts` gives without any. It is in code of T2 that the round did not touch and on a page no criterion describes, so the sentence above, "found no defect in `src/`", is true of the first pass only. The Verifier reads it as an issue under the Assumption "When the discrimination sensor is satisfied"; read as a gap of FNT-01 it would fail the pass. The maintainer chooses: an issue, a criterion with its fix in a round of its own, or a known limit as the hexadecimal escape is.
 - **Eight residual mutants**, written to attack the eight new tests from another side, on cases no criterion describes; the report gives their rows.
 - **The edits of the spec** (E1 to E5 in the report): the eight criteria and the four edits of accepted text still wait for the maintainer's reading.
+
+### The maintainer's decisions after the second pass
+
+Taken on 2026-10-13, one at a time, before the push of the commits after `ab1dbab`. None changes `src/` or `tests/`, so the second pass and T12 stand as they are.
+
+- **I-1 is an issue**: [sh4wty1/squint-mcp#20](https://github.com/sh4wty1/squint-mcp/issues/20), with the page of the report, the fix it names and the criterion to write first. The Verifier's reading holds: the pass is a PASS and slice 9 stays `concluída`.
+- **The edits of the spec are accepted as written**: E1 to E4 and the criteria FNT-55 to FNT-62. The paragraph of the Assumptions that told of them now says so.
+- **FNT-61 and FNT-62 stay as they are**, with the fonts of the machine they lean on. The last sentence of the row "Fixtures" of the Assumptions now reads "No fixture declares a family that a machine can have installed; a Tail may name fonts of a machine (FNT-16, FNT-62)", which is how the row has been read since the fixture of FNT-16 was accepted. R8 of the report stays a residual.
+- **`next-session.md` leaves the branch** before the pull request: it held the prompt of session 5.
+- **The text behind the round is brought up to it** (R9 of the report): the list of fixtures and the sentence on "Judged element" of `design.md`, the Requirement of T10 and the summary of the first pass above.
+
+The eight residual mutants (R7) were not put to the maintainer as a decision: they stay as the report lists them.

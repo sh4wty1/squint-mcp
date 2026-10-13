@@ -142,7 +142,7 @@ Nothing else in the spec changes. FNT-43 holds: `config` gains a list of propert
 ### Fixtures and tests
 
 - `tests/test_font_fallback.py`, through the tool boundary only.
-- `font-fallback-bug.html`, `-clean.html`, `-bounds.html`, `-monospace.html`, `-order.html`, `-many.html`, and `-shaping.html`. A family that fails is declared with a `src` that names a file that is not in `tests/fixtures/`; the Faces of `Scripted` and `Preloaded` are built by a script of the page.
+- `font-fallback-bug.html`, `-clean.html`, `-bounds.html`, `-monospace.html`, `-order.html`, `-many.html`, and `-shaping.html`; and, from the fixes of the first validation pass, `-judged.html` and `-names.html`. A family that fails is declared with a `src` that names a file that is not in `tests/fixtures/`; the Faces of `Scripted` and `Preloaded` are built by a script of the page.
 - `tests/test_detect_visual_bugs.py`: the literal of FNT-34 in four assertions (lines 342, 353, 364 and 376).
 
 ### Documents
@@ -234,7 +234,7 @@ Config (each with its source in a comment):
 | What a copy is given | Every `font-` longhand of the computed style and the names of `TEXT_SHAPING_PROPERTIES` | Spiked: `text-transform` and `font-style` decide which Face is asked for; `letter-spacing` and `word-spacing` are part of the width. Taking the `font-` names from the computed style keeps the list right when Chromium gains one |
 | Where the copies go | One host under the root element, of no size | `body` can be a flex or a grid container, and an absolutely positioned child of the root element lays nothing else out. No size and `overflow: hidden` keep the scroll size of the page |
 | Which elements are measured | Those whose First family has a Face of `error` | A page whose fonts loaded is not touched, and a Tail is only laid out where it can already be on the page |
-| Where the rule lives | In the Check, whole | The script's filter is what to measure, not what to report: the Check compares the family again, and "Judged element" and the equality are only there |
+| Where the rule lives | In the Check, whole | The script's filter is what to measure, not what to report: the Check compares the family again, and "Judged element" and the equality are only there, but for one clause of the Term: Own text that is only whitespace is left out by the script alone |
 | The Tail of one name | `initial` | Spiked in Specify: the same width as text whose only family failed |
 | When, inside a Capture | After the three fills, before covered text | Nothing the script does can reach a pixel of the Capture; covered text scrolls the page |
 | `textWidthPx` | `round(own, 2)`, a float | FNT-14 compares it with `box.w` rounded the same way; a whole number of pixels compares equal to the integer of FNT-27 |
