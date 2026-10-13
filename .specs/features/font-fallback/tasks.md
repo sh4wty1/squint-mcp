@@ -9,7 +9,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ---
 
 **Design**: `.specs/features/font-fallback/design.md`
-**Status**: Written on 2026-10-12. The maintainer read it the same day, accepted FNT-52 to FNT-54 and had it committed, then asked for one phase per session. Execute: phase 1 (T1 to T3) is done and its Build passed on `9953077`, phase 2 (T4 to T6) is done and its Build passed on `357206d`, and phase 3 (T7 to T9) is done and its Build passed on `ba860c9`, all the same day; phase 4 (T10 and T11) is done and its Build passed on `82fa6cc` on 2026-10-13
+**Status**: Written on 2026-10-12. The maintainer read it the same day, accepted FNT-52 to FNT-54 and had it committed, then asked for one phase per session. Execute: phase 1 (T1 to T3) is done and its Build passed on `9953077`, phase 2 (T4 to T6) is done and its Build passed on `357206d`, and phase 3 (T7 to T9) is done and its Build passed on `ba860c9`, all the same day; phase 4 (T10 and T11) is done and its Build passed on `82fa6cc` on 2026-10-13. The Verifier's first pass returned FAIL on its sensor the same day: its fix round, F1 to F3, is at the end of this file
 
 ---
 
@@ -19,7 +19,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 
 | Code Layer | Required Test Type | Coverage Expectation | Location Pattern | Run Command |
 | ---------- | ------------------ | -------------------- | ---------------- | ----------- |
-| MCP tools (handlers, and the Check, Capture, page script, models and config they drive) | integration, through the in-memory MCP client only, real Chromium; written before the code of the task | 1:1 to the criteria FNT-01 to FNT-39 and FNT-47 to FNT-54; every listed edge case | `tests/test_font_fallback.py` | `uv run pytest tests/test_font_fallback.py` |
+| MCP tools (handlers, and the Check, Capture, page script, models and config they drive) | integration, through the in-memory MCP client only, real Chromium; written before the code of the task | 1:1 to the criteria FNT-01 to FNT-39 and FNT-47 to FNT-62; every listed edge case | `tests/test_font_fallback.py` | `uv run pytest tests/test_font_fallback.py` |
 | Documents, the roadmap, a run on another platform | none | file evidence (FNT-44 to FNT-46); the gate | - | gate only |
 
 FNT-40 to FNT-43 are not observable through the tool boundary: the Verifier reads them from the files of the task that the Requirement Coverage table names.
@@ -92,7 +92,7 @@ T10 → T11
 T12
 ```
 
-The Verifier is dispatched in the fifth session, after T11 and the Build of phase 4. T12 is the closing step, written as a task so that FNT-46 has one: it runs only on a PASS, and the Verifier's report already holds the other 53 criteria by then.
+The Verifier is dispatched in the fifth session, after T11 and the Build of phase 4. T12 is the closing step, written as a task so that FNT-46 has one: it runs only on a PASS, and the Verifier's report already holds the other criteria by then (53 when this was written, 61 with those of the fix round).
 
 ---
 
@@ -467,7 +467,7 @@ The Verifier is dispatched in the fifth session, after T11 and the Build of phas
 
 **Done when**:
 
-- [ ] `validation.md` holds a PASS for the other 53 criteria, and FNT-46 is added to it from file evidence once this task is done
+- [ ] `validation.md` holds a PASS for the other 61 criteria (53, and the eight of the fix round), and FNT-46 is added to it from file evidence once this task is done
 - [ ] `validate_state.py font-fallback` exits 0
 - [ ] If a fix round changed `src/` or `tests/` after T10, the Linux gate is run again and its result written under T10
 - [ ] Nothing is pushed and no pull request is opened: both wait for the maintainer's go-ahead
@@ -586,3 +586,135 @@ Three rules that the Terms of the spec state and the design builds were held by 
 | FNT-54 | The widths of several text nodes are added | `#split`, with a text node on each side of a child | T6 |
 
 FNT-15 gained the rows of `#shown` and `#split`.
+
+---
+
+## Fixes of the first validation pass
+
+The Verifier's first pass ([`validation.md`](validation.md), 2026-10-13) covered 53 of 53 criteria, found no defect in `src/` and killed the eleven mutants the tasks name. It failed the feature on its sensor: ten mutants of its own pass the 45 tests, on rules that the Terms, the Assumptions or the design state, that the code implements and that no criterion held. The three tasks below add the criteria FNT-55 to FNT-62, their fixture cases and their tests through the MCP boundary. None changes `src/`. A new test is done when it fails under the mutant it is for, applied to a scratch copy of `src/squint_mcp` as the report gives the row, and passes on the copy without it.
+
+```
+F1 → F2 → F3
+```
+
+Baseline: 413 tests are collected and the 45 of the module pass on `ab1dbab` (2026-10-13). The matrix and the gate commands at the top of this file apply; the gate of a fix task is Full. The Build runs once, on the commit of F3, and the Linux gate with it: its result is written under T10 as a second run.
+
+**Not yet read by the maintainer.** The eight criteria, the word on whitespace in the Term "Judged element" (and in the row "Which elements are judged" of the Assumptions and the row of Out of Scope on text that is not seen, which said the same thing in other words) and the clause of FNT-49 that names `#lower-mixed` (residual R3 of the report) were written from the report under the orchestrator's defaults. Each pins what the accepted spec and design already say, and none changes a behaviour. They wait for the maintainer's reading, as FNT-52 to FNT-54 did.
+
+| Fix of the report | Mutant | The rule, and where it was stated | Criterion | Case | Task |
+| --- | --- | --- | --- | --- | --- |
+| Fix 1 | C16b | The two Line widths are equal (Term "Falls back", FNT-43) | FNT-55 | `#broad-normal`, in a loaded Face that is wider than its Tail, before `#broad-bold` in `Broad` | F1 |
+| Fix 2 | C5 | The computed `visibility` is `visible` (Term "Judged element") | FNT-56 | `#folded`, of `visibility: collapse`, before `#unfolded` in `Folded Brand` | F1 |
+| Fix 6 (SP-1) | S7, S8 | A text node that is whitespace is not measured ([`design.md`](design.md), "Font script"); the Term now says it | FNT-57 | `#spaces`, five spaces that `white-space: pre` keeps, before `#after-spaces` in `Space Brand` | F1 |
+| Fix 3 | C2 | A family is reported under the name of the first of its Faces (Assumptions, "The name a family is reported under") | FNT-58 | `Dual` and then `DUAL`, the two Faces of one family | F2 |
+| Fix 4 | S1b | A `font-family` is split "at the commas outside strings" (design, "Font script") | FNT-59 | `#comma`, in `"Acme, Inc"` | F2 |
+| Fix 5 | S1a, S2b | "A backslash taking the character after it"; a name is compared "without the quotes and the escapes" (design, "Font script") | FNT-60 | `#inch`, in the family `Vinyl 12"` | F2 |
+| Fix 7 | CFG-dir | `direction` is one of `TEXT_SHAPING_PROPERTIES` (design, Config) | FNT-61 | `#turned`, a block of `direction: rtl` in the font of `serif` | F3 |
+| Fix 8 | CFG-tr | `text-rendering` is one of them (design, Config) | FNT-62 | `#swift`, of `text-rendering: optimizeSpeed`, in Calibri or FreeSerif | F3 |
+
+**Fix 7 and Fix 8 were measured before a criterion was written** (2026-10-13, Chromium 153.0.8010.12 on Windows 11 and in the Playwright image for Docker; the scripts were not kept). The report had found 0.03px for `direction` and nothing for `text-rendering`.
+
+- **`direction`.** In a block that runs from right to left, a mark at the end of a text of Latin letters takes the direction of the block and is shaped apart from the letter before it, so the two are not kerned. In the font of `serif` at 20px, `Y.` is 16.88px wide from left to right and 19.45px from right to left; `PLAY.` is 52.81px and 55.39px. The figures are the same on both platforms (Times New Roman on Windows, Liberation Serif in the image). With `direction` out of the list the tool returns a `textWidthPx` of 52.81 for `#turned`, whose box is 55.39 wide, on both. The case is a block of its own (`inline-block`) on purpose: on an inline element `direction` has no effect on the page without `unicode-bidi`, and the copy, which is a block of its own, is then the one that is off (residual R4 of the report: no Finding is lost or gained by it). FNT-61 says nothing of that case.
+- **`text-rendering`.** Of its four values only `optimizeSpeed` changed a width, and only in a font with ligatures: it turns them off and leaves kerning on. No generic family gives such a font on either platform (seven generic families, sixteen sizes from 6px to 72px, eight texts: no width differs). By name the fonts that do are Calibri, Candara, Constantia, Corbel, Gabriola, Palatino Linotype, Segoe Script and Sitka Text on Windows, and FreeSerif, FreeSans and Loma in the image. `fifth office file` at 20px is 112.69px wide in Calibri and 113.84px without its ligatures; in FreeSerif, 110.06px and 117.48px. With `text-rendering` out of the list the tool returns 112.69 for a box 113.84 wide on Windows, and 110.06 for 117.48 on Linux. So the Tail of `#swift` names two fonts of the machine, `Calibri, FreeSerif`. What the test asserts holds whatever font the machine has; the mutant dies only where one of the two is installed. The maintainer may prefer a font file of the repository that has a ligature, which would make the widths exact, or to take the name out of the list.
+
+### F1: Hold what falls back from the other side
+
+- [ ] Done
+
+**What**: The fixture `font-fallback-judged.html` with three cases, and a test each: an element in a loaded Face of a Failed family that is wider than its Tail (FNT-55), an element of `visibility: collapse` before the first that falls back (FNT-56) and an element whose Own text is five spaces that `white-space: pre` keeps (FNT-57). No change to `src/`: every test is a pin.
+**Where**: `tests/test_font_fallback.py` (with `tests/fixtures/font-fallback-judged.html`)
+**Depends on**: None
+**Reuses**: the form of `font-fallback-bounds.html`; `of_family`, `sits_on` and `reported` of the test module
+**Requirement**: FNT-55, FNT-56, FNT-57
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [ ] The fixture is new: no fixture and no assertion of T1 to T9 changes
+- [ ] The comment of the fixture gives the status of its Faces, as read from the page in Chromium on Windows and in the Playwright image
+- [ ] Each test fails under its mutant on a scratch copy and passes on the copy without it: C16b (FNT-55), C5 (FNT-56), S7 and S8 (FNT-57)
+- [ ] C16a, the other side of the equality, still dies (FNT-20)
+- [ ] Gate check passes: Full
+- [ ] Test count: 48 in the module, 416 collected; none deleted
+
+**Tests**: integration
+**Gate**: full
+
+**Commit**: `test(font-fallback): hold what falls back from the other side`
+
+---
+
+### F2: Pin the names a family is read and reported under
+
+- [ ] Done
+
+**What**: The fixture `font-fallback-names.html` with three cases, and a test each: a family whose two Faces write its name in two cases (FNT-58), a family whose name holds a comma (FNT-59) and one whose name holds a quotation mark, which a computed `font-family` writes with a backslash (FNT-60). No change to `src/`: every test is a pin. The hexadecimal escape stays the limit the design accepts.
+**Where**: `tests/test_font_fallback.py` (with `tests/fixtures/font-fallback-names.html`)
+**Depends on**: F1
+**Reuses**: the form of `font-fallback-bounds.html`; `sits_on` and `reported` of the test module
+**Requirement**: FNT-58, FNT-59, FNT-60
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [ ] The fixture is new: no fixture and no assertion of T1 to T9 changes
+- [ ] The comment of the fixture gives the name each Face has in `document.fonts` and the computed `font-family` of `#inch`, as read from the page on both platforms
+- [ ] Each test fails under its mutants on a scratch copy and passes on the copy without them: C2 (FNT-58), S1b (FNT-59), S1a and S2b (FNT-60)
+- [ ] The case of FNT-59 holds no backslash and that of FNT-60 no comma: S1b leaves the test of FNT-60 passing, S1a and S2b that of FNT-59
+- [ ] Gate check passes: Full
+- [ ] Test count: 51 in the module, 419 collected; none deleted
+
+**Tests**: integration
+**Gate**: full
+
+**Commit**: `test(font-fallback): pin the names a family is read and reported under`
+
+---
+
+### F3: Pin the direction and the text-rendering a copy takes
+
+- [ ] Done
+
+**What**: Two cases after the last of `font-fallback-shaping.html`, and a test each: a block of `direction: rtl` whose text ends in a full stop (FNT-61) and a text of `text-rendering: optimizeSpeed` in a font with ligatures (FNT-62). Both are in fonts of the machine, so each test compares `textWidthPx` with the width of the box of the same Finding, as FNT-14 does, and with no figure. No change to `src/`: both tests are pins.
+**Where**: `tests/test_font_fallback.py` (with `tests/fixtures/font-fallback-shaping.html`)
+**Depends on**: F2
+**Reuses**: the form of the test of FNT-14
+**Requirement**: FNT-61, FNT-62
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [ ] The two cases come after `#spaced`: nothing already placed moves, and the tests of FNT-49 to FNT-51 pass unchanged
+- [ ] Each test fails under its mutant on a scratch copy, on Windows and in the Playwright image, and passes on the copy without it: CFG-dir (FNT-61), CFG-tr (FNT-62)
+- [ ] CFG-tt, CFG-ls and CFG-ws, the other three names of the list, still die (FNT-49, FNT-51)
+- [ ] Gate check passes: Full
+- [ ] Test count: 53 in the module, 421 collected; none deleted
+
+**Tests**: integration
+**Gate**: full
+
+**Commit**: `test(font-fallback): pin the direction and the text-rendering of a copy`
+
+---
+
+### Requirement coverage of the fixes
+
+| Requirements | Task |
+| --- | --- |
+| FNT-55, FNT-56, FNT-57 | F1 |
+| FNT-58, FNT-59, FNT-60 | F2 |
+| FNT-61, FNT-62 | F3 |
+
+8 of 8 mapped; with the table of "Requirement Coverage", 62 of 62.
