@@ -1079,7 +1079,7 @@ Red before the code: TOK-57, which got a result of 0 elements. The five others p
 
 ### T26: Bound each Family to its 20 most used Tokens
 
-- [ ] Done
+- [x] Done
 
 **What**: `total` as the number of Tokens found, the `TOKENS_MAX_PER_FAMILY` first in Rank order kept and put in Family order, the summary counting `total`; `tokens-limit.html` and its five tests.
 **Where**: `src/squint_mcp/tokens.py` (with the new fixture and its tests)
@@ -1091,17 +1091,29 @@ Red before the code: TOK-57, which got a result of 0 elements. The five others p
 
 **Done when**:
 
-- [ ] Red before the code: TOK-62 and TOK-64 get 21 Tokens
-- [ ] TOK-62 (one past the Limit): `total` 21, and the values 10 to 190 and then 210, whole and in order. TOK-63 (exactly at it): `total` 20 and the twenty values from 10 to 200
-- [ ] Rules dropped. The cut is made in Family order (200 stays and 210 goes). The Limit is 19 (TOK-63 loses a value). The Limit is 21 (TOK-62 keeps 200). The summary counts the Tokens returned (`colors 20`). One budget is shared by the Families (TOK-64 or TOK-62 comes back short)
-- [ ] TOK-64: the 20 colours that come first by text, whole and in order. The page has no other colour: `body` has no background and no element has Own text. A script of the scratchpad shows, with `lab_of` and `delta_e_2000`, that the smallest ΔE2000 among the 21 is at or above 2; the number is written here
-- [ ] TOK-66: the helper of the module asserts, on every result from here on, that each of the eight Families holds at most 20 Tokens
-- [ ] Gate check passes: Full
+- [x] Red before the code: TOK-62 and TOK-64 get 21 Tokens
+- [x] TOK-62 (one past the Limit): `total` 21, and the values 10 to 190 and then 210, whole and in order. TOK-63 (exactly at it): `total` 20 and the twenty values from 10 to 200
+- [x] Rules dropped. The cut is made in Family order (200 stays and 210 goes). The Limit is 19 (TOK-63 loses a value). The Limit is 21 (TOK-62 keeps 200). The summary counts the Tokens returned (`colors 20`). One budget is shared by the Families (TOK-64 or TOK-62 comes back short)
+- [x] TOK-64: the 20 colours that come first by text, whole and in order. The page has no other colour: `body` has no background and no element has Own text. A script of the scratchpad shows, with `lab_of` and `delta_e_2000`, that the smallest ΔE2000 among the 21 is at or above 2; the number is written here: 5.5252, between `#00ff00` and `#80ff00`
+- [x] TOK-66: the helper of the module asserts, on every result from here on, that each of the eight Families holds at most 20 Tokens
+- [x] Gate check passes: Full
 
 **Tests**: integration
 **Gate**: full
 
 **Commit**: `feat(tokens): bound each family to its twenty most used tokens`
+
+**Done (2026-10-14)**: four tests and `tokens-limit.html`: `#twenty` holds `#m10` to `#m200`, after it come `#m210-a` and `#m210-b`, then the twenty-one colours, each a `div` of 100px by 20px. `extract` of the module now also asserts TOK-66 on every result. In `tokens.py` one function, `_family(tokens, key, by_value=...)`, counts every Token in `total`, keeps the `TOKENS_MAX_PER_FAMILY` first in Rank order (by `uses`, most first, then by `key`) and puts them in Family order: by `key` for `sizes`, `weights`, `lineHeights`, `spacing` and `radii`, in Rank order for the three others. The five sorts each Family made on its own are gone. Its return annotation is quoted: pydantic, evaluating `Family[T]` at definition, built a schema for the `Protocol` bound of `T` and failed. Gate: Full, 70 passed (491 tests collected, none deleted).
+
+Red before the code: TOK-62 and TOK-64, with 21 Tokens (the assertion of TOK-66 in the helper). TOK-63 and TOK-65 passed at once (pins). Each rule dropped on a scratch copy of `src/squint_mcp`:
+
+- The cut is made in Family order: TOK-62 fails (200 stays, 210 goes).
+- A Limit of 19: TOK-62, TOK-63 and TOK-64 fail (one value short).
+- A Limit of 21: TOK-62 and TOK-64 fail (21 Tokens).
+- The summary counts the Tokens returned: TOK-65 fails (`colors 20`).
+- One budget of 20 shared by the Families, `colors` first: TOK-62 fails (no spacing left).
+
+**Point (1) of session 7 lands here, and stays open for the maintainer.** The Tokens of `colors` now come in the Rank order of the Tokens, by their summed Uses, as the Terms ask, and no longer in the order their Groups were opened. No test tells the two: with the Rank order taken out of `_family` on a scratch copy (Tokens kept in the order they were built), every test of `colors` passes and only the whole list of `tokens-used.html` fails, on `typography.families`. No fixture of the spec has a Group of variants that outgrows a Representative of more Uses opened before it; no criterion asks for one.
 
 ---
 

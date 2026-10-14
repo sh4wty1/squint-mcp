@@ -349,11 +349,11 @@ Covered by the stories: a `scope` that matches nothing (TOK-57), that is not a s
 | TOK-59 | P1: Narrow the reading to a part of the page | Phase 6, T25 | Implemented |
 | TOK-60 | P1: Narrow the reading to a part of the page | Phase 6, T25 | Implemented |
 | TOK-61 | P1: Narrow the reading to a part of the page | Phase 6, T25 | Implemented |
-| TOK-62 | P2: Bound the response | Phase 6, T26 | Pending |
-| TOK-63 | P2: Bound the response | Phase 6, T26 | Pending |
-| TOK-64 | P2: Bound the response | Phase 6, T26 | Pending |
-| TOK-65 | P2: Bound the response | Phase 6, T26 | Pending |
-| TOK-66 | P2: Bound the response | Phase 6, T26 | Pending |
+| TOK-62 | P2: Bound the response | Phase 6, T26 | Implemented |
+| TOK-63 | P2: Bound the response | Phase 6, T26 | Implemented |
+| TOK-64 | P2: Bound the response | Phase 6, T26 | Implemented |
+| TOK-65 | P2: Bound the response | Phase 6, T26 | Implemented |
+| TOK-66 | P2: Bound the response | Phase 6, T26 | Implemented |
 | TOK-67 | P2: Tool contract, config and documents | Phase 3, T8 | Implemented |
 | TOK-68 | P2: Tool contract, config and documents | Phase 6, T27 | Pending |
 | TOK-69 | P2: Tool contract, config and documents | Phase 6, T27 | Pending |

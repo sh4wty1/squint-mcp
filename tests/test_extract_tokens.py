@@ -14,6 +14,8 @@ USED = "tokens-used.html"
 GROUPS = "tokens-groups.html"
 DEFAULT = "tokens-default.html"
 SCOPE = "tokens-scope.html"
+LIMIT = "tokens-limit.html"
+TWENTY = [value * 10 for value in range(1, 21)]
 
 
 async def tokens_tool(client: Client) -> Tool:
@@ -37,6 +39,8 @@ async def extract(client: Client, name: str, **arguments: Any) -> dict[str, Any]
     assert result.is_error is False, texts(result)
     assert result.structured_content is not None
     assert_sums_hold(result.structured_content)
+    for family in families(result.structured_content):
+        assert len(family["tokens"]) <= 20
     return result.structured_content
 
 
@@ -774,3 +778,57 @@ async def test_an_element_that_paints_no_box_is_not_read_alone(
 ) -> None:
     for scope in ("#none", "#flat-w", "#flat-h"):
         assert (await extract(client, USED, scope=scope))["elements"] == 0, scope
+
+
+async def test_the_limit_keeps_the_most_used_tokens_in_family_order(
+    client: Client,
+) -> None:
+    spacing = (await extract(client, LIMIT))["spacing"]
+    # 210px has 2 Uses and comes first in Rank order; of the twenty of 1 Use,
+    # 200px comes last by value and is cut.
+    assert spacing["total"] == 21
+    assert rows(spacing, "value") == [(value,) for value in TWENTY[:-1]] + [(210,)]
+
+
+async def test_a_family_of_exactly_the_limit_is_whole(client: Client) -> None:
+    spacing = (await extract(client, LIMIT, scope="#twenty"))["spacing"]
+    assert spacing["total"] == 20
+    assert rows(spacing, "value") == [(value,) for value in TWENTY]
+
+
+async def test_the_limit_keeps_the_colors_that_come_first_by_text(
+    client: Client,
+) -> None:
+    colors = (await extract(client, LIMIT))["colors"]
+    # Twenty-one colours of 1 Use: `#ffffff` comes last by its text.
+    assert colors["total"] == 21
+    assert rows(colors, "value") == [
+        ("#000000",),
+        ("#000080",),
+        ("#0000ff",),
+        ("#008000",),
+        ("#008080",),
+        ("#0080ff",),
+        ("#00ff00",),
+        ("#00ffff",),
+        ("#800000",),
+        ("#800080",),
+        ("#8000ff",),
+        ("#808000",),
+        ("#808080",),
+        ("#80ff00",),
+        ("#c0c0c0",),
+        ("#ff0000",),
+        ("#ff0080",),
+        ("#ff00ff",),
+        ("#ff8000",),
+        ("#ffff00",),
+    ]
+
+
+async def test_the_summary_counts_every_token_found(client: Client) -> None:
+    result = await call(client, LIMIT)
+    assert result.is_error is False, texts(result)
+    (text,) = texts(result)
+    assert "colors 21," in text
+    assert "spacing 21," in text

@@ -4,7 +4,7 @@ code here."""
 import math
 from collections import Counter
 from collections.abc import Callable, Iterable, Iterator
-from typing import Literal
+from typing import Any, Literal, Protocol
 
 from mcp.server.mcpserver.exceptions import ToolError
 from pydantic import BaseModel, ConfigDict
@@ -162,8 +162,21 @@ def _variants[V: (float, str)](uses: Uses[V], group: list[V]) -> list[Variant[V]
     return [Variant[V](value=value, uses=uses[value].total()) for value in group]
 
 
-def _family[T](tokens: list[T]) -> Family[T]:
-    return Family(total=len(tokens), tokens=tokens)
+class _Counted(Protocol):
+    uses: int
+
+
+def _family[T: _Counted](
+    tokens: list[T], key: Callable[[T], Any], *, by_value: bool = False
+) -> "Family[T]":  # Unevaluated: pydantic builds no schema for the bound of T.
+    """A Family of all its Tokens: `total` counts them, and the Limit first in
+    Rank order (by Uses, most first, then by `key`) are kept in Family order, by
+    `key` when `by_value` and in Rank order otherwise."""
+    ranked = sorted(tokens, key=lambda token: (-token.uses, key(token)))
+    kept = ranked[: config.TOKENS_MAX_PER_FAMILY]
+    if by_value:
+        kept.sort(key=key)
+    return Family(total=len(tokens), tokens=kept)
 
 
 def _sides(edges: Edges) -> list[tuple[str, float]]:
@@ -217,7 +230,7 @@ def _colors(read: list[Element], srgb: dict[str, str]) -> Family[ColorToken]:
             variants=_variants(uses, group),
         )
         tokens.append(token)
-    return _family(tokens)
+    return _family(tokens, lambda token: token.value)
 
 
 def _rgb(value: str) -> tuple[int, int, int]:
@@ -276,12 +289,11 @@ def _length_distance(representative: float, value: float) -> float | None:
 
 def _lengths(uses: Uses[float]) -> Family[LengthToken]:
     tokens: list[LengthToken] = []
-    # By the value of each Representative.
-    for group in sorted(_group(uses, _length_distance), key=lambda group: group[0]):
+    for group in _group(uses, _length_distance):
         variants = _variants(uses, group)
         total = sum(variant.uses for variant in variants)
         tokens.append(LengthToken(value=group[0], uses=total, variants=variants))
-    return _family(tokens)
+    return _family(tokens, lambda token: token.value, by_value=True)
 
 
 def _typography(read: list[Element]) -> Typography:
@@ -302,16 +314,19 @@ def _typography(read: list[Element]) -> Typography:
     return Typography(
         families=_family(
             [
-                TextToken(value=value, uses=families[value].total())
-                for value in _ranked(families)
-            ]
+                TextToken(value=value, uses=uses.total())
+                for value, uses in families.items()
+            ],
+            lambda token: token.value,
         ),
         sizes=_lengths(sizes),
         weights=_family(
             [
-                NumberToken(value=value, uses=weights[value].total())
-                for value in sorted(weights)
-            ]
+                NumberToken(value=value, uses=uses.total())
+                for value, uses in weights.items()
+            ],
+            lambda token: token.value,
+            by_value=True,
         ),
         line_heights=_lengths(line_heights),
     )
@@ -341,8 +356,7 @@ def _spacing(read: list[Element]) -> Family[SpacingToken]:
             # A length of 0 is no Value, nor one below it.
             _use(uses, role, (px for px in values if px is not None and px > 0))
     tokens: list[SpacingToken] = []
-    # By the value of each Representative.
-    for group in sorted(_group(uses, _length_distance), key=lambda group: group[0]):
+    for group in _group(uses, _length_distance):
         roles = _roles(uses, group)
         token = SpacingToken(
             value=group[0],
@@ -353,7 +367,7 @@ def _spacing(read: list[Element]) -> Family[SpacingToken]:
             variants=_variants(uses, group),
         )
         tokens.append(token)
-    return _family(tokens)
+    return _family(tokens, lambda token: token.value, by_value=True)
 
 
 def _is_zero(corner: str) -> bool:
@@ -378,12 +392,11 @@ def _radii(read: list[Element]) -> Family[RadiusToken]:
         # A corner with no radius is no Value.
         _use(uses, SINGLE, (text for text in corners if not _is_zero(text)))
     tokens: list[RadiusToken] = []
-    groups = _group(uses, _radius_distance)
-    for group in sorted(groups, key=lambda group: _radius_order(group[0])):
+    for group in _group(uses, _radius_distance):
         variants = _variants(uses, group)
         total = sum(variant.uses for variant in variants)
         tokens.append(RadiusToken(value=group[0], uses=total, variants=variants))
-    return _family(tokens)
+    return _family(tokens, lambda token: _radius_order(token.value), by_value=True)
 
 
 def _radius_distance(representative: str, value: str) -> float | None:
@@ -406,9 +419,10 @@ def _shadows(read: list[Element]) -> Family[ShadowToken]:
         _use(uses, SINGLE, (shadow for shadow in shadows if shadow[1] != "none"))
     return _family(
         [
-            ShadowToken(kind=kind, value=value, uses=uses[kind, value].total())
-            for kind, value in _ranked(uses)
-        ]
+            ShadowToken(kind=kind, value=value, uses=counts.total())
+            for (kind, value), counts in uses.items()
+        ],
+        lambda token: (token.kind, token.value),
     )
 
 

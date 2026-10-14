@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: one spacing and one colour past the Limit</title>
+    <style>
+      /* Every element but `#twenty` is a `div` of 100px by 20px with its styles here;
+         none has text of its own. `#m10` to `#m200` are twenty spacings of 1
+         Use, `.m210` one of 2 Uses; the twenty-one colours have 1 Use each and
+         no two are Near (the smallest ΔE2000 among them is 5.5252). */
+      html,
+      body {
+        margin: 0;
+      }
+      #twenty div,
+      body > div:not(#twenty) {
+        width: 100px;
+        height: 20px;
+      }
+      #m10 {
+        margin-top: 10px;
+      }
+      #m20 {
+        margin-top: 20px;
+      }
+      #m30 {
+        margin-top: 30px;
+      }
+      #m40 {
+        margin-top: 40px;
+      }
+      #m50 {
+        margin-top: 50px;
+      }
+      #m60 {
+        margin-top: 60px;
+      }
+      #m70 {
+        margin-top: 70px;
+      }
+      #m80 {
+        margin-top: 80px;
+      }
+      #m90 {
+        margin-top: 90px;
+      }
+      #m100 {
+        margin-top: 100px;
+      }
+      #m110 {
+        margin-top: 110px;
+      }
+      #m120 {
+        margin-top: 120px;
+      }
+      #m130 {
+        margin-top: 130px;
+      }
+      #m140 {
+        margin-top: 140px;
+      }
+      #m150 {
+        margin-top: 150px;
+      }
+      #m160 {
+        margin-top: 160px;
+      }
+      #m170 {
+        margin-top: 170px;
+      }
+      #m180 {
+        margin-top: 180px;
+      }
+      #m190 {
+        margin-top: 190px;
+      }
+      #m200 {
+        margin-top: 200px;
+      }
+      .m210 {
+        margin-top: 210px;
+      }
+      #c000000 {
+        background-color: #000000;
+      }
+      #cffffff {
+        background-color: #ffffff;
+      }
+      #cff0000 {
+        background-color: #ff0000;
+      }
+      #c00ff00 {
+        background-color: #00ff00;
+      }
+      #c0000ff {
+        background-color: #0000ff;
+      }
+      #cffff00 {
+        background-color: #ffff00;
+      }
+      #cff00ff {
+        background-color: #ff00ff;
+      }
+      #c00ffff {
+        background-color: #00ffff;
+      }
+      #c800000 {
+        background-color: #800000;
+      }
+      #c008000 {
+        background-color: #008000;
+      }
+      #c000080 {
+        background-color: #000080;
+      }
+      #c808000 {
+        background-color: #808000;
+      }
+      #c800080 {
+        background-color: #800080;
+      }
+      #c008080 {
+        background-color: #008080;
+      }
+      #c808080 {
+        background-color: #808080;
+      }
+      #cc0c0c0 {
+        background-color: #c0c0c0;
+      }
+      #cff8000 {
+        background-color: #ff8000;
+      }
+      #c8000ff {
+        background-color: #8000ff;
+      }
+      #c0080ff {
+        background-color: #0080ff;
+      }
+      #cff0080 {
+        background-color: #ff0080;
+      }
+      #c80ff00 {
+        background-color: #80ff00;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="twenty">
+      <div id="m10"></div>
+      <div id="m20"></div>
+      <div id="m30"></div>
+      <div id="m40"></div>
+      <div id="m50"></div>
+      <div id="m60"></div>
+      <div id="m70"></div>
+      <div id="m80"></div>
+      <div id="m90"></div>
+      <div id="m100"></div>
+      <div id="m110"></div>
+      <div id="m120"></div>
+      <div id="m130"></div>
+      <div id="m140"></div>
+      <div id="m150"></div>
+      <div id="m160"></div>
+      <div id="m170"></div>
+      <div id="m180"></div>
+      <div id="m190"></div>
+      <div id="m200"></div>
+    </div>
+    <div id="m210-a" class="m210"></div>
+    <div id="m210-b" class="m210"></div>
+    <div id="c000000"></div>
+    <div id="cffffff"></div>
+    <div id="cff0000"></div>
+    <div id="c00ff00"></div>
+    <div id="c0000ff"></div>
+    <div id="cffff00"></div>
+    <div id="cff00ff"></div>
+    <div id="c00ffff"></div>
+    <div id="c800000"></div>
+    <div id="c008000"></div>
+    <div id="c000080"></div>
+    <div id="c808000"></div>
+    <div id="c800080"></div>
+    <div id="c008080"></div>
+    <div id="c808080"></div>
+    <div id="cc0c0c0"></div>
+    <div id="cff8000"></div>
+    <div id="c8000ff"></div>
+    <div id="c0080ff"></div>
+    <div id="cff0080"></div>
+    <div id="c80ff00"></div>
+  </body>
+</html>
