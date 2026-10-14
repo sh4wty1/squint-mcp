@@ -137,32 +137,34 @@ def _sides(edges: Edges) -> list[tuple[str, float]]:
     ]
 
 
-def _hexes(texts: Iterable[str]) -> Iterator[str]:
-    """The colour Values among computed colours: those of alpha above 0."""
+def _hexes(texts: Iterable[str], srgb: dict[str, str]) -> Iterator[str]:
+    """The colour Values among computed colours: those of alpha above 0. `srgb`
+    holds the colours Chromium does not write as `rgb()`, as it converts them."""
     for text in texts:
-        parsed = color.parse(text)
+        parsed = color.parse(srgb.get(text, text))
         if parsed is None:
             raise ToolError(f'Unsupported colour "{text}".')
         if parsed[3] > 0:
             yield color.to_hex(parsed)
 
 
-def _colors(read: list[Element]) -> Family[ColorToken]:
+def _colors(read: list[Element], srgb: dict[str, str]) -> Family[ColorToken]:
     uses: Uses[str] = {}
     for element in read:
         computed = element.computed
         if _paints_text(element):
             # What a text is filled with, which is its `color` unless the page
             # says otherwise.
-            _use(uses, "text", _hexes([computed["-webkit-text-fill-color"]]))
-        _use(uses, "background", _hexes([computed["background-color"]]))
+            fill = computed["-webkit-text-fill-color"]
+            _use(uses, "text", _hexes([fill], srgb))
+        _use(uses, "background", _hexes([computed["background-color"]], srgb))
         # A side with no border still computes a colour: the width decides.
         borders = (
             computed[f"border-{side}-color"]
             for side, width in _sides(element.box_model.border)
             if width > 0
         )
-        _use(uses, "border", _hexes(borders))
+        _use(uses, "border", _hexes(borders, srgb))
     tokens: list[ColorToken] = []
     for value in _ranked(uses):
         roles = uses[value]
@@ -302,7 +304,7 @@ def extract(capture: Capture) -> Tokens:
     read = [element for element in capture.elements if _is_read(element)]
     return Tokens(
         elements=len(read),
-        colors=_colors(read),
+        colors=_colors(read, capture.srgb),
         typography=_typography(read),
         spacing=_spacing(read),
         radii=_radii(read),

@@ -10,19 +10,30 @@ Srgb = tuple[float, float, float, float]
 
 
 def parse(text: str) -> Srgb | None:
-    """The colour of a computed `rgb(r, g, b)` or `rgba(r, g, b, a)`; None for
-    any other text."""
-    if not (text.startswith(("rgb(", "rgba(")) and text.endswith(")")):
+    """The colour of a computed `rgb(r, g, b)` or `rgba(r, g, b, a)`, or of a
+    `color(srgb r g b)` or `color(srgb r g b / a)`, where a component of `none`
+    is 0; None for any other text."""
+    if not text.endswith(")"):
         return None
-    channels = text[text.index("(") + 1 : -1].split(",")
-    red, green, blue, *alpha = (float(channel) for channel in channels)
-    return red / 255, green / 255, blue / 255, alpha[0] if alpha else 1.0
+    if text.startswith(("rgb(", "rgba(")):
+        channels = text[text.index("(") + 1 : -1].split(",")
+        red, green, blue, *alpha = (float(channel) for channel in channels)
+        return red / 255, green / 255, blue / 255, alpha[0] if alpha else 1.0
+    if text.startswith("color(srgb "):
+        parts = text.removeprefix("color(srgb ")[:-1].replace("/", " ").split()
+        red, green, blue, *alpha = (
+            0.0 if part == "none" else float(part) for part in parts
+        )
+        return red, green, blue, alpha[0] if alpha else 1.0
+    return None
 
 
 def to_hex(color: Srgb) -> str:
-    """`#rrggbb` in lower case, each channel rounded half up to 8 bits; `#rrggbbaa`
-    when the alpha, rounded the same way, is below 255."""
-    red, green, blue, alpha = (math.floor(channel * 255 + 0.5) for channel in color)
+    """`#rrggbb` in lower case, each channel rounded half up to 8 bits and clipped
+    to them; `#rrggbbaa` when the alpha, rounded the same way, is below 255."""
+    red, green, blue, alpha = (
+        min(max(math.floor(channel * 255 + 0.5), 0), 255) for channel in color
+    )
     opaque = f"#{red:02x}{green:02x}{blue:02x}"
     return opaque if alpha == 255 else f"{opaque}{alpha:02x}"
 

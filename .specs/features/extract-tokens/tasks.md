@@ -633,7 +633,7 @@ Every element with text of the fixture has `font: 400 14px/20px Arial, sans-seri
 
 ### T15: Read the colours Chromium does not write as `rgb()`
 
-- [ ] Done
+- [x] Done
 
 **What**: `color.parse` reads `color(srgb r g b)` and `color(srgb r g b / a)`, with `none` as 0; a colour is read through `capture.srgb.get(text, text)`; `#srgb` and `#wide` join the fixture.
 **Where**: `src/squint_mcp/color.py` (with the lookup in the token module, and the two elements of the fixture)
@@ -645,16 +645,26 @@ Every element with text of the fixture has `font: 400 14px/20px Arial, sans-seri
 
 **Done when**:
 
-- [ ] Red before the code: both tests fail with `Unsupported colour`, or with the colour missing
-- [ ] TOK-39: `#336699` is held. TOK-40: `#ff0000` is held: a channel above 1 clips to 255 and one below 0 to 0
-- [ ] The branch that raises `Unsupported colour "<text>".` has no fixture that reaches it: the browser converts every colour it computes (design, Error Handling and Risks). It is one line that raises, and the Verifier does not count it as a gap of the tests
-- [ ] Gate check passes: Full
+- [x] Red before the code: both tests fail with `Unsupported colour`, or with the colour missing
+- [x] TOK-39: `#336699` is held. TOK-40: `#ff0000` is held: a channel above 1 clips to 255 and one below 0 to 0
+- [x] The branch that raises `Unsupported colour "<text>".` has no fixture that reaches it: the browser converts every colour it computes (design, Error Handling and Risks). It is one line that raises, and the Verifier does not count it as a gap of the tests
+- [x] Gate check passes: Full
 
 **Tests**: integration
 **Gate**: full
 
 **Commit**: `feat(tokens): read colours in the notations Chromium keeps`
 
+**Done (2026-10-13)**: the two tests were red before the code: with `#srgb` and `#wide` in the fixture the call fails with `Unsupported colour "color(srgb 0.2 0.4 0.6)".`, and the seven tests of T14 fail with it. They pass with the code. Gate: Full, 23 passed (444 tests collected, none deleted).
+
+Built here: `color.parse` reads `color(srgb r g b)` and `color(srgb r g b / a)`, a component of `none` as 0; `color.to_hex` clips a channel to 0..255; a colour is read through `Capture.srgb`, and a text that is in neither notation after it still fails the call. The docstring of the tool says a colour is in sRGB whatever notation the page wrote it in.
+
+Each rule was also seen wrong on a scratch copy of `src/squint_mcp`:
+
+- No lookup in `Capture.srgb`: the call fails with `Unsupported colour "color(display-p3 1 0 0)".` TOK-39 does not hold the lookup, since `color(srgb 0.2 0.4 0.6)` is its own conversion: TOK-40 does.
+- A channel above 1 not clipped: `#1170000` in place of `#ff0000`. A channel below 0 not clipped: `#ff-3a-26`, so `#ff0000` is not held.
+
+No fixture tells `color(srgb r g b / a)` or `none`: the two elements are opaque and have no missing component. A script of the scratchpad called `color.parse` and `color.to_hex` on both: `color(srgb 0.2 0.4 0.6 / 0.5)` gives `#33669980` and `color(srgb none 0.4 0.6)` gives `#006699`. The branch that raises `Unsupported colour` has no fixture either, as the task says.
 ---
 
 ### T16: Count a type value only on Painted text

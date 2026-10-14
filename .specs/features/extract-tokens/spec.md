@@ -326,8 +326,8 @@ Covered by the stories: a `scope` that matches nothing (TOK-57), that is not a s
 | TOK-36 | P1: Count a value only where it paints | Phase 4, T18 | Pending |
 | TOK-37 | P1: Count a value only where it paints | Phase 4, T18 | Pending |
 | TOK-38 | P1: Count a value only where it paints | Phase 4, T18 | Pending |
-| TOK-39 | P1: Count a value only where it paints | Phase 4, T15 | Pending |
-| TOK-40 | P1: Count a value only where it paints | Phase 4, T15 | Pending |
+| TOK-39 | P1: Count a value only where it paints | Phase 4, T15 | Implemented |
+| TOK-40 | P1: Count a value only where it paints | Phase 4, T15 | Implemented |
 | TOK-41 | P1: Fold values that are nearly equal | Phase 5, T20 | Pending |
 | TOK-42 | P1: Fold values that are nearly equal | Phase 5, T20 | Pending |
 | TOK-43 | P1: Fold values that are nearly equal | Phase 5, T20 | Pending |

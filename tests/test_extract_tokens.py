@@ -292,3 +292,16 @@ async def test_each_side_of_a_border_gives_its_own_color(client: Client) -> None
     colors = (await extract(client, USED))["colors"]
     for value in ("#800000", "#008000", "#000080", "#808000"):
         assert held(colors, value)["roles"]["border"] == 1
+
+
+async def test_a_color_in_the_srgb_notation_is_read(client: Client) -> None:
+    colors = (await extract(client, USED))["colors"]
+    # `color(srgb 0.2 0.4 0.6)`: 51, 102 and 153 of 255.
+    assert ("#336699",) in rows(colors, "value")
+
+
+async def test_a_color_outside_srgb_is_clipped_to_it(client: Client) -> None:
+    colors = (await extract(client, USED))["colors"]
+    # The red of display-p3 has, in sRGB, a red above 1 and a green and a blue
+    # below 0.
+    assert ("#ff0000",) in rows(colors, "value")
