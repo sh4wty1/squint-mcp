@@ -813,7 +813,7 @@ Not told by a fixture, as the table at the end of this file already says: the Le
 - [x] Red before the code: TOK-22 holds `#aa00aa`, TOK-23 holds `#00aaaa`
 - [x] TOK-24: none of the three colours is held, and `elements` equals the number of Read elements of the finished fixture, counted by hand in a comment of the test. Rules dropped: the width of a box is not read (`#abcd02` is held and `elements` is one more); the height is not read (`#abcd03`). `#none` fails both and tells neither
 - [x] The eight lists of `tokens-used.html` are asserted whole and in order (L-020): most of its Tokens have 1 Use, so their places are decided by the `value` alone. The expected lists are written from the Terms and the fixture, not from a run
-- [ ] Gate check passes: Full; then Build for phase 4, in the background
+- [x] Gate check passes: Full; then Build for phase 4, in the background
 
 **Tests**: integration
 **Gate**: full, then build for the phase
@@ -838,7 +838,7 @@ Seen on a scratch copy of `src/squint_mcp`, one mutant each:
 
 **A row of "Rules no fixture of the spec tells" is told now**: the Family order of `typography.lineHeights`, by `value` rather than Rank order. On this fixture `20` has 4 Uses and `18` has 1, and the mutant above fails the test of the eight lists. The table was left as it is: striking the row is the maintainer's call.
 
-The Build box above is ticked in the commit of the Handoff, once the Build of phase 4 has passed.
+The Build of phase 4 ran on the commit of this task (`3649a68`): 462 passed in 21 minutes 14 seconds, with no test of an earlier slice failing. Its box above was ticked after it, in the commit of the Handoff.
 ---
 
 ### Phase 5: Values that are nearly equal
