@@ -929,7 +929,7 @@ Each test was then seen failing on a scratch copy of `src/squint_mcp`, one mutan
 
 ### T22: Fold spacings, radii and line heights
 
-- [ ] Done
+- [x] Done
 
 **What**: `spacing`, `radii` and `lineHeights` grouped with the distance of T21, a radius being a Length only when its text is one px length; the elements of the four criteria; and one test of the eight lists of the finished fixture.
 **Where**: `src/squint_mcp/tokens.py` (with the elements of the fixture and their tests)
@@ -941,17 +941,28 @@ Each test was then seen failing on a scratch copy of `src/squint_mcp`, one mutan
 
 **Done when**:
 
-- [ ] Red before the code: TOK-48, TOK-49 and TOK-50 find two Tokens where they ask for one, unless T21 grouped every Family of Lengths at once; then each is seen failing with its Family taken out of the grouping
-- [ ] TOK-50: one of the nine elements with Own text takes `line-height: 20.5px`; the one Token is `20` and its `variants` end with `(20.5, 1)`
-- [ ] TOK-51 (L-019, a case per clause). Rules dropped: a radius is a Length when its text starts with a px length (`10px 20px` and `10.5px 20px` fold); a percentage is read as a number (`30%` and `30.5%` fold)
-- [ ] The eight lists of `tokens-groups.html` are asserted whole and in order (L-020), written from the Terms and the fixture, not from a run: among them `#1a73e880` before `#1a79e8`, both of 1 Use
-- [ ] Gate check passes: Full
+- [x] Red before the code: TOK-48, TOK-49 and TOK-50 find two Tokens where they ask for one, unless T21 grouped every Family of Lengths at once; then each is seen failing with its Family taken out of the grouping
+- [x] TOK-50: one of the nine elements with Own text takes `line-height: 20.5px`; the one Token is `20` and its `variants` end with `(20.5, 1)`
+- [x] TOK-51 (L-019, a case per clause). Rules dropped: a radius is a Length when its text starts with a px length (`10px 20px` and `10.5px 20px` fold); a percentage is read as a number (`30%` and `30.5%` fold)
+- [x] The eight lists of `tokens-groups.html` are asserted whole and in order (L-020), written from the Terms and the fixture, not from a run: among them `#1a73e880` before `#1a79e8`, both of 1 Use
+- [x] Gate check passes: Full
 
 **Tests**: integration
 **Gate**: full
 
 **Commit**: `feat(tokens): fold spacings, radii and line heights`
 
+**Done (2026-10-14)**: five tests, the four of the criteria and that of the eight lists. Gate: Full, 53 passed (474 tests collected, none deleted). The elements went into the fixture in two steps, so that each test was seen alone:
+
+- With `#r30`, `#r30-5`, `#o10` and `#o10-5`: the test of TOK-51 passed at once (pin), since nothing grouped radii yet.
+- With `#p8-1`, `#p8-2`, `#p8-5`, `#r4-1`, `#r4-2`, `#r4-5` and a line height of 20.5px on `#s15`: red. TOK-48 has `(uses, roles.padding)` of `(2, 2)`, TOK-49 `uses` 2, TOK-50 two Tokens of line heights. The test of the eight lists was written from the Terms and the fixture before its first run; it failed first on `lineHeights`, the four lists before it holding, and no line of it was changed after.
+
+Built here: `spacing`, `radii` and `lineHeights` grouped; a spacing Token's `roles` summed over its Group; two radii Near only when each is one px length, by the distance of T21; the Tokens of each Family sorted by their Representative, the radii in the Family order of T18. The distance that was never Near, which held `lineHeights` out of the grouping in T21, is gone. The docstring of the tool says line heights, spacings and px radii less than 1px apart are one token too.
+
+Each test was then seen failing on a scratch copy of `src/squint_mcp`, one mutant each; the test of the eight lists fails under every one of them:
+
+- TOK-48, `spacing` out of the grouping: `(2, 2)`. TOK-49, `radii` out of it: `4px` has 2 Uses. TOK-50, `lineHeights` out of it: two Tokens.
+- TOK-51, a radius a Length when its text starts with a px length: `10px 20px` joins `10.5px 20px`. A percentage read as a number: `30.5%` joins `30%`.
 ---
 
 ### T23: Hold the two edge cases of the default page

@@ -594,3 +594,72 @@ async def test_a_font_size_as_near_two_groups_joins_the_first_opened(
         {"value": 16, "uses": 3},
         {"value": 16.5, "uses": 1},
     ]
+
+
+async def test_radii_that_are_not_one_length_are_never_near(client: Client) -> None:
+    radii = (await extract(client, GROUPS))["radii"]
+    # Two percentages half a percent apart, and two corners of two radii whose
+    # first radius is half a pixel apart.
+    for value in ("30%", "30.5%", "10px 20px", "10.5px 20px"):
+        token = held(radii, value)
+        assert token["uses"] == 1
+        assert token["variants"] == [{"value": value, "uses": 1}]
+
+
+async def test_spacings_less_than_1px_apart_are_one_token(client: Client) -> None:
+    spacing = (await extract(client, GROUPS))["spacing"]
+    token = held(spacing, 8)
+    assert (token["uses"], token["roles"]["padding"]) == (3, 3)
+    assert token["variants"] == [{"value": 8, "uses": 2}, {"value": 8.5, "uses": 1}]
+
+
+async def test_radii_less_than_1px_apart_are_one_token(client: Client) -> None:
+    radii = (await extract(client, GROUPS))["radii"]
+    token = held(radii, "4px")
+    assert token["uses"] == 3
+    assert token["variants"] == [
+        {"value": "4px", "uses": 2},
+        {"value": "4.5px", "uses": 1},
+    ]
+
+
+async def test_line_heights_less_than_1px_apart_are_one_token(client: Client) -> None:
+    typography = (await extract(client, GROUPS))["typography"]
+    # Eight of the nine texts are on a line of 20px, `#s15` on one of 20.5px.
+    (token,) = typography["lineHeights"]["tokens"]
+    assert token["value"] == 20
+    assert token["variants"][-1] == {"value": 20.5, "uses": 1}
+
+
+async def test_the_families_of_a_page_of_near_values_come_whole_and_in_their_order(
+    client: Client,
+) -> None:
+    result = await extract(client, GROUPS)
+    typography = result["typography"]
+    # Rank order of the Tokens, by the Uses of their Groups: the eight texts
+    # in `#333333`, the Group of `#1a73e8` and that of `#808080`, then two
+    # of 1 Use by their text, where a digit comes before a letter.
+    fields = ("value", "uses", "roles.text", "roles.background", "roles.border")
+    assert rows(result["colors"], *fields) == [
+        ("#333333", 8, 8, 0, 0),
+        ("#1a73e8", 7, 1, 6, 0),
+        ("#808080", 4, 0, 4, 0),
+        ("#1a73e880", 1, 0, 1, 0),
+        ("#1a79e8", 1, 0, 1, 0),
+    ]
+    assert rows(typography["families"], "value", "uses") == [("Arial, sans-serif", 9)]
+    assert rows(typography["sizes"], "value", "uses") == [(15, 1), (16, 4), (17, 4)]
+    assert rows(typography["weights"], "value", "uses") == [(400, 9)]
+    assert rows(typography["lineHeights"], "value", "uses") == [(20, 9)]
+    fields = ("value", "uses", "roles.margin", "roles.padding", "roles.gap")
+    assert rows(result["spacing"], *fields) == [(8, 3, 0, 3, 0)]
+    # The one Length, then the four others by their text, where a dot comes
+    # before a letter and a percent sign before a dot.
+    assert rows(result["radii"], "value", "uses") == [
+        ("4px", 3),
+        ("10.5px 20px", 1),
+        ("10px 20px", 1),
+        ("30%", 1),
+        ("30.5%", 1),
+    ]
+    assert rows(result["shadows"], "kind", "value", "uses") == []

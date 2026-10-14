@@ -153,6 +153,11 @@ def _group[V: (float, str)](
     return groups
 
 
+def _roles[V: (float, str)](uses: Uses[V], group: list[V]) -> Counter[str]:
+    """The Uses of a Group by Role: those of its Values."""
+    return sum((uses[value] for value in group), Counter[str]())
+
+
 def _variants[V: (float, str)](uses: Uses[V], group: list[V]) -> list[Variant[V]]:
     return [Variant[V](value=value, uses=uses[value].total()) for value in group]
 
@@ -200,7 +205,7 @@ def _colors(read: list[Element], srgb: dict[str, str]) -> Family[ColorToken]:
         _use(uses, "border", _hexes(borders, srgb))
     tokens: list[ColorToken] = []
     for group in _group(uses, _color_distance):
-        roles = sum((uses[value] for value in group), Counter[str]())
+        roles = _roles(uses, group)
         token = ColorToken(
             value=group[0],
             uses=roles.total(),
@@ -261,11 +266,6 @@ def _length(text: str) -> float | None:
         return None
 
 
-def _never[V](representative: V, value: V) -> None:
-    """The distance of two Values that are never Near."""
-    return None
-
-
 def _length_distance(representative: float, value: float) -> float | None:
     """How far apart two Lengths that are Near are, in px. Rounded to six decimal
     places: Chromium writes four, and in floating point 16.0004 minus 15.0004 is
@@ -274,12 +274,10 @@ def _length_distance(representative: float, value: float) -> float | None:
     return apart if apart < config.TOKENS_NEAR_LENGTH_BELOW_PX else None
 
 
-def _lengths(
-    uses: Uses[float], distance: Callable[[float, float], float | None]
-) -> Family[LengthToken]:
+def _lengths(uses: Uses[float]) -> Family[LengthToken]:
     tokens: list[LengthToken] = []
     # By the value of each Representative.
-    for group in sorted(_group(uses, distance), key=lambda group: group[0]):
+    for group in sorted(_group(uses, _length_distance), key=lambda group: group[0]):
         variants = _variants(uses, group)
         total = sum(variant.uses for variant in variants)
         tokens.append(LengthToken(value=group[0], uses=total, variants=variants))
@@ -308,14 +306,14 @@ def _typography(read: list[Element]) -> Typography:
                 for value in _ranked(families)
             ]
         ),
-        sizes=_lengths(sizes, _length_distance),
+        sizes=_lengths(sizes),
         weights=_family(
             [
                 NumberToken(value=value, uses=weights[value].total())
                 for value in sorted(weights)
             ]
         ),
-        line_heights=_lengths(line_heights, _never),
+        line_heights=_lengths(line_heights),
     )
 
 
@@ -343,15 +341,16 @@ def _spacing(read: list[Element]) -> Family[SpacingToken]:
             # A length of 0 is no Value, nor one below it.
             _use(uses, role, (px for px in values if px is not None and px > 0))
     tokens: list[SpacingToken] = []
-    for value in sorted(uses):
-        roles = uses[value]
+    # By the value of each Representative.
+    for group in sorted(_group(uses, _length_distance), key=lambda group: group[0]):
+        roles = _roles(uses, group)
         token = SpacingToken(
-            value=value,
+            value=group[0],
             uses=roles.total(),
             roles=SpacingRoles(
                 margin=roles["margin"], padding=roles["padding"], gap=roles["gap"]
             ),
-            variants=[Variant[float](value=value, uses=roles.total())],
+            variants=_variants(uses, group),
         )
         tokens.append(token)
     return _family(tokens)
@@ -379,11 +378,21 @@ def _radii(read: list[Element]) -> Family[RadiusToken]:
         # A corner with no radius is no Value.
         _use(uses, SINGLE, (text for text in corners if not _is_zero(text)))
     tokens: list[RadiusToken] = []
-    for value in sorted(uses, key=_radius_order):
-        total = uses[value].total()
-        variants = [Variant[str](value=value, uses=total)]
-        tokens.append(RadiusToken(value=value, uses=total, variants=variants))
+    groups = _group(uses, _radius_distance)
+    for group in sorted(groups, key=lambda group: _radius_order(group[0])):
+        variants = _variants(uses, group)
+        total = sum(variant.uses for variant in variants)
+        tokens.append(RadiusToken(value=group[0], uses=total, variants=variants))
     return _family(tokens)
+
+
+def _radius_distance(representative: str, value: str) -> float | None:
+    """How far apart two radii that are Near are, in px: only two that are each
+    one px length can be."""
+    first, second = _length(representative), _length(value)
+    if first is None or second is None:
+        return None
+    return _length_distance(first, second)
 
 
 def _shadows(read: list[Element]) -> Family[ShadowToken]:

@@ -38,8 +38,9 @@ async def extract_tokens(
     A colour is `#rrggbb` in sRGB whatever notation the page wrote it in, or
     `#rrggbbaa` when it is not opaque, and a text colour is the one the text is
     filled with. Colours of one alpha whose ΔE2000 is below 2 are one token, and
-    so are font sizes less than 1px apart: its `value` is the most used of them,
-    and `variants` lists each with its own count. A line height of `normal` is
+    so are font sizes, line heights, spacings and px radii less than 1px apart:
+    its `value` is the most used of them, and `variants` lists each with its own
+    count. A line height of `normal` is
     not counted, nor a margin of `auto`, nor the gap of an element that is not a
     flex or grid container.
 
