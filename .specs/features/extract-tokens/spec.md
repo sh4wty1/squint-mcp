@@ -289,10 +289,10 @@ Covered by the stories: a `scope` that matches nothing (TOK-57), that is not a s
 | Requirement ID | Story | Phase | Status |
 | --- | --- | --- | --- |
 | TOK-01 | P1: Read the tokens of a page | Phase 3, T9 | Implemented |
-| TOK-02 | P1: Read the tokens of a page | Phase 3, T10 | Pending |
-| TOK-03 | P1: Read the tokens of a page | Phase 3, T10 | Pending |
-| TOK-04 | P1: Read the tokens of a page | Phase 3, T10 | Pending |
-| TOK-05 | P1: Read the tokens of a page | Phase 3, T10 | Pending |
+| TOK-02 | P1: Read the tokens of a page | Phase 3, T10 | Implemented |
+| TOK-03 | P1: Read the tokens of a page | Phase 3, T10 | Implemented |
+| TOK-04 | P1: Read the tokens of a page | Phase 3, T10 | Implemented |
+| TOK-05 | P1: Read the tokens of a page | Phase 3, T10 | Implemented |
 | TOK-06 | P1: Read the tokens of a page | Phase 3, T11 | Pending |
 | TOK-07 | P1: Read the tokens of a page | Phase 3, T12 | Pending |
 | TOK-08 | P1: Read the tokens of a page | Phase 3, T12 | Pending |

@@ -136,3 +136,25 @@ async def test_colors_are_counted_by_role_and_come_in_rank_order(
         [{"value": "#cccccc", "uses": 1}],
         [{"value": "#eeeeee", "uses": 1}],
     ]
+
+
+async def test_font_families_are_counted_on_painted_text(client: Client) -> None:
+    typography = (await extract(client, PAGE))["typography"]
+    # Five of the eight elements have text of their own.
+    assert rows(typography["families"], "value", "uses") == [("Arial, sans-serif", 5)]
+
+
+async def test_font_sizes_come_by_value(client: Client) -> None:
+    typography = (await extract(client, PAGE))["typography"]
+    assert rows(typography["sizes"], "value", "uses") == [(14, 3), (16, 1), (32, 1)]
+
+
+async def test_font_weights_come_by_value_not_by_uses(client: Client) -> None:
+    typography = (await extract(client, PAGE))["typography"]
+    assert rows(typography["weights"], "value", "uses") == [(400, 2), (700, 3)]
+
+
+async def test_line_heights_come_by_value(client: Client) -> None:
+    typography = (await extract(client, PAGE))["typography"]
+    line_heights = typography["lineHeights"]
+    assert rows(line_heights, "value", "uses") == [(20, 3), (24, 1), (40, 1)]

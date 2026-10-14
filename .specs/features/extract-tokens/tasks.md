@@ -431,7 +431,7 @@ Painted text is `own_text and own_text_boxes`, as the design has it and as this 
 
 ### T10: Read the type scale of a page
 
-- [ ] Done
+- [x] Done
 
 **What**: The four lists of `typography`, read on elements with Painted text, each in its Family order.
 **Where**: `src/squint_mcp/tokens.py`
@@ -443,17 +443,29 @@ Painted text is `own_text and own_text_boxes`, as the design has it and as this 
 
 **Done when**:
 
-- [ ] Red before the code: the four tests get empty lists
-- [ ] Each test asserts its list whole and in order
-- [ ] Rules this page forces: Painted text (`Arial, sans-serif` has 5 Uses, not 8); Family order by `value` (`400` comes before `700`, which has more Uses)
-- [ ] A `line-height` that is not a px length is left for T16, which has the fixture
-- [ ] Gate check passes: Full
+- [x] Red before the code: the four tests get empty lists
+- [x] Each test asserts its list whole and in order
+- [x] Rules this page forces: Painted text (`Arial, sans-serif` has 5 Uses, not 8); Family order by `value` (`400` comes before `700`, which has more Uses)
+- [x] A `line-height` that is not a px length is left for T16, which has the fixture
+- [x] Gate check passes: Full
 
 **Tests**: integration
 **Gate**: full
 
 **Commit**: `feat(tokens): read the type scale of a page`
 
+
+
+**Done (2026-10-13)**: the four tests were red before the code, each on `assert [] == [...]`, and pass with it. Gate: Full, 9 passed (430 tests collected).
+
+The two rules, each seen wrong on a scratch copy of `src/squint_mcp`:
+
+- Family order by `value`: with the weights in Rank order the list is `(700, 3)`, `(400, 2)`.
+- Painted text: with the families counted on every Read element the list is `(Arial, sans-serif, 7)`, `("Times New Roman", 1)`.
+
+**Differs from the task as written above**: without Painted text `Arial, sans-serif` has 7 Uses, not 8. The eighth element is `html`, which the page gives no font: it computes the browser's default, `"Times New Roman"`, and `normal` for its line height, as `body` does. So with the rule taken out of the four lists at once the call fails (`float("normal")`) and seven of the eight tests of the module fail with it.
+
+Left out on purpose: a `line-height` that is not a px length is not told from one that is, and fails the call (T16, TOK-26). The sizes and the line heights come by `value`, as the weights do: on this page that is also their Rank order, so only the test of the weights tells the two apart.
 ---
 
 ### T11: Read the spacings of a page

@@ -108,6 +108,9 @@ class Tokens(BaseModel):
 type Uses[V] = dict[V, Counter[str]]
 """How many Read elements have each Value of a Family, by Role."""
 
+SINGLE = "single"
+"""The Role of every Value of a Family that has a single Role."""
+
 
 def _use[V](uses: Uses[V], role: str, values: Iterable[V]) -> None:
     """Count what one element has in one Role: a Value it has on several sides
@@ -185,18 +188,58 @@ def _paints_text(element: Element) -> bool:
     return element.own_text and bool(element.own_text_boxes)
 
 
+def _px(text: str) -> float:
+    """The number of a computed px length."""
+    return float(text.removesuffix("px"))
+
+
+def _lengths(uses: Uses[float]) -> Family[LengthToken]:
+    tokens: list[LengthToken] = []
+    for value in sorted(uses):
+        total = uses[value].total()
+        variants = [Variant[float](value=value, uses=total)]
+        tokens.append(LengthToken(value=value, uses=total, variants=variants))
+    return _family(tokens)
+
+
+def _typography(read: list[Element]) -> Typography:
+    families: Uses[str] = {}
+    sizes: Uses[float] = {}
+    weights: Uses[float] = {}
+    line_heights: Uses[float] = {}
+    for element in read:
+        if not _paints_text(element):
+            continue
+        computed = element.computed
+        _use(families, SINGLE, [computed["font-family"]])
+        _use(sizes, SINGLE, [_px(computed["font-size"])])
+        _use(weights, SINGLE, [float(computed["font-weight"])])
+        _use(line_heights, SINGLE, [_px(computed["line-height"])])
+    return Typography(
+        families=_family(
+            [
+                TextToken(value=value, uses=families[value].total())
+                for value in _ranked(families)
+            ]
+        ),
+        sizes=_lengths(sizes),
+        weights=_family(
+            [
+                NumberToken(value=value, uses=weights[value].total())
+                for value in sorted(weights)
+            ]
+        ),
+        line_heights=_lengths(line_heights),
+    )
+
+
 def extract(capture: Capture) -> Tokens:
     """Read the Tokens of the elements a Capture holds."""
     read = [element for element in capture.elements if _is_read(element)]
     return Tokens(
         elements=len(read),
         colors=_colors(read),
-        typography=Typography(
-            families=_family([]),
-            sizes=_family([]),
-            weights=_family([]),
-            line_heights=_family([]),
-        ),
+        typography=_typography(read),
         spacing=_family([]),
         radii=_family([]),
         shadows=_family([]),
