@@ -1178,11 +1178,13 @@ TOK-69 and TOK-70 are `capture(...)`'s messages: no rule of the tool to drop.
 
 **Commit**: `docs(specs): record the Linux run of extract-tokens`
 
+**Not done (2026-10-14)**: Docker Desktop crashed while the image was being pulled. It came back once the stale Unix sockets it left (in `%LOCALAPPDATA%\Dockerun` and `%LOCALAPPDATA%\docker-secrets-engine`, which Windows can no longer open or delete) were moved aside, but the image stays broken: its binaries are 0 bytes (`usr/bin/bash`, `usr/bin/uname`, `libc.so.6`), every container of it fails with `exec format error`, and `docker image rm` followed by a pull downloads no layer, so the half-unpacked layers are kept by containerd. A `busybox` container runs. The maintainer chose to do T29 and the Build first and run this task in a later session, before the Verifier, once containerd lets go of the layers or the image is pulled clean.
+
 ---
 
 ### T29: Document the tool
 
-- [ ] Done
+- [x] Done
 
 **What**: The README describes `extract_tokens`: its inputs, the eight Families, what counts as a Use, the two thresholds with their sources, and the Limit. The CHANGELOG lists it under `Unreleased`.
 **Where**: `README.md` (with the changelog)
@@ -1194,14 +1196,16 @@ TOK-69 and TOK-70 are `capture(...)`'s messages: no rule of the tool to drop.
 
 **Done when**:
 
-- [ ] Each of the five things TOK-76 names is in the README, and the sources of the two thresholds are those of the comments of T1
-- [ ] Any sentence of the README that says the server has three tools says four
+- [x] Each of the five things TOK-76 names is in the README, and the sources of the two thresholds are those of the comments of T1
+- [x] Any sentence of the README that says the server has three tools says four
 - [ ] Gate check passes: Full; then Build for phase 6, in the background. It is the gate of the spec's Success Criteria, and the Verifier waits for it
 
 **Tests**: none
 **Gate**: full, then build for the phase
 
 **Commit**: `docs: describe extract_tokens`
+
+**Done (2026-10-14)**, ahead of T28 on the maintainer's word: T28 waits on Docker (see under it), and this task does not read its result. The README lists four tools, gives `extract_tokens` its row in the table and a paragraph: its inputs (`url`, `scope`, `viewport`), the eight Families, what a Use is (one Read element with one Value in one Role; a Value on several sides, corners or axes is one Use), the two thresholds with the sources of the comments of T1 (CSS Color Module Level 4, section 20.2 for the formula and section 14.2.1 for the value, read as one token by Squint; 1px a Squint default with no norm behind it) and the Limit with `total`. The CHANGELOG lists the tool under `Unreleased`, `Added`, with what every Capture now reads and its cost (12% to 27%, AD-009). Gate: Full, 75 passed (496 tests collected, none deleted). The Build of phase 6 runs on this commit; its box above is ticked after it.
 
 ---
 
