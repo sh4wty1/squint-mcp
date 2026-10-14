@@ -20,9 +20,11 @@ def parse(text: str) -> Srgb | None:
 
 
 def to_hex(color: Srgb) -> str:
-    """`#rrggbb` in lower case, each channel rounded half up to 8 bits."""
-    red, green, blue = (math.floor(channel * 255 + 0.5) for channel in color[:3])
-    return f"#{red:02x}{green:02x}{blue:02x}"
+    """`#rrggbb` in lower case, each channel rounded half up to 8 bits; `#rrggbbaa`
+    when the alpha, rounded the same way, is below 255."""
+    red, green, blue, alpha = (math.floor(channel * 255 + 0.5) for channel in color)
+    opaque = f"#{red:02x}{green:02x}{blue:02x}"
+    return opaque if alpha == 255 else f"{opaque}{alpha:02x}"
 
 
 def delta_e_2000(reference: Lab, sample: Lab) -> float:

@@ -152,7 +152,9 @@ def _colors(read: list[Element]) -> Family[ColorToken]:
     for element in read:
         computed = element.computed
         if _paints_text(element):
-            _use(uses, "text", _hexes([computed["color"]]))
+            # What a text is filled with, which is its `color` unless the page
+            # says otherwise.
+            _use(uses, "text", _hexes([computed["-webkit-text-fill-color"]]))
         _use(uses, "background", _hexes([computed["background-color"]]))
         # A side with no border still computes a colour: the width decides.
         borders = (

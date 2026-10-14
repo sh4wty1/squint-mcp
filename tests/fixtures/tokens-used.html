@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: values counted only where they paint</title>
+    <style>
+      /* Every element is a `div` and carries its styles here. Each has values no
+         other element has, so a Token tells the element it was read from. A box
+         with no text has a size of its own: one that paints nothing is not read. */
+      html,
+      body {
+        margin: 0;
+      }
+      #inherit {
+        color: #aa0000;
+      }
+      #inherit-child {
+        font: 400 14px/20px Arial, sans-serif;
+      }
+      #fill {
+        color: #111111;
+        -webkit-text-fill-color: #222222;
+        font: 400 14px/20px Arial, sans-serif;
+      }
+      #clear {
+        width: 100px;
+        height: 20px;
+        background-color: rgba(0, 128, 128, 0);
+      }
+      #clip {
+        color: #445566;
+        -webkit-text-fill-color: transparent;
+        font: 400 14px/20px Arial, sans-serif;
+      }
+      #veil {
+        width: 100px;
+        height: 20px;
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+      #edge {
+        width: 100px;
+        height: 20px;
+        color: #00aa00;
+        border-left: 2px solid #0000aa;
+      }
+      #sides {
+        width: 100px;
+        height: 20px;
+        border-style: solid;
+        border-width: 1px;
+        border-color: #800000 #008000 #000080 #808000;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="inherit">
+      <div id="inherit-child">A text in the colour of its parent</div>
+    </div>
+    <div id="fill">A text filled with another colour</div>
+    <div id="clear"></div>
+    <div id="clip">A text with a transparent fill</div>
+    <div id="veil"></div>
+    <div id="edge"></div>
+    <div id="sides"></div>
+  </body>
+</html>

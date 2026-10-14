@@ -302,13 +302,13 @@ Covered by the stories: a `scope` that matches nothing (TOK-57), that is not a s
 | TOK-12 | P1: Read the tokens of a page | Phase 3, T13 | Implemented |
 | TOK-13 | P1: Read the tokens of a page | Phase 3, T13 | Implemented |
 | TOK-14 | P1: Read the tokens of a page | Phase 3, T13 | Implemented |
-| TOK-15 | P1: Count a value only where it paints | Phase 4, T14 | Pending |
-| TOK-16 | P1: Count a value only where it paints | Phase 4, T14 | Pending |
-| TOK-17 | P1: Count a value only where it paints | Phase 4, T14 | Pending |
-| TOK-18 | P1: Count a value only where it paints | Phase 4, T14 | Pending |
-| TOK-19 | P1: Count a value only where it paints | Phase 4, T14 | Pending |
-| TOK-20 | P1: Count a value only where it paints | Phase 4, T14 | Pending |
-| TOK-21 | P1: Count a value only where it paints | Phase 4, T14 | Pending |
+| TOK-15 | P1: Count a value only where it paints | Phase 4, T14 | Implemented |
+| TOK-16 | P1: Count a value only where it paints | Phase 4, T14 | Implemented |
+| TOK-17 | P1: Count a value only where it paints | Phase 4, T14 | Implemented |
+| TOK-18 | P1: Count a value only where it paints | Phase 4, T14 | Implemented |
+| TOK-19 | P1: Count a value only where it paints | Phase 4, T14 | Implemented |
+| TOK-20 | P1: Count a value only where it paints | Phase 4, T14 | Implemented |
+| TOK-21 | P1: Count a value only where it paints | Phase 4, T14 | Implemented |
 | TOK-22 | P1: Count a value only where it paints | Phase 4, T19 | Pending |
 | TOK-23 | P1: Count a value only where it paints | Phase 4, T19 | Pending |
 | TOK-24 | P1: Count a value only where it paints | Phase 4, T19 | Pending |

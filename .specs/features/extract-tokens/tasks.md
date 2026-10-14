@@ -589,7 +589,7 @@ The Build of phase 3 ran on the commit of this task (`e313e4e`): 435 passed in 2
 
 ### T14: Count a colour only where it paints
 
-- [ ] Done
+- [x] Done
 
 **What**: `tokens-used.html` with `#inherit` and its child, `#fill`, `#clear`, `#clip`, `#veil`, `#edge` and `#sides`, and the seven tests. Any rule T9 did not need is built here.
 **Where**: `tests/fixtures/tokens-used.html` (with its tests and what they ask of the token module)
@@ -601,15 +601,34 @@ The Build of phase 3 ran on the commit of this task (`e313e4e`): 435 passed in 2
 
 **Done when**:
 
-- [ ] The module has two helpers the criteria word: a list "holds" a value (the `value` of one of its Tokens) and "does not hold" it (the `value` of no Token and of no variant)
-- [ ] Rule dropped, test by test. TOK-15: the text Role counts an element with no Own text (`#aa0000` has 2 Uses). TOK-16: the text Role reads `color` (`#111111` is held). TOK-17 and TOK-18: a colour of alpha 0 is a Value (`#00808000`, `#00000000`). TOK-19: the alpha is cut, not rounded half up (`#0000007f`). TOK-20: a border colour counts whatever the width (`#00aa00` is held). TOK-21: one side is read for the four (three of the colours are gone)
-- [ ] Gate check passes: Full
+- [x] The module has two helpers the criteria word: a list "holds" a value (the `value` of one of its Tokens) and "does not hold" it (the `value` of no Token and of no variant)
+- [x] Rule dropped, test by test. TOK-15: the text Role counts an element with no Own text (`#aa0000` has 2 Uses). TOK-16: the text Role reads `color` (`#111111` is held). TOK-17 and TOK-18: a colour of alpha 0 is a Value (`#00808000`, `#00000000`). TOK-19: the alpha is cut, not rounded half up (`#0000007f`). TOK-20: a border colour counts whatever the width (`#00aa00` is held). TOK-21: one side is read for the four (three of the colours are gone)
+- [x] Gate check passes: Full
 
 **Tests**: integration
 **Gate**: full
 
 **Commit**: `test(tokens): hold a colour to the elements that paint it`
 
+**Done (2026-10-13)**: seven tests, and the two helpers (`held`, `values`). Gate: Full, 21 passed (442 tests collected, none deleted). Before a line of `src/` was touched three tests were red and four passed at once:
+
+- Red: TOK-16 (`#222222` is not held, the `text` Role read `color`), TOK-18 (`#445566` is held) and TOK-19 (`#00000080` is not held, the colour came as `#000000`).
+- Pins: TOK-15, TOK-17, TOK-20 and TOK-21, whose rules T9 built.
+
+Built here: the `text` Role reads `-webkit-text-fill-color`, and `color.to_hex` writes `#rrggbbaa` when the alpha, rounded half up to 8 bits, is below 255. The docstring of the tool says both.
+
+Each of the seven was then seen failing on a scratch copy of `src/squint_mcp`, with `PYTHONPATH` set to the copy:
+
+- TOK-15, the `text` Role counted on every Read element: `#aa0000` has `(uses, roles.text)` of `(2, 2)`.
+- TOK-16, `color` read in place of the fill: `#222222` is not held. The test of TOK-18 fails with it, on `#445566`.
+- TOK-17 and TOK-18, a colour of alpha 0 counted: `#00808000` is held, and `#00000000`.
+- TOK-19, the alpha cut in place of rounded: `#0000007f`.
+- TOK-20, a border colour counted whatever the width: `#00aa00` is held.
+- TOK-21, the top side read for the four: of the four colours only `#800000` is left, and `#0000aa` of `#edge` is gone too.
+
+**Differs from the task and from the note of T9**: the commit is a `feat`, not a `test`: two rules were built. The note of T9 gave the eight digits of `to_hex` to T20; TOK-19 is a criterion of this task and the mutant it names (`#0000007f`) needs them here.
+
+Every element with text of the fixture has `font: 400 14px/20px Arial, sans-serif`: a line height of `normal` fails the call until T16. A box with no text has a width and a height of its own, or it would not be a Read element and its colour would be missing for the wrong reason. Left out on purpose: `to_hex` does not clip a channel (T15).
 ---
 
 ### T15: Read the colours Chromium does not write as `rgb()`

@@ -31,10 +31,11 @@ async def extract_tokens(
     returns the values its elements are styled with, each with the number of
     elements that use it: `colors` (by role: text, background, border),
     `typography` (`families`, `sizes`, `weights`, `lineHeights`), `spacing` in
-    px (by role: margin, padding, gap), `radii` and `shadows`. `elements` is the
-    number of elements read. `viewport` defaults to 1440x900. `stabilized` is
-    false when the network never went idle. A call that takes longer than 30s
-    fails.
+    px (by role: margin, padding, gap), `radii` and `shadows`. A colour is
+    `#rrggbb`, or `#rrggbbaa` when it is not opaque, and a text colour is the
+    one the text is filled with. `elements` is the number of elements read.
+    `viewport` defaults to 1440x900. `stabilized` is false when the network
+    never went idle. A call that takes longer than 30s fails.
     """
     viewport = viewport or Viewport(
         width=config.DEFAULT_VIEWPORT_WIDTH, height=config.DEFAULT_VIEWPORT_HEIGHT

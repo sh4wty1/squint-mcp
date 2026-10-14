@@ -10,6 +10,7 @@ from mcp.types import CallToolResult, TextContent, Tool
 pytestmark = pytest.mark.anyio
 
 PAGE = "tokens-page.html"
+USED = "tokens-used.html"
 
 
 async def tokens_tool(client: Client) -> Tool:
@@ -81,6 +82,23 @@ def rows(family: dict[str, Any], *fields: str) -> list[tuple[Any, ...]]:
         return token
 
     return [tuple(read(token, field) for field in fields) for token in family["tokens"]]
+
+
+def held(family: dict[str, Any], value: Any) -> dict[str, Any]:
+    """The Token of a Family that "holds" `value`: the one whose `value` it is."""
+    tokens = [token for token in family["tokens"] if token["value"] == value]
+    assert len(tokens) == 1, (value, rows(family, "value"))
+    return tokens[0]
+
+
+def values(family: dict[str, Any]) -> list[Any]:
+    """Every `value` of a Family, of a Token or of a variant: the Family "does
+    not hold" a value that is none of them."""
+    found: list[Any] = []
+    for token in family["tokens"]:
+        found.append(token["value"])
+        found.extend(variant["value"] for variant in token.get("variants", []))
+    return found
 
 
 async def test_extract_tokens_is_listed_with_its_hints_and_its_schemas(
@@ -224,3 +242,53 @@ async def test_two_calls_with_the_same_arguments_return_equal_content(
     first = await extract(client, PAGE)
     second = await extract(client, PAGE)
     assert first == second
+
+
+async def test_a_text_color_is_counted_where_the_text_is_not_where_it_is_set(
+    client: Client,
+) -> None:
+    colors = (await extract(client, USED))["colors"]
+    # `#inherit` sets the colour and has no text of its own: its child paints it.
+    token = held(colors, "#aa0000")
+    assert (token["uses"], token["roles"]["text"]) == (1, 1)
+
+
+async def test_a_text_color_is_the_fill_of_the_text(client: Client) -> None:
+    colors = (await extract(client, USED))["colors"]
+    assert held(colors, "#222222")["roles"]["text"] == 1
+    assert "#111111" not in values(colors)
+
+
+async def test_a_background_of_alpha_zero_is_no_color(client: Client) -> None:
+    colors = (await extract(client, USED))["colors"]
+    assert [value for value in values(colors) if value.startswith("#008080")] == []
+
+
+async def test_a_transparent_text_fill_is_no_color(client: Client) -> None:
+    found = values((await extract(client, USED))["colors"])
+    assert [value for value in found if value.startswith("#445566")] == []
+    assert [value for value in found if len(value) == 9 and value.endswith("00")] == []
+
+
+async def test_a_color_that_is_not_opaque_has_its_alpha_rounded_half_up(
+    client: Client,
+) -> None:
+    colors = (await extract(client, USED))["colors"]
+    # An alpha of 0.5 is 127.5 of 255.
+    assert held(colors, "#00000080")["roles"]["background"] == 1
+
+
+async def test_a_border_color_is_counted_only_on_a_side_that_has_a_width(
+    client: Client,
+) -> None:
+    colors = (await extract(client, USED))["colors"]
+    token = held(colors, "#0000aa")
+    assert (token["uses"], token["roles"]["border"]) == (1, 1)
+    # The three sides with no border compute the `color` of `#edge`.
+    assert "#00aa00" not in values(colors)
+
+
+async def test_each_side_of_a_border_gives_its_own_color(client: Client) -> None:
+    colors = (await extract(client, USED))["colors"]
+    for value in ("#800000", "#008000", "#000080", "#808000"):
+        assert held(colors, value)["roles"]["border"] == 1
