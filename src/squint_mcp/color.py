@@ -5,6 +5,25 @@ import math
 Lab = tuple[float, float, float]
 """A CIE Lab colour: L, a and b."""
 
+Srgb = tuple[float, float, float, float]
+"""An sRGB colour: red, green and blue on the scale 0 to 1, and the alpha."""
+
+
+def parse(text: str) -> Srgb | None:
+    """The colour of a computed `rgb(r, g, b)` or `rgba(r, g, b, a)`; None for
+    any other text."""
+    if not (text.startswith(("rgb(", "rgba(")) and text.endswith(")")):
+        return None
+    channels = text[text.index("(") + 1 : -1].split(",")
+    red, green, blue, *alpha = (float(channel) for channel in channels)
+    return red / 255, green / 255, blue / 255, alpha[0] if alpha else 1.0
+
+
+def to_hex(color: Srgb) -> str:
+    """`#rrggbb` in lower case, each channel rounded half up to 8 bits."""
+    red, green, blue = (math.floor(channel * 255 + 0.5) for channel in color[:3])
+    return f"#{red:02x}{green:02x}{blue:02x}"
+
 
 def delta_e_2000(reference: Lab, sample: Lab) -> float:
     """The CIEDE2000 colour difference of two Lab colours.

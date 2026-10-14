@@ -385,7 +385,7 @@ Left out on purpose: `scope` is not read, and the result says `scope: null` what
 
 ### T9: Read the colours of a page
 
-- [ ] Done
+- [x] Done
 
 **What**: The Family `colors`: `color.parse` for `rgb()` and `rgba()`, `color.to_hex`, the Uses of a colour by Role, and Tokens in Rank order. Each Value is its own Group until T20.
 **Where**: `src/squint_mcp/tokens.py` (with the parsing and the hex of the colour module)
@@ -397,17 +397,36 @@ Left out on purpose: `scope` is not read, and the result says `scope: null` what
 
 **Done when**:
 
-- [ ] Red before the code: the test of TOK-01 gets an empty list
-- [ ] The test asserts the five `(value, uses, roles.text, roles.background, roles.border)` whole and in order (L-020: two Tokens of 2 Uses and two of 1, each pair in order of its text)
-- [ ] Rules this page forces, each seen as a wrong tuple while the code is written: a colour of alpha 0 is no Value (`html` has `rgba(0, 0, 0, 0)`); a border colour counts only where the border has a width (every element has four border colours); a text colour counts only with Painted text (`body`, `#card`); four equal sides are one Use (`#cccccc` has 1)
-- [ ] Every Token has one variant, itself
-- [ ] Gate check passes: Full
+- [x] Red before the code: the test of TOK-01 gets an empty list
+- [x] The test asserts the five `(value, uses, roles.text, roles.background, roles.border)` whole and in order (L-020: two Tokens of 2 Uses and two of 1, each pair in order of its text)
+- [x] Rules this page forces, each seen as a wrong tuple while the code is written: a colour of alpha 0 is no Value (`html` has `rgba(0, 0, 0, 0)`); a border colour counts only where the border has a width (every element has four border colours); a text colour counts only with Painted text (`body`, `#card`); four equal sides are one Use (`#cccccc` has 1)
+- [x] Every Token has one variant, itself
+- [x] Gate check passes: Full
 
 **Tests**: integration
 **Gate**: full
 
 **Commit**: `feat(tokens): read the colours of a page`
 
+
+
+**Done (2026-10-13)**: the test was red before the code (`assert [] == [...]`, the list empty) and passes with it; it also asserts the one variant of each Token. Gate: Full, 5 passed (426 tests collected).
+
+Each rule was seen as a wrong list on a scratch copy of `src/squint_mcp` with the rule taken out:
+
+- A colour of alpha 0 counted: `(#000000, 5, 0, 5, 0)` comes first, the five elements with no background.
+- A border colour counted with no width: `(#333333, 6, 3, 0, 3)`, `(#1a73e8, 3, 1, 1, 1)`, `(#ffffff, 3, 1, 1, 1)` and a new `(#000000, 2, 0, 0, 2)`.
+- A text colour counted with no Painted text: `(#000000, 3, 3, 0, 0)` comes first (`html`, `body`, `#card`).
+- Each side a Use: `(#cccccc, 4, 0, 0, 4)` comes first.
+- Rank order without the Uses: `#1a73e8`, `#333333`, `#cccccc`, `#eeeeee`, `#ffffff`. Without the Value: `#ffffff` before `#1a73e8`, and `#eeeeee` before `#cccccc`.
+
+Left out on purpose, each for the task whose fixture tells it:
+
+- The `text` Role reads the computed `color`, not `-webkit-text-fill-color` (T14, TOK-16).
+- `to_hex` writes six digits whatever the alpha (T20, TOK-19) and does not clip a channel (T15, TOK-40).
+- `parse` reads `rgb()` and `rgba()` only, and `Capture.srgb` is not read: any other computed colour fails the call with `Unsupported colour "<text>".`, the message the design gives (T15).
+
+Painted text is `own_text and own_text_boxes`, as the design has it and as this task reuses both. This page tells the first half only: no element of it has own text that paints no box.
 ---
 
 ### T10: Read the type scale of a page

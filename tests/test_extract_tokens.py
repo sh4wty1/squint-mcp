@@ -50,6 +50,18 @@ def families(result: dict[str, Any]) -> list[dict[str, Any]]:
     ]
 
 
+def rows(family: dict[str, Any], *fields: str) -> list[tuple[Any, ...]]:
+    """Each Token of a Family as the tuple of `fields`, a Role written
+    `roles.<role>` as the criteria write it."""
+
+    def read(token: Any, field: str) -> Any:
+        for key in field.split("."):
+            token = token[key]
+        return token
+
+    return [tuple(read(token, field) for field in fields) for token in family["tokens"]]
+
+
 async def test_extract_tokens_is_listed_with_its_hints_and_its_schemas(
     client: Client,
 ) -> None:
@@ -101,3 +113,26 @@ async def test_result_is_one_text_block_and_no_image(client: Client) -> None:
     assert result.is_error is False, texts(result)
     (block,) = result.content
     assert isinstance(block, TextContent)
+
+
+async def test_colors_are_counted_by_role_and_come_in_rank_order(
+    client: Client,
+) -> None:
+    colors = (await extract(client, PAGE))["colors"]
+    fields = ("value", "uses", "roles.text", "roles.background", "roles.border")
+    # Two Tokens of 2 Uses and two of 1: each pair in the order of its text.
+    assert rows(colors, *fields) == [
+        ("#333333", 3, 3, 0, 0),
+        ("#1a73e8", 2, 1, 1, 0),
+        ("#ffffff", 2, 1, 1, 0),
+        ("#cccccc", 1, 0, 0, 1),
+        ("#eeeeee", 1, 0, 1, 0),
+    ]
+    # No two colours of the page are Near: each Token is its own one variant.
+    assert [token["variants"] for token in colors["tokens"]] == [
+        [{"value": "#333333", "uses": 3}],
+        [{"value": "#1a73e8", "uses": 2}],
+        [{"value": "#ffffff", "uses": 2}],
+        [{"value": "#cccccc", "uses": 1}],
+        [{"value": "#eeeeee", "uses": 1}],
+    ]
