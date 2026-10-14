@@ -967,7 +967,7 @@ Each test was then seen failing on a scratch copy of `src/squint_mcp`, one mutan
 
 ### T23: Hold the two edge cases of the default page
 
-- [ ] Done
+- [x] Done
 
 **What**: `tokens-default.html`, which leaves the margin of `body` as the browser gives it and holds `#mixed` with `padding: 40px 40.5px`, and its two tests.
 **Where**: `tests/fixtures/tokens-default.html` (with its two tests)
@@ -979,8 +979,8 @@ Each test was then seen failing on a scratch copy of `src/squint_mcp`, one mutan
 
 **Done when**:
 
-- [ ] TOK-78: the Token `40` has 2 Uses and the variants `(40, 1)` and `(40.5, 1)`, in that order. Rule dropped: an element counts once for a Token (1 Use)
-- [ ] TOK-79: `8` is held with 1 Use and `roles.margin` 1. Rule dropped: `html` and `body` are left out of the reading. The fixture is the proof that no reset is assumed
+- [x] TOK-78: the Token `40` has 2 Uses and the variants `(40, 1)` and `(40.5, 1)`, in that order. Rule dropped: an element counts once for a Token (1 Use)
+- [x] TOK-79: `8` is held with 1 Use and `roles.margin` 1. Rule dropped: `html` and `body` are left out of the reading. The fixture is the proof that no reset is assumed
 - [ ] Gate check passes: Full; then Build for phase 5, in the background
 
 **Tests**: integration
@@ -988,6 +988,12 @@ Each test was then seen failing on a scratch copy of `src/squint_mcp`, one mutan
 
 **Commit**: `test(tokens): hold two near values on one element and the default margin`
 
+**Done (2026-10-14)**: two tests and `tokens-default.html`, whose one element, `#mixed`, is a `div` of 100px by 20px with `padding: 40px 40.5px`; neither `html` nor `body` is reset. Gate: Full, 55 passed (476 tests collected, none deleted). Nothing in `src/` changed, as the task expects: both tests passed at once (pins), on rules T11 and T22 built.
+
+Each was then seen failing on a scratch copy of `src/squint_mcp`:
+
+- TOK-78, an element counted once for a Token (a padding Near one already counted on that element is dropped): the Token `40` has 1 Use.
+- TOK-79, `html` and `body` left out of the reading: `8` is not held, and `40` is the one spacing left.
 ---
 
 ### Phase 6: Scope, the Limit, the contract and the documents

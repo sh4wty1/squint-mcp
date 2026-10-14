@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: the browser's default margin, and two near values on one element</title>
+    <style>
+      /* Neither `html` nor `body` is reset: `body` keeps the margin of the
+         browser's stylesheet. The one element is a `div` and carries its styles
+         here. */
+      #mixed {
+        width: 100px;
+        height: 20px;
+        padding: 40px 40.5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="mixed"></div>
+  </body>
+</html>

@@ -12,6 +12,7 @@ pytestmark = pytest.mark.anyio
 PAGE = "tokens-page.html"
 USED = "tokens-used.html"
 GROUPS = "tokens-groups.html"
+DEFAULT = "tokens-default.html"
 
 
 async def tokens_tool(client: Client) -> Tool:
@@ -663,3 +664,18 @@ async def test_the_families_of_a_page_of_near_values_come_whole_and_in_their_ord
         ("30.5%", 1),
     ]
     assert rows(result["shadows"], "kind", "value", "uses") == []
+
+
+async def test_two_near_values_on_one_element_are_two_uses(client: Client) -> None:
+    spacing = (await extract(client, DEFAULT))["spacing"]
+    # `#mixed`: a padding of 40px at the top and the bottom, 40.5px at the sides.
+    token = held(spacing, 40)
+    assert token["uses"] == 2
+    assert token["variants"] == [{"value": 40, "uses": 1}, {"value": 40.5, "uses": 1}]
+
+
+async def test_a_margin_of_the_browser_stylesheet_is_counted(client: Client) -> None:
+    spacing = (await extract(client, DEFAULT))["spacing"]
+    # The page does not reset the margin of `body`.
+    token = held(spacing, 8)
+    assert (token["uses"], token["roles"]["margin"]) == (1, 1)
