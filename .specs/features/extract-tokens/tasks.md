@@ -564,7 +564,7 @@ Left out on purpose, for T18: `text-shadow` is not read, and every Token of `sha
 - [x] TOK-12: two calls with the same arguments return equal structured content. No mutant kills it inside one process: every order of the result is held by a criterion of its own (TOK-01, TOK-04, TOK-06, TOK-45, TOK-52, TOK-62)
 - [x] TOK-13 and TOK-14: the helper asserts, for every Token of every result, that `uses` is the sum of its `variants` and its `value` that of the first, and for `colors` and `spacing` that `uses` is the sum of its `roles`. On this page every tuple already says so; TOK-13 is seen failing in T20, the first fixture where a Token has two variants
 - [x] Rule dropped for TOK-14: the `uses` of a colour Token counts its `text` Role only
-- [ ] Gate check passes: Full; then Build for phase 3, in the background
+- [x] Gate check passes: Full; then Build for phase 3, in the background
 
 **Tests**: integration
 **Gate**: full, then build for the phase
@@ -581,6 +581,8 @@ Left out on purpose, for T18: `text-shadow` is not read, and every Token of `sha
 - TOK-12 has no mutant.
 
 **A mutant that survives**: with the counts of `font sizes` and `line heights` swapped in the summary, all 13 tests pass. Both are 3 on this page, as `spacing` is; `font weights` and `radii` are both 2, and `font families` and `shadows` both 1. Of the eight counts, TOK-10 tells only `colors` from every other. The two other criteria that read the summary do not close it: TOK-60 has eight zeros, and TOK-65 reads `colors 21` and `spacing 21`. Nothing was changed for it: no criterion asks for a page whose eight totals differ, and adding one is the maintainer's call.
+
+The Build of phase 3 ran on the commit of this task (`e313e4e`): 435 passed in 20 minutes 49 seconds, with no test of an earlier slice failing. Its box above was ticked after it, in the commit of the Handoff.
 ---
 
 ### Phase 4: A value only where it paints
