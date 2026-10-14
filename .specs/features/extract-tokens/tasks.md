@@ -510,7 +510,7 @@ Left out on purpose, for T17: a margin side in `auto_margins` is counted as laid
 
 ### T12: Read the radii and the shadows of a page
 
-- [ ] Done
+- [x] Done
 
 **What**: The Families `radii` and `shadows` for what `tokens-page.html` holds: corner radii that are one px length, and a `box-shadow`.
 **Where**: `src/squint_mcp/tokens.py`
@@ -522,17 +522,28 @@ Left out on purpose, for T17: a margin side in `auto_margins` is counted as laid
 
 **Done when**:
 
-- [ ] Red before the code: the two tests get empty lists
-- [ ] TOK-07: `(4px, 1)` then `(8px, 1)`: four equal corners are one Use, and a corner of `0px` is no Value
-- [ ] TOK-08: `(box, rgba(0, 0, 0, 0.2) 0px 1px 3px 0px, 1)` alone: `none` is no Value
-- [ ] `text-shadow` and the radii that are not a Length are left for T18
-- [ ] Gate check passes: Full
+- [x] Red before the code: the two tests get empty lists
+- [x] TOK-07: `(4px, 1)` then `(8px, 1)`: four equal corners are one Use, and a corner of `0px` is no Value
+- [x] TOK-08: `(box, rgba(0, 0, 0, 0.2) 0px 1px 3px 0px, 1)` alone: `none` is no Value
+- [x] `text-shadow` and the radii that are not a Length are left for T18
+- [x] Gate check passes: Full
 
 **Tests**: integration
 **Gate**: full
 
 **Commit**: `feat(tokens): read the radii and the shadows of a page`
 
+
+
+**Done (2026-10-13)**: the two tests were red before the code (`assert [] == [...]`) and pass with it. Gate: Full, 12 passed (433 tests collected).
+
+Each rule was seen as a wrong list on a scratch copy of `src/squint_mcp` with the rule taken out:
+
+- A corner of `0px` counted: a first Token `(0px, 6)`.
+- Each corner a Use: `(4px, 4)` and `(8px, 4)`.
+- A shadow of `none` counted: a first Token `(box, none, 7)`.
+
+Left out on purpose, for T18: `text-shadow` is not read, and every Token of `shadows` has the `kind` `box`; a corner is left out only when its text is `0px`, so `0px 0px` would be a Value; the radii come in the order of their texts, which on this page is also their order by size, with no Length told from another text.
 ---
 
 ### T13: Pin the summary and the sums of a result

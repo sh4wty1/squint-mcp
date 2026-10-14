@@ -294,8 +294,8 @@ Covered by the stories: a `scope` that matches nothing (TOK-57), that is not a s
 | TOK-04 | P1: Read the tokens of a page | Phase 3, T10 | Implemented |
 | TOK-05 | P1: Read the tokens of a page | Phase 3, T10 | Implemented |
 | TOK-06 | P1: Read the tokens of a page | Phase 3, T11 | Implemented |
-| TOK-07 | P1: Read the tokens of a page | Phase 3, T12 | Pending |
-| TOK-08 | P1: Read the tokens of a page | Phase 3, T12 | Pending |
+| TOK-07 | P1: Read the tokens of a page | Phase 3, T12 | Implemented |
+| TOK-08 | P1: Read the tokens of a page | Phase 3, T12 | Implemented |
 | TOK-09 | P1: Read the tokens of a page | Phase 3, T8 | Implemented |
 | TOK-10 | P1: Read the tokens of a page | Phase 3, T13 | Pending |
 | TOK-11 | P1: Read the tokens of a page | Phase 3, T8 | Implemented |

@@ -264,6 +264,37 @@ def _spacing(read: list[Element]) -> Family[SpacingToken]:
     return _family(tokens)
 
 
+def _radii(read: list[Element]) -> Family[RadiusToken]:
+    uses: Uses[str] = {}
+    for element in read:
+        corners = (
+            element.computed[f"border-{corner}-radius"]
+            for corner in ("top-left", "top-right", "bottom-right", "bottom-left")
+        )
+        # A corner with no radius is no Value.
+        _use(uses, SINGLE, (text for text in corners if text != "0px"))
+    tokens: list[RadiusToken] = []
+    for value in sorted(uses):
+        total = uses[value].total()
+        variants = [Variant[str](value=value, uses=total)]
+        tokens.append(RadiusToken(value=value, uses=total, variants=variants))
+    return _family(tokens)
+
+
+def _shadows(read: list[Element]) -> Family[ShadowToken]:
+    uses: Uses[str] = {}
+    for element in read:
+        shadow = element.computed["box-shadow"]
+        if shadow != "none":
+            _use(uses, SINGLE, [shadow])
+    return _family(
+        [
+            ShadowToken(kind="box", value=value, uses=uses[value].total())
+            for value in _ranked(uses)
+        ]
+    )
+
+
 def extract(capture: Capture) -> Tokens:
     """Read the Tokens of the elements a Capture holds."""
     read = [element for element in capture.elements if _is_read(element)]
@@ -272,6 +303,6 @@ def extract(capture: Capture) -> Tokens:
         colors=_colors(read),
         typography=_typography(read),
         spacing=_spacing(read),
-        radii=_family([]),
-        shadows=_family([]),
+        radii=_radii(read),
+        shadows=_shadows(read),
     )

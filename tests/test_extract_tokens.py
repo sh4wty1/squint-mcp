@@ -170,3 +170,17 @@ async def test_spacings_are_counted_by_role_and_come_by_value(client: Client) ->
         (16, 3, 1, 2, 0),
         (24, 1, 1, 0, 0),
     ]
+
+
+async def test_radii_are_counted_once_for_four_equal_corners(client: Client) -> None:
+    radii = (await extract(client, PAGE))["radii"]
+    # The six elements with no radius have corners of `0px`.
+    assert rows(radii, "value", "uses") == [("4px", 1), ("8px", 1)]
+
+
+async def test_a_box_shadow_is_one_token_of_its_whole_text(client: Client) -> None:
+    shadows = (await extract(client, PAGE))["shadows"]
+    # The seven elements with no shadow compute `none`.
+    assert rows(shadows, "kind", "value", "uses") == [
+        ("box", "rgba(0, 0, 0, 0.2) 0px 1px 3px 0px", 1)
+    ]
