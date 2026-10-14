@@ -1119,7 +1119,7 @@ Red before the code: TOK-62 and TOK-64, with 21 Tokens (the assertion of TOK-66 
 
 ### T27: Hold the contract the tool shares with the others
 
-- [ ] Done
+- [x] Done
 
 **What**: `tokens-viewport.html` and the six tests of the viewport, the two URL errors, the timeout, the shape of a failure and a page that never goes idle.
 **Where**: `tests/test_extract_tokens.py`
@@ -1131,17 +1131,27 @@ Red before the code: TOK-62 and TOK-64, with 21 Tokens (the assertion of TOK-66 
 
 **Done when**:
 
-- [ ] TOK-68: at `{width: 375, height: 812}`, `#111111` is held, `#999999` is not, and the result says that viewport. Rule dropped: the viewport is not passed to the Capture
-- [ ] TOK-69 and TOK-70: the two messages, the first whole and the second by its start and the url. They are `capture(...)`'s messages: no rule of the tool to drop
-- [ ] TOK-71: with `TOTAL_TIMEOUT_S` patched to 1 on `/hang`, as the test of `inspect_element` does, the message is `Timed out after 1s.` and the next call succeeds. Rule dropped: the Capture is taken outside `asyncio.timeout` (the test ends on its own bound)
-- [ ] TOK-72: every failing call of the module is an error with no structured content, through one helper
-- [ ] TOK-73: on `polling.html` served by `local_server`, `stabilized` is false and the text block ends with `; not stabilized.`. Rule dropped: the summary always says `stabilized.`
-- [ ] Gate check passes: Full
+- [x] TOK-68: at `{width: 375, height: 812}`, `#111111` is held, `#999999` is not, and the result says that viewport. Rule dropped: the viewport is not passed to the Capture
+- [x] TOK-69 and TOK-70: the two messages, the first whole and the second by its start and the url. They are `capture(...)`'s messages: no rule of the tool to drop
+- [x] TOK-71: with `TOTAL_TIMEOUT_S` patched to 1 on `/hang`, as the test of `inspect_element` does, the message is `Timed out after 1s.` and the next call succeeds. Rule dropped: the Capture is taken outside `asyncio.timeout` (the test ends on its own bound)
+- [x] TOK-72: every failing call of the module is an error with no structured content, through one helper
+- [x] TOK-73: on `polling.html` served by `local_server`, `stabilized` is false and the text block ends with `; not stabilized.`. Rule dropped: the summary always says `stabilized.`
+- [x] Gate check passes: Full
 
 **Tests**: integration
 **Gate**: full
 
 **Commit**: `test(tokens): hold the viewport, the errors and the timeout of the tool`
+
+**Done (2026-10-14)**: five tests and `tokens-viewport.html`, whose one element, `#box`, is a `div` of 100px by 20px. `call` of the module takes a url as it is, and a fixture name otherwise, so that the URL errors, `/hang` and `polling.html` go through the helpers. Every failing call of the module goes through `fail` (T25), the one place that asserts an error with no structured content (TOK-72): `is_error is True` appears there alone. The timeout test is bounded by `anyio.fail_after(10)`, so that it ends with the Capture taken outside `asyncio.timeout`. Gate: Full, 75 passed (496 tests collected, none deleted). Nothing in `src/` changed.
+
+All five passed at once (pins), as the task expects. Each rule of the tool dropped on a scratch copy of `src/squint_mcp`:
+
+- The viewport not passed to the Capture (1440x900 always): TOK-68 fails (`#999999` alone).
+- The Capture taken outside `asyncio.timeout`: TOK-71 fails on its own bound of 10s.
+- The summary always says `stabilized.`: TOK-73 fails.
+
+TOK-69 and TOK-70 are `capture(...)`'s messages: no rule of the tool to drop.
 
 ---
 

@@ -1,11 +1,15 @@
 """`extract_tokens` through the MCP tool boundary, against real Chromium."""
 
+import time
 from typing import Any
 
+import anyio
 import pytest
-from helpers import fixture_url, texts
+from helpers import FIXTURES, fixture_url, texts
 from mcp import Client
 from mcp.types import CallToolResult, TextContent, Tool
+
+from squint_mcp import config
 
 pytestmark = pytest.mark.anyio
 
@@ -15,6 +19,7 @@ GROUPS = "tokens-groups.html"
 DEFAULT = "tokens-default.html"
 SCOPE = "tokens-scope.html"
 LIMIT = "tokens-limit.html"
+VIEWPORT = "tokens-viewport.html"
 TWENTY = [value * 10 for value in range(1, 21)]
 
 
@@ -26,10 +31,9 @@ async def tokens_tool(client: Client) -> Tool:
 
 
 async def call(client: Client, name: str, **arguments: Any) -> CallToolResult:
-    """Call the tool on the fixture `name`."""
-    return await client.call_tool(
-        "extract_tokens", {"url": fixture_url(name), **arguments}
-    )
+    """Call the tool on the fixture `name`, or on `name` itself when it is a url."""
+    url = name if "://" in name else fixture_url(name)
+    return await client.call_tool("extract_tokens", {"url": url, **arguments})
 
 
 async def extract(client: Client, name: str, **arguments: Any) -> dict[str, Any]:
@@ -832,3 +836,50 @@ async def test_the_summary_counts_every_token_found(client: Client) -> None:
     (text,) = texts(result)
     assert "colors 21," in text
     assert "spacing 21," in text
+
+
+async def test_the_viewport_is_the_one_the_page_is_laid_out_in(
+    client: Client,
+) -> None:
+    mobile = {"width": 375, "height": 812}
+    result = await extract(client, VIEWPORT, viewport=mobile)
+    # `#box` is `#111111` under `@media (max-width: 600px)` only.
+    assert "#111111" in values(result["colors"])
+    assert "#999999" not in values(result["colors"])
+    assert result["viewport"] == mobile
+
+
+async def test_an_unsupported_url_scheme_fails(client: Client) -> None:
+    assert await fail(client, "ftp://example.com/") == (
+        'Unsupported URL scheme "ftp"; use http://, https:// or file://.'
+    )
+
+
+async def test_a_page_that_cannot_be_loaded_fails(client: Client) -> None:
+    url = (FIXTURES / "no-such-page.html").as_uri()
+    assert (await fail(client, url)).startswith(f"Could not load {url}")
+
+
+async def test_a_call_that_outlives_the_total_timeout_fails_and_the_next_succeeds(
+    client: Client, local_server: str, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # The only reach past the MCP boundary: 30 real seconds would slow every run.
+    with monkeypatch.context() as patch, anyio.fail_after(10):
+        patch.setattr(config, "TOTAL_TIMEOUT_S", 1.0)
+        started = time.monotonic()
+        message = await fail(client, f"{local_server}/hang")
+        elapsed = time.monotonic() - started
+    assert message == "Timed out after 1s."
+    assert 1 <= elapsed < 2
+    assert (await extract(client, PAGE))["elements"] == 8
+
+
+async def test_a_page_that_never_goes_network_idle_is_read_unstabilized(
+    client: Client, local_server: str
+) -> None:
+    result = await call(client, f"{local_server}/polling.html")
+    assert result.is_error is False, texts(result)
+    assert result.structured_content is not None
+    assert result.structured_content["stabilized"] is False
+    (text,) = texts(result)
+    assert text.endswith("; not stabilized.")
