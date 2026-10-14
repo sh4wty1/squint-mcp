@@ -60,6 +60,21 @@
         height: 20px;
         background-color: color(display-p3 1 0 0);
       }
+      #big {
+        font: 900 40px/50px Georgia, serif;
+      }
+      #big-child {
+        color: #333333;
+        font: 400 12px/18px Arial, sans-serif;
+      }
+      #normal {
+        color: #333333;
+        font: 400 13px / normal Arial, sans-serif;
+      }
+      #ratio {
+        color: #333333;
+        font: 400 20px/1.5 Arial, sans-serif;
+      }
     </style>
   </head>
   <body>
@@ -74,5 +89,10 @@
     <div id="sides"></div>
     <div id="srgb"></div>
     <div id="wide"></div>
+    <div id="big">
+      <div id="big-child">A text smaller than its parent says</div>
+    </div>
+    <div id="normal">A text whose line height is the font's own</div>
+    <div id="ratio">A text whose line height is a ratio</div>
   </body>
 </html>

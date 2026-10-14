@@ -669,7 +669,7 @@ No fixture tells `color(srgb r g b / a)` or `none`: the two elements are opaque 
 
 ### T16: Count a type value only on Painted text
 
-- [ ] Done
+- [x] Done
 
 **What**: `#big` and its child, `#normal` and `#ratio` in the fixture, their three tests, and a `line-height` of `normal` as no Value.
 **Where**: `src/squint_mcp/tokens.py` (with the three elements of the fixture and their tests)
@@ -681,17 +681,31 @@ No fixture tells `color(srgb r g b / a)` or `none`: the two elements are opaque 
 
 **Done when**:
 
-- [ ] Red before the code: TOK-26 fails on `normal`
-- [ ] TOK-25. Rule dropped: a type value is read on an element with no Own text (`40`, `900`, `50` and `Georgia, serif` are held, each in its list)
-- [ ] TOK-26: `13` is held, and the Uses of `lineHeights` add up to one less than those of `sizes`: every other element with Own text of the fixture has a `line-height` in px
-- [ ] TOK-27: `30` is held. No rule of ours to drop: 30px is what Chromium computes for `1.5` at 20px, and the test pins that the computed value is what is read
-- [ ] Gate check passes: Full
+- [x] Red before the code: TOK-26 fails on `normal`
+- [x] TOK-25. Rule dropped: a type value is read on an element with no Own text (`40`, `900`, `50` and `Georgia, serif` are held, each in its list)
+- [x] TOK-26: `13` is held, and the Uses of `lineHeights` add up to one less than those of `sizes`: every other element with Own text of the fixture has a `line-height` in px
+- [x] TOK-27: `30` is held. No rule of ours to drop: 30px is what Chromium computes for `1.5` at 20px, and the test pins that the computed value is what is read
+- [x] Gate check passes: Full
 
 **Tests**: integration
 **Gate**: full
 
 **Commit**: `feat(tokens): leave out a line height that is not a length`
 
+**Done (2026-10-13)**: three tests. Gate: Full, 26 passed (447 tests collected, none deleted). The elements went into the fixture in two steps, so that each test was seen alone:
+
+- With `#big`, its child and `#ratio`: the tests of TOK-25 and TOK-27 passed at once (pins), and that of TOK-26 failed on `(13,)` not in the sizes.
+- With `#normal`: red. The call fails on `ValueError: could not convert string to float: 'normal'`, and the twelve tests of the fixture with it.
+
+Built here: a `line-height` that does not end in `px` is no Value. The docstring of the tool says a line height of `normal` is not counted.
+
+Seen on a scratch copy of `src/squint_mcp`:
+
+- TOK-25, the type values read on every Read element: `Georgia, serif` (1 Use), `40`, `900` and `50` are held, each in its list, beside the `"Times New Roman"`, `16` and `400` of the nine elements with no font of their own. The test fails on the first of them, `Georgia, serif`.
+- TOK-26, under a mutant the task does not name, `normal` counted as a line height of 0: the Uses of the line heights are 6, as those of the sizes (`assert 6 == (6 - 1)`).
+- TOK-27 has no mutant: 30px is what Chromium computes.
+
+`#big-child`, `#normal` and `#ratio` have `color: #333333`: a text colour of 3 Uses, where every other colour of the fixture has 1.
 ---
 
 ### T17: Count a spacing only where it is one

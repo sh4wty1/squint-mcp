@@ -218,7 +218,9 @@ def _typography(read: list[Element]) -> Typography:
         _use(families, SINGLE, [computed["font-family"]])
         _use(sizes, SINGLE, [_px(computed["font-size"])])
         _use(weights, SINGLE, [float(computed["font-weight"])])
-        _use(line_heights, SINGLE, [_px(computed["line-height"])])
+        # A line height of `normal` is no Value: only a length is.
+        if computed["line-height"].endswith("px"):
+            _use(line_heights, SINGLE, [_px(computed["line-height"])])
     return Typography(
         families=_family(
             [

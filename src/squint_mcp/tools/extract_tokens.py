@@ -34,9 +34,9 @@ async def extract_tokens(
     px (by role: margin, padding, gap), `radii` and `shadows`. A colour is
     `#rrggbb` in sRGB whatever notation the page wrote it in, or `#rrggbbaa`
     when it is not opaque, and a text colour is the one the text is filled
-    with. `elements` is the number of elements read.
-    `viewport` defaults to 1440x900. `stabilized` is false when the network
-    never went idle. A call that takes longer than 30s fails.
+    with. A line height of `normal` is not counted. `elements` is the number of
+    elements read. `viewport` defaults to 1440x900. `stabilized` is false when
+    the network never went idle. A call that takes longer than 30s fails.
     """
     viewport = viewport or Viewport(
         width=config.DEFAULT_VIEWPORT_WIDTH, height=config.DEFAULT_VIEWPORT_HEIGHT

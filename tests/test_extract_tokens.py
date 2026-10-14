@@ -305,3 +305,32 @@ async def test_a_color_outside_srgb_is_clipped_to_it(client: Client) -> None:
     # The red of display-p3 has, in sRGB, a red above 1 and a green and a blue
     # below 0.
     assert ("#ff0000",) in rows(colors, "value")
+
+
+async def test_type_values_are_counted_where_the_text_is_not_where_they_are_set(
+    client: Client,
+) -> None:
+    typography = (await extract(client, USED))["typography"]
+    # `#big` sets a font and has no text of its own: its child sets another.
+    for name in ("families", "sizes", "weights", "lineHeights"):
+        for value in (40, 900, 50, "Georgia, serif"):
+            assert value not in values(typography[name]), name
+    assert (12,) in rows(typography["sizes"], "value")
+
+
+async def test_a_line_height_of_normal_is_no_value(client: Client) -> None:
+    typography = (await extract(client, USED))["typography"]
+    sizes, line_heights = typography["sizes"], typography["lineHeights"]
+    assert (13,) in rows(sizes, "value")
+    # Every text of the page but that of `#normal` has a line height in px.
+    assert sum(uses for (uses,) in rows(line_heights, "uses")) == (
+        sum(uses for (uses,) in rows(sizes, "uses")) - 1
+    )
+
+
+async def test_a_line_height_is_read_as_the_length_it_computes_to(
+    client: Client,
+) -> None:
+    typography = (await extract(client, USED))["typography"]
+    # `#ratio`: a line height of 1.5 on a font size of 20px.
+    assert (30,) in rows(typography["lineHeights"], "value")

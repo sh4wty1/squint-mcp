@@ -312,9 +312,9 @@ Covered by the stories: a `scope` that matches nothing (TOK-57), that is not a s
 | TOK-22 | P1: Count a value only where it paints | Phase 4, T19 | Pending |
 | TOK-23 | P1: Count a value only where it paints | Phase 4, T19 | Pending |
 | TOK-24 | P1: Count a value only where it paints | Phase 4, T19 | Pending |
-| TOK-25 | P1: Count a value only where it paints | Phase 4, T16 | Pending |
-| TOK-26 | P1: Count a value only where it paints | Phase 4, T16 | Pending |
-| TOK-27 | P1: Count a value only where it paints | Phase 4, T16 | Pending |
+| TOK-25 | P1: Count a value only where it paints | Phase 4, T16 | Implemented |
+| TOK-26 | P1: Count a value only where it paints | Phase 4, T16 | Implemented |
+| TOK-27 | P1: Count a value only where it paints | Phase 4, T16 | Implemented |
 | TOK-28 | P1: Count a value only where it paints | Phase 4, T17 | Pending |
 | TOK-29 | P1: Count a value only where it paints | Phase 4, T17 | Pending |
 | TOK-30 | P1: Count a value only where it paints | Phase 4, T17 | Pending |
