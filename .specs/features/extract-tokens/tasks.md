@@ -1157,7 +1157,7 @@ TOK-69 and TOK-70 are `capture(...)`'s messages: no rule of the tool to drop.
 
 ### T28: Run the tests of the slice on Linux
 
-- [ ] Done
+- [x] Done
 
 **What**: The two modules of the slice run in the Playwright image for Docker, and the result written under this task. The design's spikes ran on Windows only, and the CI of the pull request is Linux. No criterion of its own: it runs those of T3 to T27 on the other platform.
 **Where**: `.specs/features/extract-tokens/tasks.md`
@@ -1169,17 +1169,16 @@ TOK-69 and TOK-70 are `capture(...)`'s messages: no rule of the tool to drop.
 
 **Done when**:
 
-- [ ] The count of passed tests on Linux equals that of the same two modules on Windows, and both are written here
-- [ ] A test that fails on Linux only is a finding for the maintainer before it is a fix: STOP and report it
-- [ ] Gate check passes: Linux
+- [x] The count of passed tests on Linux equals that of the same two modules on Windows, and both are written here
+- [x] A test that fails on Linux only is a finding for the maintainer before it is a fix: STOP and report it
+- [x] Gate check passes: Linux
 
 **Tests**: none
 **Gate**: linux
 
 **Commit**: `docs(specs): record the Linux run of extract-tokens`
 
-**Not done (2026-10-14)**: Docker Desktop crashed while the image was being pulled. It came back once the stale Unix sockets it left (in `%LOCALAPPDATA%\Docker
-un` and `%LOCALAPPDATA%\docker-secrets-engine`, which Windows can no longer open or delete) were moved aside, but the image stays broken: its binaries are 0 bytes (`usr/bin/bash`, `usr/bin/uname`, `libc.so.6`), every container of it fails with `exec format error`, and `docker image rm` followed by a pull downloads no layer, so the half-unpacked layers are kept by containerd. A `busybox` container runs. The maintainer chose to do T29 and the Build first and run this task in a later session, before the Verifier, once containerd lets go of the layers or the image is pulled clean.
+**Done (2026-10-14)**, in session 9, after T29 on the maintainer's word: 75 passed on Linux in 71.51s (Python 3.12.3, pytest 9.1.1, `tests/test_color.py` 1, `tests/test_extract_tokens.py` 74), the count of the same two modules on Windows (75 passed, the Full gate of T29). No test fails on Linux only. Docker Desktop had crashed while the image was being pulled and left stale Unix sockets in `%LOCALAPPDATA%\Docker\run` and `%LOCALAPPDATA%\docker-secrets-engine` that Windows can no longer open or delete (error 1920, also from `fsutil reparsepoint delete`); Docker starts once both directories are renamed aside. The image stayed broken (0-byte binaries, `exec format error`) because `docker image rm` only untags it and a pull reuses the layers kept in the store; `docker image rm`, then `docker system prune -f` (no `-a`, no `--volumes`), then a pull downloads every layer, and `uname -m` prints `x86_64`. The digest is the same, `sha256:72bd171a9ffc2b4b59532aaa6210e21014d07093120dc25528870c0b840da1f0`.
 
 ---
 
