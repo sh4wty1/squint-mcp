@@ -981,7 +981,7 @@ Each test was then seen failing on a scratch copy of `src/squint_mcp`, one mutan
 
 - [x] TOK-78: the Token `40` has 2 Uses and the variants `(40, 1)` and `(40.5, 1)`, in that order. Rule dropped: an element counts once for a Token (1 Use)
 - [x] TOK-79: `8` is held with 1 Use and `roles.margin` 1. Rule dropped: `html` and `body` are left out of the reading. The fixture is the proof that no reset is assumed
-- [ ] Gate check passes: Full; then Build for phase 5, in the background
+- [x] Gate check passes: Full; then Build for phase 5, in the background
 
 **Tests**: integration
 **Gate**: full, then build for the phase
@@ -994,6 +994,8 @@ Each was then seen failing on a scratch copy of `src/squint_mcp`:
 
 - TOK-78, an element counted once for a Token (a padding Near one already counted on that element is dropped): the Token `40` has 1 Use.
 - TOK-79, `html` and `body` left out of the reading: `8` is not held, and `40` is the one spacing left.
+
+The Build of phase 5 ran on the commit of this task (`2501904`): 476 passed in 21 minutes 7 seconds, with no test of an earlier slice failing. Its box above was ticked after it, in the commit of the Handoff.
 ---
 
 ### Phase 6: Scope, the Limit, the contract and the documents
