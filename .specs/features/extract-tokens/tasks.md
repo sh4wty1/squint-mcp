@@ -348,7 +348,7 @@ The Build of phase 2 ran on the commit of this task (`8bbbbfb`): 422 passed in 2
 
 ### T8: Make `extract_tokens` a tool
 
-- [ ] Done
+- [x] Done
 
 **What**: The handler (one Capture under `asyncio.timeout`, the default viewport, a hand-built `CallToolResult` with one text block and the structured content), the models of "Data Models" in a new `tokens.py` whose `extract` returns `elements` and eight empty Families, the registration with its two annotations, `tokens-page.html` as the spec's table gives it, and the new test module with its `extract` helper. `scope` is in the signature, for the schema, and is not read: the selector is `"*"` until T24.
 **Where**: `src/squint_mcp/tools/extract_tokens.py` (with the models, the registration in the server, the fixture and the new test module)
@@ -360,20 +360,27 @@ The Build of phase 2 ran on the commit of this task (`8bbbbfb`): 422 passed in 2
 
 **Done when**:
 
-- [ ] Red before the code: the three tests fail on a tool that is not listed
-- [ ] TOK-67: the test asserts `readOnlyHint` true, `openWorldHint` true, an output schema, and an input schema where `url` alone is required, `scope` is an optional string and `viewport` an optional object whose `width` and `height` are at least 1
-- [ ] TOK-09: `viewport` `{width: 1440, height: 900}`, `stabilized` true, `scope` null, `elements` 8, and in each of the eight Families a `total` equal to the length of its `tokens`. The Families are empty here: that clause gains its teeth from T9 to T12
-- [ ] TOK-11: exactly one content block, a text block
-- [ ] `elements` counts Read elements by their box only (the elements of `head` have none); `visibility` and opacity wait for T19
-- [ ] The two lists of tool names (`tests/test_ping.py:36`, `tests/test_inspect_element.py:464`) gain `extract_tokens`, and `test_tools_are_exactly_the_three_documented_ones` becomes `..._the_four_documented_ones`: `git diff` of the two files shows those lines and nothing else. This is the exception TOK-77 words
-- [ ] Gate check passes: Full, with `tests/test_ping.py` and `tests/test_inspect_element.py` added to the pytest call
-- [ ] Test count: recorded here; none deleted
+- [x] Red before the code: the three tests fail on a tool that is not listed
+- [x] TOK-67: the test asserts `readOnlyHint` true, `openWorldHint` true, an output schema, and an input schema where `url` alone is required, `scope` is an optional string and `viewport` an optional object whose `width` and `height` are at least 1
+- [x] TOK-09: `viewport` `{width: 1440, height: 900}`, `stabilized` true, `scope` null, `elements` 8, and in each of the eight Families a `total` equal to the length of its `tokens`. The Families are empty here: that clause gains its teeth from T9 to T12
+- [x] TOK-11: exactly one content block, a text block
+- [x] `elements` counts Read elements by their box only (the elements of `head` have none); `visibility` and opacity wait for T19
+- [x] The two lists of tool names (`tests/test_ping.py:36`, `tests/test_inspect_element.py:464`) gain `extract_tokens`, and `test_tools_are_exactly_the_three_documented_ones` becomes `..._the_four_documented_ones`: `git diff` of the two files shows those lines and nothing else. This is the exception TOK-77 words
+- [x] Gate check passes: Full, with `tests/test_ping.py` and `tests/test_inspect_element.py` added to the pytest call
+- [x] Test count: recorded here; none deleted
 
 **Tests**: integration
 **Gate**: full
 
 **Commit**: `feat(tokens): add the extract_tokens tool`
 
+
+
+**Done (2026-10-13)**: the three tests were red before the code (the listing test on `ValueError: not enough values to unpack (expected 1, got 0)`, the other two on `Unknown tool: extract_tokens`) and pass with it. Gate: Full with the two modules, 71 passed in 1 minute 23 seconds (1 of the colour difference, 3 of the slice, 12 of `ping`, 55 of `inspect_element`). 425 tests are collected (422 and the three), none deleted. `git diff` of the two files: one line added in `tests/test_inspect_element.py`; the name of the test and one line added in `tests/test_ping.py`.
+
+The count of Read elements was seen wrong on a scratch copy: with every element of the Capture counted, `elements` is 13 (the four of `head` and the `style` that `stabilize.js` appends to `html`).
+
+Left out on purpose: `scope` is not read, and the result says `scope: null` whatever the call gives (T24). The summary is written from the eight `total` and no test of this task reads its text (T13). The description of the tool names the Families and what the Roles are; it says nothing of `scope`, of Near values or of the Limit, which the tasks that build them add.
 ---
 
 ### T9: Read the colours of a page

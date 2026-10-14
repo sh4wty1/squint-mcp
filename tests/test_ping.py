@@ -31,10 +31,11 @@ async def test_server_reports_its_version(client: Client) -> None:
     assert client.server_info.version == VERSION
 
 
-async def test_tools_are_exactly_the_three_documented_ones(client: Client) -> None:
+async def test_tools_are_exactly_the_four_documented_ones(client: Client) -> None:
     tools = (await client.list_tools()).tools
     assert sorted(tool.name for tool in tools) == [
         "detect_visual_bugs",
+        "extract_tokens",
         "inspect_element",
         "ping",
     ]

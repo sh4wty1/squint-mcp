@@ -296,9 +296,9 @@ Covered by the stories: a `scope` that matches nothing (TOK-57), that is not a s
 | TOK-06 | P1: Read the tokens of a page | Phase 3, T11 | Pending |
 | TOK-07 | P1: Read the tokens of a page | Phase 3, T12 | Pending |
 | TOK-08 | P1: Read the tokens of a page | Phase 3, T12 | Pending |
-| TOK-09 | P1: Read the tokens of a page | Phase 3, T8 | Pending |
+| TOK-09 | P1: Read the tokens of a page | Phase 3, T8 | Implemented |
 | TOK-10 | P1: Read the tokens of a page | Phase 3, T13 | Pending |
-| TOK-11 | P1: Read the tokens of a page | Phase 3, T8 | Pending |
+| TOK-11 | P1: Read the tokens of a page | Phase 3, T8 | Implemented |
 | TOK-12 | P1: Read the tokens of a page | Phase 3, T13 | Pending |
 | TOK-13 | P1: Read the tokens of a page | Phase 3, T13 | Pending |
 | TOK-14 | P1: Read the tokens of a page | Phase 3, T13 | Pending |
@@ -354,7 +354,7 @@ Covered by the stories: a `scope` that matches nothing (TOK-57), that is not a s
 | TOK-64 | P2: Bound the response | Phase 6, T26 | Pending |
 | TOK-65 | P2: Bound the response | Phase 6, T26 | Pending |
 | TOK-66 | P2: Bound the response | Phase 6, T26 | Pending |
-| TOK-67 | P2: Tool contract, config and documents | Phase 3, T8 | Pending |
+| TOK-67 | P2: Tool contract, config and documents | Phase 3, T8 | Implemented |
 | TOK-68 | P2: Tool contract, config and documents | Phase 6, T27 | Pending |
 | TOK-69 | P2: Tool contract, config and documents | Phase 6, T27 | Pending |
 | TOK-70 | P2: Tool contract, config and documents | Phase 6, T27 | Pending |
