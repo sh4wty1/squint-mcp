@@ -382,3 +382,41 @@ async def test_a_gap_is_counted_on_each_display_that_lays_one_out(
 async def test_the_gap_of_a_block_is_no_spacing(client: Client) -> None:
     spacing = (await extract(client, USED))["spacing"]
     assert 91 not in values(spacing)
+
+
+async def test_each_corner_gives_its_own_radius_and_a_zero_corner_none(
+    client: Client,
+) -> None:
+    radii = (await extract(client, USED))["radii"]
+    for value in ("41px", "43px", "45px", "47px"):
+        assert held(radii, value)["uses"] == 1
+    # Every other box of the page has corners of `0px`.
+    assert "0px" not in values(radii)
+
+
+async def test_radii_that_are_not_one_length_come_after_those_that_are(
+    client: Client,
+) -> None:
+    radii = (await extract(client, USED))["radii"]
+    # `#oval` and `#round`, in the order of their texts: the four corners of
+    # `#corners`, each one px length, come before both.
+    assert rows(radii, "value", "uses")[-2:] == [("10px 20px", 1), ("50%", 1)]
+
+
+async def test_a_text_shadow_is_counted_where_the_text_is_not_where_it_is_set(
+    client: Client,
+) -> None:
+    shadows = (await extract(client, USED))["shadows"]
+    # `#glow` sets the shadow and has no text of its own: its child paints it.
+    fields = ("kind", "value", "uses")
+    assert [row for row in rows(shadows, *fields) if row[0] == "text"] == [
+        ("text", "rgb(0, 0, 0) 1px 1px 2px", 1)
+    ]
+
+
+async def test_a_shadow_of_two_layers_is_one_token(client: Client) -> None:
+    shadows = (await extract(client, USED))["shadows"]
+    fields = ("kind", "value", "uses")
+    assert [row for row in rows(shadows, *fields) if row[0] == "box"] == [
+        ("box", "rgb(0, 0, 0) 0px 1px 2px 0px, rgb(0, 0, 0) 0px 4px 8px 0px", 1)
+    ]

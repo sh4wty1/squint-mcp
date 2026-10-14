@@ -108,6 +108,9 @@ class Tokens(BaseModel):
 type Uses[V] = dict[V, Counter[str]]
 """How many Read elements have each Value of a Family, by Role."""
 
+type Shadow = tuple[Literal["box", "text"], str]
+"""A Value of `shadows`: its `kind` and the whole computed text of the property."""
+
 SINGLE = "single"
 """The Role of every Value of a Family that has a single Role."""
 
@@ -122,7 +125,7 @@ def _use[V](uses: Uses[V], role: str, values: Iterable[V]) -> None:
         uses.setdefault(value, Counter())[role] += 1
 
 
-def _ranked[V: (float, str)](uses: Uses[V]) -> list[V]:
+def _ranked[V: (float, str, Shadow)](uses: Uses[V]) -> list[V]:
     """The Values in Rank order: by Uses, most first, then by Value."""
     return sorted(uses, key=lambda value: (-uses[value].total(), value))
 
@@ -289,6 +292,18 @@ def _spacing(read: list[Element]) -> Family[SpacingToken]:
     return _family(tokens)
 
 
+def _is_zero(corner: str) -> bool:
+    """Whether both radii of a computed corner are zero: `0px`, `0%`, `0px 0%`."""
+    return all(radius in ("0px", "0%") for radius in corner.split())
+
+
+def _radius_order(value: str) -> tuple[bool, float, str]:
+    """Where a radius comes in its Family: the Lengths by size, then the other
+    texts."""
+    px = _length(value)
+    return px is None, px or 0.0, value
+
+
 def _radii(read: list[Element]) -> Family[RadiusToken]:
     uses: Uses[str] = {}
     for element in read:
@@ -297,9 +312,9 @@ def _radii(read: list[Element]) -> Family[RadiusToken]:
             for corner in ("top-left", "top-right", "bottom-right", "bottom-left")
         )
         # A corner with no radius is no Value.
-        _use(uses, SINGLE, (text for text in corners if text != "0px"))
+        _use(uses, SINGLE, (text for text in corners if not _is_zero(text)))
     tokens: list[RadiusToken] = []
-    for value in sorted(uses):
+    for value in sorted(uses, key=_radius_order):
         total = uses[value].total()
         variants = [Variant[str](value=value, uses=total)]
         tokens.append(RadiusToken(value=value, uses=total, variants=variants))
@@ -307,15 +322,18 @@ def _radii(read: list[Element]) -> Family[RadiusToken]:
 
 
 def _shadows(read: list[Element]) -> Family[ShadowToken]:
-    uses: Uses[str] = {}
+    uses: Uses[Shadow] = {}
     for element in read:
-        shadow = element.computed["box-shadow"]
-        if shadow != "none":
-            _use(uses, SINGLE, [shadow])
+        shadows: list[Shadow] = [("box", element.computed["box-shadow"])]
+        if _paints_text(element):
+            shadows.append(("text", element.computed["text-shadow"]))
+        # The whole text is one Value, however many layers it has; `none` is
+        # no Value.
+        _use(uses, SINGLE, (shadow for shadow in shadows if shadow[1] != "none"))
     return _family(
         [
-            ShadowToken(kind="box", value=value, uses=uses[value].total())
-            for value in _ranked(uses)
+            ShadowToken(kind=kind, value=value, uses=uses[kind, value].total())
+            for kind, value in _ranked(uses)
         ]
     )
 

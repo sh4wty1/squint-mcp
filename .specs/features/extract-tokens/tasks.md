@@ -753,7 +753,7 @@ Each test was then seen failing on a scratch copy of `src/squint_mcp`, one mutan
 
 ### T18: Count a radius and a shadow where they are
 
-- [ ] Done
+- [x] Done
 
 **What**: `#corners`, `#round`, `#oval`, `#glow` and its child, and `#layers` in the fixture, their four tests, the Family order of radii that are not a Length, and `text-shadow` on Painted text.
 **Where**: `src/squint_mcp/tokens.py` (with the six elements of the fixture and their tests)
@@ -765,18 +765,35 @@ Each test was then seen failing on a scratch copy of `src/squint_mcp`, one mutan
 
 **Done when**:
 
-- [ ] Red before the code: TOK-37 finds no Token of `kind` `text`
-- [ ] TOK-35. Rules dropped: one corner is read for the four (three radii gone); a corner of zero is a Value (`0px` is held)
-- [ ] TOK-36: `50%` and `10px 20px` come after every Token that is one px length. Rule dropped: the radii are sorted as texts (`10px 20px` comes first)
-- [ ] TOK-37: `(text, rgb(0, 0, 0) 1px 1px 2px)` with 1 Use. Rule dropped: `text-shadow` is read on an element with no Own text (2 Uses)
-- [ ] TOK-38: one Token of `kind` `box` whose `value` is the two layers. Rule dropped: the text is split at its commas
-- [ ] Gate check passes: Full
+- [x] Red before the code: TOK-37 finds no Token of `kind` `text`
+- [x] TOK-35. Rules dropped: one corner is read for the four (three radii gone); a corner of zero is a Value (`0px` is held)
+- [x] TOK-36: `50%` and `10px 20px` come after every Token that is one px length. Rule dropped: the radii are sorted as texts (`10px 20px` comes first)
+- [x] TOK-37: `(text, rgb(0, 0, 0) 1px 1px 2px)` with 1 Use. Rule dropped: `text-shadow` is read on an element with no Own text (2 Uses)
+- [x] TOK-38: one Token of `kind` `box` whose `value` is the two layers. Rule dropped: the text is split at its commas
+- [x] Gate check passes: Full
 
 **Tests**: integration
 **Gate**: full
 
 **Commit**: `feat(tokens): read text shadows and radii that are not a length`
 
+**Done (2026-10-13)**: four tests. Gate: Full, 37 passed (458 tests collected, none deleted). Before a line of `src/` was touched two tests were red and two passed at once:
+
+- Red: TOK-36 (the list ends with `47px`, `50%`: `10px 20px` comes first, as a text) and TOK-37 (no Token of `kind` `text`).
+- Pins: TOK-35 and TOK-38, whose rules T12 built.
+
+Built here: the radii come in Family order, those that are one px length by size and then the others by text; `text-shadow` is read on Painted text, and a Value of `shadows` is its `kind` and its text; a corner is no Value when both of its radii are zero. The docstring of the tool says what a radius and a shadow are.
+
+Each test was then seen failing on a scratch copy of `src/squint_mcp`, one mutant each:
+
+- TOK-35, the top-left corner read for the four: `43px`, `45px` and `47px` are gone. A corner of zero counted: `0px` is held.
+- TOK-36, the radii sorted as texts: `10px 20px` comes first and the list ends with `47px`, `50%`.
+- TOK-37, `text-shadow` read on every Read element: the Token has 2 Uses.
+- TOK-38, the text split where a layer ends: two Tokens of `kind` `box`, `rgb(0, 0, 0) 0px 1px 2px 0px` and `(0, 0, 0) 0px 4px 8px 0px`.
+
+**One rule more than the task lists**, which the note of T12 gave to this task: a corner is left out when both of its radii are zero, not only when its text is `0px` (Terms: "unless both of its radii are zero"). No fixture of this phase tells it: every zero corner of the fixtures computes `0px`. A page of the scratchpad with `border-radius: 0%` on one box and, on another, corners of `0 0%`, `0 10px` and `9px`, read through the tool, gives two radii: `9px`, then `0px 10px`.
+
+Not told by a fixture, as the table at the end of this file already says: the Lengths by size rather than by text, and `box` before `text`.
 ---
 
 ### T19: Read only the elements that paint

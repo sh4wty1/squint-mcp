@@ -126,6 +126,35 @@
         height: 20px;
         gap: 91px;
       }
+      #corners {
+        width: 100px;
+        height: 20px;
+        border-radius: 41px 43px 45px 47px;
+      }
+      #round {
+        width: 100px;
+        height: 20px;
+        border-radius: 50%;
+      }
+      #oval {
+        width: 100px;
+        height: 20px;
+        border-top-left-radius: 10px 20px;
+      }
+      #glow {
+        text-shadow: 1px 1px 2px #000000;
+      }
+      #glow-child {
+        color: #333333;
+        font: 400 14px/20px Arial, sans-serif;
+      }
+      #layers {
+        width: 100px;
+        height: 20px;
+        box-shadow:
+          0 1px 2px #000000,
+          0 4px 8px #000000;
+      }
     </style>
   </head>
   <body>
@@ -154,5 +183,12 @@
     <div id="grid"></div>
     <div id="igrid"></div>
     <div id="block"></div>
+    <div id="corners"></div>
+    <div id="round"></div>
+    <div id="oval"></div>
+    <div id="glow">
+      <div id="glow-child">A text with the shadow of its parent</div>
+    </div>
+    <div id="layers"></div>
   </body>
 </html>

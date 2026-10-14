@@ -31,7 +31,9 @@ async def extract_tokens(
     returns the values its elements are styled with, each with the number of
     elements that use it: `colors` (by role: text, background, border),
     `typography` (`families`, `sizes`, `weights`, `lineHeights`), `spacing` in
-    px (by role: margin, padding, gap), `radii` and `shadows`.
+    px (by role: margin, padding, gap), `radii` (the computed text of a corner:
+    `4px`, `50%`, `10px 20px`) and `shadows` (the whole computed text, with a
+    `kind`: `box` or `text`).
 
     A colour is `#rrggbb` in sRGB whatever notation the page wrote it in, or
     `#rrggbbaa` when it is not opaque, and a text colour is the one the text is
