@@ -28,11 +28,32 @@ async def call(client: Client, name: str, **arguments: Any) -> CallToolResult:
 
 async def extract(client: Client, name: str, **arguments: Any) -> dict[str, Any]:
     """Call the tool on a fixture and return its structured content, failing on
-    a tool error."""
+    a tool error and on a Token whose sums do not hold."""
     result = await call(client, name, **arguments)
     assert result.is_error is False, texts(result)
     assert result.structured_content is not None
+    assert_sums_hold(result.structured_content)
     return result.structured_content
+
+
+def assert_sums_hold(result: dict[str, Any]) -> None:
+    """The `uses` of every Token are those of its variants, its `value` that of
+    the first of them, and where it has Roles its `uses` are theirs."""
+    typography = result["typography"]
+    for family in (
+        result["colors"],
+        typography["sizes"],
+        typography["lineHeights"],
+        result["spacing"],
+        result["radii"],
+    ):
+        for token in family["tokens"]:
+            variants = token["variants"]
+            assert token["uses"] == sum(variant["uses"] for variant in variants), token
+            assert token["value"] == variants[0]["value"], token
+    for family in (result["colors"], result["spacing"]):
+        for token in family["tokens"]:
+            assert token["uses"] == sum(token["roles"].values()), token
 
 
 def families(result: dict[str, Any]) -> list[dict[str, Any]]:
@@ -184,3 +205,22 @@ async def test_a_box_shadow_is_one_token_of_its_whole_text(client: Client) -> No
     assert rows(shadows, "kind", "value", "uses") == [
         ("box", "rgba(0, 0, 0, 0.2) 0px 1px 3px 0px", 1)
     ]
+
+
+async def test_summary_counts_each_family_and_the_elements(client: Client) -> None:
+    result = await call(client, PAGE)
+    assert result.is_error is False, texts(result)
+    block = result.content[0]
+    assert isinstance(block, TextContent)
+    assert block.text == (
+        "Tokens: colors 5, font families 1, font sizes 3, font weights 2, "
+        "line heights 3, spacing 3, radii 2, shadows 1; elements 8; stabilized."
+    )
+
+
+async def test_two_calls_with_the_same_arguments_return_equal_content(
+    client: Client,
+) -> None:
+    first = await extract(client, PAGE)
+    second = await extract(client, PAGE)
+    assert first == second

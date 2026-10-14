@@ -548,7 +548,7 @@ Left out on purpose, for T18: `text-shadow` is not read, and every Token of `sha
 
 ### T13: Pin the summary and the sums of a result
 
-- [ ] Done
+- [x] Done
 
 **What**: The tests of the summary line and of two equal calls, and the two sums of a Token checked by the `extract` helper on every result of the module from here on.
 **Where**: `tests/test_extract_tokens.py`
@@ -560,10 +560,10 @@ Left out on purpose, for T18: `text-shadow` is not read, and every Token of `sha
 
 **Done when**:
 
-- [ ] TOK-10: the text block equals the line of the criterion, character for character. Rule dropped: two counts of the summary swapped
-- [ ] TOK-12: two calls with the same arguments return equal structured content. No mutant kills it inside one process: every order of the result is held by a criterion of its own (TOK-01, TOK-04, TOK-06, TOK-45, TOK-52, TOK-62)
-- [ ] TOK-13 and TOK-14: the helper asserts, for every Token of every result, that `uses` is the sum of its `variants` and its `value` that of the first, and for `colors` and `spacing` that `uses` is the sum of its `roles`. On this page every tuple already says so; TOK-13 is seen failing in T20, the first fixture where a Token has two variants
-- [ ] Rule dropped for TOK-14: the `uses` of a colour Token counts its `text` Role only
+- [x] TOK-10: the text block equals the line of the criterion, character for character. Rule dropped: two counts of the summary swapped
+- [x] TOK-12: two calls with the same arguments return equal structured content. No mutant kills it inside one process: every order of the result is held by a criterion of its own (TOK-01, TOK-04, TOK-06, TOK-45, TOK-52, TOK-62)
+- [x] TOK-13 and TOK-14: the helper asserts, for every Token of every result, that `uses` is the sum of its `variants` and its `value` that of the first, and for `colors` and `spacing` that `uses` is the sum of its `roles`. On this page every tuple already says so; TOK-13 is seen failing in T20, the first fixture where a Token has two variants
+- [x] Rule dropped for TOK-14: the `uses` of a colour Token counts its `text` Role only
 - [ ] Gate check passes: Full; then Build for phase 3, in the background
 
 **Tests**: integration
@@ -571,6 +571,16 @@ Left out on purpose, for T18: `text-shadow` is not read, and every Token of `sha
 
 **Commit**: `test(tokens): pin the summary and the sums of a result`
 
+
+
+**Done (2026-10-13)**: the two tests and the sums of the helper passed at once: pins. The module has 13 tests and the Full gate 14; 435 tests are collected, none deleted. Each pin was seen failing on a scratch copy of `src/squint_mcp`, with `PYTHONPATH` set to the copy:
+
+- TOK-10: with the counts of `radii` and `shadows` swapped in the summary, the test of the summary fails and the other twelve pass.
+- TOK-14: with the `uses` of a colour Token, and of its variant, counting its `text` Role only, the helper fails on `{'value': '#1a73e8', 'uses': 1, 'roles': {'text': 1, 'background': 1, 'border': 0}, ...}` (`assert 1 == 2`), in the ten tests that call `extract`.
+- TOK-13, under a mutant the task does not name: with the `uses` of the variant of a Length one too many, the helper fails on `{'value': 14.0, 'uses': 3, 'variants': [{'value': 14.0, 'uses': 4}]}`. That the `value` is that of the first variant, on a Token of two, waits for T20.
+- TOK-12 has no mutant.
+
+**A mutant that survives**: with the counts of `font sizes` and `line heights` swapped in the summary, all 13 tests pass. Both are 3 on this page, as `spacing` is; `font weights` and `radii` are both 2, and `font families` and `shadows` both 1. Of the eight counts, TOK-10 tells only `colors` from every other. The two other criteria that read the summary do not close it: TOK-60 has eight zeros, and TOK-65 reads `colors 21` and `spacing 21`. Nothing was changed for it: no criterion asks for a page whose eight totals differ, and adding one is the maintainer's call.
 ---
 
 ### Phase 4: A value only where it paints
