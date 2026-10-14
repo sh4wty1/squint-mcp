@@ -40,6 +40,19 @@ async def extract(client: Client, name: str, **arguments: Any) -> dict[str, Any]
     return result.structured_content
 
 
+async def fail(client: Client, name: str, **arguments: Any) -> str:
+    """Call the tool on a fixture and return the message it fails with: a
+    failure is an error with no structured content."""
+    result = await call(client, name, **arguments)
+    assert result.is_error is True
+    assert result.structured_content is None
+    (text,) = texts(result)
+    # The SDK names the tool before the message of the ToolError.
+    prefix = "Error executing tool extract_tokens: "
+    assert text.startswith(prefix), text
+    return text.removeprefix(prefix)
+
+
 def assert_sums_hold(result: dict[str, Any]) -> None:
     """The `uses` of every Token are those of its variants, its `value` that of
     the first of them, and where it has Roles its `uses` are theirs."""
@@ -721,3 +734,43 @@ async def test_a_family_with_no_value_in_the_scope_is_empty(client: Client) -> N
     result = await extract(client, SCOPE, scope="#one-child")
     for family in families(result)[1:]:
         assert family == {"total": 0, "tokens": []}
+
+
+async def test_a_scope_that_matches_no_element_fails(client: Client) -> None:
+    message = await fail(client, SCOPE, scope=".missing")
+    assert message == 'Scope ".missing" matched no elements.'
+
+
+async def test_a_scope_that_is_not_a_selector_fails(client: Client) -> None:
+    assert await fail(client, SCOPE, scope="div[") == 'Invalid selector "div[".'
+
+
+async def test_a_scope_that_matches_only_elements_not_read_is_empty(
+    client: Client,
+) -> None:
+    # `#gone` matches, and has no box.
+    result = await extract(client, SCOPE, scope="#gone")
+    assert result["elements"] == 0
+    for family in families(result):
+        assert family == {"total": 0, "tokens": []}
+
+
+async def test_the_summary_of_an_empty_reading_counts_zeros(client: Client) -> None:
+    result = await call(client, SCOPE, scope="#gone")
+    assert result.is_error is False, texts(result)
+    assert texts(result) == [
+        "Tokens: colors 0, font families 0, font sizes 0, font weights 0, "
+        "line heights 0, spacing 0, radii 0, shadows 0; elements 0; stabilized."
+    ]
+
+
+async def test_an_empty_scope_fails_and_is_not_the_whole_page(client: Client) -> None:
+    message = await fail(client, SCOPE, scope="")
+    assert not message.startswith("Tokens:")
+
+
+async def test_an_element_that_paints_no_box_is_not_read_alone(
+    client: Client,
+) -> None:
+    for scope in ("#none", "#flat-w", "#flat-h"):
+        assert (await extract(client, USED, scope=scope))["elements"] == 0, scope

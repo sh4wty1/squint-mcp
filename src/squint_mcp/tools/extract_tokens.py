@@ -66,6 +66,8 @@ async def extract_tokens(
             )
     except TimeoutError as error:
         raise ToolError(f"Timed out after {config.TOTAL_TIMEOUT_S:g}s.") from error
+    if not captured.elements:
+        raise ToolError(f'Scope "{scope}" matched no elements.')
     result = ExtractTokensResult(
         **dict(extract(captured)),
         viewport=captured.viewport,

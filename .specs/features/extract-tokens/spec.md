@@ -344,11 +344,11 @@ Covered by the stories: a `scope` that matches nothing (TOK-57), that is not a s
 | TOK-54 | P1: Narrow the reading to a part of the page | Phase 6, T24 | Implemented |
 | TOK-55 | P1: Narrow the reading to a part of the page | Phase 6, T24 | Implemented |
 | TOK-56 | P1: Narrow the reading to a part of the page | Phase 6, T24 | Implemented |
-| TOK-57 | P1: Narrow the reading to a part of the page | Phase 6, T25 | Pending |
-| TOK-58 | P1: Narrow the reading to a part of the page | Phase 6, T25 | Pending |
-| TOK-59 | P1: Narrow the reading to a part of the page | Phase 6, T25 | Pending |
-| TOK-60 | P1: Narrow the reading to a part of the page | Phase 6, T25 | Pending |
-| TOK-61 | P1: Narrow the reading to a part of the page | Phase 6, T25 | Pending |
+| TOK-57 | P1: Narrow the reading to a part of the page | Phase 6, T25 | Implemented |
+| TOK-58 | P1: Narrow the reading to a part of the page | Phase 6, T25 | Implemented |
+| TOK-59 | P1: Narrow the reading to a part of the page | Phase 6, T25 | Implemented |
+| TOK-60 | P1: Narrow the reading to a part of the page | Phase 6, T25 | Implemented |
+| TOK-61 | P1: Narrow the reading to a part of the page | Phase 6, T25 | Implemented |
 | TOK-62 | P2: Bound the response | Phase 6, T26 | Pending |
 | TOK-63 | P2: Bound the response | Phase 6, T26 | Pending |
 | TOK-64 | P2: Bound the response | Phase 6, T26 | Pending |

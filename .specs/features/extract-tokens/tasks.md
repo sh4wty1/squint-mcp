@@ -1042,7 +1042,7 @@ Each rule dropped on a scratch copy of `src/squint_mcp`:
 
 ### T25: Fail on a scope that reads nothing, and answer one that paints nothing
 
-- [ ] Done
+- [x] Done
 
 **What**: A Capture with no element raises `Scope "<scope>" matched no elements.`; the five tests of the errors and of the empty reading.
 **Where**: `src/squint_mcp/tools/extract_tokens.py` (with its tests)
@@ -1054,18 +1054,26 @@ Each rule dropped on a scratch copy of `src/squint_mcp`:
 
 **Done when**:
 
-- [ ] Red before the code: TOK-57 gets a result with 0 elements
-- [ ] TOK-58: the message is `Invalid selector "div[".`, whole. It is `capture(...)`'s message: no rule of the tool to drop
-- [ ] TOK-59 and TOK-60: `#gone` succeeds with 0 elements, eight Families of `{total: 0, tokens: []}` and the summary of zeros, character for character. Rule dropped: the call fails when no element is Read
-- [ ] TOK-61: an empty `scope` fails, with no structured content and a text that is not a summary. Rule dropped: the selector is `scope or "*"` (the call succeeds on the whole page)
-- [ ] Every failure of this task is also asserted an error with no structured content (TOK-72, which T27 owns)
-- [ ] TOK-24, sharpened now that a scope exists: with `scope` equal to `#none`, `#flat-w` and `#flat-h` of `tokens-used.html` in turn, `elements` is 0
-- [ ] Gate check passes: Full
+- [x] Red before the code: TOK-57 gets a result with 0 elements
+- [x] TOK-58: the message is `Invalid selector "div[".`, whole. It is `capture(...)`'s message: no rule of the tool to drop
+- [x] TOK-59 and TOK-60: `#gone` succeeds with 0 elements, eight Families of `{total: 0, tokens: []}` and the summary of zeros, character for character. Rule dropped: the call fails when no element is Read
+- [x] TOK-61: an empty `scope` fails, with no structured content and a text that is not a summary. Rule dropped: the selector is `scope or "*"` (the call succeeds on the whole page)
+- [x] Every failure of this task is also asserted an error with no structured content (TOK-72, which T27 owns)
+- [x] TOK-24, sharpened now that a scope exists: with `scope` equal to `#none`, `#flat-w` and `#flat-h` of `tokens-used.html` in turn, `elements` is 0
+- [x] Gate check passes: Full
 
 **Tests**: integration
 **Gate**: full
 
 **Commit**: `feat(tokens): fail on a scope that matches no element`
+
+**Done (2026-10-14)**: six tests, on `tokens-scope.html` and `tokens-used.html`. The handler raises `Scope "<scope>" matched no elements.` when the Capture holds no element: it checks the elements matched, not those Read. The module gained `fail(client, name, **arguments)`, which asserts an error with no structured content and returns the message whole; the SDK writes `Error executing tool extract_tokens: ` before the message of a `ToolError`, and the helper asserts that prefix and takes it off. Gate: Full, 66 passed (487 tests collected, none deleted).
+
+Red before the code: TOK-57, which got a result of 0 elements. The five others passed at once (pins):
+
+- TOK-58: `capture(...)`'s message, no rule of the tool to drop.
+- TOK-59, TOK-60 and TOK-24 sharpened: the call fails when no element is Read (the check on `extract(captured).elements`). All three fail on a scratch copy of `src/squint_mcp`.
+- TOK-61: the selector is `scope or "*"`. The test fails on a scratch copy: the call succeeds on the whole page.
 
 ---
 
