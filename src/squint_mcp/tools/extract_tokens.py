@@ -40,7 +40,8 @@ async def extract_tokens(
     filled with. A line height of `normal` is not counted, nor a margin of
     `auto`, nor the gap of an element that is not a flex or grid container.
 
-    `elements` is the number of elements read. `viewport` defaults to 1440x900.
+    `elements` is the number of elements read: those that paint a box, are
+    visible and are not under an opacity of 0. `viewport` defaults to 1440x900.
     `stabilized` is false when the network never went idle. A call that takes
     longer than 30s fails.
     """

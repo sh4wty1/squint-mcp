@@ -420,3 +420,98 @@ async def test_a_shadow_of_two_layers_is_one_token(client: Client) -> None:
     assert [row for row in rows(shadows, *fields) if row[0] == "box"] == [
         ("box", "rgb(0, 0, 0) 0px 1px 2px 0px, rgb(0, 0, 0) 0px 4px 8px 0px", 1)
     ]
+
+
+async def test_an_element_that_is_not_visible_is_not_read(client: Client) -> None:
+    colors = (await extract(client, USED))["colors"]
+    assert "#aa00aa" not in values(colors)
+
+
+async def test_an_element_under_an_opacity_of_zero_is_not_read(client: Client) -> None:
+    colors = (await extract(client, USED))["colors"]
+    # `#faded-child` has no opacity of its own: that of `#faded` hides it.
+    assert "#00aaaa" not in values(colors)
+
+
+async def test_an_element_that_paints_no_box_is_not_read(client: Client) -> None:
+    result = await extract(client, USED)
+    found = values(result["colors"])
+    # `#none`, `#flat-w` and `#flat-h`, in turn.
+    for value in ("#abcd01", "#abcd02", "#abcd03"):
+        assert value not in found
+    # `html`, `body` and 29 of the 35 elements of `body`: all but the three
+    # above, `#hidden`, `#faded` and `#faded-child`.
+    assert result["elements"] == 31
+
+
+async def test_the_families_of_a_page_come_whole_and_in_their_order(
+    client: Client,
+) -> None:
+    result = await extract(client, USED)
+    typography = result["typography"]
+    # Rank order: the colour of the four texts that share one, then the ten of
+    # 1 Use by their text, where a digit comes before a letter.
+    fields = ("value", "uses", "roles.text", "roles.background", "roles.border")
+    assert rows(result["colors"], *fields) == [
+        ("#333333", 4, 4, 0, 0),
+        ("#00000080", 1, 0, 1, 0),
+        ("#000080", 1, 0, 0, 1),
+        ("#0000aa", 1, 0, 0, 1),
+        ("#008000", 1, 0, 0, 1),
+        ("#222222", 1, 1, 0, 0),
+        ("#336699", 1, 0, 1, 0),
+        ("#800000", 1, 0, 0, 1),
+        ("#808000", 1, 0, 0, 1),
+        ("#aa0000", 1, 1, 0, 0),
+        ("#ff0000", 1, 0, 1, 0),
+    ]
+    # Rank order: Arial on five of the seven texts, then the family of `#clip`
+    # and that of `#fill` by their text, where a quote comes before a letter.
+    assert rows(typography["families"], "value", "uses") == [
+        ("Arial, sans-serif", 5),
+        ('"Segoe UI", sans-serif', 1),
+        ("Verdana, sans-serif", 1),
+    ]
+    # By value: four of the seven texts are 14px on a line of 20px, and that of
+    # `#normal` has no line height.
+    assert rows(typography["sizes"], "value", "uses") == [
+        (12, 1),
+        (13, 1),
+        (14, 4),
+        (20, 1),
+    ]
+    assert rows(typography["weights"], "value", "uses") == [(400, 7)]
+    assert rows(typography["lineHeights"], "value", "uses") == [
+        (18, 1),
+        (20, 4),
+        (30, 1),
+    ]
+    fields = ("value", "uses", "roles.margin", "roles.padding", "roles.gap")
+    assert rows(result["spacing"], *fields) == [
+        (51, 1, 1, 0, 0),
+        (53, 1, 1, 0, 0),
+        (55, 1, 1, 0, 0),
+        (57, 1, 1, 0, 0),
+        (61, 1, 0, 1, 0),
+        (63, 1, 0, 1, 0),
+        (65, 1, 0, 1, 0),
+        (67, 1, 0, 1, 0),
+        (81, 1, 0, 0, 1),
+        (83, 1, 0, 0, 1),
+        (85, 1, 0, 0, 1),
+        (87, 1, 0, 0, 1),
+        (89, 1, 0, 0, 1),
+    ]
+    # The four that are one px length, then the two others by their text.
+    assert rows(result["radii"], "value", "uses") == [
+        ("41px", 1),
+        ("43px", 1),
+        ("45px", 1),
+        ("47px", 1),
+        ("10px 20px", 1),
+        ("50%", 1),
+    ]
+    assert rows(result["shadows"], "kind", "value", "uses") == [
+        ("box", "rgb(0, 0, 0) 0px 1px 2px 0px, rgb(0, 0, 0) 0px 4px 8px 0px", 1),
+        ("text", "rgb(0, 0, 0) 1px 1px 2px", 1),
+    ]

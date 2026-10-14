@@ -189,8 +189,14 @@ def _colors(read: list[Element], srgb: dict[str, str]) -> Family[ColorToken]:
 
 
 def _is_read(element: Element) -> bool:
-    """Whether an element is a Read element: one that paints a box."""
-    return element.box.w > 0 and element.box.h > 0
+    """Whether an element is a Read element: one that paints a box, is visible
+    and is not under an opacity of 0."""
+    return (
+        element.box.w > 0
+        and element.box.h > 0
+        and element.computed["visibility"] == "visible"
+        and element.opacity > 0
+    )
 
 
 def _paints_text(element: Element) -> bool:

@@ -20,7 +20,7 @@
       #fill {
         color: #111111;
         -webkit-text-fill-color: #222222;
-        font: 400 14px/20px Arial, sans-serif;
+        font: 400 14px/20px Verdana, sans-serif;
       }
       #clear {
         width: 100px;
@@ -30,7 +30,7 @@
       #clip {
         color: #445566;
         -webkit-text-fill-color: transparent;
-        font: 400 14px/20px Arial, sans-serif;
+        font: 400 14px/20px "Segoe UI", sans-serif;
       }
       #veil {
         width: 100px;
@@ -155,6 +155,36 @@
           0 1px 2px #000000,
           0 4px 8px #000000;
       }
+      #hidden {
+        width: 100px;
+        height: 20px;
+        visibility: hidden;
+        background-color: #aa00aa;
+      }
+      #faded {
+        opacity: 0;
+      }
+      #faded-child {
+        width: 100px;
+        height: 20px;
+        background-color: #00aaaa;
+      }
+      #none {
+        display: none;
+        width: 100px;
+        height: 20px;
+        background-color: #abcd01;
+      }
+      #flat-w {
+        width: 0;
+        height: 20px;
+        background-color: #abcd02;
+      }
+      #flat-h {
+        width: 100px;
+        height: 0;
+        background-color: #abcd03;
+      }
     </style>
   </head>
   <body>
@@ -190,5 +220,12 @@
       <div id="glow-child">A text with the shadow of its parent</div>
     </div>
     <div id="layers"></div>
+    <div id="hidden"></div>
+    <div id="faded">
+      <div id="faded-child"></div>
+    </div>
+    <div id="none"></div>
+    <div id="flat-w"></div>
+    <div id="flat-h"></div>
   </body>
 </html>

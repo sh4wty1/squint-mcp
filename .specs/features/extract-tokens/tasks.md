@@ -798,7 +798,7 @@ Not told by a fixture, as the table at the end of this file already says: the Le
 
 ### T19: Read only the elements that paint
 
-- [ ] Done
+- [x] Done
 
 **What**: `#hidden`, `#faded` and its child, `#none`, `#flat-w` and `#flat-h` in the fixture, their three tests, the `visibility` and the opacity of a Read element, and one test of the eight lists of the finished fixture.
 **Where**: `src/squint_mcp/tokens.py` (with the six elements of the fixture and their tests)
@@ -810,9 +810,9 @@ Not told by a fixture, as the table at the end of this file already says: the Le
 
 **Done when**:
 
-- [ ] Red before the code: TOK-22 holds `#aa00aa`, TOK-23 holds `#00aaaa`
-- [ ] TOK-24: none of the three colours is held, and `elements` equals the number of Read elements of the finished fixture, counted by hand in a comment of the test. Rules dropped: the width of a box is not read (`#abcd02` is held and `elements` is one more); the height is not read (`#abcd03`). `#none` fails both and tells neither
-- [ ] The eight lists of `tokens-used.html` are asserted whole and in order (L-020): most of its Tokens have 1 Use, so their places are decided by the `value` alone. The expected lists are written from the Terms and the fixture, not from a run
+- [x] Red before the code: TOK-22 holds `#aa00aa`, TOK-23 holds `#00aaaa`
+- [x] TOK-24: none of the three colours is held, and `elements` equals the number of Read elements of the finished fixture, counted by hand in a comment of the test. Rules dropped: the width of a box is not read (`#abcd02` is held and `elements` is one more); the height is not read (`#abcd03`). `#none` fails both and tells neither
+- [x] The eight lists of `tokens-used.html` are asserted whole and in order (L-020): most of its Tokens have 1 Use, so their places are decided by the `value` alone. The expected lists are written from the Terms and the fixture, not from a run
 - [ ] Gate check passes: Full; then Build for phase 4, in the background
 
 **Tests**: integration
@@ -820,6 +820,25 @@ Not told by a fixture, as the table at the end of this file already says: the Le
 
 **Commit**: `feat(tokens): read only the elements that paint`
 
+**Done (2026-10-13)**: four tests, the three of the criteria and that of the eight lists. Gate: Full, 41 passed (462 tests collected, none deleted: 435 and the 27 of phase 4). The elements went into the fixture in two steps, so that each test was seen alone:
+
+- With `#none`, `#flat-w` and `#flat-h`: the test of TOK-24 and that of the eight lists passed at once (pins). The lists were written from the Terms and the fixture before the first run, and no line of them was changed after it.
+- With `#hidden`, `#faded` and its child: red. `#aa00aa` is held (TOK-22), `#00aaaa` is held (TOK-23), and `elements` is 34 where the test of TOK-24 counts 31.
+
+Built here: a Read element also has a computed `visibility` of `visible` and an `Element.opacity` above 0. The docstring of the tool says which elements are read.
+
+Seen on a scratch copy of `src/squint_mcp`, one mutant each:
+
+- TOK-24, the width of a box not read: `#abcd02` is held and `elements` is 32. The height not read: `#abcd03` is held and `elements` is 32. `#none` fails both and tells neither.
+- TOK-22, the `visibility` not read: `#aa00aa` is held and `elements` is 32.
+- TOK-23, the opacity of the element alone in place of that through its ancestors: `#00aaaa` is held and `elements` is 32.
+- The eight lists. The families sorted by their text: `"Segoe UI", sans-serif` comes first. By Uses alone: `Verdana, sans-serif` comes before `"Segoe UI", sans-serif`. The sizes in Rank order: `14` comes first. The line heights in Rank order: `20` comes first.
+
+**Changed in elements of T14**, so that the list of the families tells its order (L-020, and the row "Family order of `colors` and `typography.families`" of the table at the end of this file): `#fill` is in `Verdana, sans-serif` and `#clip` in `"Segoe UI", sans-serif`, where both were in Arial. The page has three families, one of 5 Uses and two of 1.
+
+**A row of "Rules no fixture of the spec tells" is told now**: the Family order of `typography.lineHeights`, by `value` rather than Rank order. On this fixture `20` has 4 Uses and `18` has 1, and the mutant above fails the test of the eight lists. The table was left as it is: striking the row is the maintainer's call.
+
+The Build box above is ticked in the commit of the Handoff, once the Build of phase 4 has passed.
 ---
 
 ### Phase 5: Values that are nearly equal
