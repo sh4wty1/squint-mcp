@@ -332,9 +332,9 @@ Covered by the stories: a `scope` that matches nothing (TOK-57), that is not a s
 | TOK-42 | P1: Fold values that are nearly equal | Phase 5, T20 | Implemented |
 | TOK-43 | P1: Fold values that are nearly equal | Phase 5, T20 | Implemented |
 | TOK-44 | P1: Fold values that are nearly equal | Phase 5, T20 | Implemented |
-| TOK-45 | P1: Fold values that are nearly equal | Phase 5, T21 | Pending |
-| TOK-46 | P1: Fold values that are nearly equal | Phase 5, T21 | Pending |
-| TOK-47 | P1: Fold values that are nearly equal | Phase 5, T21 | Pending |
+| TOK-45 | P1: Fold values that are nearly equal | Phase 5, T21 | Implemented |
+| TOK-46 | P1: Fold values that are nearly equal | Phase 5, T21 | Implemented |
+| TOK-47 | P1: Fold values that are nearly equal | Phase 5, T21 | Implemented |
 | TOK-48 | P1: Fold values that are nearly equal | Phase 5, T22 | Pending |
 | TOK-49 | P1: Fold values that are nearly equal | Phase 5, T22 | Pending |
 | TOK-50 | P1: Fold values that are nearly equal | Phase 5, T22 | Pending |

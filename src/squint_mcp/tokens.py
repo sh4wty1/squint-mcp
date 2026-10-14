@@ -261,12 +261,28 @@ def _length(text: str) -> float | None:
         return None
 
 
-def _lengths(uses: Uses[float]) -> Family[LengthToken]:
+def _never[V](representative: V, value: V) -> None:
+    """The distance of two Values that are never Near."""
+    return None
+
+
+def _length_distance(representative: float, value: float) -> float | None:
+    """How far apart two Lengths that are Near are, in px. Rounded to six decimal
+    places: Chromium writes four, and in floating point 16.0004 minus 15.0004 is
+    a hair under 1."""
+    apart = round(abs(representative - value), 6)
+    return apart if apart < config.TOKENS_NEAR_LENGTH_BELOW_PX else None
+
+
+def _lengths(
+    uses: Uses[float], distance: Callable[[float, float], float | None]
+) -> Family[LengthToken]:
     tokens: list[LengthToken] = []
-    for value in sorted(uses):
-        total = uses[value].total()
-        variants = [Variant[float](value=value, uses=total)]
-        tokens.append(LengthToken(value=value, uses=total, variants=variants))
+    # By the value of each Representative.
+    for group in sorted(_group(uses, distance), key=lambda group: group[0]):
+        variants = _variants(uses, group)
+        total = sum(variant.uses for variant in variants)
+        tokens.append(LengthToken(value=group[0], uses=total, variants=variants))
     return _family(tokens)
 
 
@@ -292,14 +308,14 @@ def _typography(read: list[Element]) -> Typography:
                 for value in _ranked(families)
             ]
         ),
-        sizes=_lengths(sizes),
+        sizes=_lengths(sizes, _length_distance),
         weights=_family(
             [
                 NumberToken(value=value, uses=weights[value].total())
                 for value in sorted(weights)
             ]
         ),
-        line_heights=_lengths(line_heights),
+        line_heights=_lengths(line_heights, _never),
     )
 
 

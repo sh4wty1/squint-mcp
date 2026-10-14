@@ -891,7 +891,7 @@ The test of the eight lists of `tokens-used.html` stayed green, with no line cha
 
 ### T21: Fold font sizes less than 1px apart
 
-- [ ] Done
+- [x] Done
 
 **What**: The distance of two Lengths (their difference in px, rounded to six decimal places, when it is below the threshold of T1), `sizes` grouped with it, and the nine elements with Own text of the fixture: 15px on 1, 16px on 3, 16.5px on 1, 16.75px on 1, 17px on 2, 17.75px on 1.
 **Where**: `src/squint_mcp/tokens.py` (with the elements of the fixture and their tests)
@@ -903,17 +903,28 @@ The test of the eight lists of `tokens-used.html` stayed green, with no line cha
 
 **Done when**:
 
-- [ ] Red before the code: TOK-45 finds six Tokens
-- [ ] The element with Own text of TOK-41 is one of the nine; all nine have `line-height: 20px` until T22
-- [ ] Rules dropped. TOK-45 (L-021, sizes exactly at the threshold): Near is at or below 1px (15, 16 and 17 fold). TOK-46: a Value joins the first Near Group opened, not the nearest (16.75 joins 16); the threshold is 0.7 (17.75 opens a Group). TOK-47: a tie in distance goes to the Group opened last (16.5 joins 17)
-- [ ] Each test asserts its `variants` whole and in order
-- [ ] Gate check passes: Full
+- [x] Red before the code: TOK-45 finds six Tokens
+- [x] The element with Own text of TOK-41 is one of the nine; all nine have `line-height: 20px` until T22
+- [x] Rules dropped. TOK-45 (L-021, sizes exactly at the threshold): Near is at or below 1px (15, 16 and 17 fold). TOK-46: a Value joins the first Near Group opened, not the nearest (16.75 joins 16); the threshold is 0.7 (17.75 opens a Group). TOK-47: a tie in distance goes to the Group opened last (16.5 joins 17)
+- [x] Each test asserts its `variants` whole and in order
+- [x] Gate check passes: Full
 
 **Tests**: integration
 **Gate**: full
 
 **Commit**: `feat(tokens): fold font sizes less than a pixel apart`
 
+**Done (2026-10-14)**: three tests, and eight texts in `tokens-groups.html`, each with `color: #333333` and `font: 400 <size>/20px Arial, sans-serif`; `#t78` of T20 is the third of 16px. Gate: Full, 48 passed (469 tests collected, none deleted). The three tests read the same nine texts, so the elements went in in one step, and the three were red before a line of `src/` was touched: six Tokens of sizes, each with one variant.
+
+Built here: the distance of two Lengths, their difference in px rounded to six decimal places, None when it is not below `TOKENS_NEAR_LENGTH_BELOW_PX`; `sizes` grouped with it, its Tokens sorted by the value of their Representative. `lineHeights` goes through the same code with a distance that is never Near, until T22. The docstring of the tool says font sizes less than 1px apart are one token.
+
+Each test was then seen failing on a scratch copy of `src/squint_mcp`, one mutant each:
+
+- TOK-45, Near at or below 1px: the sizes are `(16, 8)` and `(17.75, 1)`. The test of the eight lists of `tokens-used.html` fails with it: 12, 13 and 14px fold there.
+- TOK-46, a Value joining the first Near Group opened: 16.75 joins 16. The threshold at 0.7: 17.75 opens a Group.
+- TOK-47, a tie in distance to the Group opened last: 16.5 joins 17.
+
+**The rounding to six decimal places has no fixture**, as the task names it and no criterion tells it. The example of the design is wrong: in floating point 14.3333 minus 13.3333 is exactly 1.0, as are 16.6667 and 17.6667, so the rounding changes nothing there. Chromium keeps `15.0004px` and `16.0004px`, whose difference is 0.9999999999999982. A page of the scratchpad with one text of each, read through the tool, gives two Tokens; with the rounding taken out, one Token of 2 Uses. The comment of the distance names that pair; `design.md` was left as it is.
 ---
 
 ### T22: Fold spacings, radii and line heights

@@ -564,3 +564,33 @@ async def test_a_tie_in_uses_goes_to_the_lower_value_not_the_first_of_the_docume
         {"value": "#808080", "uses": 2},
         {"value": "#858585", "uses": 2},
     ]
+
+
+async def test_font_sizes_exactly_1px_apart_are_not_near(client: Client) -> None:
+    typography = (await extract(client, GROUPS))["typography"]
+    # 15px on one text, 16px on three, 16.5px, 16.75px, 17px on two, 17.75px.
+    assert rows(typography["sizes"], "value", "uses") == [(15, 1), (16, 4), (17, 4)]
+
+
+async def test_a_font_size_joins_the_nearest_group_not_the_most_used(
+    client: Client,
+) -> None:
+    typography = (await extract(client, GROUPS))["typography"]
+    # 16.75px is 0.75px from 16px, which has more Uses, and 0.25px from 17px.
+    assert held(typography["sizes"], 17)["variants"] == [
+        {"value": 17, "uses": 2},
+        {"value": 16.75, "uses": 1},
+        {"value": 17.75, "uses": 1},
+    ]
+
+
+async def test_a_font_size_as_near_two_groups_joins_the_first_opened(
+    client: Client,
+) -> None:
+    typography = (await extract(client, GROUPS))["typography"]
+    # 16.5px is 0.5px from 16px and from 17px: the Group of 16px, which has more
+    # Uses, was opened first.
+    assert held(typography["sizes"], 16)["variants"] == [
+        {"value": 16, "uses": 3},
+        {"value": 16.5, "uses": 1},
+    ]
