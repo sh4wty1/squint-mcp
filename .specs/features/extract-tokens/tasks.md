@@ -1002,7 +1002,7 @@ The Build of phase 5 ran on the commit of this task (`2501904`): 476 passed in 2
 
 ### T24: Narrow the reading to a scope
 
-- [ ] Done
+- [x] Done
 
 **What**: The handler reads `scope`: the selector is the `scope` as given when it is not `None`, with `descendants=True`, and the result says which `scope` it read. `tokens-scope.html` as the spec gives it, with its five tests.
 **Where**: `src/squint_mcp/tools/extract_tokens.py` (with the new fixture and its tests)
@@ -1014,17 +1014,29 @@ The Build of phase 5 ran on the commit of this task (`2501904`): 476 passed in 2
 
 **Done when**:
 
-- [ ] Red before the code: TOK-52, TOK-53, TOK-55 and TOK-56 get the whole page. TOK-54 passes before and after: it is the other side of the rule
-- [ ] TOK-52: the four `(value, uses)` whole and in order (L-020: three Tokens of 1 Use, in order of their text), and `scope` equal to `.card`
-- [ ] Rules dropped, on a scratch copy. `descendants` is not passed (`#0000ff` and `#00ffff` are gone). The collector adds a match under a match twice (TOK-53: 7 elements, and `#ffff00` has 2 Uses). The collector does not walk the shadow tree under a match (`#00ffff` is gone). TOK-54: the selector without `scope` is `body *` (7 elements)
-- [ ] TOK-55: `#deep` alone. No rule of ours to drop: Playwright's `css=` engine reaches into open shadow trees
-- [ ] `#host` has no background and holds `#deep`, a block of 100px by 20px, in an open shadow tree, so that the host has a box
-- [ ] Gate check passes: Full
+- [x] Red before the code: TOK-52, TOK-53, TOK-55 and TOK-56 get the whole page. TOK-54 passes before and after: it is the other side of the rule
+- [x] TOK-52: the four `(value, uses)` whole and in order (L-020: three Tokens of 1 Use, in order of their text), and `scope` equal to `.card`
+- [x] Rules dropped, on a scratch copy. `descendants` is not passed (`#0000ff` and `#00ffff` are gone). The collector adds a match under a match twice (TOK-53: 7 elements, and `#ffff00` has 2 Uses). The collector does not walk the shadow tree under a match (`#00ffff` is gone). TOK-54: the selector without `scope` is `body *` (7 elements)
+- [x] TOK-55: `#deep` alone. No rule of ours to drop: Playwright's `css=` engine reaches into open shadow trees
+- [x] `#host` has no background and holds `#deep`, a block of 100px by 20px, in an open shadow tree, so that the host has a box
+- [x] Gate check passes: Full
 
 **Tests**: integration
 **Gate**: full
 
 **Commit**: `feat(tokens): narrow the reading to a scope`
+
+**Done (2026-10-14)**: five tests and `tokens-scope.html`, built as the spec gives it: `#host` is a `div` with no background whose declarative open shadow tree holds `#deep` and its own style. The handler passes `scope` as the selector, with `descendants=True`, when it is not `None`, and `"*"` otherwise; the result says the `scope` it read, and the docstring says what a `scope` reads. Gate: Full, 60 passed (481 tests collected, none deleted).
+
+Red before the code: TOK-52, TOK-53 and TOK-55, each on the whole page. TOK-54 passed before and after, as the task expects. **TOK-56 passed before the code too**, where the task expects it red: the fixture the spec gives has no Value outside `colors` anywhere (no text, margin, padding, radius or shadow, and `html` and `body` reset), so the whole page also leaves the seven other Families empty. On this fixture the test cannot tell a `scope` from no `scope`; it pins the empty Family only. Written for the maintainer, with no change to the fixture or the criterion.
+
+Each rule dropped on a scratch copy of `src/squint_mcp`:
+
+- `descendants` not passed: TOK-52 and TOK-53 fail (3 elements).
+- The collector adds a match under a match twice (`held` an array whose `has` is always false): TOK-52 and TOK-53 fail (7 elements, `#ffff00` of 2 Uses).
+- The collector does not walk the shadow tree of an element under a match: TOK-52 and TOK-53 fail (5 elements, `#00ffff` gone).
+- The selector with no `scope` is `body *`: TOK-54 fails (7 elements).
+- TOK-56, with no rule of the scope behind it: an empty Family says `total` 1, and the test fails.
 
 ---
 

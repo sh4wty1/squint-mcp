@@ -44,8 +44,10 @@ async def extract_tokens(
     not counted, nor a margin of `auto`, nor the gap of an element that is not a
     flex or grid container.
 
-    `elements` is the number of elements read: those that paint a box, are
-    visible and are not under an opacity of 0. `viewport` defaults to 1440x900.
+    `scope`, a CSS selector that reaches into open shadow roots, narrows the
+    reading to its matches and every element under them. `elements` is the
+    number of elements read: those that paint a box, are visible and are not
+    under an opacity of 0. `viewport` defaults to 1440x900.
     `stabilized` is false when the network never went idle. A call that takes
     longer than 30s fails.
     """
@@ -56,7 +58,11 @@ async def extract_tokens(
         # asyncio.timeout cancels once, so the capture's cleanup still gets to run.
         async with asyncio.timeout(config.TOTAL_TIMEOUT_S):
             captured = await capture(
-                ctx.request_context.lifespan_context, url, viewport, "*"
+                ctx.request_context.lifespan_context,
+                url,
+                viewport,
+                "*" if scope is None else scope,
+                descendants=scope is not None,
             )
     except TimeoutError as error:
         raise ToolError(f"Timed out after {config.TOTAL_TIMEOUT_S:g}s.") from error
@@ -64,7 +70,7 @@ async def extract_tokens(
         **dict(extract(captured)),
         viewport=captured.viewport,
         stabilized=captured.stabilized,
-        scope=None,
+        scope=scope,
     )
     typography = result.typography
     totals = {

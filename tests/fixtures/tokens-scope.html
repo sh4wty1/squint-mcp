@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: cards to narrow the reading to, one inside another and one with a shadow tree</title>
+    <style>
+      /* Every element is a `div` and carries its styles here; none has text of
+         its own, a margin, a padding, a radius or a shadow. `#host` has no
+         background: its box is that of `#deep`, in its open shadow tree. */
+      html,
+      body {
+        margin: 0;
+      }
+      #outside,
+      #one,
+      #one-child,
+      #two,
+      #inner {
+        width: 100px;
+        height: 20px;
+      }
+      #outside {
+        background-color: #ff0000;
+      }
+      #one,
+      #two {
+        background-color: #00ff00;
+      }
+      #one-child {
+        background-color: #0000ff;
+      }
+      #inner {
+        background-color: #ffff00;
+      }
+      #gone {
+        display: none;
+        background-color: #ff00ff;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="outside"></div>
+    <div id="one" class="card"><div id="one-child"></div></div>
+    <div id="two" class="card">
+      <div id="inner" class="card"></div>
+      <div id="host">
+        <template shadowrootmode="open">
+          <style>
+            #deep {
+              width: 100px;
+              height: 20px;
+              background-color: #00ffff;
+            }
+          </style>
+          <div id="deep"></div>
+        </template>
+      </div>
+    </div>
+    <div id="gone"></div>
+  </body>
+</html>

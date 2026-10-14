@@ -13,6 +13,7 @@ PAGE = "tokens-page.html"
 USED = "tokens-used.html"
 GROUPS = "tokens-groups.html"
 DEFAULT = "tokens-default.html"
+SCOPE = "tokens-scope.html"
 
 
 async def tokens_tool(client: Client) -> Tool:
@@ -679,3 +680,44 @@ async def test_a_margin_of_the_browser_stylesheet_is_counted(client: Client) -> 
     # The page does not reset the margin of `body`.
     token = held(spacing, 8)
     assert (token["uses"], token["roles"]["margin"]) == (1, 1)
+
+
+async def test_a_scope_reads_its_matches_and_what_is_under_them(
+    client: Client,
+) -> None:
+    result = await extract(client, SCOPE, scope=".card")
+    # The two cards share one colour; the three others of 1 Use come by their
+    # text, where a digit comes before a letter.
+    assert rows(result["colors"], "value", "uses") == [
+        ("#00ff00", 2),
+        ("#0000ff", 1),
+        ("#00ffff", 1),
+        ("#ffff00", 1),
+    ]
+    assert result["scope"] == ".card"
+
+
+async def test_a_match_under_a_match_is_read_once(client: Client) -> None:
+    result = await extract(client, SCOPE, scope=".card")
+    # `#one`, `#one-child`, `#two`, `#inner`, `#host` and `#deep`.
+    assert result["elements"] == 6
+    assert held(result["colors"], "#ffff00")["uses"] == 1
+
+
+async def test_no_scope_reads_the_whole_page(client: Client) -> None:
+    result = await extract(client, SCOPE)
+    assert "#ff0000" in values(result["colors"])
+    # `html`, `body`, `#outside` and the six of the cards: `#gone` has no box.
+    assert result["elements"] == 9
+
+
+async def test_a_scope_reaches_into_an_open_shadow_tree(client: Client) -> None:
+    result = await extract(client, SCOPE, scope="#deep")
+    assert rows(result["colors"], "value", "uses") == [("#00ffff", 1)]
+    assert result["elements"] == 1
+
+
+async def test_a_family_with_no_value_in_the_scope_is_empty(client: Client) -> None:
+    result = await extract(client, SCOPE, scope="#one-child")
+    for family in families(result)[1:]:
+        assert family == {"total": 0, "tokens": []}

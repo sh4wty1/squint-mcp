@@ -339,11 +339,11 @@ Covered by the stories: a `scope` that matches nothing (TOK-57), that is not a s
 | TOK-49 | P1: Fold values that are nearly equal | Phase 5, T22 | Implemented |
 | TOK-50 | P1: Fold values that are nearly equal | Phase 5, T22 | Implemented |
 | TOK-51 | P1: Fold values that are nearly equal | Phase 5, T22 | Implemented |
-| TOK-52 | P1: Narrow the reading to a part of the page | Phase 6, T24 | Pending |
-| TOK-53 | P1: Narrow the reading to a part of the page | Phase 6, T24 | Pending |
-| TOK-54 | P1: Narrow the reading to a part of the page | Phase 6, T24 | Pending |
-| TOK-55 | P1: Narrow the reading to a part of the page | Phase 6, T24 | Pending |
-| TOK-56 | P1: Narrow the reading to a part of the page | Phase 6, T24 | Pending |
+| TOK-52 | P1: Narrow the reading to a part of the page | Phase 6, T24 | Implemented |
+| TOK-53 | P1: Narrow the reading to a part of the page | Phase 6, T24 | Implemented |
+| TOK-54 | P1: Narrow the reading to a part of the page | Phase 6, T24 | Implemented |
+| TOK-55 | P1: Narrow the reading to a part of the page | Phase 6, T24 | Implemented |
+| TOK-56 | P1: Narrow the reading to a part of the page | Phase 6, T24 | Implemented |
 | TOK-57 | P1: Narrow the reading to a part of the page | Phase 6, T25 | Pending |
 | TOK-58 | P1: Narrow the reading to a part of the page | Phase 6, T25 | Pending |
 | TOK-59 | P1: Narrow the reading to a part of the page | Phase 6, T25 | Pending |
