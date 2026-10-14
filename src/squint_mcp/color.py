@@ -38,6 +38,51 @@ def to_hex(color: Srgb) -> str:
     return opaque if alpha == 255 else f"{opaque}{alpha:02x}"
 
 
+D50 = (0.3457 / 0.3585, 1.0, (1.0 - 0.3457 - 0.3585) / 0.3585)
+"""The white of CIE Lab as CSS Color Module Level 4 converts to it, in XYZ."""
+
+# Linear-light sRGB to CIE XYZ with sRGB's own white, D65 (CSS Color 4, section 17).
+SRGB_TO_XYZ = (
+    (506752 / 1228815, 87881 / 245763, 12673 / 70218),
+    (87098 / 409605, 175762 / 245763, 12673 / 175545),
+    (7918 / 409605, 87881 / 737289, 1001167 / 1053270),
+)
+# Bradford chromatic adaptation from D65 to D50.
+D65_TO_D50 = (
+    (1.0479297925449969, 0.022946870601609652, -0.05019226628920524),
+    (0.02962780877005599, 0.9904344267538799, -0.017073799063418826),
+    (-0.009243040646204504, 0.015055191490298152, 0.7518742814281371),
+)
+
+type Vector = tuple[float, float, float]
+type Matrix = tuple[Vector, Vector, Vector]
+
+
+def _linear(value: float) -> float:
+    """An sRGB channel on 0 to 1 to linear light."""
+    return value / 12.92 if value <= 0.04045 else ((value + 0.055) / 1.055) ** 2.4
+
+
+def _times(matrix: Matrix, v: Vector) -> Vector:
+    first, second, third = (
+        row[0] * v[0] + row[1] * v[1] + row[2] * v[2] for row in matrix
+    )
+    return first, second, third
+
+
+def lab_of(rgb: tuple[int, int, int]) -> Lab:
+    """An 8-bit sRGB colour in CIE Lab with a D50 white, as CSS Color Module
+    Level 4 converts it."""
+    red, green, blue = (_linear(channel / 255) for channel in rgb)
+    x, y, z = _times(D65_TO_D50, _times(SRGB_TO_XYZ, (red, green, blue)))
+    kappa, epsilon = 24389 / 27, 216 / 24389
+    fx, fy, fz = (
+        math.cbrt(v) if v > epsilon else (kappa * v + 16) / 116
+        for v in (x / D50[0], y / D50[1], z / D50[2])
+    )
+    return 116 * fy - 16, 500 * (fx - fy), 200 * (fy - fz)
+
+
 def delta_e_2000(reference: Lab, sample: Lab) -> float:
     """The CIEDE2000 colour difference of two Lab colours.
 

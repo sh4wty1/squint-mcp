@@ -11,6 +11,7 @@ pytestmark = pytest.mark.anyio
 
 PAGE = "tokens-page.html"
 USED = "tokens-used.html"
+GROUPS = "tokens-groups.html"
 
 
 async def tokens_tool(client: Client) -> Tool:
@@ -514,4 +515,52 @@ async def test_the_families_of_a_page_come_whole_and_in_their_order(
     assert rows(result["shadows"], "kind", "value", "uses") == [
         ("box", "rgb(0, 0, 0) 0px 1px 2px 0px, rgb(0, 0, 0) 0px 4px 8px 0px", 1),
         ("text", "rgb(0, 0, 0) 1px 1px 2px", 1),
+    ]
+
+
+async def test_near_colors_are_one_token_whose_value_is_the_most_used(
+    client: Client,
+) -> None:
+    colors = (await extract(client, GROUPS))["colors"]
+    # `#1a78e8` comes first in the document, on two boxes and a text: ΔE2000
+    # 1.8554 from `#1a73e8`, which has 4 Uses.
+    token = held(colors, "#1a73e8")
+    assert token["uses"] == 7
+    assert token["roles"] == {"text": 1, "background": 6, "border": 0}
+    assert token["variants"] == [
+        {"value": "#1a73e8", "uses": 4},
+        {"value": "#1a78e8", "uses": 3},
+    ]
+
+
+async def test_a_color_is_compared_with_the_representative_of_a_group_only(
+    client: Client,
+) -> None:
+    colors = (await extract(client, GROUPS))["colors"]
+    # ΔE2000 2.2280 from the Representative `#1a73e8`, 0.3724 from its variant
+    # `#1a78e8`.
+    token = held(colors, "#1a79e8")
+    assert token["uses"] == 1
+    assert token["variants"] == [{"value": "#1a79e8", "uses": 1}]
+
+
+async def test_colors_of_another_alpha_are_not_near(client: Client) -> None:
+    colors = (await extract(client, GROUPS))["colors"]
+    # The colour of `#1a73e8` at an alpha of 0.5.
+    token = held(colors, "#1a73e880")
+    assert token["uses"] == 1
+    assert token["variants"] == [{"value": "#1a73e880", "uses": 1}]
+
+
+async def test_a_tie_in_uses_goes_to_the_lower_value_not_the_first_of_the_document(
+    client: Client,
+) -> None:
+    colors = (await extract(client, GROUPS))["colors"]
+    # `#858585` comes first in the document, on two boxes: ΔE2000 1.8620 from
+    # `#808080`, on two boxes too.
+    token = held(colors, "#808080")
+    assert token["uses"] == 4
+    assert token["variants"] == [
+        {"value": "#808080", "uses": 2},
+        {"value": "#858585", "uses": 2},
     ]

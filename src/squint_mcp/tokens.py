@@ -1,15 +1,16 @@
 """The tokens of a Capture: the Terms of `extract_tokens` as code. No browser
 code here."""
 
+import math
 from collections import Counter
-from collections.abc import Iterable, Iterator
+from collections.abc import Callable, Iterable, Iterator
 from typing import Literal
 
 from mcp.server.mcpserver.exceptions import ToolError
 from pydantic import BaseModel, ConfigDict
 from pydantic.alias_generators import to_camel
 
-from squint_mcp import color
+from squint_mcp import color, config
 from squint_mcp.models import Capture, Edges, Element
 
 
@@ -130,6 +131,32 @@ def _ranked[V: (float, str, Shadow)](uses: Uses[V]) -> list[V]:
     return sorted(uses, key=lambda value: (-uses[value].total(), value))
 
 
+def _group[V: (float, str)](
+    uses: Uses[V], distance: Callable[[V, V], float | None]
+) -> list[list[V]]:
+    """The Groups of a Family, each with its Representative first: the Values are
+    walked in Rank order, and each joins the Group whose Representative is Near
+    it and nearest, the first opened on a tie, or opens one. `distance` is None
+    for two Values that are not Near."""
+    groups: list[list[V]] = []
+    for value in _ranked(uses):
+        nearest: list[V] | None = None
+        smallest = math.inf
+        for group in groups:
+            apart = distance(group[0], value)
+            if apart is not None and apart < smallest:
+                nearest, smallest = group, apart
+        if nearest is None:
+            groups.append([value])
+        else:
+            nearest.append(value)
+    return groups
+
+
+def _variants[V: (float, str)](uses: Uses[V], group: list[V]) -> list[Variant[V]]:
+    return [Variant[V](value=value, uses=uses[value].total()) for value in group]
+
+
 def _family[T](tokens: list[T]) -> Family[T]:
     return Family(total=len(tokens), tokens=tokens)
 
@@ -172,20 +199,36 @@ def _colors(read: list[Element], srgb: dict[str, str]) -> Family[ColorToken]:
         )
         _use(uses, "border", _hexes(borders, srgb))
     tokens: list[ColorToken] = []
-    for value in _ranked(uses):
-        roles = uses[value]
+    for group in _group(uses, _color_distance):
+        roles = sum((uses[value] for value in group), Counter[str]())
         token = ColorToken(
-            value=value,
+            value=group[0],
             uses=roles.total(),
             roles=ColorRoles(
                 text=roles["text"],
                 background=roles["background"],
                 border=roles["border"],
             ),
-            variants=[Variant[str](value=value, uses=roles.total())],
+            variants=_variants(uses, group),
         )
         tokens.append(token)
     return _family(tokens)
+
+
+def _rgb(value: str) -> tuple[int, int, int]:
+    """The 8-bit channels of a colour Value."""
+    return int(value[1:3], 16), int(value[3:5], 16), int(value[5:7], 16)
+
+
+def _color_distance(representative: str, value: str) -> float | None:
+    """The ΔE2000 of two colours that are Near: their alphas, the digits after the
+    sixth, are equal."""
+    if representative[7:] != value[7:]:
+        return None
+    delta = color.delta_e_2000(
+        color.lab_of(_rgb(representative)), color.lab_of(_rgb(value))
+    )
+    return delta if delta < config.TOKENS_NEAR_COLOR_BELOW_DELTA_E else None
 
 
 def _is_read(element: Element) -> bool:

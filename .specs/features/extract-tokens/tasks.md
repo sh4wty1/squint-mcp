@@ -845,7 +845,7 @@ The Build of phase 4 ran on the commit of this task (`3649a68`): 462 passed in 2
 
 ### T20: Fold colours that are Near
 
-- [ ] Done
+- [x] Done
 
 **What**: `group(values, distance)` as the design gives it, `color.lab_of` as the appendix writes it, the distance of two colours (equal alpha as 8 bits, ΔE2000 below the threshold of T1), and `tokens-groups.html` with the elements of the four criteria.
 **Where**: `src/squint_mcp/tokens.py` (with the Lab of the colour module, the new fixture and its tests)
@@ -857,18 +857,36 @@ The Build of phase 4 ran on the commit of this task (`3649a68`): 462 passed in 2
 
 **Done when**:
 
-- [ ] Red before the code: TOK-41 and TOK-44 find two Tokens where they ask for one
-- [ ] TOK-42 and TOK-43 pass before the code, since nothing groups yet; each is seen failing under its mutant once the code is in. TOK-42: a Value is compared with every Value of a Group (`#1a79e8` joins through `#1a78e8`). TOK-43: the alpha is left out of Near (`#1a73e880` joins `#1a73e8`)
-- [ ] Rules dropped. TOK-41: the Representative is the first Value of the document (`#1a78e8`); the threshold is 1.8 (two Tokens). TOK-42: the threshold is 2.3 (`#1a79e8` joins). TOK-44: a tie in Uses goes to the first of the document (`#858585`). TOK-13: the `uses` of a Token is that of its Representative
-- [ ] L-021: no criterion has a pair at exactly 2. The two sides the spec gives are 1.8620 (Near) and 2.2280 (not): the mutants at 1.8 and at 2.3 are the nearest that tell
-- [ ] The other colours of the fixture (its text, the background of `body`) are Near none of the colours of the criteria
-- [ ] Gate check passes: Full
+- [x] Red before the code: TOK-41 and TOK-44 find two Tokens where they ask for one
+- [x] TOK-42 and TOK-43 pass before the code, since nothing groups yet; each is seen failing under its mutant once the code is in. TOK-42: a Value is compared with every Value of a Group (`#1a79e8` joins through `#1a78e8`). TOK-43: the alpha is left out of Near (`#1a73e880` joins `#1a73e8`)
+- [x] Rules dropped. TOK-41: the Representative is the first Value of the document (`#1a78e8`); the threshold is 1.8 (two Tokens). TOK-42: the threshold is 2.3 (`#1a79e8` joins). TOK-44: a tie in Uses goes to the first of the document (`#858585`). TOK-13: the `uses` of a Token is that of its Representative
+- [x] L-021: no criterion has a pair at exactly 2. The two sides the spec gives are 1.8620 (Near) and 2.2280 (not): the mutants at 1.8 and at 2.3 are the nearest that tell
+- [x] The other colours of the fixture (its text, the background of `body`) are Near none of the colours of the criteria
+- [x] Gate check passes: Full
 
 **Tests**: integration
 **Gate**: full
 
 **Commit**: `feat(tokens): fold colours closer than one noticeable difference`
 
+**Done (2026-10-14)**: four tests and `tokens-groups.html`. Gate: Full, 45 passed (466 tests collected, none deleted). The elements went into the fixture in two steps; TOK-41 and TOK-42 read the same eight boxes and the text, so they came in together:
+
+- With the elements of TOK-41, TOK-42 and TOK-43: the tests of TOK-42 and TOK-43 passed at once (pins), and that of TOK-41 was red (`uses` 4 where it asks for 7: `#1a78e8` was its own Token).
+- With the four boxes of TOK-44: red, `uses` 2 where it asks for 4. Before them it had failed only for want of `#808080`.
+
+Built here: `color.lab_of` as the appendix writes it; `group(uses, distance)` as the design's step 4 gives it; the distance of two colours, None when their alpha digits differ or their ΔE2000 is not below `TOKENS_NEAR_COLOR_BELOW_DELTA_E`; `colors` grouped with it, a Token's `uses` and `roles` summed over its Group and its `variants` the Group in Rank order. `lab_of` gives the four ΔE2000 the criteria quote, to the digit: 1.8554, 2.2280, 0.3724, 1.8620. The docstring of the tool says that colours of one alpha whose ΔE2000 is below 2 are one token, and what `variants` lists.
+
+Each test was then seen failing on a scratch copy of `src/squint_mcp`, one mutant each:
+
+- TOK-41, the Values walked in document order: the Representative is `#1a78e8`, and the tests of TOK-42 and TOK-44 fail with it. The threshold at 1.8: `#1a78e8` is its own Token (`uses` 4), and `#858585` (TOK-44, `uses` 2).
+- TOK-42, the threshold at 2.3: `#1a79e8` joins (`uses` 8). A Value compared with every Value of a Group: `#1a79e8` joins through `#1a78e8`.
+- TOK-43, the alpha left out: `#1a73e880` joins `#1a73e8` (`uses` 8).
+- TOK-44, a tie in Uses to the first of the document: `#858585` is the Representative.
+- TOK-13, the `uses` of a Token taken from its Representative: the helper fails on all four tests (`4 == 7`). With the `variants` reversed, the helper fails because the `value` is not that of the first variant: a Token of two says it now.
+
+The test of the eight lists of `tokens-used.html` stayed green, with no line changed: its nearest two opaque colours are `#333333` and `#222222`, at ΔE2000 5.3929. The fixture has no colour outside the criteria: `body` sets no background and the one text is in `#1a78e8`.
+
+**Left out, as no task of the phase names it**: the Family order of `colors` after grouping. The Tokens come in the order their Groups were opened, the Rank order of their Representatives; the Terms ask for the Rank order of the Tokens, by their summed Uses. The two differ when a Group of variants outgrows a Representative of more Uses opened before it: no fixture of this phase has one, and the design sorts in its step 6, with the Limit (T26).
 ---
 
 ### T21: Fold font sizes less than 1px apart

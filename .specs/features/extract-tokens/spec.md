@@ -328,10 +328,10 @@ Covered by the stories: a `scope` that matches nothing (TOK-57), that is not a s
 | TOK-38 | P1: Count a value only where it paints | Phase 4, T18 | Implemented |
 | TOK-39 | P1: Count a value only where it paints | Phase 4, T15 | Implemented |
 | TOK-40 | P1: Count a value only where it paints | Phase 4, T15 | Implemented |
-| TOK-41 | P1: Fold values that are nearly equal | Phase 5, T20 | Pending |
-| TOK-42 | P1: Fold values that are nearly equal | Phase 5, T20 | Pending |
-| TOK-43 | P1: Fold values that are nearly equal | Phase 5, T20 | Pending |
-| TOK-44 | P1: Fold values that are nearly equal | Phase 5, T20 | Pending |
+| TOK-41 | P1: Fold values that are nearly equal | Phase 5, T20 | Implemented |
+| TOK-42 | P1: Fold values that are nearly equal | Phase 5, T20 | Implemented |
+| TOK-43 | P1: Fold values that are nearly equal | Phase 5, T20 | Implemented |
+| TOK-44 | P1: Fold values that are nearly equal | Phase 5, T20 | Implemented |
 | TOK-45 | P1: Fold values that are nearly equal | Phase 5, T21 | Pending |
 | TOK-46 | P1: Fold values that are nearly equal | Phase 5, T21 | Pending |
 | TOK-47 | P1: Fold values that are nearly equal | Phase 5, T21 | Pending |
