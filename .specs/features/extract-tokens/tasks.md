@@ -470,7 +470,7 @@ Left out on purpose: a `line-height` that is not a px length is not told from on
 
 ### T11: Read the spacings of a page
 
-- [ ] Done
+- [x] Done
 
 **What**: The Family `spacing`, with its three Roles, in Family order.
 **Where**: `src/squint_mcp/tokens.py`
@@ -482,17 +482,30 @@ Left out on purpose: a `line-height` that is not a px length is not told from on
 
 **Done when**:
 
-- [ ] Red before the code: the test of TOK-06 gets an empty list
-- [ ] The test asserts the three `(value, uses, roles.margin, roles.padding, roles.gap)` whole and in order
-- [ ] Rules this page forces: a length of 0 is no Value; the same Value on several sides of one element in one Role is one Use (`16` has `padding` 2: `#card` and `#button`); the two axes of a gap are one Use; Family order by `value` (`8` before `16`, which has more Uses)
-- [ ] The `auto` sides and the `display` of a gap are left for T17, which has the fixtures
-- [ ] Gate check passes: Full
+- [x] Red before the code: the test of TOK-06 gets an empty list
+- [x] The test asserts the three `(value, uses, roles.margin, roles.padding, roles.gap)` whole and in order
+- [x] Rules this page forces: a length of 0 is no Value; the same Value on several sides of one element in one Role is one Use (`16` has `padding` 2: `#card` and `#button`); the two axes of a gap are one Use; Family order by `value` (`8` before `16`, which has more Uses)
+- [x] The `auto` sides and the `display` of a gap are left for T17, which has the fixtures
+- [x] Gate check passes: Full
 
 **Tests**: integration
 **Gate**: full
 
 **Commit**: `feat(tokens): read the spacings of a page`
 
+
+
+**Done (2026-10-13)**: the test was red before the code (`assert [] == [...]`) and passes with it. Gate: Full, 10 passed (431 tests collected).
+
+Each rule was seen as a wrong list on a scratch copy of `src/squint_mcp` with the rule taken out:
+
+- A length of 0 counted: a first Token `(0, 14, 8, 6, 0)`.
+- Each side and each axis a Use: `(8, 4, 0, 2, 2)` and `(16, 7, 1, 6, 0)`.
+- Rank order in place of Family order: `16` comes before `8`.
+
+One rule more than the task lists is forced by the page: a gap of `normal`, which every element but `#card` computes, is no Value. Without it the call fails (`float("normal")`).
+
+Left out on purpose, for T17: a margin side in `auto_margins` is counted as laid out; the `display` of an element is not read, so a gap counts on a block; a gap that is neither `normal` nor one px length (`10%`) fails the call.
 ---
 
 ### T12: Read the radii and the shadows of a page

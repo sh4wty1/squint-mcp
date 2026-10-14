@@ -233,6 +233,37 @@ def _typography(read: list[Element]) -> Typography:
     )
 
 
+def _spacing(read: list[Element]) -> Family[SpacingToken]:
+    uses: Uses[float] = {}
+    for element in read:
+        computed = element.computed
+        lengths = {
+            "margin": [px for _, px in _sides(element.box_model.margin)],
+            "padding": [px for _, px in _sides(element.box_model.padding)],
+            "gap": [
+                _px(computed[axis])
+                for axis in ("row-gap", "column-gap")
+                if computed[axis] != "normal"
+            ],
+        }
+        for role, values in lengths.items():
+            # A length of 0 is no Value.
+            _use(uses, role, (px for px in values if px > 0))
+    tokens: list[SpacingToken] = []
+    for value in sorted(uses):
+        roles = uses[value]
+        token = SpacingToken(
+            value=value,
+            uses=roles.total(),
+            roles=SpacingRoles(
+                margin=roles["margin"], padding=roles["padding"], gap=roles["gap"]
+            ),
+            variants=[Variant[float](value=value, uses=roles.total())],
+        )
+        tokens.append(token)
+    return _family(tokens)
+
+
 def extract(capture: Capture) -> Tokens:
     """Read the Tokens of the elements a Capture holds."""
     read = [element for element in capture.elements if _is_read(element)]
@@ -240,7 +271,7 @@ def extract(capture: Capture) -> Tokens:
         elements=len(read),
         colors=_colors(read),
         typography=_typography(read),
-        spacing=_family([]),
+        spacing=_spacing(read),
         radii=_family([]),
         shadows=_family([]),
     )

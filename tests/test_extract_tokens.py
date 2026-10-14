@@ -158,3 +158,15 @@ async def test_line_heights_come_by_value(client: Client) -> None:
     typography = (await extract(client, PAGE))["typography"]
     line_heights = typography["lineHeights"]
     assert rows(line_heights, "value", "uses") == [(20, 3), (24, 1), (40, 1)]
+
+
+async def test_spacings_are_counted_by_role_and_come_by_value(client: Client) -> None:
+    spacing = (await extract(client, PAGE))["spacing"]
+    fields = ("value", "uses", "roles.margin", "roles.padding", "roles.gap")
+    # 16 has the most Uses and comes second; the padding of `#card` on four sides
+    # and that of `#button` on two are one Use each, as the two axes of a gap are.
+    assert rows(spacing, *fields) == [
+        (8, 2, 0, 1, 1),
+        (16, 3, 1, 2, 0),
+        (24, 1, 1, 0, 0),
+    ]
