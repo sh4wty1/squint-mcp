@@ -334,3 +334,51 @@ async def test_a_line_height_is_read_as_the_length_it_computes_to(
     typography = (await extract(client, USED))["typography"]
     # `#ratio`: a line height of 1.5 on a font size of 20px.
     assert (30,) in rows(typography["lineHeights"], "value")
+
+
+async def test_each_side_of_a_margin_gives_its_own_spacing(client: Client) -> None:
+    spacing = (await extract(client, USED))["spacing"]
+    for value in (51, 53, 55, 57):
+        token = held(spacing, value)
+        assert (token["uses"], token["roles"]["margin"]) == (1, 1)
+
+
+async def test_each_side_of_a_padding_gives_its_own_spacing(client: Client) -> None:
+    spacing = (await extract(client, USED))["spacing"]
+    for value in (61, 63, 65, 67):
+        token = held(spacing, value)
+        assert (token["uses"], token["roles"]["padding"]) == (1, 1)
+
+
+async def test_a_margin_of_auto_is_no_spacing(client: Client) -> None:
+    spacing = (await extract(client, USED))["spacing"]
+    # `#centered` is 200px wide in a `body` of 1440px: 620px is laid out on
+    # each side of it.
+    assert 620 not in values(spacing)
+
+
+async def test_a_negative_margin_is_no_spacing(client: Client) -> None:
+    found = values((await extract(client, USED))["spacing"])
+    assert [value for value in found if value <= 0] == []
+    assert 71 not in found
+
+
+async def test_each_axis_of_a_gap_gives_its_own_spacing(client: Client) -> None:
+    spacing = (await extract(client, USED))["spacing"]
+    for value in (81, 83):
+        assert held(spacing, value)["roles"]["gap"] == 1
+
+
+async def test_a_gap_is_counted_on_each_display_that_lays_one_out(
+    client: Client,
+) -> None:
+    spacing = (await extract(client, USED))["spacing"]
+    # `inline-flex`, `grid` and `inline-grid`, in turn.
+    for value in (85, 87, 89):
+        token = held(spacing, value)
+        assert (token["uses"], token["roles"]["gap"]) == (1, 1)
+
+
+async def test_the_gap_of_a_block_is_no_spacing(client: Client) -> None:
+    spacing = (await extract(client, USED))["spacing"]
+    assert 91 not in values(spacing)

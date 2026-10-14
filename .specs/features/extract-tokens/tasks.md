@@ -710,7 +710,7 @@ Seen on a scratch copy of `src/squint_mcp`:
 
 ### T17: Count a spacing only where it is one
 
-- [ ] Done
+- [x] Done
 
 **What**: `#margins`, `#paddings`, `#centered`, `#pulled`, `#flex`, `#iflex`, `#grid`, `#igrid` and `#block` in the fixture, their seven tests, the sides of `auto_margins` left out of the margins, and a gap read only on the four displays.
 **Where**: `src/squint_mcp/tokens.py` (with the nine elements of the fixture and their tests)
@@ -722,16 +722,33 @@ Seen on a scratch copy of `src/squint_mcp`:
 
 **Done when**:
 
-- [ ] Red before the code: TOK-30 holds `620`; TOK-34 holds `91` if T11 did not read `display`
-- [ ] Rule dropped, test by test. TOK-28 and TOK-29: one side is read for the four (three values of each are gone; L-019, a value per side). TOK-31: a Value is a length other than 0, not above 0 (a `value` below 0 is held), and the test also refuses `71`. TOK-32: `row-gap` alone is read (`83` is gone). TOK-33: `inline-flex`, `grid` and `inline-grid` taken out of the displays, one mutant each (`85`, `87`, `89` gone in turn). TOK-34: the `display` is not read
-- [ ] `#centered` sits in a `body` 1440px wide, so that 620px is what a missing rule would return
-- [ ] Gate check passes: Full
+- [x] Red before the code: TOK-30 holds `620`; TOK-34 holds `91` if T11 did not read `display`
+- [x] Rule dropped, test by test. TOK-28 and TOK-29: one side is read for the four (three values of each are gone; L-019, a value per side). TOK-31: a Value is a length other than 0, not above 0 (a `value` below 0 is held), and the test also refuses `71`. TOK-32: `row-gap` alone is read (`83` is gone). TOK-33: `inline-flex`, `grid` and `inline-grid` taken out of the displays, one mutant each (`85`, `87`, `89` gone in turn). TOK-34: the `display` is not read
+- [x] `#centered` sits in a `body` 1440px wide, so that 620px is what a missing rule would return
+- [x] Gate check passes: Full
 
 **Tests**: integration
 **Gate**: full
 
 **Commit**: `feat(tokens): leave out auto margins and the gap of a block`
 
+**Done (2026-10-13)**: seven tests. Gate: Full, 33 passed (454 tests collected, none deleted). Before a line of `src/` was touched two tests were red and five passed at once:
+
+- Red: TOK-30 (`620` is held) and TOK-34 (`91` is held).
+- Pins: TOK-28, TOK-29, TOK-31, TOK-32 and TOK-33, whose rules T11 built.
+
+Built here: a margin side in `auto_margins` is left out; a gap is read only when the computed `display` is `flex`, `inline-flex`, `grid` or `inline-grid`; a gap that is not one px length is no Value. The docstring of the tool says the first two.
+
+Each test was then seen failing on a scratch copy of `src/squint_mcp`, one mutant each:
+
+- TOK-28, the top margin read for the four: `53`, `55` and `57` are gone. TOK-29, the same of the paddings: `63`, `65` and `67` are gone.
+- TOK-30, a side of `auto_margins` counted: `620` is held.
+- TOK-31, a length other than 0 in place of above 0: `-71` is held. With the size of a length counted, whatever its sign: `71` is held.
+- TOK-32, `row-gap` alone: `83` is gone.
+- TOK-33, a display taken out of the four: `85` is gone without `inline-flex`, `87` without `grid`, `89` without `inline-grid`, and nothing else changes.
+- TOK-34, the `display` not read: `91` is held.
+
+**One rule more than the task lists**, which the note of T11 gave to this task and the design asks for ("when they are one px length"): a gap that is neither `normal` nor one px length is no Value, where it failed the call. No fixture of this phase tells it. A page of the scratchpad with two flex boxes, `gap: 10%` and `gap: calc(10% + 4px) 12px`, read through the tool, gives one spacing, `12` with `roles.gap` 1.
 ---
 
 ### T18: Count a radius and a shadow where they are

@@ -111,6 +111,9 @@ type Uses[V] = dict[V, Counter[str]]
 SINGLE = "single"
 """The Role of every Value of a Family that has a single Role."""
 
+GAP_DISPLAYS = ("flex", "inline-flex", "grid", "inline-grid")
+"""The computed displays whose `row-gap` and `column-gap` are spacings."""
+
 
 def _use[V](uses: Uses[V], role: str, values: Iterable[V]) -> None:
     """Count what one element has in one Role: a Value it has on several sides
@@ -197,6 +200,15 @@ def _px(text: str) -> float:
     return float(text.removesuffix("px"))
 
 
+def _length(text: str) -> float | None:
+    """The px of a computed text that is one px length; None for any other:
+    `normal`, `10%`, `calc(10% + 4px)`."""
+    try:
+        return _px(text) if text.endswith("px") else None
+    except ValueError:
+        return None
+
+
 def _lengths(uses: Uses[float]) -> Family[LengthToken]:
     tokens: list[LengthToken] = []
     for value in sorted(uses):
@@ -244,17 +256,24 @@ def _spacing(read: list[Element]) -> Family[SpacingToken]:
     for element in read:
         computed = element.computed
         lengths = {
-            "margin": [px for _, px in _sides(element.box_model.margin)],
+            # A margin of `auto` is laid out, not chosen: `box_model` holds
+            # what the layout gave it.
+            "margin": [
+                px
+                for side, px in _sides(element.box_model.margin)
+                if side not in element.auto_margins
+            ],
             "padding": [px for _, px in _sides(element.box_model.padding)],
+            # Any element computes a gap; these displays alone lay one out.
             "gap": [
-                _px(computed[axis])
+                _length(computed[axis])
                 for axis in ("row-gap", "column-gap")
-                if computed[axis] != "normal"
+                if computed["display"] in GAP_DISPLAYS
             ],
         }
         for role, values in lengths.items():
-            # A length of 0 is no Value.
-            _use(uses, role, (px for px in values if px > 0))
+            # A length of 0 is no Value, nor one below it.
+            _use(uses, role, (px for px in values if px is not None and px > 0))
     tokens: list[SpacingToken] = []
     for value in sorted(uses):
         roles = uses[value]
