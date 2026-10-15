@@ -588,6 +588,12 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: mutant FACE-UNQUOTE-ONLY, src/squint_mcp/js/font_widths.js:46 (FNT-63) (tests,names) (+1 more)
 - last seen: 2026-10-15T18:53:44Z
 
+### L-097 - When a value must be kept exactly as given, pin it with fixture values that hold every character class a normalization could change, whitespace at the edges and doubled included, not one class per fix round
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,names` · harmful: 0
+- features: font-fallback
+- evidence: mutants FACE-TRIM, FACE-COLLAPSE-SPACES (src/squint_mcp/js/font_widths.js:46), FIRST-TRIM (font_widths.js:101); validation.md G1 (tests,names)
+- last seen: 2026-10-15T20:03:26Z
+
 ## Quarantined (failed when applied - ignore)
 
 A confirmed lesson that recurred alongside failure. Kept for the maintainer to review.
