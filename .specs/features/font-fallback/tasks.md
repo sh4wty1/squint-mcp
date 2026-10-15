@@ -770,7 +770,7 @@ The eight residual mutants (R7) were not put to the maintainer as a decision: th
 
 ### F4: Report a family whose name holds a backslash
 
-- [ ] Done
+- [x] Done
 
 **What**: The case `#slash` in `font-fallback-names.html` (the family `Back\slash`, declared with a `src` that names no file) and its test, red on the code as it is. Then `font_widths.js` takes the name of a Face as `document.fonts` gives it; `bare` stays for the names read from a computed `font-family`. The hexadecimal escape stays the limit the design accepts.
 **Where**: `src/squint_mcp/js/font_widths.js`, `tests/test_font_fallback.py` (with `tests/fixtures/font-fallback-names.html`)
@@ -785,14 +785,16 @@ The eight residual mutants (R7) were not put to the maintainer as a decision: th
 
 **Done when**:
 
-- [ ] The computed `font-family` of `#slash` is `"Back\\slash", Ahem` and its Face is `error` under the name `Back\slash`, as read from the page; the comment of the fixture says so
-- [ ] The test fails on the code as it is, on `[] == [('#slash', 'Back\\slash')]`, and passes with the fix
-- [ ] N60-unescape-quotes-only, applied to a scratch copy with the fix, fails the test of FNT-63
-- [ ] The tests of FNT-58 to FNT-60 pass unchanged
-- [ ] Gate check passes: Full
-- [ ] Test count: 54 in the module; none deleted
+- [x] The computed `font-family` of `#slash` is `"Back\\slash", Ahem` and its Face is `error` under the name `Back\slash`, as read from the page; the comment of the fixture says so
+- [x] The test fails on the code as it is, on `[] == [('#slash', 'Back\\slash')]`, and passes with the fix
+- [x] N60-unescape-quotes-only, applied to a scratch copy with the fix, fails the test of FNT-63
+- [x] The tests of FNT-58 to FNT-60 pass unchanged
+- [x] Gate check passes: Full
+- [x] Test count: 54 in the module, 499 collected; none deleted
 
 **Tests**: integration
 **Gate**: full
 
 **Commit**: `fix(font-fallback): report a family whose name holds a backslash`
+
+**Notes**: Read on Windows, Chromium 153, 2026-10-15: the Faces are `Dual`, `DUAL`, `Acme, Inc`, `Vinyl 12"` and `Back\slash`, all `error`, and the computed `font-family` of `#slash` is `"Back\\slash", Ahem`; not read in the Playwright image. On the code as it is the test failed on `[] == [('#slash', 'Back\\slash')]`. N60-unescape-quotes-only, applied to a scratch copy of `src/squint_mcp` with the fix (`squint_mcp.__file__` in the copy), fails the test of FNT-63 on the same assertion and leaves those of FNT-59 and FNT-60 passing. Full: pyright, ruff check, ruff format and 54 passed in 153s.

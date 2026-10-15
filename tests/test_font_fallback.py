@@ -557,6 +557,15 @@ async def test_a_family_name_written_with_a_backslash_is_matched_to_its_face(
     assert finding["evidence"]["computed"]["font-family"] == '"Vinyl 12\\"", Ahem'
 
 
+async def test_a_family_name_that_holds_a_backslash_is_matched_to_its_face(
+    client: Client,
+) -> None:
+    families = ("Back\\slash",)
+    assert await reported(client, NAMES, families=families, on=("#slash",)) == [
+        ("#slash", "Back\\slash")
+    ]
+
+
 async def test_the_width_is_of_the_text_in_the_direction_of_its_element(
     client: Client,
 ) -> None:

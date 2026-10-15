@@ -14,7 +14,9 @@
          Faces, read from `document.fonts` in Chromium 153 on Windows and on Linux
          when this fixture was written (the tool does not show them): Ahem is
          `loaded` and the other four are `error`, under the names Dual, DUAL,
-         Acme, Inc and Vinyl 12" in this order, each without quotes. */
+         Acme, Inc and Vinyl 12" in this order, each without quotes. Back\slash,
+         added later and read on Windows only, is `error` too, after them, without
+         quotes and with one backslash. */
       /* One family whose two Faces write its name in two cases. Both fail. */
       @font-face {
         font-family: Dual;
@@ -36,6 +38,12 @@
       @font-face {
         font-family: 'Vinyl 12"';
         src: url("no-such-vinyl.woff2");
+      }
+      /* A name with a backslash in it (FNT-63). The computed `font-family` of
+         `#slash` writes it with a second one: "Back\\slash", Ahem. */
+      @font-face {
+        font-family: "Back\\slash";
+        src: url("no-such-back-slash.woff2");
       }
       html,
       body {
@@ -67,6 +75,10 @@
       #inch {
         font-family: 'Vinyl 12"', Ahem;
       }
+
+      #slash {
+        font-family: "Back\\slash", Ahem;
+      }
     </style>
   </head>
   <body>
@@ -74,5 +86,6 @@
     <div id="dual-bold" class="text">XXXXXXXXXX</div>
     <div id="comma" class="text">XXXXXXXXXX</div>
     <div id="inch" class="text">XXXXXXXXXX</div>
+    <div id="slash" class="text">XXXXXXXXXX</div>
   </body>
 </html>

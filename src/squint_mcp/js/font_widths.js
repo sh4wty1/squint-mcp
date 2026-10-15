@@ -41,8 +41,9 @@
     name.replace(/^(["'])(.*)\1$/s, "$2").replace(/\\(.)/gs, "$1");
 
   // Before any copy is made: a copy can ask for a font, and change a status.
+  // `document.fonts` gives the name of a Face with no quotes and no escapes.
   const faces = [...document.fonts].map((face) => ({
-    family: bare(face.family),
+    family: face.family,
     status: face.status,
   }));
   // In lower case: a family is matched whatever the case of its name.
