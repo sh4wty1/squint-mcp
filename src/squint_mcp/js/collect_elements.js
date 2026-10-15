@@ -1,13 +1,14 @@
 // Runs in the page over the elements matched by the selector and returns them in
-// document order. For each one: its tag name, its border box as painted, in page
-// coordinates, its box model as laid out, the requested computed styles, an excerpt
-// of its text, the boxes and the right edge of its own text, its opacity with that
-// of its ancestors, its scroll and client width and a selector that is unique on
-// the page.
+// document order; with `descendants`, every element under one of them is returned
+// too. For each one: its tag name, its border box as painted, in page
+// coordinates, its box model as laid out, the sides whose margin is `auto`, the
+// requested computed styles, an excerpt of its text, the boxes and the right edge
+// of its own text, its opacity with that of its ancestors, its scroll and client
+// width and a selector that is unique on the page.
 // The elements themselves are kept on the page as `globalThis.__squintElements`, in
 // the order they are returned in: a script that runs later names an element by its
 // place in the Capture, which needs no second selector (AD-005).
-(elements,{ properties, textLimit, transformMinSizeDiffPx }) => {
+(elements,{ properties, textLimit, transformMinSizeDiffPx, descendants }) => {
   // Document order, an open shadow tree right after its host. Playwright lists the
   // matches inside shadow trees after the whole light tree, so its order is not used.
   // ponytail: the whole page is walked and every match is serialized, whatever the
@@ -117,6 +118,9 @@
       );
     const border = edges("border", "-width");
     const padding = edges("padding");
+    // getComputedStyle gives a margin of `auto` as laid out, in pixels: only the
+    // typed style still holds the keyword (AD-009).
+    const typed = element.computedStyleMap();
     // The layout border box, before transforms: border and padding are untransformed
     // too (ADR-0003). offsetWidth is an integer, so the rect is kept while it agrees
     // with it: no transform is in play then, and a fractional size stays exact. SVG
@@ -169,6 +173,9 @@
           h: Math.max(0, layoutHeight - border.top - border.bottom - padding.top - padding.bottom),
         },
       },
+      autoMargins: ["top", "right", "bottom", "left"].filter(
+        (side) => typed.get(`margin-${side}`).value === "auto",
+      ),
       computed: Object.fromEntries(
         properties.map((property) => [property, style.getPropertyValue(property)]),
       ),
@@ -185,7 +192,26 @@
     };
   };
 
-  const sorted = [...elements].sort((a, b) => order.get(a) - order.get(b));
+  const inOrder = (list) => [...list].sort((a, b) => order.get(a) - order.get(b));
+  let sorted = inOrder(elements);
+  if (descendants) {
+    // The matches and every element under one of them, in the light tree and in
+    // open shadow trees, each once: a match under a match is already held.
+    const held = new Set();
+    const hold = (root) => {
+      for (const element of root.querySelectorAll("*")) {
+        held.add(element);
+        if (element.shadowRoot) hold(element.shadowRoot);
+      }
+    };
+    for (const match of sorted) {
+      if (held.has(match)) continue;
+      held.add(match);
+      hold(match);
+      if (match.shadowRoot) hold(match.shadowRoot);
+    }
+    sorted = inOrder(held);
+  }
   globalThis.__squintElements = sorted;
   return sorted.map(describe);
 };

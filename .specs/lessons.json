@@ -3,7 +3,7 @@
   "promote_threshold": 2,
   "window_days": 45,
   "quarantine_threshold": 2,
-  "next_id": 91,
+  "next_id": 96,
   "lessons": [
     {
       "id": "L-001",
@@ -1655,6 +1655,96 @@
       ],
       "created": "2026-10-13T17:39:24Z",
       "last_seen": "2026-10-13T17:39:24Z"
+    },
+    {
+      "id": "L-091",
+      "key": "surviving_mutant::give a narrowing input a fixture where the part left out holds a value of every list the result returns",
+      "text": "Give a narrowing input a fixture where the part left out holds a value of every list the result returns",
+      "signal": "surviving_mutant",
+      "scope": "tests,scope",
+      "status": "candidate",
+      "features": [
+        "extract-tokens"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md S2; tests/test_extract_tokens.py:741 (tests,scope)"
+      ],
+      "created": "2026-10-14T19:00:03Z",
+      "last_seen": "2026-10-14T19:00:03Z"
+    },
+    {
+      "id": "L-092",
+      "key": "spec_precision_gap::give a narrowing input a fixture where the part left out holds a value of every list the result returns",
+      "text": "Give a narrowing input a fixture where the part left out holds a value of every list the result returns",
+      "signal": "spec_precision_gap",
+      "scope": "tests,scope",
+      "status": "candidate",
+      "features": [
+        "extract-tokens"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "TOK-56; tests/test_extract_tokens.py:741 (tests,scope)"
+      ],
+      "created": "2026-10-14T19:00:03Z",
+      "last_seen": "2026-10-14T19:00:03Z"
+    },
+    {
+      "id": "L-093",
+      "key": "surviving_mutant::pin an order by a summed count with a fixture where the sum and the count of the first member give different orders",
+      "text": "Pin an order by a summed count with a fixture where the sum and the count of the first member give different orders",
+      "signal": "surviving_mutant",
+      "scope": "tests,ordering",
+      "status": "candidate",
+      "features": [
+        "extract-tokens"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md C1, C2; src/squint_mcp/tokens.py:175 (tests,ordering)"
+      ],
+      "created": "2026-10-14T19:00:03Z",
+      "last_seen": "2026-10-14T19:00:03Z"
+    },
+    {
+      "id": "L-094",
+      "key": "surviving_mutant::give every rule the terms or the assumptions table of a spec define an acceptance criterion with a fixture whose outcome changes when the rule is dropped",
+      "text": "Give every rule the Terms or the Assumptions table of a spec define an acceptance criterion with a fixture whose outcome changes when the rule is dropped",
+      "signal": "surviving_mutant",
+      "scope": "spec",
+      "status": "candidate",
+      "features": [
+        "extract-tokens"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md P1; src/squint_mcp/tokens.py:265 (spec)"
+      ],
+      "created": "2026-10-14T19:00:03Z",
+      "last_seen": "2026-10-14T19:00:03Z"
+    },
+    {
+      "id": "L-095",
+      "key": "spec_precision_gap::state in the spec which part of the error text the client receives a criterion s message is when the sdk adds a prefix to it",
+      "text": "State in the spec which part of the error text the client receives a criterion's message is, when the SDK adds a prefix to it",
+      "signal": "spec_precision_gap",
+      "scope": "spec,mcp-tools",
+      "status": "candidate",
+      "features": [
+        "extract-tokens"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "TOK-57, TOK-58, TOK-69, TOK-70, TOK-71; tests/test_extract_tokens.py:58 (spec,mcp-tools)"
+      ],
+      "created": "2026-10-14T19:00:03Z",
+      "last_seen": "2026-10-14T19:00:03Z"
     }
   ]
 }

@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: values that are nearly equal</title>
+    <style>
+      /* Every element is a `div` and carries its styles here. A box with no text
+         is 100px by 20px with the background it is named after. */
+      html,
+      body {
+        margin: 0;
+      }
+      #b78-1,
+      #b78-2,
+      #b73-1,
+      #b73-2,
+      #b73-3,
+      #b73-4,
+      #b79,
+      #b73-half,
+      #g85-1,
+      #g85-2,
+      #g80-1,
+      #g80-2,
+      #c1,
+      #c2,
+      #c3,
+      #c4,
+      #c5 {
+        width: 100px;
+        height: 20px;
+      }
+      #b78-1,
+      #b78-2 {
+        background-color: #1a78e8;
+      }
+      #t78 {
+        color: #1a78e8;
+        font: 400 16px/20px Arial, sans-serif;
+      }
+      #b73-1,
+      #b73-2,
+      #b73-3,
+      #b73-4 {
+        background-color: #1a73e8;
+      }
+      #b79 {
+        background-color: #1a79e8;
+      }
+      #b73-half {
+        background-color: rgba(26, 115, 232, 0.5);
+      }
+      #g85-1,
+      #g85-2 {
+        background-color: #858585;
+      }
+      #g80-1,
+      #g80-2 {
+        background-color: #808080;
+      }
+      /* Near no other colour of the page: its five Uses pass the four of the
+         Representative `#1a73e8`, not the seven of its Group. */
+      #c1,
+      #c2,
+      #c3,
+      #c4,
+      #c5 {
+        background-color: #ff8800;
+      }
+      #s15 {
+        color: #333333;
+        font: 400 15px/20.5px Arial, sans-serif;
+      }
+      #s16-1 {
+        color: #333333;
+        font: 400 16px/20px Arial, sans-serif;
+      }
+      #s16-2 {
+        color: #333333;
+        font: 400 16px/20px Arial, sans-serif;
+      }
+      #s16-5 {
+        color: #333333;
+        font: 400 16.5px/20px Arial, sans-serif;
+      }
+      #s16-75 {
+        color: #333333;
+        font: 400 16.75px/20px Arial, sans-serif;
+      }
+      #s17-1 {
+        color: #333333;
+        font: 400 17px/20px Arial, sans-serif;
+      }
+      #s17-2 {
+        color: #333333;
+        font: 400 17px/20px Arial, sans-serif;
+      }
+      #s17-75 {
+        color: #333333;
+        font: 400 17.75px/20px Arial, sans-serif;
+      }
+      #p8-1 {
+        width: 100px;
+        height: 20px;
+        padding: 8px;
+      }
+      #p8-2 {
+        width: 100px;
+        height: 20px;
+        padding: 8px;
+      }
+      #p8-5 {
+        width: 100px;
+        height: 20px;
+        padding: 8.5px;
+      }
+      #r4-1 {
+        width: 100px;
+        height: 20px;
+        border-radius: 4px;
+      }
+      #r4-2 {
+        width: 100px;
+        height: 20px;
+        border-radius: 4px;
+      }
+      #r4-5 {
+        width: 100px;
+        height: 20px;
+        border-radius: 4.5px;
+      }
+      #r30 {
+        width: 100px;
+        height: 20px;
+        border-radius: 30%;
+      }
+      #r30-5 {
+        width: 100px;
+        height: 20px;
+        border-radius: 30.5%;
+      }
+      #o10 {
+        width: 100px;
+        height: 20px;
+        border-top-left-radius: 10px 20px;
+      }
+      #o10-5 {
+        width: 100px;
+        height: 20px;
+        border-top-left-radius: 10.5px 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="b78-1"></div>
+    <div id="b78-2"></div>
+    <div id="t78">A text in the colour of the first two boxes</div>
+    <div id="b73-1"></div>
+    <div id="b73-2"></div>
+    <div id="b73-3"></div>
+    <div id="b73-4"></div>
+    <div id="b79"></div>
+    <div id="b73-half"></div>
+    <div id="g85-1"></div>
+    <div id="g85-2"></div>
+    <div id="g80-1"></div>
+    <div id="g80-2"></div>
+    <div id="c1"></div>
+    <div id="c2"></div>
+    <div id="c3"></div>
+    <div id="c4"></div>
+    <div id="c5"></div>
+    <div id="s15">A text of 15px on a line of 20.5px</div>
+    <div id="s16-1">A text of 16px</div>
+    <div id="s16-2">A text of 16px</div>
+    <div id="s16-5">A text of 16.5px</div>
+    <div id="s16-75">A text of 16.75px</div>
+    <div id="s17-1">A text of 17px</div>
+    <div id="s17-2">A text of 17px</div>
+    <div id="s17-75">A text of 17.75px</div>
+    <div id="p8-1"></div>
+    <div id="p8-2"></div>
+    <div id="p8-5"></div>
+    <div id="r4-1"></div>
+    <div id="r4-2"></div>
+    <div id="r4-5"></div>
+    <div id="r30"></div>
+    <div id="r30-5"></div>
+    <div id="o10"></div>
+    <div id="o10-5"></div>
+  </body>
+</html>

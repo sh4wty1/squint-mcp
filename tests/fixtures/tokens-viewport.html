@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: one colour on a wide viewport and another on a narrow one</title>
+    <style>
+      /* The one element is a `div` and carries its styles here; it has no text
+         of its own. */
+      html,
+      body {
+        margin: 0;
+      }
+      #box {
+        width: 100px;
+        height: 20px;
+        background-color: #999999;
+      }
+      @media (max-width: 600px) {
+        #box {
+          background-color: #111111;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="box"></div>
+  </body>
+</html>

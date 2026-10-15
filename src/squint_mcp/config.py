@@ -71,13 +71,40 @@ INSPECT_COMPUTED_PROPERTIES = (
 # `-webkit-text-fill-color`, the colour that paints the glyphs: that of `color`
 # unless the page sets it, `z-index`, which with `position` decides what is
 # painted above an element, and `font-style`, which with `font-family` and
-# `font-weight` says which face of a family an element asks for.
+# `font-weight` says which face of a family an element asks for. The twelve
+# after them are what the tokens of a page are made of besides the box model
+# (AD-009): the colour of each border, the radius of each corner, the two
+# shadows and the two gaps.
 CAPTURE_COMPUTED_PROPERTIES = (
     *INSPECT_COMPUTED_PROPERTIES,
     "direction",
     "-webkit-text-fill-color",
     "z-index",
     "font-style",
+    "border-top-color",
+    "border-right-color",
+    "border-bottom-color",
+    "border-left-color",
+    "border-top-left-radius",
+    "border-top-right-radius",
+    "border-bottom-right-radius",
+    "border-bottom-left-radius",
+    "box-shadow",
+    "text-shadow",
+    "row-gap",
+    "column-gap",
+)
+
+# Source: Squint default (AD-009). Those of the list above whose computed value
+# is one colour, which Chromium writes in the notation the page wrote it in.
+CAPTURE_COLOR_PROPERTIES = (
+    "color",
+    "background-color",
+    "-webkit-text-fill-color",
+    "border-top-color",
+    "border-right-color",
+    "border-bottom-color",
+    "border-left-color",
 )
 
 # Source: Squint default (AD-008). What changes the width of a text or the
@@ -160,3 +187,19 @@ SILENT_LAYER_ROLES = ("menu", "listbox", "tooltip", "dialog", "alertdialog")
 # microseconds: at most this many per Capture keep them to about a second. A
 # Capture with more hidden pixels than that tests a sample of them.
 HIT_TEST_MAX = 20_000
+
+# Source: CSS Color Module Level 4, section 20.2 for the formula, ΔE2000, and the
+# note of section 14.2.1 for the value: "using deltaE2000, one JND is 2". The
+# module compares with `E < JND`, so two colours are Near below 2. It gives that
+# just noticeable difference for gamut mapping: reading it as "two colours a
+# viewer cannot tell apart are one token" is Squint's.
+TOKENS_NEAR_COLOR_BELOW_DELTA_E = 2.0
+
+# Source: Squint default, no norm found. A Capture has one image pixel per CSS
+# pixel, so two px lengths less than 1px apart are Near, and the whole steps of
+# a scale (12, 13, 14) stay apart.
+TOKENS_NEAR_LENGTH_BELOW_PX = 1.0
+
+# Source: Squint default, not measured on real pages. Eight Families of 20 bound
+# a response to 160 Tokens, and a scale longer than 20 says so through `total`.
+TOKENS_MAX_PER_FAMILY = 20

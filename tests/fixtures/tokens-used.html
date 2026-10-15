@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: values counted only where they paint</title>
+    <style>
+      /* Every element is a `div` and carries its styles here. Each has values no
+         other element has, so a Token tells the element it was read from. A box
+         with no text has a size of its own: one that paints nothing is not read. */
+      html,
+      body {
+        margin: 0;
+      }
+      #inherit {
+        color: #aa0000;
+      }
+      #inherit-child {
+        font: 400 14px/20px Arial, sans-serif;
+      }
+      #fill {
+        color: #111111;
+        -webkit-text-fill-color: #222222;
+        font: 400 14px/20px Verdana, sans-serif;
+      }
+      #clear {
+        width: 100px;
+        height: 20px;
+        background-color: rgba(0, 128, 128, 0);
+      }
+      #clip {
+        color: #445566;
+        -webkit-text-fill-color: transparent;
+        font: 400 14px/20px "Segoe UI", sans-serif;
+      }
+      #veil {
+        width: 100px;
+        height: 20px;
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+      #edge {
+        width: 100px;
+        height: 20px;
+        color: #00aa00;
+        border-left: 2px solid #0000aa;
+      }
+      #sides {
+        width: 100px;
+        height: 20px;
+        border-style: solid;
+        border-width: 1px;
+        border-color: #800000 #008000 #000080 #808000;
+      }
+      #srgb {
+        width: 100px;
+        height: 20px;
+        background-color: color(srgb 0.2 0.4 0.6);
+      }
+      #wide {
+        width: 100px;
+        height: 20px;
+        background-color: color(display-p3 1 0 0);
+      }
+      #big {
+        font: 900 40px/50px Georgia, serif;
+      }
+      #big-child {
+        color: #333333;
+        font: 400 12px/18px Arial, sans-serif;
+      }
+      #normal {
+        color: #333333;
+        font: 400 13px / normal Arial, sans-serif;
+      }
+      #ratio {
+        color: #333333;
+        font: 400 20px/1.5 Arial, sans-serif;
+      }
+      #margins {
+        width: 100px;
+        height: 20px;
+        margin: 51px 53px 55px 57px;
+      }
+      #paddings {
+        width: 100px;
+        height: 20px;
+        padding: 61px 63px 65px 67px;
+      }
+      /* In a `body` of 1440px each side margin is laid out at 620px. */
+      #centered {
+        width: 200px;
+        height: 20px;
+        margin: 0 auto;
+      }
+      #pulled {
+        width: 100px;
+        height: 20px;
+        margin-top: -71px;
+      }
+      #flex {
+        display: flex;
+        width: 100px;
+        height: 20px;
+        gap: 81px 83px;
+      }
+      #iflex {
+        display: inline-flex;
+        width: 100px;
+        height: 20px;
+        gap: 85px;
+      }
+      #grid {
+        display: grid;
+        width: 100px;
+        height: 20px;
+        gap: 87px;
+      }
+      #igrid {
+        display: inline-grid;
+        width: 100px;
+        height: 20px;
+        gap: 89px;
+      }
+      #block {
+        display: block;
+        width: 100px;
+        height: 20px;
+        gap: 91px;
+      }
+      #corners {
+        width: 100px;
+        height: 20px;
+        border-radius: 41px 43px 45px 47px;
+      }
+      #round {
+        width: 100px;
+        height: 20px;
+        border-radius: 50%;
+      }
+      #oval {
+        width: 100px;
+        height: 20px;
+        border-top-left-radius: 10px 20px;
+      }
+      #glow {
+        text-shadow: 1px 1px 2px #000000;
+      }
+      #glow-child {
+        color: #333333;
+        font: 400 14px/20px Arial, sans-serif;
+      }
+      #layers {
+        width: 100px;
+        height: 20px;
+        box-shadow:
+          0 1px 2px #000000,
+          0 4px 8px #000000;
+      }
+      #hidden {
+        width: 100px;
+        height: 20px;
+        visibility: hidden;
+        background-color: #aa00aa;
+      }
+      #faded {
+        opacity: 0;
+      }
+      #faded-child {
+        width: 100px;
+        height: 20px;
+        background-color: #00aaaa;
+      }
+      #none {
+        display: none;
+        width: 100px;
+        height: 20px;
+        background-color: #abcd01;
+      }
+      #flat-w {
+        width: 0;
+        height: 20px;
+        background-color: #abcd02;
+      }
+      #flat-h {
+        width: 100px;
+        height: 0;
+        background-color: #abcd03;
+      }
+      /* A box with text of its own that paints no box: Chromium gives a text of
+         font size 0 one rect of 0 by 0. */
+      #mute {
+        width: 100px;
+        height: 20px;
+        color: #abcdef;
+        font: 700 0px/37px Courier, monospace;
+        text-shadow: 3px 3px 3px #abcdef;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="inherit">
+      <div id="inherit-child">A text in the colour of its parent</div>
+    </div>
+    <div id="fill">A text filled with another colour</div>
+    <div id="clear"></div>
+    <div id="clip">A text with a transparent fill</div>
+    <div id="veil"></div>
+    <div id="edge"></div>
+    <div id="sides"></div>
+    <div id="srgb"></div>
+    <div id="wide"></div>
+    <div id="big">
+      <div id="big-child">A text smaller than its parent says</div>
+    </div>
+    <div id="normal">A text whose line height is the font's own</div>
+    <div id="ratio">A text whose line height is a ratio</div>
+    <div id="margins"></div>
+    <div id="paddings"></div>
+    <div id="centered"></div>
+    <div id="pulled"></div>
+    <div id="flex"></div>
+    <div id="iflex"></div>
+    <div id="grid"></div>
+    <div id="igrid"></div>
+    <div id="block"></div>
+    <div id="corners"></div>
+    <div id="round"></div>
+    <div id="oval"></div>
+    <div id="glow">
+      <div id="glow-child">A text with the shadow of its parent</div>
+    </div>
+    <div id="layers"></div>
+    <div id="hidden"></div>
+    <div id="faded">
+      <div id="faded-child"></div>
+    </div>
+    <div id="none"></div>
+    <div id="flat-w"></div>
+    <div id="flat-h"></div>
+    <div id="mute">A text of no size</div>
+  </body>
+</html>

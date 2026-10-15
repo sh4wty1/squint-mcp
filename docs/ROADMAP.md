@@ -109,7 +109,7 @@ A v0.2 fecha a fase 2 da especificação inicial ([`.docs/START.md`](../.docs/ST
 | 7 | `offscreen-overflow` | — | `tlc-spec-lean` | concluída |
 | 8 | `overlap` | — | `tlc-spec-driven` | concluída |
 | 9 | `font-fallback` | — | `tlc-spec-driven` | concluída |
-| 10 | `extract_tokens` | — | `tlc-spec-driven` | pendente |
+| 10 | `extract_tokens` | — | `tlc-spec-driven` | concluída |
 | 11 | Release 0.2.0 | 6 a 10 | `tlc-implement` | pendente |
 
 ## 6. Orçamento de pixels por Capture
@@ -173,7 +173,7 @@ A v0.2 fecha a fase 2 da especificação inicial ([`.docs/START.md`](../.docs/ST
 - **Não entra:** regras de consistência e score (fase 4); comparação com um design system; `audit_ui`.
 - **Dependência:** nenhuma.
 - **Skill:** `tlc-spec-driven`.
-- **Status:** pendente.
+- **Status:** concluída. Spec, design e relatório de validação em [`.specs/features/extract-tokens/`](../.specs/features/extract-tokens/).
 
 ## 11. Release 0.2.0
 

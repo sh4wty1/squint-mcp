@@ -93,6 +93,9 @@ class Element(BaseModel):
     """The local name of the element, in lower case for an HTML one."""
     box: Box
     box_model: BoxModel
+    auto_margins: list[Literal["top", "right", "bottom", "left"]]
+    """The sides whose computed margin is `auto`; `box_model.margin` holds there
+    the margin as laid out."""
     computed: dict[str, str]
     text: str
     """An excerpt of the text content, whitespace collapsed."""
@@ -125,8 +128,12 @@ class Capture:
     viewport: Viewport
     stabilized: bool
     elements: list[Element]
-    """The elements matched by the selector the Capture was taken for, in
-    document order."""
+    """The elements matched by the selector the Capture was taken for and, with
+    `descendants`, every element under one of them, in document order."""
+    srgb: dict[str, str]
+    """The computed colours of the elements that Chromium does not write as
+    `rgb()` or `rgba()`, each as the `color(srgb r g b)` or `color(srgb r g b / a)`
+    the browser converts it to. A channel can be outside 0 to 1."""
     scroll_width: int
     """How wide the page scrolls, in CSS pixels. The pixels can be wider: they
     also hold what a `body` that is its own scroll container clips."""

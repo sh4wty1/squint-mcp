@@ -1,0 +1,439 @@
+"""The tokens of a Capture: the Terms of `extract_tokens` as code. No browser
+code here."""
+
+import math
+from collections import Counter
+from collections.abc import Callable, Iterable, Iterator
+from typing import Any, Literal, Protocol
+
+from mcp.server.mcpserver.exceptions import ToolError
+from pydantic import BaseModel, ConfigDict
+from pydantic.alias_generators import to_camel
+
+from squint_mcp import color, config
+from squint_mcp.models import Capture, Edges, Element
+
+
+class Variant[V: (float, str)](BaseModel):
+    """One Value of a Group, with its own Uses."""
+
+    value: V
+    uses: int
+
+
+class ColorRoles(BaseModel):
+    text: int
+    background: int
+    border: int
+
+
+class SpacingRoles(BaseModel):
+    margin: int
+    padding: int
+    gap: int
+
+
+class ColorToken(BaseModel):
+    value: str
+    """`#rrggbb`, or `#rrggbbaa` for a colour that is not opaque."""
+    uses: int
+    roles: ColorRoles
+    variants: list[Variant[str]]
+
+
+class TextToken(BaseModel):
+    value: str
+    uses: int
+
+
+class NumberToken(BaseModel):
+    value: float
+    uses: int
+
+
+class LengthToken(BaseModel):
+    value: float
+    """In px."""
+    uses: int
+    variants: list[Variant[float]]
+
+
+class SpacingToken(BaseModel):
+    value: float
+    """In px."""
+    uses: int
+    roles: SpacingRoles
+    variants: list[Variant[float]]
+
+
+class RadiusToken(BaseModel):
+    value: str
+    """The computed text of a corner: `4px`, `50%`, `10px 20px`."""
+    uses: int
+    variants: list[Variant[str]]
+
+
+class ShadowToken(BaseModel):
+    kind: Literal["box", "text"]
+    value: str
+    """The whole computed text of the property."""
+    uses: int
+
+
+class Family[T](BaseModel):
+    total: int
+    tokens: list[T]
+
+
+class Typography(BaseModel):
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
+
+    families: Family[TextToken]
+    sizes: Family[LengthToken]
+    weights: Family[NumberToken]
+    line_heights: Family[LengthToken]
+
+
+class Tokens(BaseModel):
+    """The eight Families of a Capture."""
+
+    elements: int
+    """How many Read elements the Tokens were read from."""
+    colors: Family[ColorToken]
+    typography: Typography
+    spacing: Family[SpacingToken]
+    radii: Family[RadiusToken]
+    shadows: Family[ShadowToken]
+
+
+type Uses[V] = dict[V, Counter[str]]
+"""How many Read elements have each Value of a Family, by Role."""
+
+type Shadow = tuple[Literal["box", "text"], str]
+"""A Value of `shadows`: its `kind` and the whole computed text of the property."""
+
+SINGLE = "single"
+"""The Role of every Value of a Family that has a single Role."""
+
+GAP_DISPLAYS = ("flex", "inline-flex", "grid", "inline-grid")
+"""The computed displays whose `row-gap` and `column-gap` are spacings."""
+
+
+def _use[V](uses: Uses[V], role: str, values: Iterable[V]) -> None:
+    """Count what one element has in one Role: a Value it has on several sides
+    is one Use."""
+    for value in set(values):
+        uses.setdefault(value, Counter())[role] += 1
+
+
+def _ranked[V: (float, str, Shadow)](uses: Uses[V]) -> list[V]:
+    """The Values in Rank order: by Uses, most first, then by Value."""
+    return sorted(uses, key=lambda value: (-uses[value].total(), value))
+
+
+def _group[V: (float, str)](
+    uses: Uses[V], distance: Callable[[V, V], float | None]
+) -> list[list[V]]:
+    """The Groups of a Family, each with its Representative first: the Values are
+    walked in Rank order, and each joins the Group whose Representative is Near
+    it and nearest, the first opened on a tie, or opens one. `distance` is None
+    for two Values that are not Near."""
+    groups: list[list[V]] = []
+    for value in _ranked(uses):
+        nearest: list[V] | None = None
+        smallest = math.inf
+        for group in groups:
+            apart = distance(group[0], value)
+            if apart is not None and apart < smallest:
+                nearest, smallest = group, apart
+        if nearest is None:
+            groups.append([value])
+        else:
+            nearest.append(value)
+    return groups
+
+
+def _roles[V: (float, str)](uses: Uses[V], group: list[V]) -> Counter[str]:
+    """The Uses of a Group by Role: those of its Values."""
+    return sum((uses[value] for value in group), Counter[str]())
+
+
+def _variants[V: (float, str)](uses: Uses[V], group: list[V]) -> list[Variant[V]]:
+    return [Variant[V](value=value, uses=uses[value].total()) for value in group]
+
+
+class _Counted(Protocol):
+    uses: int
+
+
+def _family[T: _Counted](
+    tokens: list[T], key: Callable[[T], Any], *, by_value: bool = False
+) -> "Family[T]":  # Unevaluated: pydantic builds no schema for the bound of T.
+    """A Family of all its Tokens: `total` counts them, and the Limit first in
+    Rank order (by Uses, most first, then by `key`) are kept in Family order, by
+    `key` when `by_value` and in Rank order otherwise."""
+    ranked = sorted(tokens, key=lambda token: (-token.uses, key(token)))
+    kept = ranked[: config.TOKENS_MAX_PER_FAMILY]
+    if by_value:
+        kept.sort(key=key)
+    return Family(total=len(tokens), tokens=kept)
+
+
+def _sides(edges: Edges) -> list[tuple[str, float]]:
+    return [
+        ("top", edges.top),
+        ("right", edges.right),
+        ("bottom", edges.bottom),
+        ("left", edges.left),
+    ]
+
+
+def _hexes(texts: Iterable[str], srgb: dict[str, str]) -> Iterator[str]:
+    """The colour Values among computed colours: those of alpha above 0. `srgb`
+    holds the colours Chromium does not write as `rgb()`, as it converts them."""
+    for text in texts:
+        parsed = color.parse(srgb.get(text, text))
+        if parsed is None:
+            raise ToolError(f'Unsupported colour "{text}".')
+        if parsed[3] > 0:
+            yield color.to_hex(parsed)
+
+
+def _colors(read: list[Element], srgb: dict[str, str]) -> Family[ColorToken]:
+    uses: Uses[str] = {}
+    for element in read:
+        computed = element.computed
+        if _paints_text(element):
+            # What a text is filled with, which is its `color` unless the page
+            # says otherwise.
+            fill = computed["-webkit-text-fill-color"]
+            _use(uses, "text", _hexes([fill], srgb))
+        _use(uses, "background", _hexes([computed["background-color"]], srgb))
+        # A side with no border still computes a colour: the width decides.
+        borders = (
+            computed[f"border-{side}-color"]
+            for side, width in _sides(element.box_model.border)
+            if width > 0
+        )
+        _use(uses, "border", _hexes(borders, srgb))
+    tokens: list[ColorToken] = []
+    for group in _group(uses, _color_distance):
+        roles = _roles(uses, group)
+        token = ColorToken(
+            value=group[0],
+            uses=roles.total(),
+            roles=ColorRoles(
+                text=roles["text"],
+                background=roles["background"],
+                border=roles["border"],
+            ),
+            variants=_variants(uses, group),
+        )
+        tokens.append(token)
+    return _family(tokens, lambda token: token.value)
+
+
+def _rgb(value: str) -> tuple[int, int, int]:
+    """The 8-bit channels of a colour Value."""
+    return int(value[1:3], 16), int(value[3:5], 16), int(value[5:7], 16)
+
+
+def _color_distance(representative: str, value: str) -> float | None:
+    """The ΔE2000 of two colours that are Near: their alphas, the digits after the
+    sixth, are equal."""
+    if representative[7:] != value[7:]:
+        return None
+    delta = color.delta_e_2000(
+        color.lab_of(_rgb(representative)), color.lab_of(_rgb(value))
+    )
+    return delta if delta < config.TOKENS_NEAR_COLOR_BELOW_DELTA_E else None
+
+
+def _is_read(element: Element) -> bool:
+    """Whether an element is a Read element: one that paints a box, is visible
+    and is not under an opacity of 0."""
+    return (
+        element.box.w > 0
+        and element.box.h > 0
+        and element.computed["visibility"] == "visible"
+        and element.opacity > 0
+    )
+
+
+def _paints_text(element: Element) -> bool:
+    """Whether an element has Painted text: own text that paints a box."""
+    return element.own_text and bool(element.own_text_boxes)
+
+
+def _px(text: str) -> float:
+    """The number of a computed px length."""
+    return float(text.removesuffix("px"))
+
+
+def _length(text: str) -> float | None:
+    """The px of a computed text that is one px length; None for any other:
+    `normal`, `10%`, `calc(10% + 4px)`."""
+    try:
+        return _px(text) if text.endswith("px") else None
+    except ValueError:
+        return None
+
+
+def _length_distance(representative: float, value: float) -> float | None:
+    """How far apart two Lengths that are Near are, in px. Rounded to six decimal
+    places: Chromium writes four, and in floating point 16.0004 minus 15.0004 is
+    a hair under 1."""
+    apart = round(abs(representative - value), 6)
+    return apart if apart < config.TOKENS_NEAR_LENGTH_BELOW_PX else None
+
+
+def _lengths(uses: Uses[float]) -> Family[LengthToken]:
+    tokens: list[LengthToken] = []
+    for group in _group(uses, _length_distance):
+        variants = _variants(uses, group)
+        total = sum(variant.uses for variant in variants)
+        tokens.append(LengthToken(value=group[0], uses=total, variants=variants))
+    return _family(tokens, lambda token: token.value, by_value=True)
+
+
+def _typography(read: list[Element]) -> Typography:
+    families: Uses[str] = {}
+    sizes: Uses[float] = {}
+    weights: Uses[float] = {}
+    line_heights: Uses[float] = {}
+    for element in read:
+        if not _paints_text(element):
+            continue
+        computed = element.computed
+        _use(families, SINGLE, [computed["font-family"]])
+        _use(sizes, SINGLE, [_px(computed["font-size"])])
+        _use(weights, SINGLE, [float(computed["font-weight"])])
+        # A line height of `normal` is no Value: only a length is.
+        if computed["line-height"].endswith("px"):
+            _use(line_heights, SINGLE, [_px(computed["line-height"])])
+    return Typography(
+        families=_family(
+            [
+                TextToken(value=value, uses=uses.total())
+                for value, uses in families.items()
+            ],
+            lambda token: token.value,
+        ),
+        sizes=_lengths(sizes),
+        weights=_family(
+            [
+                NumberToken(value=value, uses=uses.total())
+                for value, uses in weights.items()
+            ],
+            lambda token: token.value,
+            by_value=True,
+        ),
+        line_heights=_lengths(line_heights),
+    )
+
+
+def _spacing(read: list[Element]) -> Family[SpacingToken]:
+    uses: Uses[float] = {}
+    for element in read:
+        computed = element.computed
+        lengths = {
+            # A margin of `auto` is laid out, not chosen: `box_model` holds
+            # what the layout gave it.
+            "margin": [
+                px
+                for side, px in _sides(element.box_model.margin)
+                if side not in element.auto_margins
+            ],
+            "padding": [px for _, px in _sides(element.box_model.padding)],
+            # Any element computes a gap; these displays alone lay one out.
+            "gap": [
+                _length(computed[axis])
+                for axis in ("row-gap", "column-gap")
+                if computed["display"] in GAP_DISPLAYS
+            ],
+        }
+        for role, values in lengths.items():
+            # A length of 0 is no Value, nor one below it.
+            _use(uses, role, (px for px in values if px is not None and px > 0))
+    tokens: list[SpacingToken] = []
+    for group in _group(uses, _length_distance):
+        roles = _roles(uses, group)
+        token = SpacingToken(
+            value=group[0],
+            uses=roles.total(),
+            roles=SpacingRoles(
+                margin=roles["margin"], padding=roles["padding"], gap=roles["gap"]
+            ),
+            variants=_variants(uses, group),
+        )
+        tokens.append(token)
+    return _family(tokens, lambda token: token.value, by_value=True)
+
+
+def _is_zero(corner: str) -> bool:
+    """Whether both radii of a computed corner are zero: `0px`, `0%`, `0px 0%`."""
+    return all(radius in ("0px", "0%") for radius in corner.split())
+
+
+def _radius_order(value: str) -> tuple[bool, float, str]:
+    """Where a radius comes in its Family: the Lengths by size, then the other
+    texts."""
+    px = _length(value)
+    return px is None, px or 0.0, value
+
+
+def _radii(read: list[Element]) -> Family[RadiusToken]:
+    uses: Uses[str] = {}
+    for element in read:
+        corners = (
+            element.computed[f"border-{corner}-radius"]
+            for corner in ("top-left", "top-right", "bottom-right", "bottom-left")
+        )
+        # A corner with no radius is no Value.
+        _use(uses, SINGLE, (text for text in corners if not _is_zero(text)))
+    tokens: list[RadiusToken] = []
+    for group in _group(uses, _radius_distance):
+        variants = _variants(uses, group)
+        total = sum(variant.uses for variant in variants)
+        tokens.append(RadiusToken(value=group[0], uses=total, variants=variants))
+    return _family(tokens, lambda token: _radius_order(token.value), by_value=True)
+
+
+def _radius_distance(representative: str, value: str) -> float | None:
+    """How far apart two radii that are Near are, in px: only two that are each
+    one px length can be."""
+    first, second = _length(representative), _length(value)
+    if first is None or second is None:
+        return None
+    return _length_distance(first, second)
+
+
+def _shadows(read: list[Element]) -> Family[ShadowToken]:
+    uses: Uses[Shadow] = {}
+    for element in read:
+        shadows: list[Shadow] = [("box", element.computed["box-shadow"])]
+        if _paints_text(element):
+            shadows.append(("text", element.computed["text-shadow"]))
+        # The whole text is one Value, however many layers it has; `none` is
+        # no Value.
+        _use(uses, SINGLE, (shadow for shadow in shadows if shadow[1] != "none"))
+    return _family(
+        [
+            ShadowToken(kind=kind, value=value, uses=counts.total())
+            for (kind, value), counts in uses.items()
+        ],
+        lambda token: (token.kind, token.value),
+    )
+
+
+def extract(capture: Capture) -> Tokens:
+    """Read the Tokens of the elements a Capture holds."""
+    read = [element for element in capture.elements if _is_read(element)]
+    return Tokens(
+        elements=len(read),
+        colors=_colors(read, capture.srgb),
+        typography=_typography(read),
+        spacing=_spacing(read),
+        radii=_radii(read),
+        shadows=_shadows(read),
+    )

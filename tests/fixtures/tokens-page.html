@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: a page with a small set of tokens</title>
+    <style>
+      /* Every element is a `div` and carries its styles here: nothing but the
+         font of `body`, which its texts inherit, comes from anywhere else. */
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #ffffff;
+      }
+      #title {
+        color: #333333;
+        font-size: 32px;
+        line-height: 40px;
+        font-weight: 700;
+        margin-bottom: 24px;
+      }
+      #lead {
+        color: #333333;
+        font-size: 16px;
+        line-height: 24px;
+        font-weight: 400;
+        margin-bottom: 16px;
+      }
+      #card {
+        display: flex;
+        gap: 8px;
+        padding: 16px;
+        background-color: #eeeeee;
+        border: 1px solid #cccccc;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      }
+      #card-a {
+        color: #1a73e8;
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: 400;
+      }
+      #card-b {
+        color: #333333;
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: 700;
+      }
+      #button {
+        color: #ffffff;
+        background-color: #1a73e8;
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: 700;
+        padding: 8px 16px;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="title">Tokens of a page</div>
+    <div id="lead">A lead paragraph under the title.</div>
+    <div id="card">
+      <div id="card-a">A link in the card</div>
+      <div id="card-b">A label in the card</div>
+    </div>
+    <div id="button">Save</div>
+  </body>
+</html>
