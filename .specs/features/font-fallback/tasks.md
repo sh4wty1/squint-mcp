@@ -9,7 +9,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ---
 
 **Design**: `.specs/features/font-fallback/design.md`
-**Status**: Written on 2026-10-12. The maintainer read it the same day, accepted FNT-52 to FNT-54 and had it committed, then asked for one phase per session. Execute: phase 1 (T1 to T3) is done and its Build passed on `9953077`, phase 2 (T4 to T6) is done and its Build passed on `357206d`, and phase 3 (T7 to T9) is done and its Build passed on `ba860c9`, all the same day; phase 4 (T10 and T11) is done and its Build passed on `82fa6cc` on 2026-10-13. The Verifier's first pass returned FAIL on its sensor the same day: its fix round, F1 to F3, is at the end of this file. The second pass is a PASS, and the closing step (T12) is done but for the push of the new commits and the pull request, which wait for the maintainer; #21 was merged on 2026-10-13. Issue #20 is a round of its own, F4, at the end of this file (2026-10-15); the third pass failed it on one mutant, and F5 closes it
+**Status**: Written on 2026-10-12. The maintainer read it the same day, accepted FNT-52 to FNT-54 and had it committed, then asked for one phase per session. Execute: phase 1 (T1 to T3) is done and its Build passed on `9953077`, phase 2 (T4 to T6) is done and its Build passed on `357206d`, and phase 3 (T7 to T9) is done and its Build passed on `ba860c9`, all the same day; phase 4 (T10 and T11) is done and its Build passed on `82fa6cc` on 2026-10-13. The Verifier's first pass returned FAIL on its sensor the same day: its fix round, F1 to F3, is at the end of this file. The second pass is a PASS, and the closing step (T12) is done but for the push of the new commits and the pull request, which wait for the maintainer; #21 was merged on 2026-10-13. Issue #20 is a round of its own, F4, at the end of this file (2026-10-15); the third pass failed it on one mutant, and F5 closes it; the fourth pass passed it with one residual mutant, and F6 closes that
 
 ---
 
@@ -828,3 +828,31 @@ The eight residual mutants (R7) were not put to the maintainer as a decision: th
 **Commit**: `test(font-fallback): pin a family name wrapped in quotation marks`
 
 **Notes**: Read on Windows, Chromium 153, 2026-10-15: the Face is `"Quoted"`, marks included, `error`, after the five others; the computed `font-family` of `#quoted` is `"\"Quoted\"", Ahem`; not read in the Playwright image. FACE-UNQUOTE-ONLY (`family: face.family.replace(/^(["'])(.*)\1$/s, "$2"),`, as the third pass gives it), applied to a scratch copy of `src/squint_mcp` (`squint_mcp.__file__` in the copy), fails the test of FNT-64 on `[] == [('#quoted', '"Quoted"')]` and leaves those of FNT-59, FNT-60 and FNT-63 passing. Full: pyright, ruff check, ruff format and 55 passed in 154s.
+
+### F6: Report a family whose name starts and ends with an apostrophe
+
+- [ ] Done
+
+**What**: The fourth pass ([`validation.md`](validation.md)) passed with one residual: FACE-UNQUOTE-SINGLE-ONLY, which takes apostrophes off the name of a Face, passes the 55 tests. The maintainer chose to close it. The case `#single` in `font-fallback-names.html` (the family `'Single'`, its apostrophes part of the name, declared with a `src` that names no file) and its test. No change to `src/`: the test is a pin, red under the mutant.
+**Where**: `tests/test_font_fallback.py` (with `tests/fixtures/font-fallback-names.html`)
+**Depends on**: F5
+**Reuses**: `reported` of the test module; the form of the case of FNT-64
+**Requirement**: FNT-65
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [ ] The computed `font-family` of `#single` and the name of its Face, as read from the page, are in the comment of the fixture
+- [ ] The test passes on the code as it is and fails under FACE-UNQUOTE-SINGLE-ONLY on a scratch copy
+- [ ] The tests of FNT-58 to FNT-60, FNT-63 and FNT-64 pass unchanged
+- [ ] Gate check passes: Full
+- [ ] Test count: 56 in the module; none deleted
+
+**Tests**: integration
+**Gate**: full
+
+**Commit**: `test(font-fallback): pin a family name wrapped in apostrophes`
