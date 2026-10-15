@@ -205,6 +205,7 @@ The other fixtures (`tokens-used.html`, `tokens-groups.html`, `tokens-scope.html
 9. WHEN two elements have `border-radius: 4px` and one has `border-radius: 4.5px` THEN `radii.tokens` SHALL hold a Token of `value` `4px`, `uses` 3 and `variants`, in this order, `(4px, 2)` and `(4.5px, 1)`. <!-- TOK-49 -->
 10. WHEN every element with Own text of the page has `line-height: 20px` but one, which has `line-height: 20.5px` THEN `typography.lineHeights.tokens` SHALL hold one Token, of `value` `20`, whose `variants` end with `(20.5, 1)`. <!-- TOK-50 -->
 11. WHEN one element has `border-radius: 30%` and another `border-radius: 30.5%`, and one has `border-top-left-radius: 10px 20px` and another `border-top-left-radius: 10.5px 20px` THEN `radii.tokens` SHALL hold `30%`, `30.5%`, `10px 20px` and `10.5px 20px` as four Tokens of `uses` 1. <!-- TOK-51 -->
+12. WHEN the page also holds five elements of `background-color: #ff8800`, which is Near no other colour of the page THEN the `(value, uses)` of `colors.tokens` SHALL be, in this order, `(#333333, 8)`, `(#1a73e8, 7)`, `(#ff8800, 5)`, `(#808080, 4)`, `(#1a73e880, 1)` and `(#1a79e8, 1)`: a Token ranks by the Uses of its whole Group, and `#1a73e8` alone has 4. <!-- TOK-80 -->
 
 **Independent Test**: call the tool on `tokens-groups.html` and read the `variants` of each Token named above.
 
@@ -367,13 +368,14 @@ Covered by the stories: a `scope` that matches nothing (TOK-57), that is not a s
 | TOK-77 | P2: Tool contract, config and documents | Phase 2, T7 | Implemented |
 | TOK-78 | Edge Cases | Phase 5, T23 | Implemented |
 | TOK-79 | Edge Cases | Phase 5, T23 | Implemented |
+| TOK-80 | P1: Fold values that are nearly equal | Phase 7, T32 | Implemented |
 
-**Coverage:** 79 total, 79 mapped to tasks, 0 unmapped.
+**Coverage:** 80 total, 80 mapped to tasks, 0 unmapped.
 
 ---
 
 ## Success Criteria
 
-- [ ] Every criterion from TOK-01 to TOK-79 has a test that fails when its rule is dropped, all but TOK-74 through the MCP tool boundary.
+- [ ] Every criterion from TOK-01 to TOK-80 has a test that fails when its rule is dropped, all but TOK-74 through the MCP tool boundary.
 - [ ] The Verifier's `validation.md` is a PASS.
 - [ ] The tests of the other tools pass with no assertion changed.

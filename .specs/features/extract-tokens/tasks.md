@@ -1252,7 +1252,7 @@ A pin, seen failing under S2 on a scratch copy of `src/squint_mcp` (a second Cap
 
 ### T32: Hold the order of colours by the Uses of their Groups
 
-- [ ] Done
+- [x] Done
 
 **What**: Fix 2 of the first Verifier (mutants C1 and C2). `tokens-groups.html` gains five boxes `#c1` to `#c5` of `background-color: #ff8800`, after `#g80-2`, Near no other colour of the page. A new criterion, TOK-80, gives the whole `(value, uses)` list of `colors`: `#1a73e8` (7 in its Group, 4 alone) comes before `#ff8800` (5).
 **Where**: `tests/test_extract_tokens.py` (with the spec and the fixture of its page)
@@ -1264,17 +1264,21 @@ A pin, seen failing under S2 on a scratch copy of `src/squint_mcp` (a second Cap
 
 **Done when**:
 
-- [ ] The spec rows and the fixture come before the test
-- [ ] A script of the scratchpad shows that `#ff8800` is at or above ΔE2000 2 from every other colour of the page; the smallest number is written here
-- [ ] TOK-80: `(#333333, 8)`, `(#1a73e8, 7)`, `(#ff8800, 5)`, `(#808080, 4)`, `(#1a73e880, 1)`, `(#1a79e8, 1)`, whole and in order
-- [ ] The whole-list test of the page gains the row of `#ff8800` (5 Uses, background 5); no other assertion of the page changes
-- [ ] Rules dropped, on a scratch copy: C1 (`colors` Tokens in build order) and C2 (ranked by the Uses of the Representative) each fail the test of TOK-80
-- [ ] Gate check passes: Full
+- [x] The spec rows and the fixture come before the test
+- [x] A script of the scratchpad shows that `#ff8800` is at or above ΔE2000 2 from every other colour of the page; the smallest number is written here
+- [x] TOK-80: `(#333333, 8)`, `(#1a73e8, 7)`, `(#ff8800, 5)`, `(#808080, 4)`, `(#1a73e880, 1)`, `(#1a79e8, 1)`, whole and in order
+- [x] The whole-list test of the page gains the row of `#ff8800` (5 Uses, background 5); no other assertion of the page changes
+- [x] Rules dropped, on a scratch copy: C1 (`colors` Tokens in build order) and C2 (ranked by the Uses of the Representative) each fail the test of TOK-80
+- [x] Gate check passes: Full
 
 **Tests**: integration
 **Gate**: full
 
 **Commit**: `test(tokens): hold the order of colours by the uses of their groups`
+
+**Done (2026-10-15)**, in session 10: TOK-80 and its traceability row first, then `#c1` to `#c5` of `#ff8800` in `tokens-groups.html` after `#g80-2`, then the test of TOK-80 and the row of `#ff8800` in the whole-list test of the page. The smallest ΔE2000 from `#ff8800` to another colour of the page, by `lab_of` and `delta_e_2000` from a script of the scratchpad, is 31.6362 (to `#858585`); to the blues it is 57.0277 to 57.8001, to `#333333` 54.4247. Gate: Full, 76 passed (none deleted); `src/` unchanged.
+
+A pin, seen failing on scratch copies of `src/squint_mcp`: under C1 (`colors` Tokens kept in build order, then cut at the Limit) and under C2 (ranked by the Uses of the Representative) the test of TOK-80 and the whole-list test both fail at index 1, `(#ff8800, 5)` before `(#1a73e8, 7)`. Before the fixture changed, both passed the 74 tests of the module (run again in this session before any change).
 
 ---
 

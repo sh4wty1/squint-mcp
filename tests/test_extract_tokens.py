@@ -589,6 +589,20 @@ async def test_a_tie_in_uses_goes_to_the_lower_value_not_the_first_of_the_docume
     ]
 
 
+async def test_colors_rank_by_the_uses_of_their_whole_group(client: Client) -> None:
+    colors = (await extract(client, GROUPS))["colors"]
+    # `#ff8800` has 5 Uses, more than the 4 of `#1a73e8` alone and fewer than
+    # the 7 of its Group; its Group opens before that of `#1a73e8`.
+    assert rows(colors, "value", "uses") == [
+        ("#333333", 8),
+        ("#1a73e8", 7),
+        ("#ff8800", 5),
+        ("#808080", 4),
+        ("#1a73e880", 1),
+        ("#1a79e8", 1),
+    ]
+
+
 async def test_font_sizes_exactly_1px_apart_are_not_near(client: Client) -> None:
     typography = (await extract(client, GROUPS))["typography"]
     # 15px on one text, 16px on three, 16.5px, 16.75px, 17px on two, 17.75px.
@@ -660,12 +674,14 @@ async def test_the_families_of_a_page_of_near_values_come_whole_and_in_their_ord
     result = await extract(client, GROUPS)
     typography = result["typography"]
     # Rank order of the Tokens, by the Uses of their Groups: the eight texts
-    # in `#333333`, the Group of `#1a73e8` and that of `#808080`, then two
-    # of 1 Use by their text, where a digit comes before a letter.
+    # in `#333333`, the Group of `#1a73e8`, the five boxes of `#ff8800` and the
+    # Group of `#808080`, then two of 1 Use by their text, where a digit comes
+    # before a letter.
     fields = ("value", "uses", "roles.text", "roles.background", "roles.border")
     assert rows(result["colors"], *fields) == [
         ("#333333", 8, 8, 0, 0),
         ("#1a73e8", 7, 1, 6, 0),
+        ("#ff8800", 5, 0, 5, 0),
         ("#808080", 4, 0, 4, 0),
         ("#1a73e880", 1, 0, 1, 0),
         ("#1a79e8", 1, 0, 1, 0),
