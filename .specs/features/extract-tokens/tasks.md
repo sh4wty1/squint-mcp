@@ -1284,7 +1284,7 @@ A pin, seen failing on scratch copies of `src/squint_mcp`: under C1 (`colors` To
 
 ### T33: Hold that Own text of no box is not Painted text
 
-- [ ] Done
+- [x] Done
 
 **What**: Fix 3 of the first Verifier (mutant P1). `tokens-used.html` gains `#mute`, a box of 100px by 20px with no background whose Own text has `font: 700 0px/37px Courier, monospace`, `color: #abcdef` and `text-shadow: 3px 3px 3px #abcdef`, values no other element of the page has. A new criterion, TOK-81, says none of them is held. A probe on Chromium 153.0.8010.12 (2026-10-15, a script of the scratchpad that reads `range.getClientRects()` of the Own text as `collect_elements.js` does): with `font-size: 0` the element's box stays 100x20 and the one rect of its text is 0x0; `text-indent: -9999px` and `color: transparent` still paint a 75x17 rect, and `transform: scale(0)` takes the element's own box away.
 **Where**: `tests/test_extract_tokens.py` (with the spec and the fixture of its page)
@@ -1296,16 +1296,20 @@ A pin, seen failing on scratch copies of `src/squint_mcp`: under C1 (`colors` To
 
 **Done when**:
 
-- [ ] The spec rows and the fixture come before the test
-- [ ] TOK-81: no list of `typography` holds `0`, `700`, `37` or `Courier, monospace`; `colors` does not hold `#abcdef`; no Value of `shadows` holds `3px 3px 3px`
-- [ ] The test of TOK-24 counts 32 elements, `#mute` being Read; the whole lists of the page do not change
-- [ ] Rule dropped, on a scratch copy: P1 (Painted text is Own text, whether it paints a box or not) fails the test of TOK-81
-- [ ] Gate check passes: Full
+- [x] The spec rows and the fixture come before the test
+- [x] TOK-81: no list of `typography` holds `0`, `700`, `37` or `Courier, monospace`; `colors` does not hold `#abcdef`; no Value of `shadows` holds `3px 3px 3px`
+- [x] The test of TOK-24 counts 32 elements, `#mute` being Read; the whole lists of the page do not change
+- [x] Rule dropped, on a scratch copy: P1 (Painted text is Own text, whether it paints a box or not) fails the test of TOK-81
+- [x] Gate check passes: Full
 
 **Tests**: integration
 **Gate**: full
 
 **Commit**: `test(tokens): hold that own text of no box is not painted`
+
+**Done (2026-10-15)**, in session 10: TOK-81 and its traceability row first, then `#mute` at the end of `tokens-used.html`, then the test of TOK-81 (each of the four values absent from each of the four lists of `typography`, as "no list" reads; `#abcdef` from `colors`, by Token and variant; `3px 3px 3px` from every Value of `shadows`) and the count of the test of TOK-24, 31 to 32. Gate: Full, 77 passed (none deleted); `src/` unchanged.
+
+A pin, seen failing under P1 on a scratch copy of `src/squint_mcp` (`_paints_text` returns `own_text` alone): the test of TOK-81 fails at `Courier, monospace` in `families`, and the test of TOK-37 and the whole-list test of the page fail too (a second text shadow, `rgb(171, 205, 239) 3px 3px 3px`, and `#abcdef` with a text Role). Before the fixture changed, P1 passed the 74 tests of the module (run again in this session before any change).
 
 ---
 

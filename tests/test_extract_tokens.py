@@ -331,6 +331,18 @@ async def test_a_color_outside_srgb_is_clipped_to_it(client: Client) -> None:
     assert ("#ff0000",) in rows(colors, "value")
 
 
+async def test_own_text_that_paints_no_box_is_not_painted_text(client: Client) -> None:
+    result = await extract(client, USED)
+    typography = result["typography"]
+    # `#mute`: a box of 100px by 20px whose text, of font size 0, paints no box.
+    for name in ("families", "sizes", "weights", "lineHeights"):
+        for value in ("Courier, monospace", 0, 700, 37):
+            assert value not in values(typography[name]), (name, value)
+    assert "#abcdef" not in values(result["colors"])
+    for value in values(result["shadows"]):
+        assert "3px 3px 3px" not in value
+
+
 async def test_type_values_are_counted_where_the_text_is_not_where_they_are_set(
     client: Client,
 ) -> None:
@@ -463,9 +475,9 @@ async def test_an_element_that_paints_no_box_is_not_read(client: Client) -> None
     # `#none`, `#flat-w` and `#flat-h`, in turn.
     for value in ("#abcd01", "#abcd02", "#abcd03"):
         assert value not in found
-    # `html`, `body` and 29 of the 35 elements of `body`: all but the three
+    # `html`, `body` and 30 of the 36 elements of `body`: all but the three
     # above, `#hidden`, `#faded` and `#faded-child`.
-    assert result["elements"] == 31
+    assert result["elements"] == 32
 
 
 async def test_the_families_of_a_page_come_whole_and_in_their_order(

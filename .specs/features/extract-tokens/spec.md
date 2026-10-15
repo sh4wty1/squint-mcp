@@ -181,6 +181,7 @@ The other fixtures (`tokens-used.html`, `tokens-groups.html`, `tokens-scope.html
 24. WHEN `#layers` has `box-shadow: 0 1px 2px #000000, 0 4px 8px #000000` THEN `shadows.tokens` SHALL hold one Token of `kind` `box` for it, of `value` `rgb(0, 0, 0) 0px 1px 2px 0px, rgb(0, 0, 0) 0px 4px 8px 0px` and `uses` 1. <!-- TOK-38 -->
 25. WHEN `#srgb` has `background-color: color(srgb 0.2 0.4 0.6)` THEN `colors.tokens` SHALL hold `#336699`. <!-- TOK-39 -->
 26. WHEN `#wide` has `background-color: color(display-p3 1 0 0)`, a colour outside sRGB THEN `colors.tokens` SHALL hold `#ff0000`. <!-- TOK-40 -->
+27. WHEN `#mute` has Own text, `font: 700 0px/37px Courier, monospace`, `color: #abcdef` and `text-shadow: 3px 3px 3px #abcdef`, so that its box is 100px by 20px and its text paints no box THEN no list of `typography` SHALL hold `0`, `700`, `37` or `Courier, monospace`, `colors.tokens` SHALL NOT hold `#abcdef`, and no Value of `shadows.tokens` SHALL hold `3px 3px 3px`. <!-- TOK-81 -->
 
 **Independent Test**: call the tool on `tokens-used.html` and look for each value named above.
 
@@ -369,13 +370,14 @@ Covered by the stories: a `scope` that matches nothing (TOK-57), that is not a s
 | TOK-78 | Edge Cases | Phase 5, T23 | Implemented |
 | TOK-79 | Edge Cases | Phase 5, T23 | Implemented |
 | TOK-80 | P1: Fold values that are nearly equal | Phase 7, T32 | Implemented |
+| TOK-81 | P1: Count a value only where it paints | Phase 7, T33 | Implemented |
 
-**Coverage:** 80 total, 80 mapped to tasks, 0 unmapped.
+**Coverage:** 81 total, 81 mapped to tasks, 0 unmapped.
 
 ---
 
 ## Success Criteria
 
-- [ ] Every criterion from TOK-01 to TOK-80 has a test that fails when its rule is dropped, all but TOK-74 through the MCP tool boundary.
+- [ ] Every criterion from TOK-01 to TOK-81 has a test that fails when its rule is dropped, all but TOK-74 through the MCP tool boundary.
 - [ ] The Verifier's `validation.md` is a PASS.
 - [ ] The tests of the other tools pass with no assertion changed.
