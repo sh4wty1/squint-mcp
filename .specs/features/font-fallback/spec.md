@@ -66,7 +66,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 
 The maintainer accepted the spec on 2026-10-12 and took every default of the table below: all of them are confirmed. The same day the maintainer accepted what the design asked for: the criteria FNT-49 to FNT-51, on a fixture of their own, and one row of Out of Scope ("A Tail that starts with a family the page declares and no text has used"). With the tasks, still on 2026-10-12, the maintainer accepted FNT-52 to FNT-54: three rules that the Terms state and no criterion held (text that paints no box, a Face that is `unloaded`, the widths of several text nodes added), each on one case more of `font-fallback-bounds.html`, and the two rows FNT-15 gains for them.
 
-On 2026-10-13 the Verifier's first pass ([`validation.md`](validation.md)) found ten mutants alive on rules that the Terms, the Assumptions or the design state and that no criterion held. The criteria FNT-55 to FNT-62 pin those rules, on two fixtures of their own and on two cases more of `font-fallback-shaping.html`. With them came one word on whitespace, which the design had and the Terms did not: in the Term "Judged element", in the row "Which elements are judged" below and in the row of Out of Scope on text that is not seen; and the clause of FNT-49 that names `#lower-mixed`. No behaviour changes. They were the orchestrator's defaults, written from the report. The maintainer read them on 2026-10-13, after the second pass, and accepted each as written; with them the last sentence of the row "Fixtures" below was reworded to say what a Tail may name ([`tasks.md`](tasks.md), "The maintainer's decisions after the second pass").
+On 2026-10-13 the Verifier's first pass ([`validation.md`](validation.md)) found ten mutants alive on rules that the Terms, the Assumptions or the design state and that no criterion held. The criteria FNT-55 to FNT-62 pin those rules, on two fixtures of their own and on two cases more of `font-fallback-shaping.html`. With them came one word on whitespace, which the design had and the Terms did not: in the Term "Judged element", in the row "Which elements are judged" below and in the row of Out of Scope on text that is not seen; and the clause of FNT-49 that names `#lower-mixed`. No behaviour changes. They were the orchestrator's defaults, written from the report. The maintainer read them on 2026-10-13, after the second pass, and accepted each as written; with them the last sentence of the row "Fixtures" below was reworded to say what a Tail may name ([`tasks.md`](tasks.md), "The maintainer's decisions after the second pass"). On 2026-10-15 the maintainer accepted FNT-63, for issue #20 (I-1 of the second pass): a Failed family whose name holds a backslash, on one case more of `font-fallback-names.html`.
 
 | Assumption / decision | Chosen default | Rationale | Confirmed? |
 | --- | --- | --- | --- |
@@ -139,6 +139,7 @@ On 2026-10-13 the Verifier's first pass ([`validation.md`](validation.md)) found
 16. WHEN the Face that failed is the italic one of a family and an element asks for it (in `font-fallback-shaping.html`, `Slant` has a Face of `font-style: normal` from the file of Ahem and one of `font-style: italic` with a `src` that names no file; `#slant-normal` and after it `#slant-italic`, of `font-style: italic`, both have `font-family: Slant, Wide`) THEN the Check SHALL return one Finding for the family, on `#slant-italic`, with `evidence.measured.elements` equal to 1 and `evidence.computed` equal to `{"font-family": "Slant, Wide", "font-weight": "400", "font-style": "italic"}`. <!-- FNT-50 -->
 17. WHEN the name of a Failed family holds a comma (`#comma` in `font-fallback-names.html`, `font-family: "Acme, Inc", Ahem`; the page declares `"Acme, Inc"` with a `src` that names no file) THEN the Check SHALL return one Finding for the element with `evidence.measured.family` equal to `Acme, Inc`: a `font-family` is split at the commas outside its quotes. <!-- FNT-59 -->
 18. WHEN the name of a Failed family holds a quotation mark, which a computed `font-family` writes with a backslash before it (`#inch` in `font-fallback-names.html`, of `font-family: 'Vinyl 12"', Ahem`; the page declares the family `Vinyl 12"` with a `src` that names no file) THEN the Check SHALL return one Finding for the element with `evidence.measured.family` equal to `Vinyl 12"`, and `evidence.computed` SHALL hold the `font-family` of the element as computed, `"Vinyl 12\"", Ahem`. <!-- FNT-60 -->
+19. WHEN the name of a Failed family holds a backslash, which a computed `font-family` writes with a second backslash before it (`#slash` in `font-fallback-names.html`, of `font-family: "Back\\slash", Ahem`; the page declares the family `Back\slash` with a `src` that names no file) THEN the Check SHALL return one Finding for the element with `evidence.measured.family` equal to `Back\slash`: the name of a Face is taken as `document.fonts` gives it, with no quote and no escape taken off. <!-- FNT-63 -->
 
 **Independent Test**: Call `detect_visual_bugs` on `font-fallback-bug.html` and read the two Findings: `Brand` on three elements, `Icon Set` on one.
 
@@ -311,14 +312,15 @@ On 2026-10-13 the Verifier's first pass ([`validation.md`](validation.md)) found
 | FNT-60 | P1: Report a font that did not load | F2 | Implemented |
 | FNT-61 | P1: Read the Finding | F3 | Implemented |
 | FNT-62 | P1: Read the Finding | F3 | Implemented |
+| FNT-63 | P1: Report a font that did not load | F4 | Pending |
 
-**Coverage:** 62 total, 62 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
+**Coverage:** 63 total, 63 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
 
 ---
 
 ## Success Criteria
 
-- [ ] All 62 requirements verified by the Verifier, FNT-40 to FNT-46 from file evidence.
+- [ ] All 63 requirements verified by the Verifier, FNT-40 to FNT-46 from file evidence.
 - [ ] The gate passes: typecheck, lint, format check and the whole test suite.
 - [ ] The first run of the suite on the CI's Linux passes the tests of this slice with no assertion changed for it.
 - [ ] The discrimination sensor leaves alive none of the mutants that a validation report or a task names, nor any of the code the last fix round changed, in the Check and in what the Capture gains for it (Assumptions, "When the discrimination sensor is satisfied").

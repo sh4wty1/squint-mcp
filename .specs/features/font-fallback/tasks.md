@@ -9,7 +9,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ---
 
 **Design**: `.specs/features/font-fallback/design.md`
-**Status**: Written on 2026-10-12. The maintainer read it the same day, accepted FNT-52 to FNT-54 and had it committed, then asked for one phase per session. Execute: phase 1 (T1 to T3) is done and its Build passed on `9953077`, phase 2 (T4 to T6) is done and its Build passed on `357206d`, and phase 3 (T7 to T9) is done and its Build passed on `ba860c9`, all the same day; phase 4 (T10 and T11) is done and its Build passed on `82fa6cc` on 2026-10-13. The Verifier's first pass returned FAIL on its sensor the same day: its fix round, F1 to F3, is at the end of this file. The second pass is a PASS, and the closing step (T12) is done but for the push of the new commits and the pull request, which wait for the maintainer
+**Status**: Written on 2026-10-12. The maintainer read it the same day, accepted FNT-52 to FNT-54 and had it committed, then asked for one phase per session. Execute: phase 1 (T1 to T3) is done and its Build passed on `9953077`, phase 2 (T4 to T6) is done and its Build passed on `357206d`, and phase 3 (T7 to T9) is done and its Build passed on `ba860c9`, all the same day; phase 4 (T10 and T11) is done and its Build passed on `82fa6cc` on 2026-10-13. The Verifier's first pass returned FAIL on its sensor the same day: its fix round, F1 to F3, is at the end of this file. The second pass is a PASS, and the closing step (T12) is done but for the push of the new commits and the pull request, which wait for the maintainer; #21 was merged on 2026-10-13. Issue #20 is a round of its own, F4, at the end of this file (2026-10-15)
 
 ---
 
@@ -761,3 +761,38 @@ Taken on 2026-10-13, one at a time, before the push of the commits after `ab1dba
 - **The text behind the round is brought up to it** (R9 of the report): the list of fixtures and the sentence on "Judged element" of `design.md`, the Requirement of T10 and the summary of the first pass above.
 
 The eight residual mutants (R7) were not put to the maintainer as a decision: they stay as the report lists them.
+
+---
+
+## Fix of issue #20
+
+[sh4wty1/squint-mcp#20](https://github.com/sh4wty1/squint-mcp/issues/20) is I-1 of the second pass: a Failed family whose name holds a backslash gets no Finding, because `font_widths.js` takes the escapes off the name of a Face, which `document.fonts` gives without any. The maintainer accepted FNT-63 on 2026-10-15. One task: the case and its test first, seen red on the code as it is, then the fix. A new Verifier runs after it.
+
+### F4: Report a family whose name holds a backslash
+
+- [ ] Done
+
+**What**: The case `#slash` in `font-fallback-names.html` (the family `Back\slash`, declared with a `src` that names no file) and its test, red on the code as it is. Then `font_widths.js` takes the name of a Face as `document.fonts` gives it; `bare` stays for the names read from a computed `font-family`. The hexadecimal escape stays the limit the design accepts.
+**Where**: `src/squint_mcp/js/font_widths.js`, `tests/test_font_fallback.py` (with `tests/fixtures/font-fallback-names.html`)
+**Depends on**: F3
+**Reuses**: `reported` and `sits_on` of the test module; the form of the cases of FNT-59 and FNT-60
+**Requirement**: FNT-63
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [ ] The computed `font-family` of `#slash` is `"Back\\slash", Ahem` and its Face is `error` under the name `Back\slash`, as read from the page; the comment of the fixture says so
+- [ ] The test fails on the code as it is, on `[] == [('#slash', 'Back\\slash')]`, and passes with the fix
+- [ ] N60-unescape-quotes-only, applied to a scratch copy with the fix, fails the test of FNT-63
+- [ ] The tests of FNT-58 to FNT-60 pass unchanged
+- [ ] Gate check passes: Full
+- [ ] Test count: 54 in the module; none deleted
+
+**Tests**: integration
+**Gate**: full
+
+**Commit**: `fix(font-fallback): report a family whose name holds a backslash`
