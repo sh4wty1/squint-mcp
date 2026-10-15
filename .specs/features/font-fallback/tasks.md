@@ -9,7 +9,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ---
 
 **Design**: `.specs/features/font-fallback/design.md`
-**Status**: Written on 2026-10-12. The maintainer read it the same day, accepted FNT-52 to FNT-54 and had it committed, then asked for one phase per session. Execute: phase 1 (T1 to T3) is done and its Build passed on `9953077`, phase 2 (T4 to T6) is done and its Build passed on `357206d`, and phase 3 (T7 to T9) is done and its Build passed on `ba860c9`, all the same day; phase 4 (T10 and T11) is done and its Build passed on `82fa6cc` on 2026-10-13. The Verifier's first pass returned FAIL on its sensor the same day: its fix round, F1 to F3, is at the end of this file. The second pass is a PASS, and the closing step (T12) is done but for the push of the new commits and the pull request, which wait for the maintainer; #21 was merged on 2026-10-13. Issue #20 is a round of its own, F4, at the end of this file (2026-10-15)
+**Status**: Written on 2026-10-12. The maintainer read it the same day, accepted FNT-52 to FNT-54 and had it committed, then asked for one phase per session. Execute: phase 1 (T1 to T3) is done and its Build passed on `9953077`, phase 2 (T4 to T6) is done and its Build passed on `357206d`, and phase 3 (T7 to T9) is done and its Build passed on `ba860c9`, all the same day; phase 4 (T10 and T11) is done and its Build passed on `82fa6cc` on 2026-10-13. The Verifier's first pass returned FAIL on its sensor the same day: its fix round, F1 to F3, is at the end of this file. The second pass is a PASS, and the closing step (T12) is done but for the push of the new commits and the pull request, which wait for the maintainer; #21 was merged on 2026-10-13. Issue #20 is a round of its own, F4, at the end of this file (2026-10-15); the third pass failed it on one mutant, and F5 closes it
 
 ---
 
@@ -798,3 +798,31 @@ The eight residual mutants (R7) were not put to the maintainer as a decision: th
 **Commit**: `fix(font-fallback): report a family whose name holds a backslash`
 
 **Notes**: Read on Windows, Chromium 153, 2026-10-15: the Faces are `Dual`, `DUAL`, `Acme, Inc`, `Vinyl 12"` and `Back\slash`, all `error`, and the computed `font-family` of `#slash` is `"Back\\slash", Ahem`; not read in the Playwright image. On the code as it is the test failed on `[] == [('#slash', 'Back\\slash')]`. N60-unescape-quotes-only, applied to a scratch copy of `src/squint_mcp` with the fix (`squint_mcp.__file__` in the copy), fails the test of FNT-63 on the same assertion and leaves those of FNT-59 and FNT-60 passing. Full: pyright, ruff check, ruff format and 54 passed in 153s.
+
+### F5: Report a family whose name starts and ends with a quotation mark
+
+- [ ] Done
+
+**What**: The third pass ([`validation.md`](validation.md)) failed F4 on one mutant: FACE-UNQUOTE-ONLY, which takes the quotation marks off the name of a Face and leaves its escapes, passes the 54 tests. The case `#quoted` in `font-fallback-names.html` (the family `"Quoted"`, its quotation marks part of the name, declared with a `src` that names no file) and its test. No change to `src/`: the test is a pin, red under the mutant.
+**Where**: `tests/test_font_fallback.py` (with `tests/fixtures/font-fallback-names.html`)
+**Depends on**: F4
+**Reuses**: `reported` of the test module; the form of the case of FNT-63
+**Requirement**: FNT-64
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [ ] The computed `font-family` of `#quoted` and the name of its Face, as read from the page, are in the comment of the fixture
+- [ ] The test passes on the code as it is and fails under FACE-UNQUOTE-ONLY on a scratch copy
+- [ ] The tests of FNT-58 to FNT-60 and FNT-63 pass unchanged
+- [ ] Gate check passes: Full
+- [ ] Test count: 55 in the module; none deleted
+
+**Tests**: integration
+**Gate**: full
+
+**Commit**: `test(font-fallback): pin a family whose name starts and ends with a quotation mark`

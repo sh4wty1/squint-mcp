@@ -107,7 +107,7 @@ Nothing else in the spec changes. FNT-43 holds: `config` gains a list of propert
 - **Purpose**: everything the Capture does in the page for fonts. One call, synchronous.
 - **Location**: `src/squint_mcp/js/font_widths.js`
 - **Interfaces**: `({ shaping }) => ({ faces, widths })`.
-  - `faces`: for each entry of `document.fonts`, in its order, `family` (as `document.fonts` gives it, which is without quotes and without escapes; FNT-63, issue #20) and `status`. Read before any copy is made.
+  - `faces`: for each entry of `document.fonts`, in its order, `family` (as `document.fonts` gives it: the name itself, with no quotes put around it and no escapes, so a quotation mark or a backslash that is part of the name is kept; FNT-63, FNT-64, issue #20) and `status`. Read before any copy is made.
   - `widths`: by index in the collector's list, `{ family, own, tail }` for each element that has a text node as a direct child that is not whitespace and whose First family, in lower case, is the family of a Face of `error`. `family` is the First family without quotes; `own` and `tail` are the sums over those text nodes of the width of their two copies.
 - **The names of a `font-family`**: the computed value split at the commas outside strings, a backslash taking the character after it. The Tail is the names after the first joined by `, `, or `initial`.
 - **A copy**: a `span` with the `nodeValue` of the text node; `all: initial`, `position: absolute`, `white-space: nowrap`, the computed value of each shaping property of the element, and the `font-family`, each `!important`.
