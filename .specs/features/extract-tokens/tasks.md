@@ -1345,7 +1345,7 @@ A pin, seen failing under P1 on a scratch copy of `src/squint_mcp` (`_paints_tex
 
 ### T30: Mark slice 10 as done
 
-- [ ] Done
+- [x] Done
 
 **What**: After the Verifier's PASS: `docs/ROADMAP.md` shows slice 10 as `concluída`, in the table and in its section, with a link to this feature's directory; the Status column of the spec's traceability table and the Handoff of `.specs/STATE.md` say the same.
 **Where**: `docs/ROADMAP.md` (with the traceability table of the spec and the Handoff)
@@ -1357,15 +1357,17 @@ A pin, seen failing under P1 on a scratch copy of `src/squint_mcp` (`_paints_tex
 
 **Done when**:
 
-- [ ] `validation.md` holds a PASS for the 81 criteria
-- [ ] `validate_state.py extract-tokens` exits 0
-- [ ] If a fix round changed `src/` or `tests/` after T28, the Linux gate is run again and its result written under T28
-- [ ] Nothing is pushed and no pull request is opened: both wait for the maintainer's go-ahead
+- [x] `validation.md` holds a PASS for the 81 criteria
+- [x] `validate_state.py extract-tokens` exits 0
+- [x] If a fix round changed `src/` or `tests/` after T28, the Linux gate is run again and its result written under T28
+- [x] Nothing is pushed and no pull request is opened: both wait for the maintainer's go-ahead
 
 **Tests**: none
 **Gate**: full
 
 **Commit**: `docs(roadmap): mark slice 10 as done`
+
+**Done (2026-10-15)**, in session 10: the second Verifier, a fresh sub-agent, wrote `validation.md`: **PASS**, 81 of 81 criteria on the spec's outcome, 0 spec-precision gaps, Full gate 77 passed at `07d6c2c`, 12 mutants injected and 12 killed (S2, C1, C2 and P1 among them, plus S3 to S5, P6, P7, C3, R2 and E3), porcelain identical before and after. `validate_state.py extract-tokens` exits 0. `docs/ROADMAP.md` shows slice 10 as `concluída` in its table and its section, with a link to this directory; every row of the traceability table of the spec says `Implemented`, as slice 9 closed. The Linux gate ran again after the fix round and is written under T28. The push of the branch follows this commit, on the maintainer's word of 2026-10-15; the pull request waits for theirs.
 
 ---
 

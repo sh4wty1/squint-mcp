@@ -1,23 +1,17 @@
 # extract-tokens Validation
 
-**Date**: 2026-10-14
-**Spec**: `.specs/features/extract-tokens/spec.md` (TOK-01 to TOK-79)
-**Diff range**: `f2c6213..e3fcf12` as given (branch `feat/extract-tokens`). That range also holds slices 6 to 9; the surface of this feature is `ee2c88e..e3fcf12` (from `6e85ca4`, the first commit of its spec): 21 files under `src/` and `tests/`, among them `src/squint_mcp/tokens.py`, `color.py`, `tools/extract_tokens.py`, `capture.py`, `js/collect_elements.js`, `js/srgb_colors.js`, `config.py`, `models.py`, `server.py`, `tests/test_extract_tokens.py`, `tests/test_color.py` and seven fixtures.
-**Verifier**: independent sub-agent (author ≠ verifier), first pass
+**Date**: 2026-10-15
+**Spec**: `.specs/features/extract-tokens/spec.md` (TOK-01 to TOK-81; TOK-56 rewritten, TOK-80 and TOK-81 new, the Term **Message** added)
+**Diff range**: the surface of the feature is `ee2c88e..07d6c2c` (branch `feat/extract-tokens`; `origin/main` is `4e0be46`, the local `main` is stale and was not used). The fix round is `840099a..07d6c2c` (5 commits, `3c3d41c` to `07d6c2c`): it touches `.specs/features/extract-tokens/spec.md`, `tasks.md`, `tests/test_extract_tokens.py` and the fixtures `tokens-groups.html`, `tokens-scope.html` and `tokens-used.html`. `git diff --stat 840099a..07d6c2c -- src` is empty: `src/` is unchanged by the fix round.
+**Verifier**: independent sub-agent (author ≠ verifier), second pass
 
-**Verdict**: ❌ FAIL
+**Verdict**: ✅ PASS
 
-**Result**: ❌ FAIL
+**Result**: ✅ PASS
 
-All 79 criteria have an assertion at `file:line` that targets the outcome the spec gives, and the Full gate is green (75 passed). The discrimination sensor injected 22 behaviour-level mutants: 18 were killed and 4 survived. The 4 survivors are 3 gaps. In each one the code does what the Terms say, but no fixture gives a different result when the rule is dropped:
+All 81 criteria have an assertion at `file:line` on the outcome the spec gives. The Full gate is green on the real tree (77 passed). The discrimination sensor injected 12 behaviour-level mutants, among them the four survivors of the first pass (S2, C1, C2, P1), each re-implemented from the first pass's description: all 12 were killed. The two spec-precision gaps of the first pass are closed: TOK-56 now has a fixture where the whole page differs from the scope, and the Term **Message** (`spec.md:43`) says what "the message" of a failing call is.
 
-1. A `scope` is not held for `typography`, `radii` and `shadows` (mutant S2). This is the maintainer's point (1).
-2. The order of the `colors` Tokens by the summed Uses of their Group is not held (mutants C1 and C2). This is the maintainer's point (2).
-3. The clause of Painted text that says "when at least one of them paints a box" is not held (mutant P1).
-
-Two spec-precision gaps are flagged. One is the fixture of TOK-56, which is the same as gap 1 seen from the spec. The other is what "the message" of a failure is, which is the maintainer's point (3) and does not block.
-
-Abbreviations: `T` = `tests/test_extract_tokens.py`, `K` = `src/squint_mcp/tokens.py`.
+Abbreviations: `T` = `tests/test_extract_tokens.py`, `K` = `src/squint_mcp/tokens.py`, `X` = `src/squint_mcp/tools/extract_tokens.py`.
 
 ---
 
@@ -25,20 +19,24 @@ Abbreviations: `T` = `tests/test_extract_tokens.py`, `K` = `src/squint_mcp/token
 
 | Task | Status | Notes |
 | ---- | ------ | ----- |
-| T1 to T29 | ✅ Done | Every box is ticked in `tasks.md`. Checked against the files, not against the notes. |
-| T30 | ⏳ Pending | Waits for a PASS, by design (`tasks.md:1214-1231`). Not counted as a gap. |
+| T1 to T29 | ✅ Done | Checked by the first pass; `src/` has not changed since (`840099a..07d6c2c`). |
+| T31 | ✅ Done | `#outside` of `tokens-scope.html` gains its text, font, radius and shadow; TOK-56's test reads the whole page first (`T:771-780`). |
+| T32 | ✅ Done | `#c1` to `#c5` of `#ff8800` in `tokens-groups.html`; TOK-80's test (`T:604-615`); the row of `#ff8800` in the whole-list test (`T:696`). |
+| T33 | ✅ Done | `#mute` in `tokens-used.html`; TOK-81's test (`T:334-343`); TOK-24's count 31 to 32 (`T:480`). |
+| T34 | ✅ Done | The Term **Message** (`spec.md:43`); no test or code changed. |
+| T30 | ⏳ Pending | Waits for this PASS, by design. Not counted as a gap. |
 
 ---
 
 ## Spec-Anchored Acceptance Criteria
 
-The `extract` helper (`T:39-48`) runs on every successful call. It asserts `is_error is False`, then `assert_sums_hold` (`T:64-81`, which covers TOK-13 and TOK-14), then at most 20 Tokens per Family (`T:46-47`, which covers TOK-66). The `fail` helper (`T:51-61`) asserts `is_error is True`, `structured_content is None` and one text block (which covers TOK-72). It then strips the SDK prefix and returns the rest.
+The `extract` helper (`T:39-48`) runs on every successful call: it asserts `is_error is False`, then `assert_sums_hold` (`T:64-81`, TOK-13 and TOK-14), then at most 20 Tokens per Family (`T:46-47`, TOK-66). The `fail` helper (`T:51-61`) asserts `is_error is True`, `structured_content is None` and one text block (TOK-72), asserts that the text starts with `Error executing tool extract_tokens: ` and returns the rest. That rest is exactly the **Message** of the spec's new Term (`spec.md:43`); the SDK writes that prefix at `.venv/Lib/site-packages/mcp/server/mcpserver/tools/base.py:210`.
 
 ### P1: Read the tokens of a page
 
 | Criterion | Spec-defined outcome | `file:line` + assertion | Result |
 | --------- | -------------------- | ----------------------- | ------ |
-| TOK-01 | 5 colour tuples, whole and in order | `T:187` `rows(colors, *fields) == [("#333333",3,3,0,0), …]`; `T:195` single variants | ✅ PASS (see gap 2: the order is not told apart from build order) |
+| TOK-01 | 5 colour tuples, whole and in order | `T:187` `rows(colors, *fields) == [("#333333",3,3,0,0), …]`; `T:195` one variant each | ✅ PASS |
 | TOK-02 | `(Arial, sans-serif, 5)` alone | `T:207` `== [("Arial, sans-serif", 5)]` | ✅ PASS |
 | TOK-03 | `(14,3),(16,1),(32,1)` | `T:212` | ✅ PASS |
 | TOK-04 | `(400,2),(700,3)` | `T:217` | ✅ PASS |
@@ -57,72 +55,74 @@ The `extract` helper (`T:39-48`) runs on every successful call. It asserts `is_e
 
 | Criterion | Spec-defined outcome | `file:line` + assertion | Result |
 | --------- | -------------------- | ----------------------- | ------ |
-| TOK-15 | `#aa0000` uses 1, text 1 | `T:277` | ✅ PASS |
+| TOK-15 | `#aa0000` uses 1, text 1 | `T:276-277` | ✅ PASS |
 | TOK-16 | `#222222` text 1; no `#111111` | `T:282-283` | ✅ PASS |
-| TOK-17 | no value starting `#008080` | `T:288` (over Tokens and variants) | ✅ PASS |
+| TOK-17 | no value starting `#008080` | `T:288` (Tokens and variants) | ✅ PASS |
 | TOK-18 | no `#445566…`, no 8-digit `…00` | `T:293-294` | ✅ PASS |
 | TOK-19 | `#00000080`, background 1 | `T:302` | ✅ PASS |
 | TOK-20 | `#0000aa` uses 1, border 1; no `#00aa00` | `T:310`, `T:312` | ✅ PASS |
 | TOK-21 | four border Tokens, border 1 each | `T:317-318` | ✅ PASS |
-| TOK-22 | no `#aa00aa` | `T:451` | ✅ PASS |
-| TOK-23 | no `#00aaaa` | `T:457` | ✅ PASS |
-| TOK-24 | none of the 3 colours; none of the 3 elements counted | `T:464-468` (`elements == 31`); `T:783-784` (each alone gives 0) | ✅ PASS |
-| TOK-25 | no 40/900/50/Georgia in any typography list; sizes holds 12 | `T:339-342` | ✅ PASS |
-| TOK-26 | sizes holds 13; line-height uses = size uses − 1 | `T:348-352` | ✅ PASS |
-| TOK-27 | lineHeights holds 30 | `T:360` | ✅ PASS |
-| TOK-28 | 51/53/55/57, uses 1, margin 1 | `T:365-367` | ✅ PASS |
-| TOK-29 | 61/63/65/67, uses 1, padding 1 | `T:372-374` | ✅ PASS |
-| TOK-30 | no 620 | `T:381` | ✅ PASS |
-| TOK-31 | nothing ≤ 0; no 71 | `T:386-387` | ✅ PASS |
-| TOK-32 | 81, 83 with gap 1 | `T:392-393` | ✅ PASS |
-| TOK-33 | 85/87/89, uses 1, gap 1 | `T:401-403` | ✅ PASS |
-| TOK-34 | no 91 | `T:408` | ✅ PASS |
-| TOK-35 | 41/43/45/47px, uses 1; no `0px` | `T:415-418` | ✅ PASS |
-| TOK-36 | `50%`, `10px 20px` uses 1, after every px Length | `T:427` (last two rows); `T:530-537` (whole list) | ✅ PASS |
-| TOK-37 | `(text, rgb(0, 0, 0) 1px 1px 2px)` uses 1 | `T:436` | ✅ PASS |
-| TOK-38 | one box Token of the two-layer text, uses 1 | `T:444` | ✅ PASS |
+| TOK-22 | no `#aa00aa` | `T:463` | ✅ PASS |
+| TOK-23 | no `#00aaaa` | `T:469` | ✅ PASS |
+| TOK-24 | none of the 3 colours; none of the 3 elements counted | `T:476-477`; `T:480` `result["elements"] == 32`; `T:822-823` (each alone gives 0) | ✅ PASS. Re-derived: the `body` of `tokens-used.html` holds 36 elements, all with an `id`; minus `#none`, `#flat-w`, `#flat-h`, `#hidden`, `#faded`, `#faded-child` that is 30, plus `html` and `body`: 32. `#mute` (100x20, visible) is Read, as TOK-81 says. |
+| TOK-25 | no 40/900/50/Georgia in any typography list; sizes holds 12 | `T:351-354` | ✅ PASS |
+| TOK-26 | sizes holds 13; line-height uses = size uses − 1 | `T:360-364` | ✅ PASS |
+| TOK-27 | lineHeights holds 30 | `T:372` | ✅ PASS |
+| TOK-28 | 51/53/55/57, uses 1, margin 1 | `T:377-379` | ✅ PASS |
+| TOK-29 | 61/63/65/67, uses 1, padding 1 | `T:384-386` | ✅ PASS |
+| TOK-30 | no 620 | `T:393` | ✅ PASS |
+| TOK-31 | nothing ≤ 0; no 71 | `T:398-399` | ✅ PASS |
+| TOK-32 | 81, 83 with gap 1 | `T:404-405` | ✅ PASS |
+| TOK-33 | 85/87/89, uses 1, gap 1 | `T:413-415` | ✅ PASS |
+| TOK-34 | no 91 | `T:420` | ✅ PASS |
+| TOK-35 | 41/43/45/47px, uses 1; no `0px` | `T:427-430` | ✅ PASS |
+| TOK-36 | `50%`, `10px 20px` uses 1, after every px Length | `T:439` (last two rows); `T:542-549` (whole list) | ✅ PASS |
+| TOK-37 | `(text, rgb(0, 0, 0) 1px 1px 2px)` uses 1 | `T:448` (every `text` row) | ✅ PASS |
+| TOK-38 | one box Token of the two-layer text, uses 1 | `T:456` (every `box` row) | ✅ PASS |
 | TOK-39 | holds `#336699` | `T:324` (a Token `value`) | ✅ PASS |
 | TOK-40 | holds `#ff0000` | `T:331` | ✅ PASS |
+| TOK-81 (new) | no typography list holds `0`, `700`, `37`, `Courier, monospace`; `colors` does not hold `#abcdef`; no Value of `shadows` holds `3px 3px 3px` | `T:338-340` `value not in values(typography[name])` for each of the 4 lists and 4 values; `T:341` `"#abcdef" not in values(result["colors"])`; `T:342-343` `"3px 3px 3px" not in value` for every Value of `shadows` | ✅ PASS. `values()` (`T:118-125`) reads Tokens and variants, as "does not hold" is defined (`spec.md:157`). The fixture matches the criterion: `tests/fixtures/tokens-used.html:190-196` (`#mute`, 100x20, `font: 700 0px/37px Courier, monospace`, `color: #abcdef`, `text-shadow: 3px 3px 3px #abcdef`). The whole lists of the page (`T:491-553`) did not change, so the values are absent, not merely moved. |
 
 ### P1: Fold values that are nearly equal
 
 | Criterion | Spec-defined outcome | `file:line` + assertion | Result |
 | --------- | -------------------- | ----------------------- | ------ |
-| TOK-41 | `#1a73e8` uses 7, roles {1,6,0}, variants `(#1a73e8,4),(#1a78e8,3)` | `T:550-556` | ✅ PASS |
-| TOK-42 | `#1a79e8` uses 1, single variant | `T:565-567` | ✅ PASS |
-| TOK-43 | `#1a73e880` uses 1, apart from `#1a73e8` | `T:573-575` | ✅ PASS |
-| TOK-44 | `#808080` uses 4, variants `(#808080,2),(#858585,2)` | `T:584-589` | ✅ PASS |
-| TOK-45 | `(15,1),(16,4),(17,4)` | `T:595` | ✅ PASS |
-| TOK-46 | variants of 17: `(17,2),(16.75,1),(17.75,1)` | `T:603` | ✅ PASS |
-| TOK-47 | variants of 16: `(16,3),(16.5,1)` | `T:616` | ✅ PASS |
-| TOK-48 | `8` uses 3, padding 3, variants `(8,2),(8.5,1)` | `T:634-636` | ✅ PASS |
-| TOK-49 | `4px` uses 3, variants `(4px,2),(4.5px,1)` | `T:641-645` | ✅ PASS |
-| TOK-50 | one Token `20`, variants end `(20.5,1)` | `T:652-654` | ✅ PASS |
-| TOK-51 | four Tokens of uses 1 | `T:626-629` | ✅ PASS |
+| TOK-41 | `#1a73e8` uses 7, roles {1,6,0}, variants `(#1a73e8,4),(#1a78e8,3)` | `T:562-568` | ✅ PASS |
+| TOK-42 | `#1a79e8` uses 1, single variant | `T:577-579` | ✅ PASS |
+| TOK-43 | `#1a73e880` uses 1, apart from `#1a73e8` | `T:585-587` | ✅ PASS |
+| TOK-44 | `#808080` uses 4, variants `(#808080,2),(#858585,2)` | `T:596-601` | ✅ PASS |
+| TOK-45 | `(15,1),(16,4),(17,4)` | `T:621` | ✅ PASS |
+| TOK-46 | variants of 17: `(17,2),(16.75,1),(17.75,1)` | `T:629-633` | ✅ PASS |
+| TOK-47 | variants of 16: `(16,3),(16.5,1)` | `T:642-645` | ✅ PASS |
+| TOK-48 | `8` uses 3, padding 3, variants `(8,2),(8.5,1)` | `T:660-662` | ✅ PASS |
+| TOK-49 | `4px` uses 3, variants `(4px,2),(4.5px,1)` | `T:667-672` | ✅ PASS |
+| TOK-50 | one Token `20`, variants end `(20.5,1)` | `T:678-680` | ✅ PASS |
+| TOK-51 | four Tokens of uses 1 | `T:652-655` | ✅ PASS |
+| TOK-80 (new) | `(#333333,8),(#1a73e8,7),(#ff8800,5),(#808080,4),(#1a73e880,1),(#1a79e8,1)`, whole and in order | `T:608-615` `rows(colors, "value", "uses") == [...]`; `T:693-700` the same list with Roles (`("#ff8800", 5, 0, 5, 0)`) | ✅ PASS. Re-derived: in Rank order of Values `#ff8800` (5) comes before `#1a73e8` (4 alone), so its Group opens first; the order the spec asks for exists only by the summed Uses (7). The Verifier recomputed with the shipped `lab_of` and `delta_e_2000`: the smallest ΔE2000 from `#ff8800` to another colour of the page is 31.6362 (`#858585`), so it is Near none. Fixture: `tests/fixtures/tokens-groups.html:61-69`, `:168-172`. |
 
 ### P1: Narrow the reading to a part of the page
 
 | Criterion | Spec-defined outcome | `file:line` + assertion | Result |
 | --------- | -------------------- | ----------------------- | ------ |
-| TOK-52 | 4 colour rows in order; scope `.card` | `T:712-718` | ✅ PASS |
-| TOK-53 | elements 6 | `T:724` | ✅ PASS |
-| TOK-54 | holds `#ff0000`; elements 9 | `T:730-732` | ✅ PASS (note: `values()` also accepts a variant; this is equivalent here, since no two colours of the page are Near) |
-| TOK-55 | `(#00ffff,1)` alone; elements 1 | `T:737-738` | ✅ PASS |
-| TOK-56 | every Family but `colors` `{total: 0, tokens: []}` | `T:743-744` | ⚠️ Spec-precision gap: the outcome is the same with no scope (see point 1) |
-| TOK-57 | message `Scope ".missing" matched no elements.` | `T:749` `message == …` (after the SDK prefix) | ✅ PASS (see point 3) |
-| TOK-58 | message `Invalid selector "div[".` | `T:753` | ✅ PASS (see point 3) |
-| TOK-59 | elements 0; every Family empty | `T:761-763` | ✅ PASS |
-| TOK-60 | exact zero summary | `T:769` | ✅ PASS |
-| TOK-61 | fails; not a whole-page reading | `T:776-777` (fails, and the message is not a summary) | ✅ PASS (the spec gives no message, and none is asserted) |
+| TOK-52 | 4 colour rows in order; scope `.card` | `T:740-746` | ✅ PASS |
+| TOK-53 | elements 6 | `T:752` | ✅ PASS |
+| TOK-54 | holds `#ff0000`; elements 9 | `T:758-760` | ✅ PASS (`values()` also accepts a variant; equivalent here, no two colours of the page are Near) |
+| TOK-55 | `(#00ffff,1)` alone; elements 1 | `T:765-766` | ✅ PASS |
+| TOK-56 (rewritten) | without `scope`: six Families each one Token, those of `#outside`; with `#one-child`: every Family but `colors` `{total: 0, tokens: []}` | `T:773-780` six `rows(...) == [single row]` assertions, whole lists, with the spec's exact values (`("box", "rgba(0, 0, 0, 0.5) 0px 2px 4px 0px", 1)` at `T:778-779`); `T:782-783` `family == {"total": 0, "tokens": []}` for `families(result)[1:]` | ✅ PASS. The first pass's spec-precision gap is closed: the fixture (`tests/fixtures/tokens-scope.html:23-29`, `:47`) now gives the whole page a non-colour Value in each of the six Families, so the empty Families of `#one-child` are told from the whole page. Mutants S2 to S5 die at `T:783`. |
+| TOK-57 | Message `Scope ".missing" matched no elements.` | `T:787-788` `message == …` | ✅ PASS (Message per `spec.md:43`) |
+| TOK-58 | Message `Invalid selector "div[".` | `T:792` `== 'Invalid selector "div[".'` | ✅ PASS (Message per `spec.md:43`) |
+| TOK-59 | elements 0; every Family empty | `T:799-802` | ✅ PASS; now also told from the whole page by `#outside` (S2 to S5 die at `T:802`) |
+| TOK-60 | exact zero summary | `T:808` | ✅ PASS; S2 to S5 die here too |
+| TOK-61 | fails; not a whole-page reading | `T:815-816` (fails through `fail`, and the message is not a summary) | ✅ PASS (the spec gives no message, and none is asserted) |
 
 ### P2: Bound the response
 
 | Criterion | Spec-defined outcome | `file:line` + assertion | Result |
 | --------- | -------------------- | ----------------------- | ------ |
-| TOK-62 | total 21; 10…190, then 210 | `T:793-794` | ✅ PASS |
-| TOK-63 | total 20; 10…200 | `T:799-800` | ✅ PASS |
-| TOK-64 | total 21; first 20 by text, in order | `T:808-830` (exact list; the fixture has 21 backgrounds, `#ffffff` the last) | ✅ PASS |
-| TOK-65 | the text says `colors 21` and `spacing 21` | `T:837-838` | ✅ PASS |
+| TOK-62 | total 21; 10…190, then 210 | `T:832-833` | ✅ PASS |
+| TOK-63 | total 20; 10…200 | `T:838-839` | ✅ PASS |
+| TOK-64 | total 21; first 20 by text, in order | `T:847-869` (exact list) | ✅ PASS |
+| TOK-65 | the text says `colors 21` and `spacing 21` | `T:876-877` | ✅ PASS |
 | TOK-66 | ≤ 20 per Family | `T:46-47`, on every `extract` call | ✅ PASS |
 
 ### P2: Tool contract, config and documents
@@ -130,100 +130,62 @@ The `extract` helper (`T:39-48`) runs on every successful call. It asserts `is_e
 | Criterion | Spec-defined outcome | `file:line` + assertion | Result |
 | --------- | -------------------- | ----------------------- | ------ |
 | TOK-67 | hints, output schema, `url` required, `scope` optional string, viewport min 1 | `T:131-158` | ✅ PASS |
-| TOK-68 | holds `#111111`, not `#999999`; viewport 375x812 | `T:847-849` | ✅ PASS (same `values()` note as TOK-54) |
-| TOK-69 | exact scheme message | `T:853` | ✅ PASS (see point 3) |
-| TOK-70 | starts with `Could not load ` + url | `T:860` | ✅ PASS (see point 3) |
-| TOK-71 | `Timed out after 30s.` | `T:872` `== "Timed out after 1s."` with the config set to 1.0. The 30 is `config.py:8` (`TOTAL_TIMEOUT_S = 30.0`), formatted by `tools/extract_tokens.py:68` (`{:g}s`) | ✅ PASS |
+| TOK-68 | holds `#111111`, not `#999999`; viewport 375x812 | `T:886-888` | ✅ PASS |
+| TOK-69 | Message `Unsupported URL scheme "ftp"; use http://, https:// or file://.` | `T:892-894` `==` | ✅ PASS (Message per `spec.md:43`) |
+| TOK-70 | Message starts with `Could not load ` + url | `T:899` `.startswith(f"Could not load {url}")` | ✅ PASS (Message per `spec.md:43`) |
+| TOK-71 | Message `Timed out after 30s.` | `T:911` `message == "Timed out after 1s."` with `TOTAL_TIMEOUT_S` set to 1.0 (`T:907`); the 30 is `src/squint_mcp/config.py:8`, formatted by `X:68` (`{:g}s`) | ✅ PASS (mutant E3 on the format dies at `T:911`) |
 | TOK-72 | error, no structured content | `T:55-56`, in every `fail` call | ✅ PASS |
-| TOK-73 | stabilized false; the text ends `; not stabilized.` | `T:883-885` | ✅ PASS |
+| TOK-73 | stabilized false; the text ends `; not stabilized.` | `T:922-924` | ✅ PASS |
 | TOK-74 | 34 published pairs to four places | `tests/test_color.py:18` (34 rows), `tests/test_color.py:21-22` (both orders) | ✅ PASS |
 | TOK-75 | three named constants, each with its source | `src/squint_mcp/config.py:191-205` (read) | ✅ PASS |
-| TOK-76 | README describes the tool; CHANGELOG under Unreleased | `README.md:44`, `README.md:48-53`; `CHANGELOG.md:7`, `CHANGELOG.md:11` (read) | ✅ PASS |
-| TOK-77 | earlier tests pass, with only the two tool lists changed | `git diff ee2c88e..e3fcf12` on earlier tests: only `tests/test_ping.py:38` and `tests/test_inspect_element.py:466` gain `extract_tokens` (and the ping test's name). The Build was not re-run here, by the orchestrator's instruction: 496 passed at `1c1b55f`, as recorded under T29 | ✅ PASS |
+| TOK-76 | README describes the tool; CHANGELOG under Unreleased | `README.md:44`, `README.md:48`; `CHANGELOG.md:7`, `CHANGELOG.md:11` (read) | ✅ PASS |
+| TOK-77 | earlier tests pass, with only the two tool lists changed | `git diff ee2c88e..07d6c2c` on earlier tests: only `tests/test_ping.py` and `tests/test_inspect_element.py` gain `extract_tokens` (and the ping test's name). Build 498 passed at `496676d`, recorded under T34 (not re-run here, by the orchestrator's instruction) | ✅ PASS |
 
 ### Edge Cases
 
 | Criterion | Spec-defined outcome | `file:line` + assertion | Result |
 | --------- | -------------------- | ----------------------- | ------ |
-| TOK-78 | `40` uses 2, variants `(40,1),(40.5,1)` | `T:694-696` | ✅ PASS |
-| TOK-79 | `8` uses 1, margin 1 | `T:702-703` | ✅ PASS |
+| TOK-78 | `40` uses 2, variants `(40,1),(40.5,1)` | `T:722-724` | ✅ PASS |
+| TOK-79 | `8` uses 1, margin 1 | `T:730-731` | ✅ PASS |
 
-**Status**: All 79 criteria are covered, with the assertion on the spec's outcome. ⚠️ 2 spec-precision gaps are flagged (TOK-56; the meaning of "message" in TOK-57, 58, 69, 70 and 71). Two rules of the Terms have no criterion whose fixture tells them apart: the Family order of `colors`, and the box clause of Painted text. The sensor found both.
+**Status**: ✅ All 81 criteria are covered, each assertion on the spec's outcome. 0 spec-precision gaps: TOK-56's is closed by its new fixture, and that of "the message" (TOK-57, 58, 69, 70, 71) by the Term **Message**, which the `fail` helper (`T:59-61`) implements to the character.
 
 ---
 
 ## Discrimination Sensor
 
-**Depth**: expanded (22 mutants), because the tool changes what every Capture reads.
+**Depth**: expanded (12 mutants): the four survivors of the first pass, re-implemented from its descriptions, and eight more aimed at the new or changed criteria (TOK-56, TOK-80, TOK-81, TOK-24, TOK-71).
 
-**Isolation**: a detached worktree at `C:\Users\Dev\AppData\Local\Temp\tok-verify` (`e3fcf12`). Each mutant was applied by exact string replacement, checked to occur once. The tests ran with the repo's `.venv` and `PYTHONPATH` set to the worktree's `src`; `squint_mcp.tokens.__file__` was checked to resolve there. After each run `git checkout -- src` reset the worktree. At the end the worktree was removed with `git worktree remove --force` and `git worktree prune`. `git status --porcelain` of the real tree was empty before and empty after (byte-identical), and HEAD stayed at `e3fcf12`. Each mutant ran the whole Quick gate: `pytest tests/test_color.py tests/test_extract_tokens.py`.
+**Isolation**: for each mutant a fresh copy of `src/squint_mcp` in `C:\Users\Dev\AppData\Local\Temp\tok-verify2\<name>\squint_mcp`, the mutation applied by exact string replacement (asserted to occur once), then `uv run pytest tests/test_color.py tests/test_extract_tokens.py -q --tb=line -p no:cacheprovider` from the repo root with `PYTHONPATH` set to the copy's parent and `PYTHONDONTWRITEBYTECODE=1`. Before each run `squint_mcp.__file__` was asserted to resolve into the copy (e.g. `C:\Users\Dev\AppData\Local\Temp\tok-verify2\S2\squint_mcp\__init__.py`). An unmutated copy (BASE) passed 77 of 77 first. Each copy was deleted after its run, and the scratch directory at the end. No `git stash`, no worktree, no edit of the real `src/`. `git status --porcelain` of the real tree was empty before and empty after (byte-identical, `cmp`), and HEAD stayed at `07d6c2c`. Every mutant ran the whole Quick gate (77 tests), not a `-k` subset.
 
 | # | File:line | Description | Killed? | Killed by |
 | - | --------- | ----------- | ------- | --------- |
-| S1 | `tools/extract_tokens.py:71-72` | With a scope, the seven non-colour Families read from a second Capture of `*` (the whole page) | ✅ Killed | only `T:797` (TOK-63, spacing) |
-| S2 | `tools/extract_tokens.py:71-72` | As S1, but `spacing` stays scoped: typography, radii and shadows read from the whole page | ❌ **Survived** | - |
-| C1 | `K:233` | `colors` Tokens kept in build order (the order their Groups were opened), then cut at the Limit | ❌ **Survived** | - |
-| C2 | `K:233` | `colors` Tokens ranked by the Uses of their Representative, not of their Group | ❌ **Survived** | - |
-| G1 | `K:147` | A Value joins the first Near Group, not the nearest | ✅ Killed | `T:592`, `T:598`, `T:610`, `T:657` |
-| G2 | `K:147` | A tie goes to the Group opened last (`<` → `<=`) | ✅ Killed | `T:592`, `T:598`, `T:610`, `T:657` |
-| G3 | `K:287` | Lengths exactly 1px apart are Near | ✅ Killed | `T:345`, `T:471`, `T:592`, `T:598`, `T:610`, `T:657` |
-| G4 | `K:146` | A Value is compared with every member of a Group, not only its Representative | ✅ Killed | `T:544`, `T:559`, `T:592`, `T:598`, `T:610`, `T:657` |
-| G5 | `K:244` | Colours of different alphas can be Near | ✅ Killed | `T:544`, `T:570`, `T:657` |
-| G6 | `K:249` | Colour threshold loosened to ΔE 2.3 | ✅ Killed | `T:544`, `T:559`, `T:657` |
-| R1 | `K:131` | Rank order ties broken by Value descending | ✅ Killed | `T:578`, `T:598`, `T:657`, `T:691` |
-| U1 | `K:125` | One Use per side/corner/axis instead of one per Value per element | ✅ Killed | 12 tests (e.g. `T:181`, `T:226`, `T:238`) |
-| P1 | `K:265` | Painted text = Own text, whether or not it paints a box | ❌ **Survived** | - |
-| P2 | `K:209` | Text colour read from `color`, not `-webkit-text-fill-color` | ✅ Killed | `T:280`, `T:291`, `T:471` |
-| P3 | `K:259` | The opacity of ancestors ignored | ✅ Killed | `T:454`, `T:460`, `T:471` |
-| P4 | `K:345` | `auto` margins counted | ✅ Killed | `T:377`, `T:471` |
-| P5 | `K:433` | `elements` counts every element of the Capture, not the Read ones | ✅ Killed | 9 tests (e.g. `T:161`, `T:721`, `T:756`) |
-| L1 | `K:176` | The Limit cut after Family order, not in Rank order | ✅ Killed | `T:787` |
-| E1 | `tools/extract_tokens.py:64-65` | An empty scope read as no scope | ✅ Killed | `T:775` |
-| E2 | `tools/extract_tokens.py:70` | The no-match failure raised as a `ValueError` (a crash), not a `ToolError` | ✅ Killed | `T:747` (the prefix assertion in `fail`) |
-| D1 | `src/squint_mcp/js/collect_elements.js:204` | The descendants of a match do not enter open shadow trees | ✅ Killed | `T:706`, `T:721` |
-| X1 | `src/squint_mcp/color.py:136` | ΔE2000 without the rotation term `R_T` | ✅ Killed | `tests/test_color.py:12`, `T:544`, `T:559`, `T:657` |
+| S2 | `X:71-72` | With a scope, a second Capture of `*` (whole page, no descendants); its `typography`, `radii` and `shadows` replace those of the scope; `spacing` and `colors` stay scoped | ✅ Killed (survived in pass 1) | `T:783` (TOK-56), `T:802` (TOK-59), `T:808` (TOK-60) |
+| C1 | `K:233` | `colors` Tokens kept in build order (the order their Groups were opened), then cut at the Limit | ✅ Killed (survived in pass 1) | `T:608` (TOK-80), `T:693` (TOK-80 / whole list) |
+| C2 | `K:233` | `colors` Tokens ranked by the Uses of their Representative (first variant), then by value, then cut at the Limit | ✅ Killed (survived in pass 1) | `T:608` (TOK-80), `T:693` |
+| P1 | `K:265` | Painted text = Own text, whether or not it paints a box (`return element.own_text`) | ✅ Killed (survived in pass 1) | `T:340` (TOK-81, `Courier, monospace` in `families`), `T:448` (TOK-37), `T:491` (whole list of `tokens-used.html`) |
+| S3 | `X:71-72` | As S2, but only `shadows` read from the whole page | ✅ Killed | `T:783`, `T:802`, `T:808` |
+| S4 | `X:71-72` | As S2, but only `radii` read from the whole page | ✅ Killed | `T:783`, `T:802`, `T:808` |
+| S5 | `X:71-72` | As S2, but only `typography` read from the whole page | ✅ Killed | `T:783`, `T:802`, `T:808` |
+| P6 | `K:206` | The text colour alone ignores the box clause (`if element.own_text:` in `_colors`) | ✅ Killed | `T:341` (TOK-81, `#abcdef`), `T:491` |
+| P7 | `K:415` | The text shadow alone ignores the box clause (`if element.own_text:` in `_shadows`) | ✅ Killed | `T:343` (TOK-81, `3px 3px 3px`), `T:448`, `T:550` |
+| C3 | `K:233` | `colors` kept in Family order by value (`by_value=True`), not in Rank order | ✅ Killed | `T:187` (TOK-01), `T:491`, `T:608`, `T:693`, `T:740` (TOK-52) |
+| R2 | `K:255-260` | A Read element also needs its Own text, if any, to paint a box (`#mute` no longer Read) | ✅ Killed | `T:480` (TOK-24, `31 == 32`) |
+| E3 | `X:68` | The timeout Message formatted with `{}` instead of `{:g}` (`1.0s`) | ✅ Killed | `T:911` (TOK-71) |
 
-**Result**: 18 of 22 killed, 4 survived (3 gaps). ❌ FAIL
+**Sensor depth**: expanded
+**Result**: 12/12 killed - ✅ PASS
 
-None of the four survivors is equivalent. Each one changes what a call returns on a page the spec's Terms describe:
-
-- S2: a scoped call on a page whose text, radii or shadows lie outside the scope.
-- C1 and C2: a page where a later-opened Group's summed Uses pass those of an earlier Representative.
-- P1: an element whose Own text paints no box, in a box that does.
+The 18 mutants killed in the first pass (S1, G1 to G6, R1, U1, P2 to P5, L1, E1, E2, D1, X1) were not re-run: `src/` is unchanged since, and the fix round only added fixture rows and assertions, none removed (76 tests in the module, 74 before plus TOK-80 and TOK-81). The fix round only added rows and assertions to existing tests (`T:696`, `T:770-780`), with one exception: `T:480` (TOK-24), whose count rose from 31 to 32 with `#mute`. R2 shows that count still discriminates.
 
 ---
 
-## The three points the maintainer asked about
+## The changes of the fix round, checked
 
-### Point 1: does TOK-56's test tell a scope from the whole page? Verdict: **gap**
-
-No. `tokens-scope.html` gives no element text of its own, and no margin, padding, radius or shadow (its own comment and the spec's TOK-52 preamble). Only `background-color` is set. So the whole page leaves the seven non-colour Families empty too. `T:741-744` holds for `#one-child`, and it would hold just the same for no scope at all. TOK-59 (`T:756-763`, `#gone`) has the same blind spot: an empty Family is empty either way on this page.
-
-The literal mutant, "ignore scope for the non-colour Families" (S1), is killed, but only by TOK-63 (`T:797-800`, `scope="#twenty"` on `tokens-limit.html`), because `spacing` differs there. The narrower mutant S2 leaves `spacing` scoped and reads typography, radii and shadows from the whole page. It passes all 75 tests: no scoped call anywhere in the module reads those Families on a page where the whole page differs.
-
-The code itself is sound: every Family is computed from the same `read` list (`K:431-438`), and the Capture alone narrows it. But a per-Family scope bug is not held. This is a spec-precision gap, because the fixture the spec fixes for TOK-56 cannot fail the rule.
-
-**Fix**: give `tokens-scope.html` one element outside every card, for instance `#outside`, with Own text, a radius and a box shadow, and say in TOK-56 that the whole page holds them. Then `T:741-744` fails under S2.
-
-### Point 2: are the `colors` Tokens ordered by summed Uses? Verdict: **gap, confirmed**
-
-The author's report is right. The code orders by the summed Uses of each Token (`K:175`: `sorted(tokens, key=lambda token: (-token.uses, key(token)))`, where `uses` is the sum of the Group, `K:224`). That is the order the Terms ask for (Family order → Rank order of the Tokens, by Uses).
-
-But C1 keeps the Tokens in build order, which is the order their Groups were opened, and it passes all 75 tests. C2 ranks by the Representative's own Uses, and it passes all 75 too. On `tokens-groups.html` (`T:666-672`) build order and summed order are the same: `#333333` (8 Uses, opened first), then `#1a73e8` (opened with 4, ends with 7), then `#808080` (opened with 2, ends with 4), then the two of 1 Use. No Group's sum overtakes a Representative opened before it. On `tokens-page.html` and `tokens-limit.html` no two colours are Near, so the two orders cannot differ.
-
-The Limit is not held either: a cut in build order keeps different Tokens only when the two orders differ.
-
-**Fix**: a criterion and fixture rows where they differ. For example, add five boxes of one colour Near no other to `tokens-groups.html`. In build order that colour (5) comes before `#1a73e8` (opened with 4). In summed order `#1a73e8` (7) comes first. Both C1 and C2 then die on the whole-list assertion `T:666`.
-
-### Point 3: are the error criteria anchored to the spec or to the SDK prefix? Verdict: **anchored to the spec; minor spec-precision gap, not blocking**
-
-The SDK wraps every `ToolError` as `Error executing tool <name>: <message>` (`.venv/Lib/site-packages/mcp/server/mcpserver/tools/base.py:210`). `fail` (`T:51-61`) first asserts that the text starts with that prefix. It then compares the rest whole, with `==`, against the spec's literal text for TOK-57 (`T:749`), TOK-58 (`T:753`), TOK-69 (`T:853`) and TOK-71 (`T:872`), and with `startswith` for TOK-70 (`T:860`), as that criterion asks. So the asserted value is the spec's text, character for character. That is stricter than the earlier tools' tests, which use a substring `in` (`tests/test_inspect_element.py:444`).
-
-The prefix assertion also discriminates. A crash reaches the client as `Error executing tool extract_tokens` with no message (`base.py:213`). Mutant E2 (a `ValueError` instead of a `ToolError`) is killed by `T:747` through that very prefix check.
-
-The gap: the spec says "the call SHALL fail with the message X" but never says what "the message" is in the result the client receives. The client's text block is the SDK prefix followed by X, not X. The test settles this by an assumption about the SDK that is written in a test comment (`T:58`), not in the spec. If the SDK changed its prefix, the tests would fail while the tool still meets the spec.
-
-**Fix (spec wording only)**: add a Term, "Message: the text of the error's one text block after the SDK's `Error executing tool extract_tokens: `", or write it into the Assumptions table. No code or test change is needed.
+- **TOK-56 / S2**: the criterion now names the whole page's six Tokens, and the test asserts each list whole (`T:773-780`) before the empty Families of `#one-child` (`T:782-783`). The fixture matches the spec's preamble (`spec.md:222`): `#outside` has the Own text `Out`, `font: 400 12px/16px Arial, sans-serif`, `color: #000000`, `border-radius: 6px` and `box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5)`; no other element has text, a radius or a shadow. TOK-52 to TOK-55 and TOK-57 to TOK-60 still pass with their assertions unchanged (`git diff 840099a..07d6c2c -- tests/test_extract_tokens.py` touches none of them).
+- **TOK-80 / C1, C2**: the five boxes of `#ff8800` make the build order (and the Representative's order) differ from the summed order. The whole-list test of the page (`T:693-700`) gained only the row of `#ff8800`; the other Families of that test are unchanged.
+- **TOK-81 / P1**: one 100x20 element whose text, of `font-size: 0`, paints no box. The task notes a Chromium 153 probe: one 0x0 rect. That the rule now discriminates is shown by P1, P6 and P7, each killed at its own clause of `T:338-343`.
+- **Message**: `spec.md:43`. The `fail` helper already compared the text after that prefix. TOK-57, 58, 69 and 71 compare it whole with `==`, and TOK-70 with `startswith`, as the criterion asks.
 
 ---
 
@@ -231,63 +193,44 @@ The gap: the spec says "the call SHALL fail with the message X" but never says w
 
 | Principle | Status |
 | --------- | ------ |
-| Minimum code | ✅ `tokens.py` is the Terms as code; one grouping walk (`K:134-153`) is shared by every Family that groups |
-| Surgical changes | ✅ Earlier tests change only in the two tool lists (TOK-77) |
+| Minimum code | ✅ No code changed in the fix round; the fixes are fixture rows and assertions |
+| Surgical changes | ✅ `840099a..07d6c2c` touches only `.specs/`, `tests/test_extract_tokens.py` and three fixtures |
 | No scope creep | ✅ |
-| Matches patterns | ✅ Same timeout, `ToolError` and `CallToolResult` shape as the other tools |
-| Spec-anchored outcome check | ✅ (2 flags above) |
+| Matches patterns | ✅ The new tests use the module's `extract`, `rows` and `values` helpers |
+| Spec-anchored outcome check (asserted values match spec) | ✅ 81/81 |
 | Per-layer Coverage Expectation met | ✅ 1:1 through the MCP boundary; ΔE2000 alone below it, as the Assumptions allow |
-| Every test maps to a spec requirement | ✅ Each test carries the criterion it holds; `T:780` (TOK-24 per element) and the whole-list tests `T:471` and `T:657` hold the L-020 order |
+| Every test maps to a spec requirement | ✅ The two new tests hold TOK-80 (`T:604`) and TOK-81 (`T:334`) |
 | Documented guidelines followed | ✅ `CONTRIBUTING.md`, `docs/SPEC.md` Testing Decisions (one seam) |
 
 ---
 
 ## Edge Cases
 
-- [x] TOK-78: two Near Values on one element are two Uses (`T:691-696`)
-- [x] TOK-79: the browser's default `body` margin is counted (`T:699-703`)
-- [x] A scope that matches nothing (TOK-57), is not a selector (TOK-58), or matches only elements that are not Read (TOK-59)
-- [ ] A Family with no Value in the scope (TOK-56): asserted, but not told apart from the whole page (point 1)
+- [x] TOK-78: two Near Values on one element are two Uses (`T:719-724`)
+- [x] TOK-79: the browser's default `body` margin is counted (`T:727-731`)
+- [x] A scope that matches nothing (TOK-57), is not a selector (TOK-58), or matches only elements that are not Read (TOK-59, now told from the whole page)
+- [x] A Family with no Value in the scope (TOK-56): told from the whole page by `#outside`
+- [x] Own text that paints no box in a box that does (TOK-81)
 
 ---
 
 ## Gate Check
 
-- **Gate command**: Full, `uv run pyright && uv run ruff check && uv run ruff format --check && uv run pytest tests/test_color.py tests/test_extract_tokens.py`, run by the Verifier on the real tree at `e3fcf12`
-- **Result**: pyright 0 errors; ruff check passed; ruff format check passed (120 files); **75 passed**, 0 failed, 0 skipped, in 81.04s. Exit 0.
+- **Gate command**: Full, `uv run pyright && uv run ruff check && uv run ruff format --check && uv run pytest tests/test_color.py tests/test_extract_tokens.py`, run by the Verifier on the real tree at `07d6c2c`
+- **Outcome**: pyright 0 errors, 0 warnings; ruff check `All checks passed!`; ruff format check `121 files already formatted`; **77 passed**, 0 failed, 0 skipped, in 74.90s. Exit 0.
+- **Build** (recorded, not re-run, by the orchestrator's instruction): 498 passed at `496676d`, pyright 0 errors, ruff clean (T34)
+- **Linux** (recorded, not re-run): 77 passed in 73.84s, Playwright Docker image (T28)
 - **Test count before feature**: 421 collected at `486004c` (`tasks.md`)
-- **Test count after feature**: 496 collected (Build at `1c1b55f`, 496 passed, recorded under T29; not re-run by the Verifier, by the orchestrator's instruction)
-- **Delta**: +75 (`test_color.py` 1, `test_extract_tokens.py` 74); none deleted
+- **Test count after feature**: 498 (Build); the two modules hold 77 (`test_color.py` 1, `test_extract_tokens.py` 76)
+- **Delta**: +77; +2 since the first pass (TOK-80, TOK-81); none deleted, none weakened (the one changed assertion, `T:480`, is a count that rose with the new element)
 - **Skipped tests**: none
 - **Failures**: none
-- **Linux**: 75 passed (T28, recorded; not re-run)
 
 ---
 
 ## Fix Plans
 
-### Fix 1: hold the scope for typography, radii and shadows (S2; TOK-56)
-
-- **Root cause**: the fixture of TOK-56 has no non-colour Value outside the scope, so an empty Family proves nothing.
-- **Fix task**: Spec (maintainer): TOK-56, or a new criterion, gives `tokens-scope.html` an element outside the cards with Own text, a radius and a box shadow, and says the whole page holds them while `#one-child` does not. Tests: extend `T:741-744`, or add a whole-page check of those Families. Done when S2 fails in a scratch copy. `src/` is unchanged.
-- **Priority**: Major
-
-### Fix 2: hold the Family order of `colors` by summed Uses (C1, C2)
-
-- **Root cause**: no fixture has a Group whose summed Uses pass a Representative opened before it.
-- **Fix task**: Spec (maintainer): a criterion on `tokens-groups.html` with, for example, five boxes of one colour Near no other, and the whole `colors` list in order (TOK-41's Token before it). Test: the whole list at `T:666`. Done when C1 and C2 fail in a scratch copy.
-- **Priority**: Major
-
-### Fix 3: hold the box clause of Painted text (P1)
-
-- **Root cause**: no criterion has an element with Own text that paints no box inside a box that does. Terms: "when at least one of them paints a box".
-- **Fix task**: Spec (maintainer): a criterion on `tokens-used.html`, for example a 100x20 box whose Own text paints no box, with a font family, size, colour and text shadow no other element has, none of them held. The Verifier did not probe which CSS makes the text paint no box in Chromium 153 (`font-size: 0` is one candidate), so Design should confirm it. Done when P1 fails in a scratch copy.
-- **Priority**: Minor (it is a rare page, but the rule is in the Terms)
-
-### Fix 4 (wording, non-blocking): define "message"
-
-- **Fix task**: add to the spec's Terms or Assumptions what "the message" of a failure is: the text after the SDK's `Error executing tool extract_tokens: `.
-- **Priority**: Cosmetic
+None. The four fix plans of the first pass are done (T31 to T34) and verified above.
 
 ---
 
@@ -295,23 +238,25 @@ The gap: the spec says "the call SHALL fail with the message X" but never says w
 
 | Requirement | Previous Status | New Status |
 | ----------- | --------------- | ---------- |
-| TOK-01 to TOK-55, TOK-57 to TOK-79 | Implemented | ✅ Verified (TOK-01 and TOK-52 assertions hold; the order rule behind them is Fix 2) |
-| TOK-56 | Implemented | ❌ Needs Fix (Fix 1) |
+| TOK-01 to TOK-55, TOK-57 to TOK-79 | Implemented | ✅ Verified |
+| TOK-56 | Implemented (❌ Needs Fix in pass 1) | ✅ Verified |
+| TOK-80 | Implemented | ✅ Verified |
+| TOK-81 | Implemented | ✅ Verified |
 
-The spec was not edited: the Verifier writes only this file.
+The spec was not edited: the Verifier writes only this file. T30 updates the Status column.
 
 ---
 
 ## Summary
 
-**Overall**: ❌ Not Ready
+**Overall**: ✅ Ready
 
-**Spec-anchored check**: 79/79 criteria have an assertion on the spec's outcome; 2 spec-precision gaps flagged (TOK-56; "message").
-**Sensor**: 18/22 mutations killed; S2, C1, C2 and P1 survived.
-**Gate**: 75 passed, 0 failed (Full).
+**Spec-anchored check**: 81/81 criteria matched to the spec's outcome; 0 spec-precision gaps.
+**Sensor**: 12/12 mutations killed, among them S2, C1, C2 and P1, the four survivors of the first pass.
+**Gate**: 77 passed, 0 failed (Full, run by the Verifier); Build 498 and Linux 77 as recorded.
 
-**What works**: every value, Role, Use, variant and order the criteria name; the ΔE2000 function against the 34 published pairs; scope, matches under matches and open shadow trees; the Limit; the summary; the contract and the errors. 18 mutants across grouping, rank, reading, counting, scoping, the Limit and errors are killed.
+**What works**: every value, Role, Use, variant and order the criteria name; the scope now held for every Family; the order of `colors` by the Uses of a whole Group; the box clause of Painted text, held for type, text colour and text shadow separately; the Messages of the failures as the new Term defines them.
 
-**Issues found**: three rules of the Terms are built but not held by any fixture: the scope for typography, radii and shadows; the `colors` order by summed Uses; the box clause of Painted text. All three are fixed in the spec and its fixtures; `src/` should not need to change.
+**Issues found**: none.
 
-**Next steps**: the maintainer decides the spec rows for Fixes 1 to 3 (and the wording of Fix 4). A fix round adds the fixtures and tests, then the Verifier runs again, re-running S2, C1, C2 and P1.
+**Next steps**: T30 (mark slice 10 as done), then the maintainer's go-ahead for a push and a pull request.
