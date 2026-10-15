@@ -552,6 +552,36 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: validation.md pass 2 (range 0b9ae25..6cd7076): mutants N61-always-rtl and N62-always-optimize-speed, js/font_widths.js (tests,capture)
 - last seen: 2026-10-13T17:39:24Z
 
+### L-091 - Give a narrowing input a fixture where the part left out holds a value of every list the result returns
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,scope` · harmful: 0
+- features: extract-tokens
+- evidence: validation.md S2; tests/test_extract_tokens.py:741 (tests,scope)
+- last seen: 2026-10-14T19:00:03Z
+
+### L-092 - Give a narrowing input a fixture where the part left out holds a value of every list the result returns
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `tests,scope` · harmful: 0
+- features: extract-tokens
+- evidence: TOK-56; tests/test_extract_tokens.py:741 (tests,scope)
+- last seen: 2026-10-14T19:00:03Z
+
+### L-093 - Pin an order by a summed count with a fixture where the sum and the count of the first member give different orders
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,ordering` · harmful: 0
+- features: extract-tokens
+- evidence: validation.md C1, C2; src/squint_mcp/tokens.py:175 (tests,ordering)
+- last seen: 2026-10-14T19:00:03Z
+
+### L-094 - Give every rule the Terms or the Assumptions table of a spec define an acceptance criterion with a fixture whose outcome changes when the rule is dropped
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `spec` · harmful: 0
+- features: extract-tokens
+- evidence: validation.md P1; src/squint_mcp/tokens.py:265 (spec)
+- last seen: 2026-10-14T19:00:03Z
+
+### L-095 - State in the spec which part of the error text the client receives a criterion's message is, when the SDK adds a prefix to it
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `spec,mcp-tools` · harmful: 0
+- features: extract-tokens
+- evidence: TOK-57, TOK-58, TOK-69, TOK-70, TOK-71; tests/test_extract_tokens.py:58 (spec,mcp-tools)
+- last seen: 2026-10-14T19:00:03Z
+
 ## Quarantined (failed when applied - ignore)
 
 A confirmed lesson that recurred alongside failure. Kept for the maintainer to review.
