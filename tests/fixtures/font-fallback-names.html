@@ -15,8 +15,10 @@
          when this fixture was written (the tool does not show them): Ahem is
          `loaded` and the other four are `error`, under the names Dual, DUAL,
          Acme, Inc and Vinyl 12" in this order, each without quotes. Back\slash,
-         added later and read on Windows only, is `error` too, after them, without
-         quotes and with one backslash. */
+         "Quoted" and 'Single', added later (issue #20), are `error` too, after
+         them in this order, with no quotes put around them: one backslash, the
+         quotation marks and the apostrophes are part of each name. Read on Windows,
+         and the first two on Linux as well by the fourth validation pass. */
       /* One family whose two Faces write its name in two cases. Both fail. */
       @font-face {
         font-family: Dual;
@@ -52,6 +54,14 @@
       @font-face {
         font-family: '"Quoted"';
         src: url("no-such-quoted.woff2");
+      }
+      /* A name that starts and ends with an apostrophe (FNT-65): the apostrophes
+         are part of the name. Read on Windows, its Face is `error`, last, under the
+         name 'Single' with its apostrophes, and the computed `font-family` of
+         `#single` is "'Single'", Ahem. */
+      @font-face {
+        font-family: "'Single'";
+        src: url("no-such-single.woff2");
       }
       html,
       body {
@@ -91,6 +101,10 @@
       #quoted {
         font-family: '"Quoted"', Ahem;
       }
+
+      #single {
+        font-family: "'Single'", Ahem;
+      }
     </style>
   </head>
   <body>
@@ -100,5 +114,6 @@
     <div id="inch" class="text">XXXXXXXXXX</div>
     <div id="slash" class="text">XXXXXXXXXX</div>
     <div id="quoted" class="text">XXXXXXXXXX</div>
+    <div id="single" class="text">XXXXXXXXXX</div>
   </body>
 </html>

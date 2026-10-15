@@ -831,7 +831,7 @@ The eight residual mutants (R7) were not put to the maintainer as a decision: th
 
 ### F6: Report a family whose name starts and ends with an apostrophe
 
-- [ ] Done
+- [x] Done
 
 **What**: The fourth pass ([`validation.md`](validation.md)) passed with one residual: FACE-UNQUOTE-SINGLE-ONLY, which takes apostrophes off the name of a Face, passes the 55 tests. The maintainer chose to close it. The case `#single` in `font-fallback-names.html` (the family `'Single'`, its apostrophes part of the name, declared with a `src` that names no file) and its test. No change to `src/`: the test is a pin, red under the mutant.
 **Where**: `tests/test_font_fallback.py` (with `tests/fixtures/font-fallback-names.html`)
@@ -846,13 +846,15 @@ The eight residual mutants (R7) were not put to the maintainer as a decision: th
 
 **Done when**:
 
-- [ ] The computed `font-family` of `#single` and the name of its Face, as read from the page, are in the comment of the fixture
-- [ ] The test passes on the code as it is and fails under FACE-UNQUOTE-SINGLE-ONLY on a scratch copy
-- [ ] The tests of FNT-58 to FNT-60, FNT-63 and FNT-64 pass unchanged
-- [ ] Gate check passes: Full
-- [ ] Test count: 56 in the module; none deleted
+- [x] The computed `font-family` of `#single` and the name of its Face, as read from the page, are in the comment of the fixture
+- [x] The test passes on the code as it is and fails under FACE-UNQUOTE-SINGLE-ONLY on a scratch copy
+- [x] The tests of FNT-58 to FNT-60, FNT-63 and FNT-64 pass unchanged
+- [x] Gate check passes: Full
+- [x] Test count: 56 in the module, 501 collected; none deleted
 
 **Tests**: integration
 **Gate**: full
 
 **Commit**: `test(font-fallback): pin a family name wrapped in apostrophes`
+
+**Notes**: Read on Windows, Chromium 153, 2026-10-15: the Face is `'Single'`, apostrophes included, `error`, last of the eight; the computed `font-family` of `#single` is `"'Single'", Ahem`; not read in the Playwright image. FACE-UNQUOTE-SINGLE-ONLY (`family: face.family.replace(/^'(.*)'$/s, "$1"),`, as the fourth pass gives it), applied to a scratch copy of `src/squint_mcp` (`squint_mcp.__file__` in the copy), fails the test of FNT-65 on `[] == [('#single', "'Single'")]` and leaves those of FNT-59, FNT-60, FNT-63 and FNT-64 passing. The comment at the top of the fixture now lists the three Faces of issue #20 and where each was read. Full: pyright, ruff check, ruff format and 56 passed in 156s.

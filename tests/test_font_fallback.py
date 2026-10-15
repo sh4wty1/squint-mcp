@@ -575,6 +575,15 @@ async def test_a_family_name_that_starts_and_ends_with_a_quotation_mark_keeps_it
     ]
 
 
+async def test_a_family_name_that_starts_and_ends_with_an_apostrophe_keeps_it(
+    client: Client,
+) -> None:
+    families = ("'Single'",)
+    assert await reported(client, NAMES, families=families, on=("#single",)) == [
+        ("#single", "'Single'")
+    ]
+
+
 async def test_the_width_is_of_the_text_in_the_direction_of_its_element(
     client: Client,
 ) -> None:
