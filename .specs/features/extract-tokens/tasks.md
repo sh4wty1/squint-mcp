@@ -1315,7 +1315,7 @@ A pin, seen failing under P1 on a scratch copy of `src/squint_mcp` (`_paints_tex
 
 ### T34: Define the message of a failing call
 
-- [ ] Done
+- [x] Done
 
 **What**: Fix 4 of the first Verifier, wording only. A Term, after **Limit**: the message of a failing call is the text of its one text block after `Error executing tool extract_tokens: `, the prefix the MCP SDK writes before the text of every `ToolError`. No test and no code changes: the `fail` helper of the module already compares that text.
 **Where**: `.specs/features/extract-tokens/spec.md`
@@ -1327,13 +1327,15 @@ A pin, seen failing under P1 on a scratch copy of `src/squint_mcp` (`_paints_tex
 
 **Done when**:
 
-- [ ] The Term is in the spec, and `validate_spec.py extract-tokens` exits 0
+- [x] The Term is in the spec, and `validate_spec.py extract-tokens` exits 0
 - [ ] Gate check passes: Full; then the Linux gate (the tests changed after T28), with its result written under T28, and the Build for phase 7, in the background. The Verifier waits for both
 
 **Tests**: none
 **Gate**: full, then linux and build for the phase
 
 **Commit**: `docs(specs): define the message of a failing call`
+
+**Done (2026-10-15)**, in session 10: the Term **Message**, after **Limit**. `validate_spec.py extract-tokens` exits 0. Gate: Full, 77 passed; no test and no code changed. The box of the Linux gate and the Build is ticked once both have passed, with their results under T28 and here.
 
 ---
 

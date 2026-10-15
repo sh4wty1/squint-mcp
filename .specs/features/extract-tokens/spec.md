@@ -40,6 +40,7 @@ Used by the criteria below; each is defined once here.
 - **Token**: one Group as it is returned: `value` is its Representative, `uses` the Uses of all its Values, `roles` (where the Family has Roles) those Uses by Role, and `variants` (where the Family can group: `colors`, `sizes`, `lineHeights`, `spacing`, `radii`) each of its Values with its own `uses`, in Rank order.
 - **Family order**: `colors`, `typography.families` and `shadows` in Rank order of their Tokens. `typography.sizes`, `typography.weights`, `typography.lineHeights` and `spacing` by `value`, ascending. `radii`: the Tokens whose `value` is a Length by size, ascending, then the others by text.
 - **Limit**: 20 Tokens per Family.
+- **Message**: the message of a failing call is the text of its one text block after `Error executing tool extract_tokens: `, the prefix the MCP SDK writes before the text of every `ToolError`.
 
 ## Fixtures
 
