@@ -314,7 +314,7 @@ On 2026-10-13 the Verifier's first pass ([`validation.md`](validation.md)) found
 | FNT-61 | P1: Read the Finding | F3 | Implemented |
 | FNT-62 | P1: Read the Finding | F3 | Implemented |
 | FNT-63 | P1: Report a font that did not load | F4 | Implemented |
-| FNT-64 | P1: Report a font that did not load | F5 | Pending |
+| FNT-64 | P1: Report a font that did not load | F5 | Implemented |
 
 **Coverage:** 64 total, 64 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
 

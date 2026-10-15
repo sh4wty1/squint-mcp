@@ -566,6 +566,15 @@ async def test_a_family_name_that_holds_a_backslash_is_matched_to_its_face(
     ]
 
 
+async def test_a_family_name_that_starts_and_ends_with_a_quotation_mark_keeps_it(
+    client: Client,
+) -> None:
+    families = ('"Quoted"',)
+    assert await reported(client, NAMES, families=families, on=("#quoted",)) == [
+        ("#quoted", '"Quoted"')
+    ]
+
+
 async def test_the_width_is_of_the_text_in_the_direction_of_its_element(
     client: Client,
 ) -> None:

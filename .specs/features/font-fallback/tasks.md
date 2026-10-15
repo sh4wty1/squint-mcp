@@ -801,7 +801,7 @@ The eight residual mutants (R7) were not put to the maintainer as a decision: th
 
 ### F5: Report a family whose name starts and ends with a quotation mark
 
-- [ ] Done
+- [x] Done
 
 **What**: The third pass ([`validation.md`](validation.md)) failed F4 on one mutant: FACE-UNQUOTE-ONLY, which takes the quotation marks off the name of a Face and leaves its escapes, passes the 54 tests. The case `#quoted` in `font-fallback-names.html` (the family `"Quoted"`, its quotation marks part of the name, declared with a `src` that names no file) and its test. No change to `src/`: the test is a pin, red under the mutant.
 **Where**: `tests/test_font_fallback.py` (with `tests/fixtures/font-fallback-names.html`)
@@ -816,13 +816,15 @@ The eight residual mutants (R7) were not put to the maintainer as a decision: th
 
 **Done when**:
 
-- [ ] The computed `font-family` of `#quoted` and the name of its Face, as read from the page, are in the comment of the fixture
-- [ ] The test passes on the code as it is and fails under FACE-UNQUOTE-ONLY on a scratch copy
-- [ ] The tests of FNT-58 to FNT-60 and FNT-63 pass unchanged
-- [ ] Gate check passes: Full
-- [ ] Test count: 55 in the module; none deleted
+- [x] The computed `font-family` of `#quoted` and the name of its Face, as read from the page, are in the comment of the fixture
+- [x] The test passes on the code as it is and fails under FACE-UNQUOTE-ONLY on a scratch copy
+- [x] The tests of FNT-58 to FNT-60 and FNT-63 pass unchanged
+- [x] Gate check passes: Full
+- [x] Test count: 55 in the module, 500 collected; none deleted
 
 **Tests**: integration
 **Gate**: full
 
-**Commit**: `test(font-fallback): pin a family whose name starts and ends with a quotation mark`
+**Commit**: `test(font-fallback): pin a family name wrapped in quotation marks`
+
+**Notes**: Read on Windows, Chromium 153, 2026-10-15: the Face is `"Quoted"`, marks included, `error`, after the five others; the computed `font-family` of `#quoted` is `"\"Quoted\"", Ahem`; not read in the Playwright image. FACE-UNQUOTE-ONLY (`family: face.family.replace(/^(["'])(.*)\1$/s, "$2"),`, as the third pass gives it), applied to a scratch copy of `src/squint_mcp` (`squint_mcp.__file__` in the copy), fails the test of FNT-64 on `[] == [('#quoted', '"Quoted"')]` and leaves those of FNT-59, FNT-60 and FNT-63 passing. Full: pyright, ruff check, ruff format and 55 passed in 154s.

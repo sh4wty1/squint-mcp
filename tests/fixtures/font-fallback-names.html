@@ -45,6 +45,14 @@
         font-family: "Back\\slash";
         src: url("no-such-back-slash.woff2");
       }
+      /* A name that starts and ends with a quotation mark (FNT-64): the marks are
+         part of the name. Read on Windows, its Face is `error`, last, under the
+         name "Quoted" with its marks, and the computed `font-family` of `#quoted`
+         is "\"Quoted\"", Ahem. */
+      @font-face {
+        font-family: '"Quoted"';
+        src: url("no-such-quoted.woff2");
+      }
       html,
       body {
         margin: 0;
@@ -79,6 +87,10 @@
       #slash {
         font-family: "Back\\slash", Ahem;
       }
+
+      #quoted {
+        font-family: '"Quoted"', Ahem;
+      }
     </style>
   </head>
   <body>
@@ -87,5 +99,6 @@
     <div id="comma" class="text">XXXXXXXXXX</div>
     <div id="inch" class="text">XXXXXXXXXX</div>
     <div id="slash" class="text">XXXXXXXXXX</div>
+    <div id="quoted" class="text">XXXXXXXXXX</div>
   </body>
 </html>
