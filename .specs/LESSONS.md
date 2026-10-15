@@ -582,6 +582,12 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: TOK-57, TOK-58, TOK-69, TOK-70, TOK-71; tests/test_extract_tokens.py:58 (spec,mcp-tools)
 - last seen: 2026-10-14T19:00:03Z
 
+### L-096 - When a fix stops several transformations of one value, give each of them a fixture case whose outcome changes when only that one comes back
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,names` · harmful: 0
+- features: font-fallback
+- evidence: mutant FACE-UNQUOTE-ONLY, src/squint_mcp/js/font_widths.js:46 (FNT-63) (tests,names)
+- last seen: 2026-10-15T15:40:32Z
+
 ## Quarantined (failed when applied - ignore)
 
 A confirmed lesson that recurred alongside failure. Kept for the maintainer to review.

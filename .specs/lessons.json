@@ -3,7 +3,7 @@
   "promote_threshold": 2,
   "window_days": 45,
   "quarantine_threshold": 2,
-  "next_id": 96,
+  "next_id": 97,
   "lessons": [
     {
       "id": "L-001",
@@ -1747,6 +1747,24 @@
       ],
       "created": "2026-10-14T19:00:03Z",
       "last_seen": "2026-10-14T19:00:03Z"
+    },
+    {
+      "id": "L-096",
+      "key": "surviving_mutant::when a fix stops several transformations of one value give each of them a fixture case whose outcome changes when only that one comes back",
+      "text": "When a fix stops several transformations of one value, give each of them a fixture case whose outcome changes when only that one comes back",
+      "signal": "surviving_mutant",
+      "scope": "tests,names",
+      "status": "candidate",
+      "features": [
+        "font-fallback"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "mutant FACE-UNQUOTE-ONLY, src/squint_mcp/js/font_widths.js:46 (FNT-63) (tests,names)"
+      ],
+      "created": "2026-10-15T15:40:32Z",
+      "last_seen": "2026-10-15T15:40:32Z"
     }
   ]
 }
