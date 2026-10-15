@@ -1186,6 +1186,8 @@ TOK-69 and TOK-70 are `capture(...)`'s messages: no rule of the tool to drop.
 
 **Done (2026-10-14)**, in session 9, after T29 on the maintainer's word: 75 passed on Linux in 71.51s (Python 3.12.3, pytest 9.1.1, `tests/test_color.py` 1, `tests/test_extract_tokens.py` 74), the count of the same two modules on Windows (75 passed, the Full gate of T29). No test fails on Linux only. Docker Desktop had crashed while the image was being pulled and left stale Unix sockets in `%LOCALAPPDATA%\Docker\run` and `%LOCALAPPDATA%\docker-secrets-engine` that Windows can no longer open or delete (error 1920, also from `fsutil reparsepoint delete`); Docker starts once both directories are renamed aside. The image stayed broken (0-byte binaries, `exec format error`) because `docker image rm` only untags it and a pull reuses the layers kept in the store; `docker image rm`, then `docker system prune -f` (no `-a`, no `--volumes`), then a pull downloads every layer, and `uname -m` prints `x86_64`. The digest is the same, `sha256:72bd171a9ffc2b4b59532aaa6210e21014d07093120dc25528870c0b840da1f0`.
 
+**Run again (2026-10-15)**, in session 10, after the first fix round (T31 to T33 changed `tests/`): 77 passed on Linux in 73.84s (85 seconds in all; Python 3.12.3, pytest 9.1.1), the count of the Full gate on Windows at `496676d`. No test fails on Linux only; `font-size: 0` of `#mute` (TOK-81) holds there too.
+
 ---
 
 ### T29: Document the tool
@@ -1328,14 +1330,14 @@ A pin, seen failing under P1 on a scratch copy of `src/squint_mcp` (`_paints_tex
 **Done when**:
 
 - [x] The Term is in the spec, and `validate_spec.py extract-tokens` exits 0
-- [ ] Gate check passes: Full; then the Linux gate (the tests changed after T28), with its result written under T28, and the Build for phase 7, in the background. The Verifier waits for both
+- [x] Gate check passes: Full; then the Linux gate (the tests changed after T28), with its result written under T28, and the Build for phase 7, in the background. The Verifier waits for both
 
 **Tests**: none
 **Gate**: full, then linux and build for the phase
 
 **Commit**: `docs(specs): define the message of a failing call`
 
-**Done (2026-10-15)**, in session 10: the Term **Message**, after **Limit**. `validate_spec.py extract-tokens` exits 0. Gate: Full, 77 passed; no test and no code changed. The box of the Linux gate and the Build is ticked once both have passed, with their results under T28 and here.
+**Done (2026-10-15)**, in session 10: the Term **Message**, after **Limit**. `validate_spec.py extract-tokens` exits 0. Gate: Full, 77 passed; no test and no code changed. Linux gate: 77 passed in 73.84s, written under T28. Build for phase 7: pyright 0 errors, ruff check and format clean (121 files), 498 passed in 20 minutes 3 seconds (496 at `1c1b55f` and the two new tests; none deleted, none skipped).
 
 ---
 
