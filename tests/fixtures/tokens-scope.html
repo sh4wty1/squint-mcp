@@ -4,9 +4,10 @@
     <meta charset="utf-8" />
     <title>Squint fixture: cards to narrow the reading to, one inside another and one with a shadow tree</title>
     <style>
-      /* Every element is a `div` and carries its styles here; none has text of
-         its own, a margin, a padding, a radius or a shadow. `#host` has no
-         background: its box is that of `#deep`, in its open shadow tree. */
+      /* Every element is a `div` and carries its styles here; none has a margin
+         or a padding. Only `#outside`, out of every card, has text of its own, a
+         radius and a shadow. `#host` has no background: its box is that of
+         `#deep`, in its open shadow tree. */
       html,
       body {
         margin: 0;
@@ -21,6 +22,10 @@
       }
       #outside {
         background-color: #ff0000;
+        color: #000000;
+        font: 400 12px/16px Arial, sans-serif;
+        border-radius: 6px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
       }
       #one,
       #two {
@@ -39,7 +44,7 @@
     </style>
   </head>
   <body>
-    <div id="outside"></div>
+    <div id="outside">Out</div>
     <div id="one" class="card"><div id="one-child"></div></div>
     <div id="two" class="card">
       <div id="inner" class="card"></div>

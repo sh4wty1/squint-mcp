@@ -1221,7 +1221,7 @@ Each task changes the spec and a fixture first, then the test; the test is seen 
 
 ### T31: Hold the scope for typography, radii and shadows
 
-- [ ] Done
+- [x] Done
 
 **What**: Fix 1 of the first Verifier (mutant S2). `#outside` of `tokens-scope.html` gains the Own text `Out`, `font: 400 12px/16px Arial, sans-serif`, `color: #000000`, `border-radius: 6px` and `box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5)`. The preamble of the story says so, and TOK-56 says that the whole page holds one Token of each of six Families, those of `#outside`, while `#one-child` holds none. The test of TOK-56 reads both.
 **Where**: `tests/test_extract_tokens.py` (with the spec and the fixture of its page)
@@ -1233,16 +1233,20 @@ Each task changes the spec and a fixture first, then the test; the test is seen 
 
 **Done when**:
 
-- [ ] The spec rows and the fixture come before the test
-- [ ] TOK-56: without `scope`, `(Arial, sans-serif, 1)`, `(12, 1)`, `(400, 1)`, `(16, 1)`, `(6px, 1)` and `(box, rgba(0, 0, 0, 0.5) 0px 2px 4px 0px, 1)`, each list whole; with `#one-child`, every Family but `colors` empty
-- [ ] Rule dropped, on a scratch copy: S2 (with a scope, `typography`, `radii` and `shadows` read from the whole page, `spacing` scoped) fails the test of TOK-56
-- [ ] TOK-52 to TOK-55 and TOK-57 to TOK-60 pass with no assertion changed
-- [ ] Gate check passes: Full
+- [x] The spec rows and the fixture come before the test
+- [x] TOK-56: without `scope`, `(Arial, sans-serif, 1)`, `(12, 1)`, `(400, 1)`, `(16, 1)`, `(6px, 1)` and `(box, rgba(0, 0, 0, 0.5) 0px 2px 4px 0px, 1)`, each list whole; with `#one-child`, every Family but `colors` empty
+- [x] Rule dropped, on a scratch copy: S2 (with a scope, `typography`, `radii` and `shadows` read from the whole page, `spacing` scoped) fails the test of TOK-56
+- [x] TOK-52 to TOK-55 and TOK-57 to TOK-60 pass with no assertion changed
+- [x] Gate check passes: Full
 
 **Tests**: integration
 **Gate**: full
 
 **Commit**: `test(tokens): hold the scope for typography, radii and shadows`
+
+**Done (2026-10-15)**, in session 10: the preamble of the story and TOK-56 first, then `#outside` of `tokens-scope.html` (the text `Out`, `font: 400 12px/16px Arial, sans-serif`, `color: #000000`, `border-radius: 6px`, `box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5)`), then the test of TOK-56, which now reads the six lists of the whole page whole before the empty Families of `#one-child`. It passes on the tree. Gate: Full, 75 passed (none deleted); `src/` unchanged.
+
+A pin, seen failing under S2 on a scratch copy of `src/squint_mcp` (a second Capture of `*` when a `scope` is given, whose `typography`, `radii` and `shadows` replace those of the scope): the test of TOK-56 fails at its empty Families (`total` 1), and so do those of TOK-59 and TOK-60, which `#outside` now tells from the whole page too. Before the fixture changed, S2 passed all 75 tests (first Verifier).
 
 ---
 

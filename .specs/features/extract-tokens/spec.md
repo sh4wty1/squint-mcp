@@ -216,13 +216,13 @@ The other fixtures (`tokens-used.html`, `tokens-groups.html`, `tokens-scope.html
 
 **Why P1**: `scope` is in the tool's signature in the roadmap.
 
-**Acceptance Criteria** (all on `tokens-scope.html`, which holds, in document order: `#outside` of `#ff0000`; `#one`, of class `card` and `#00ff00`, holding `#one-child` of `#0000ff`; `#two`, of class `card` and `#00ff00`, holding `#inner`, of class `card` and `#ffff00`, and `#host`, with no background, whose open shadow tree holds `#deep` of `#00ffff`; and `#gone`, of `display: none`. No element has Own text, a margin, a padding, a radius or a shadow):
+**Acceptance Criteria** (all on `tokens-scope.html`, which holds, in document order: `#outside` of `#ff0000`; `#one`, of class `card` and `#00ff00`, holding `#one-child` of `#0000ff`; `#two`, of class `card` and `#00ff00`, holding `#inner`, of class `card` and `#ffff00`, and `#host`, with no background, whose open shadow tree holds `#deep` of `#00ffff`; and `#gone`, of `display: none`. `#outside` has the Own text `Out`, `font: 400 12px/16px Arial, sans-serif`, `color: #000000`, `border-radius: 6px` and `box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5)`. No other element has Own text, a radius or a shadow, and no element has a margin or a padding):
 
 1. WHEN `extract_tokens` is called with `scope` equal to `.card` THEN the `(value, uses)` of `colors.tokens` SHALL be, in this order, `(#00ff00, 2)`, `(#0000ff, 1)`, `(#00ffff, 1)` and `(#ffff00, 1)`, and `scope` in the structured content SHALL be `.card`. <!-- TOK-52 -->
 2. WHEN `extract_tokens` is called with `scope` equal to `.card` THEN `elements` SHALL be 6: `#inner`, which is a match and a descendant of a match, is read once. <!-- TOK-53 -->
 3. WHEN `extract_tokens` is called without `scope` THEN `colors.tokens` SHALL hold `#ff0000` and `elements` SHALL be 9 (`html`, `body`, `#outside` and the six of the cards). <!-- TOK-54 -->
 4. WHEN `extract_tokens` is called with `scope` equal to `#deep` THEN the `(value, uses)` of `colors.tokens` SHALL be `(#00ffff, 1)` alone and `elements` SHALL be 1: a selector reaches into open shadow trees. <!-- TOK-55 -->
-5. WHEN `extract_tokens` is called with `scope` equal to `#one-child` THEN every Family but `colors` SHALL be `{total: 0, tokens: []}`. <!-- TOK-56 -->
+5. WHEN `extract_tokens` is called without `scope` THEN `typography.families`, `typography.sizes`, `typography.weights`, `typography.lineHeights`, `radii` and `shadows` SHALL each hold one Token, those of `#outside`: `(Arial, sans-serif, 1)`, `(12, 1)`, `(400, 1)`, `(16, 1)`, `(6px, 1)` and `(box, rgba(0, 0, 0, 0.5) 0px 2px 4px 0px, 1)`; and WHEN it is called with `scope` equal to `#one-child` THEN every Family but `colors` SHALL be `{total: 0, tokens: []}`. <!-- TOK-56 -->
 6. IF `scope` is `.missing`, which matches no element THEN the call SHALL fail with the message `Scope ".missing" matched no elements.` <!-- TOK-57 -->
 7. IF `scope` is `div[`, which is not a selector THEN the call SHALL fail with the message `Invalid selector "div[".` <!-- TOK-58 -->
 8. WHEN `extract_tokens` is called with `scope` equal to `#gone` THEN the call SHALL succeed with `elements` equal to 0 and every Family equal to `{total: 0, tokens: []}`. <!-- TOK-59 -->
@@ -343,7 +343,7 @@ Covered by the stories: a `scope` that matches nothing (TOK-57), that is not a s
 | TOK-53 | P1: Narrow the reading to a part of the page | Phase 6, T24 | Implemented |
 | TOK-54 | P1: Narrow the reading to a part of the page | Phase 6, T24 | Implemented |
 | TOK-55 | P1: Narrow the reading to a part of the page | Phase 6, T24 | Implemented |
-| TOK-56 | P1: Narrow the reading to a part of the page | Phase 6, T24 | Implemented |
+| TOK-56 | P1: Narrow the reading to a part of the page | Phase 6, T24; Phase 7, T31 | Implemented |
 | TOK-57 | P1: Narrow the reading to a part of the page | Phase 6, T25 | Implemented |
 | TOK-58 | P1: Narrow the reading to a part of the page | Phase 6, T25 | Implemented |
 | TOK-59 | P1: Narrow the reading to a part of the page | Phase 6, T25 | Implemented |

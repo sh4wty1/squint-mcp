@@ -739,6 +739,17 @@ async def test_a_scope_reaches_into_an_open_shadow_tree(client: Client) -> None:
 
 
 async def test_a_family_with_no_value_in_the_scope_is_empty(client: Client) -> None:
+    # The whole page holds the text, the radius and the shadow of `#outside`.
+    page = await extract(client, SCOPE)
+    typography = page["typography"]
+    assert rows(typography["families"], "value", "uses") == [("Arial, sans-serif", 1)]
+    assert rows(typography["sizes"], "value", "uses") == [(12, 1)]
+    assert rows(typography["weights"], "value", "uses") == [(400, 1)]
+    assert rows(typography["lineHeights"], "value", "uses") == [(16, 1)]
+    assert rows(page["radii"], "value", "uses") == [("6px", 1)]
+    assert rows(page["shadows"], "kind", "value", "uses") == [
+        ("box", "rgba(0, 0, 0, 0.5) 0px 2px 4px 0px", 1)
+    ]
     result = await extract(client, SCOPE, scope="#one-child")
     for family in families(result)[1:]:
         assert family == {"total": 0, "tokens": []}
