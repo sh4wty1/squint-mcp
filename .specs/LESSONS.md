@@ -63,10 +63,10 @@ Corroborated across multiple features. Safe to apply as guidance.
 - last seen: 2026-10-11T12:46:50Z
 
 ### L-050 - Give every rule the Terms or the Assumptions table of a spec define an acceptance criterion with a fixture whose outcome changes when the rule is dropped
-- signal: `spec_precision_gap` · recurrence: 2 feature(s) · scope: `spec` · harmful: 0
-- features: overlap, font-fallback
-- evidence: spec.md:29, spec.md:75 (Terms: Coverer; Assumptions: the role attribute); mutants J4, J5, J8, J10 (spec) (+2 more)
-- last seen: 2026-10-13T17:39:23Z
+- signal: `spec_precision_gap` · recurrence: 3 feature(s) · scope: `spec` · harmful: 0
+- features: overlap, font-fallback, extract-tokens
+- evidence: spec.md:29, spec.md:75 (Terms: Coverer; Assumptions: the role attribute); mutants J4, J5, J8, J10 (spec) (+3 more)
+- last seen: 2026-10-15T14:32:24Z
 
 ### L-065 - Pin a rule that reads one chosen item of a list with a fixture where another item of the list would give another outcome
 - signal: `surviving_mutant` · recurrence: 2 feature(s) · scope: `tests,checks` · harmful: 0

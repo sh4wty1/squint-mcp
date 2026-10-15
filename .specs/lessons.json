@@ -921,17 +921,19 @@
       "status": "confirmed",
       "features": [
         "overlap",
-        "font-fallback"
+        "font-fallback",
+        "extract-tokens"
       ],
-      "recurrence": 2,
+      "recurrence": 3,
       "harmful": 0,
       "evidence": [
         "spec.md:29, spec.md:75 (Terms: Coverer; Assumptions: the role attribute); mutants J4, J5, J8, J10 (spec)",
         "mutant N14 src/squint_mcp/capture.py:212; spec.md:29 (the sentence added to the Term Coverer has no criterion) (spec)",
-        "validation.md pass 1 (895bd56): mutants C16b, C5, C2 (rules of the Terms and the Assumptions that no criterion held) (spec)"
+        "validation.md pass 1 (895bd56): mutants C16b, C5, C2 (rules of the Terms and the Assumptions that no criterion held) (spec)",
+        "validation.md P1; src/squint_mcp/tokens.py:265 (spec)"
       ],
       "created": "2026-10-11T10:40:26Z",
-      "last_seen": "2026-10-13T17:39:23Z"
+      "last_seen": "2026-10-15T14:32:24Z"
     },
     {
       "id": "L-051",
