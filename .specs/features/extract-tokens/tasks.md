@@ -52,7 +52,7 @@ Phases are ordered and run sequentially. A session runs one batch of whole phase
 | 3 | Phase 4 | T14 to T19 | the Build of phase 4 passes |
 | 4 | Phase 5 | T20 to T23 | the Build of phase 5 passes |
 | 5 | Phase 6 | T24 to T29 | the Build of phase 6 passes |
-| 6 | The Verifier, its fix rounds if any, and T30 on a PASS | T30 | `validate_state.py extract-tokens` exits 0 |
+| 6 | The Verifier, its fix rounds if any (phase 7), and T30 on a PASS | T31 to T34, T30 | `validate_state.py extract-tokens` exits 0 |
 
 A session reads `tasks.md` down to the end of its batch and, of the spec and the design, what its tasks name; it does not read the phases that follow. It ends with the Handoff of `.specs/STATE.md` replaced and committed, and with the prompt for the next session handed to the maintainer. Commits stay local: pushing the branch and opening the pull request wait for the maintainer's go-ahead.
 
@@ -109,13 +109,19 @@ T20 → T21 → T22 → T23
 T24 → T25 → T26 → T27 → T28 → T29
 ```
 
-### Phase 7: Closing
+### Phase 7: First fix round
+
+```
+T31 → T32 → T33 → T34
+```
+
+### Phase 8: Closing
 
 ```
 T30
 ```
 
-The Verifier is dispatched in the sixth session, after T29 and the Build of phase 6. T30 is the closing step: it runs only on a PASS.
+The Verifier is dispatched in the sixth session, after T29 and the Build of phase 6. Its first pass was a FAIL (2026-10-14): 4 of 22 mutants survived. Phase 7 holds the four fixes of its "Fix Plans", each approved by the maintainer on 2026-10-15; then the Full gate, the Linux gate, the Build, and a fresh Verifier. T30 is the closing step: it runs only on a PASS.
 
 ---
 
@@ -1209,7 +1215,117 @@ TOK-69 and TOK-70 are `capture(...)`'s messages: no rule of the tool to drop.
 
 ---
 
-### Phase 7: Closing
+### Phase 7: First fix round
+
+Each task changes the spec and a fixture first, then the test; the test is seen failing under the mutant of the first Verifier on a scratch copy of `src/squint_mcp`, then passing on the tree. `src/` does not change: a task that needs it stops and goes back to the maintainer.
+
+### T31: Hold the scope for typography, radii and shadows
+
+- [ ] Done
+
+**What**: Fix 1 of the first Verifier (mutant S2). `#outside` of `tokens-scope.html` gains the Own text `Out`, `font: 400 12px/16px Arial, sans-serif`, `color: #000000`, `border-radius: 6px` and `box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5)`. The preamble of the story says so, and TOK-56 says that the whole page holds one Token of each of six Families, those of `#outside`, while `#one-child` holds none. The test of TOK-56 reads both.
+**Where**: `tests/test_extract_tokens.py` (with the spec and the fixture of its page)
+**Depends on**: T29
+**Reuses**: the mutant runner of the Handoff (a copy of `src/squint_mcp`, `PYTHONPATH` set to it)
+**Requirement**: TOK-56
+
+**Tools**: MCP NONE; Skill NONE
+
+**Done when**:
+
+- [ ] The spec rows and the fixture come before the test
+- [ ] TOK-56: without `scope`, `(Arial, sans-serif, 1)`, `(12, 1)`, `(400, 1)`, `(16, 1)`, `(6px, 1)` and `(box, rgba(0, 0, 0, 0.5) 0px 2px 4px 0px, 1)`, each list whole; with `#one-child`, every Family but `colors` empty
+- [ ] Rule dropped, on a scratch copy: S2 (with a scope, `typography`, `radii` and `shadows` read from the whole page, `spacing` scoped) fails the test of TOK-56
+- [ ] TOK-52 to TOK-55 and TOK-57 to TOK-60 pass with no assertion changed
+- [ ] Gate check passes: Full
+
+**Tests**: integration
+**Gate**: full
+
+**Commit**: `test(tokens): hold the scope for typography, radii and shadows`
+
+---
+
+### T32: Hold the order of colours by the Uses of their Groups
+
+- [ ] Done
+
+**What**: Fix 2 of the first Verifier (mutants C1 and C2). `tokens-groups.html` gains five boxes `#c1` to `#c5` of `background-color: #ff8800`, after `#g80-2`, Near no other colour of the page. A new criterion, TOK-80, gives the whole `(value, uses)` list of `colors`: `#1a73e8` (7 in its Group, 4 alone) comes before `#ff8800` (5).
+**Where**: `tests/test_extract_tokens.py` (with the spec and the fixture of its page)
+**Depends on**: T31
+**Reuses**: `lab_of` and `delta_e_2000`, run from a script of the scratchpad
+**Requirement**: TOK-80
+
+**Tools**: MCP NONE; Skill NONE
+
+**Done when**:
+
+- [ ] The spec rows and the fixture come before the test
+- [ ] A script of the scratchpad shows that `#ff8800` is at or above ΔE2000 2 from every other colour of the page; the smallest number is written here
+- [ ] TOK-80: `(#333333, 8)`, `(#1a73e8, 7)`, `(#ff8800, 5)`, `(#808080, 4)`, `(#1a73e880, 1)`, `(#1a79e8, 1)`, whole and in order
+- [ ] The whole-list test of the page gains the row of `#ff8800` (5 Uses, background 5); no other assertion of the page changes
+- [ ] Rules dropped, on a scratch copy: C1 (`colors` Tokens in build order) and C2 (ranked by the Uses of the Representative) each fail the test of TOK-80
+- [ ] Gate check passes: Full
+
+**Tests**: integration
+**Gate**: full
+
+**Commit**: `test(tokens): hold the order of colours by the uses of their groups`
+
+---
+
+### T33: Hold that Own text of no box is not Painted text
+
+- [ ] Done
+
+**What**: Fix 3 of the first Verifier (mutant P1). `tokens-used.html` gains `#mute`, a box of 100px by 20px with no background whose Own text has `font: 700 0px/37px Courier, monospace`, `color: #abcdef` and `text-shadow: 3px 3px 3px #abcdef`, values no other element of the page has. A new criterion, TOK-81, says none of them is held. A probe on Chromium 153.0.8010.12 (2026-10-15, a script of the scratchpad that reads `range.getClientRects()` of the Own text as `collect_elements.js` does): with `font-size: 0` the element's box stays 100x20 and the one rect of its text is 0x0; `text-indent: -9999px` and `color: transparent` still paint a 75x17 rect, and `transform: scale(0)` takes the element's own box away.
+**Where**: `tests/test_extract_tokens.py` (with the spec and the fixture of its page)
+**Depends on**: T32
+**Reuses**: the probe above
+**Requirement**: TOK-81
+
+**Tools**: MCP NONE; Skill NONE
+
+**Done when**:
+
+- [ ] The spec rows and the fixture come before the test
+- [ ] TOK-81: no list of `typography` holds `0`, `700`, `37` or `Courier, monospace`; `colors` does not hold `#abcdef`; no Value of `shadows` holds `3px 3px 3px`
+- [ ] The test of TOK-24 counts 32 elements, `#mute` being Read; the whole lists of the page do not change
+- [ ] Rule dropped, on a scratch copy: P1 (Painted text is Own text, whether it paints a box or not) fails the test of TOK-81
+- [ ] Gate check passes: Full
+
+**Tests**: integration
+**Gate**: full
+
+**Commit**: `test(tokens): hold that own text of no box is not painted`
+
+---
+
+### T34: Define the message of a failing call
+
+- [ ] Done
+
+**What**: Fix 4 of the first Verifier, wording only. A Term, after **Limit**: the message of a failing call is the text of its one text block after `Error executing tool extract_tokens: `, the prefix the MCP SDK writes before the text of every `ToolError`. No test and no code changes: the `fail` helper of the module already compares that text.
+**Where**: `.specs/features/extract-tokens/spec.md`
+**Depends on**: T33
+**Reuses**: the prefix as `validation.md` cites it from the SDK
+**Requirement**: none (the wording of TOK-57, TOK-58 and TOK-69 to TOK-71)
+
+**Tools**: MCP NONE; Skill NONE
+
+**Done when**:
+
+- [ ] The Term is in the spec, and `validate_spec.py extract-tokens` exits 0
+- [ ] Gate check passes: Full; then the Linux gate (the tests changed after T28), with its result written under T28, and the Build for phase 7, in the background. The Verifier waits for both
+
+**Tests**: none
+**Gate**: full, then linux and build for the phase
+
+**Commit**: `docs(specs): define the message of a failing call`
+
+---
+
+### Phase 8: Closing
 
 ### T30: Mark slice 10 as done
 
@@ -1217,7 +1333,7 @@ TOK-69 and TOK-70 are `capture(...)`'s messages: no rule of the tool to drop.
 
 **What**: After the Verifier's PASS: `docs/ROADMAP.md` shows slice 10 as `concluída`, in the table and in its section, with a link to this feature's directory; the Status column of the spec's traceability table and the Handoff of `.specs/STATE.md` say the same.
 **Where**: `docs/ROADMAP.md` (with the traceability table of the spec and the Handoff)
-**Depends on**: T29
+**Depends on**: T34
 **Reuses**: how slice 9 was closed
 **Requirement**: none
 
@@ -1225,7 +1341,7 @@ TOK-69 and TOK-70 are `capture(...)`'s messages: no rule of the tool to drop.
 
 **Done when**:
 
-- [ ] `validation.md` holds a PASS for the 79 criteria
+- [ ] `validation.md` holds a PASS for the 81 criteria
 - [ ] `validate_state.py extract-tokens` exits 0
 - [ ] If a fix round changed `src/` or `tests/` after T28, the Linux gate is run again and its result written under T28
 - [ ] Nothing is pushed and no pull request is opened: both wait for the maintainer's go-ahead
@@ -1240,7 +1356,7 @@ TOK-69 and TOK-70 are `capture(...)`'s messages: no rule of the tool to drop.
 ## Phase Execution Map
 
 ```
-Phase 1 → Phase 2 → Phase 3 → Phase 4 → Phase 5 → Phase 6 → Verifier → Phase 7
+Phase 1 → Phase 2 → Phase 3 → Phase 4 → Phase 5 → Phase 6 → Verifier → Phase 7 → Verifier → Phase 8
 
 Phase 1:  T1 ------→ T2 ------→ T3
 Phase 2:  T4 ------→ T5 ------→ T6 ------→ T7
@@ -1248,7 +1364,8 @@ Phase 3:  T8 ------→ T9 ------→ T10 -----→ T11 -----→ T12 -----→ T13
 Phase 4:  T14 -----→ T15 -----→ T16 -----→ T17 -----→ T18 -----→ T19
 Phase 5:  T20 -----→ T21 -----→ T22 -----→ T23
 Phase 6:  T24 -----→ T25 -----→ T26 -----→ T27 -----→ T28 -----→ T29
-Phase 7:  T30
+Phase 7:  T31 -----→ T32 -----→ T33 -----→ T34
+Phase 8:  T30
 ```
 
 Execution is strictly sequential, one batch per session (Execution Plan). T30 is taken in the session of the Verifier, after its PASS.
@@ -1288,6 +1405,10 @@ Execution is strictly sequential, one batch per session (Execution Plan). T30 is
 | T27: Contract | 1 fixture, 6 tests | ⚠️ OK: six criteria of the handler the tool shares with the others |
 | T28: Linux | 1 run, 1 record | ✅ Granular |
 | T29: Documents | 2 documents | ✅ Granular |
+| T31: Scope of the other Families | 1 fixture element, 1 criterion, 1 test | ✅ Granular |
+| T32: Order of colours | 5 fixture elements, 1 criterion, 1 test | ✅ Granular |
+| T33: Text of no box | 1 fixture element, 1 criterion, 1 test | ✅ Granular |
+| T34: The message | 1 Term | ✅ Granular |
 | T30: Closing | 1 roadmap row and section, the Handoff | ✅ Granular |
 
 ---
@@ -1325,7 +1446,11 @@ Execution is strictly sequential, one batch per session (Execution Plan). T30 is
 | T27 | T26 | T26 → T27 | ✅ Match |
 | T28 | T27 | T27 → T28 | ✅ Match |
 | T29 | T28 | T28 → T29 | ✅ Match |
-| T30 | T29 | first of phase 7, after phase 6 | ✅ Match |
+| T31 | T29 | first of phase 7, after phase 6 and the Verifier | ✅ Match |
+| T32 | T31 | T31 → T32 | ✅ Match |
+| T33 | T32 | T32 → T33 | ✅ Match |
+| T34 | T33 | T33 → T34 | ✅ Match |
+| T30 | T34 | first of phase 8, after phase 7 and the Verifier | ✅ Match |
 
 ---
 
@@ -1348,6 +1473,8 @@ Execution is strictly sequential, one batch per session (Execution Plan). T30 is
 | T24 to T27 | MCP tools (handler, `tokens.py`, their tests) | integration | integration | ✅ OK |
 | T28: Linux | a run on another platform | none | none | ✅ OK |
 | T29: Documents | documents | none | none | ✅ OK |
+| T31 to T33 | MCP tools (fixtures and tests only) | integration | integration | ✅ OK |
+| T34: The message | the spec | none | none | ✅ OK |
 | T30: Closing | the roadmap | none | none | ✅ OK |
 
 T4 to T7 add three facts and twelve properties that no test reads in their own task: the project allows no test below the tool boundary, and no tool reads them before phase 3. The order is the maintainer's (the contract of the Capture first, closed by the whole suite for TOK-77). What the tasks do about it: a recorded probe in each, and a test through the tool that is red before the code that reads the fact, in T17, T15 and T24, each naming the task it holds end to end. From T8 on, no task changes `src/` without tests of its own, written first.
@@ -1382,8 +1509,11 @@ T4 to T7 add three facts and twelve properties that no test reads in their own t
 | TOK-62 to TOK-66 | T26 |
 | TOK-68 to TOK-73 | T27 |
 | TOK-76 | T29, from file evidence |
+| TOK-56 (its fixture and whole-page side) | T31 |
+| TOK-80 | T32 |
+| TOK-81 | T33 |
 
-79 of 79 mapped. T2, T4, T5, T6, T28 and T30 hold no criterion of their own.
+81 of 81 mapped. T2, T4, T5, T6, T28, T30 and T34 hold no criterion of their own.
 
 ---
 
@@ -1413,6 +1543,9 @@ L-050 asks that every rule of the spec's Terms have a fixture whose outcome chan
 | Family order of `sizes`, `weights`, `spacing`: by `value` | TOK-45; TOK-04; TOK-06 and TOK-62 | T21, T10, T11, T26 |
 | Family order of `radii`: the Lengths before the others | TOK-36 | T18 |
 | Limit: 20 per Family, the first in Rank order, `total` the full count | TOK-62 to TOK-66 | T26 |
+| Scope, for `typography`, `radii` and `shadows` (S2 of the first Verifier) | TOK-56 | T31 |
+| Family order of `colors`: by the Uses of the whole Group, not of the Representative nor build order (C1, C2) | TOK-80 | T32 |
+| Painted text: when at least one text node paints a box (P1) | TOK-81 | T33 |
 
 Rules no fixture of the spec tells. No criterion was added and no task covers them: the maintainer left them so on 2026-10-13 (point 1 of "Waiting for the maintainer").
 
