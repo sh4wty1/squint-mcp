@@ -585,8 +585,8 @@ Seen once or not yet corroborated. Tracked, not trusted.
 ### L-096 - When a fix stops several transformations of one value, give each of them a fixture case whose outcome changes when only that one comes back
 - signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,names` · harmful: 0
 - features: font-fallback
-- evidence: mutant FACE-UNQUOTE-ONLY, src/squint_mcp/js/font_widths.js:46 (FNT-63) (tests,names)
-- last seen: 2026-10-15T15:40:32Z
+- evidence: mutant FACE-UNQUOTE-ONLY, src/squint_mcp/js/font_widths.js:46 (FNT-63) (tests,names) (+1 more)
+- last seen: 2026-10-15T18:53:44Z
 
 ## Quarantined (failed when applied - ignore)
 

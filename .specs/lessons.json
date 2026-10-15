@@ -1761,10 +1761,11 @@
       "recurrence": 1,
       "harmful": 0,
       "evidence": [
-        "mutant FACE-UNQUOTE-ONLY, src/squint_mcp/js/font_widths.js:46 (FNT-63) (tests,names)"
+        "mutant FACE-UNQUOTE-ONLY, src/squint_mcp/js/font_widths.js:46 (FNT-63) (tests,names)",
+        "mutant FACE-UNQUOTE-SINGLE-ONLY, src/squint_mcp/js/font_widths.js:46 (FNT-64) (tests,names)"
       ],
       "created": "2026-10-15T15:40:32Z",
-      "last_seen": "2026-10-15T15:40:32Z"
+      "last_seen": "2026-10-15T18:53:44Z"
     }
   ]
 }
