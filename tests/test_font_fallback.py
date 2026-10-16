@@ -585,20 +585,23 @@ async def test_a_family_name_that_starts_and_ends_with_an_apostrophe_keeps_it(
 
 
 async def test_whitespace_that_belongs_to_a_family_name_is_kept(client: Client) -> None:
-    families = (" Two  Spaces ", "\u00a0NBSP")
-    on = ("#spaced-name", "#nbsp-name")
+    families = (" Two  Spaces ", "\u00a0NBSP", "NBSP\u00a0")
+    on = ("#spaced-name", "#nbsp-name", "#nbsp-end")
     assert await reported(client, NAMES, families=families, on=on) == [
         ("#spaced-name", " Two  Spaces "),
         ("#nbsp-name", "\u00a0NBSP"),
+        ("#nbsp-end", "NBSP\u00a0"),
     ]
 
 
 async def test_a_family_name_serialized_with_a_hexadecimal_escape_is_reported(
     client: Client,
 ) -> None:
-    families = ("Tab\tName",)
-    assert await reported(client, NAMES, families=families, on=("#tab-name",)) == [
-        ("#tab-name", "Tab\tName")
+    families = ("Tab\tName", "Unit\u001f Sep")
+    on = ("#tab-name", "#unit-sep")
+    assert await reported(client, NAMES, families=families, on=on) == [
+        ("#tab-name", "Tab\tName"),
+        ("#unit-sep", "Unit\u001f Sep"),
     ]
 
 

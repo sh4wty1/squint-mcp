@@ -25,7 +25,11 @@
          `" Two  Spaces ", Ahem`, U+00A0 + `NBSP, Ahem` (no quotes), and
          `"Tab\9 Name", Ahem`. ASCII edge and doubled spaces, the leading
          U+00A0, and the tab in the Face name are preserved by Chromium.
-         These three were not read in the Playwright Linux image. */
+         The sixth validation pass read these three in the Playwright Linux image
+         too, the same. F8, read on Windows on 2026-10-16: after them come
+         `error` Faces named NBSP + U+00A0 and Unit + U+001F + one space + Sep;
+         their computed `font-family` values are `NBSP` + U+00A0 + `, Ahem` (no
+         quotes) and `"Unit\1f  Sep", Ahem`. */
       /* One family whose two Faces write its name in two cases. Both fail. */
       @font-face {
         font-family: Dual;
@@ -84,6 +88,17 @@
         font-family: "Tab\9 Name";
         src: url("no-such-tab-name.woff2");
       }
+      /* U+00A0 at the end of a name (FNT-66). */
+      @font-face {
+        font-family: "NBSP\a0";
+        src: url("no-such-nbsp-end.woff2");
+      }
+      /* U+001F, an escape of two hexadecimal digits, one a letter, and a space
+         of the name after the one the escape consumes (FNT-67). */
+      @font-face {
+        font-family: "Unit\1f  Sep";
+        src: url("no-such-unit-sep.woff2");
+      }
       html,
       body {
         margin: 0;
@@ -138,6 +153,14 @@
       #tab-name {
         font-family: "Tab\9 Name", Ahem;
       }
+
+      #nbsp-end {
+        font-family: "NBSP\a0", Ahem;
+      }
+
+      #unit-sep {
+        font-family: "Unit\1f  Sep", Ahem;
+      }
     </style>
   </head>
   <body>
@@ -151,5 +174,7 @@
     <div id="spaced-name" class="text">XXXXXXXXXX</div>
     <div id="nbsp-name" class="text">XXXXXXXXXX</div>
     <div id="tab-name" class="text">XXXXXXXXXX</div>
+    <div id="nbsp-end" class="text">XXXXXXXXXX</div>
+    <div id="unit-sep" class="text">XXXXXXXXXX</div>
   </body>
 </html>

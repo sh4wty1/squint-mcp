@@ -890,7 +890,7 @@ The eight residual mutants (R7) were not put to the maintainer as a decision: th
 **Tests**: integration
 **Gate**: build
 
-**Commit**: `test(font-fallback): preserve whitespace and decode escaped names` (footer `Refs #20`)
+**Commit**: `fix(font-fallback): keep whitespace and decode escapes in names` (footer `Refs #20`; `d02f632`, reworded from `test(font-fallback): preserve whitespace and decode escaped names`, since it changes `src/`)
 
 **Notes**: The maintainer approved FNT-66 and FNT-67 on 2026-10-16. Read from the fixture on Windows in Chromium 153.0.8010.12: the last three Faces are `error`, named `" Two  Spaces "`, `"\u00a0NBSP"` and `"Tab\tName"` (JSON string notation); the computed values are `" Two  Spaces ", Ahem`, U+00A0 followed by `NBSP, Ahem` without quotes, and `"Tab\9 Name", Ahem`. These cases were not read in the Playwright Linux image. Both new tests failed against a source copy from `875eae4` (2 failed in 8.31s): FNT-66 lacked `('#nbsp-name', '\u00a0NBSP')`, FNT-67 lacked `('#tab-name', 'Tab\tName')`. With the corrections, both passed (2 passed in 5.56s). Every isolated run set `PYTHONPATH` to the copy's `src`, printed and asserted `squint_mcp.__file__` inside that copy, and checked hashes of real `src/` and `tests/` before and after. All existing test functions are unchanged, including FNT-58 to FNT-60 and FNT-63 to FNT-65; the Full passed them. Full: pyright 0 errors, ruff check and format check passed, 58 tests passed in 195.03s (200.39s total). Build ran in the background to its final exit 0, with a log: the same three static checks passed and 503 tests passed in 1410.69s (1415.12s total). No test deleted or skipped. The final-sigma limit remains accepted and is documented beside the comparison and in the design. `validation.md` was not edited and no Verifier ran, as explicitly requested by the maintainer; the separate independent verification is still pending.
 
@@ -913,3 +913,34 @@ The eight residual mutants (R7) were not put to the maintainer as a decision: th
 | --- | --- | --- |
 | `tests/test_font_fallback.py:590`, equality of the two `(selector, family)` pairs | FNT-66 | Yes |
 | `tests/test_font_fallback.py:600`, equality of the tab `(selector, family)` pair | FNT-67 | Yes |
+
+### F8: Pin the decoder and a U+00A0 at the end of a name
+
+- [x] Done
+
+**What**: The sixth pass ([`validation.md`](validation.md)) failed F7 on its pins, not its code: FNT-67 held the decoder with `\9` alone, which every misreading reads right, and FNT-66 had U+00A0 only at the start of a name. The maintainer chose one case more for each, on the same criteria, and a last Verifier limited to them. The cases `#nbsp-end` (`NBSP` + U+00A0, which Chromium writes unquoted) and `#unit-sep` (`Unit` + U+001F + one space + `Sep`, written `"Unit\1f  Sep"`) in `font-fallback-names.html`, each added to the test of its criterion. No change to `src/`.
+**Where**: `tests/test_font_fallback.py` (with `tests/fixtures/font-fallback-names.html`)
+**Depends on**: F7
+**Reuses**: the tests of FNT-66 and FNT-67
+**Requirement**: FNT-66, FNT-67
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [x] The Face names and computed `font-family` of both cases, as read from the page, are in the comment of the fixture
+- [x] Both tests pass on the code as it is
+- [x] HEX-ONE-DIGIT, HEX-DECIMAL, HEX-UPPER-ONLY and HEX-ALL-WS each fail the test of FNT-67, and TRIM-END-UNICODE that of FNT-66, on a scratch copy, as the sixth pass gives them
+- [x] The other tests of the module pass unchanged
+- [x] Gate check passes: Full
+- [x] Test count: 58 in the module, 503 collected; none deleted
+
+**Tests**: integration
+**Gate**: full
+
+**Commit**: `test(font-fallback): pin the escape decoder and a trailing U+00A0`
+
+**Notes**: Read on Windows, Chromium 153, 2026-10-16: the two Faces are `error`, last of the twelve, named `"NBSP "` and `"Unit\u001f Sep"` (JSON notation); the computed values are `NBSP` + U+00A0 + `, Ahem`, unquoted, and `"Unit\1f  Sep", Ahem`; not read in the Playwright image. Each mutant was applied to a scratch copy of `src/squint_mcp` as the sixth pass gives it, with an assertion that `squint_mcp.__file__` is in the copy. HEX-ONE-DIGIT, HEX-DECIMAL, HEX-UPPER-ONLY and HEX-ALL-WS fail the test of FNT-67 on `[('#tab-name', 'Tab\tName')] == [('#tab-name', 'Tab\tName'), ('#unit-sep', 'Unit\x1f Sep')]`; TRIM-END-UNICODE fails that of FNT-66, where `('#nbsp-end', 'NBSP\xa0')` is missing; in each run the other test passes. Full: pyright, ruff check, ruff format and 58 passed in 164s.
