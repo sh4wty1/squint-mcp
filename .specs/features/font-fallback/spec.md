@@ -330,5 +330,5 @@ On 2026-10-13 the Verifier's first pass ([`validation.md`](validation.md)) found
 
 - [x] All 67 requirements verified by the Verifier, FNT-40 to FNT-46 from file evidence.
 - [x] The gate passes: typecheck, lint, format check and the whole test suite.
-- [ ] The first run of the suite on the CI's Linux passes the tests of this slice with no assertion changed for it.
+- [x] The first run of the suite on the CI's Linux passes the tests of this slice with no assertion changed for it. (Run 38447799140 on `61c4378` for the tests before issue #20; run 38928445283 on `f26e730`, pull request #29, for FNT-63 to FNT-67.)
 - [x] The discrimination sensor leaves alive none of the mutants that a validation report or a task names, nor any of the code the last fix round changed, in the Check and in what the Capture gains for it (Assumptions, "When the discrimination sensor is satisfied").
