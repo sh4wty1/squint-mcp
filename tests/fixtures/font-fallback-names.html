@@ -18,7 +18,14 @@
          "Quoted" and 'Single', added later (issue #20), are `error` too, after
          them in this order, with no quotes put around them: one backslash, the
          quotation marks and the apostrophes are part of each name. Read on Windows,
-         and the first two on Linux as well by the fourth validation pass. */
+         and the first two on Linux as well by the fourth validation pass.
+         FNT-66 and FNT-67, read on Windows in Chromium 153 on 2026-10-16:
+         the last three Faces are `error`, named " Two  Spaces ", U+00A0 + NBSP,
+         and Tab + U+0009 + Name. Their computed `font-family` values are
+         `" Two  Spaces ", Ahem`, U+00A0 + `NBSP, Ahem` (no quotes), and
+         `"Tab\9 Name", Ahem`. ASCII edge and doubled spaces, the leading
+         U+00A0, and the tab in the Face name are preserved by Chromium.
+         These three were not read in the Playwright Linux image. */
       /* One family whose two Faces write its name in two cases. Both fail. */
       @font-face {
         font-family: Dual;
@@ -63,6 +70,20 @@
         font-family: "'Single'";
         src: url("no-such-single.woff2");
       }
+      /* Whitespace belongs to the name, including its edges (FNT-66). */
+      @font-face {
+        font-family: " Two  Spaces ";
+        src: url("no-such-spaced-name.woff2");
+      }
+      @font-face {
+        font-family: "\a0 NBSP";
+        src: url("no-such-nbsp-name.woff2");
+      }
+      /* The tab is serialized as a hexadecimal escape (FNT-67). */
+      @font-face {
+        font-family: "Tab\9 Name";
+        src: url("no-such-tab-name.woff2");
+      }
       html,
       body {
         margin: 0;
@@ -105,6 +126,18 @@
       #single {
         font-family: "'Single'", Ahem;
       }
+
+      #spaced-name {
+        font-family: " Two  Spaces ", Ahem;
+      }
+
+      #nbsp-name {
+        font-family: "\a0 NBSP", Ahem;
+      }
+
+      #tab-name {
+        font-family: "Tab\9 Name", Ahem;
+      }
     </style>
   </head>
   <body>
@@ -115,5 +148,8 @@
     <div id="slash" class="text">XXXXXXXXXX</div>
     <div id="quoted" class="text">XXXXXXXXXX</div>
     <div id="single" class="text">XXXXXXXXXX</div>
+    <div id="spaced-name" class="text">XXXXXXXXXX</div>
+    <div id="nbsp-name" class="text">XXXXXXXXXX</div>
+    <div id="tab-name" class="text">XXXXXXXXXX</div>
   </body>
 </html>

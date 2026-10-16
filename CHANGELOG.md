@@ -21,6 +21,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- `font-fallback` preserves Unicode whitespace at the edges of family names and reports names that Chromium serializes with hexadecimal escapes, such as a tab.
+
 - A screenshot that Chromium hands back with a part of the page not painted yet is no longer read as a page with nothing there. On a page with several layers of its own (sticky elements, faded texts, links with a `z-index`), a text beyond the viewport could have no ink in one of the pictures a Capture compares, and lose its Finding on some calls and not on others. A Capture now lets the page paint two frames before each screenshot, and waits for them 250ms at most: a page that never calls an animation frame back is captured all the same. A call takes up to a fifth longer.
 - The layout of a Capture on a page that uses the generic `monospace` font on Windows. The first screenshot that reached beyond the viewport made Chromium change that font and lay the page out again, so boxes were read from one layout and pixels from another, in every tool. A Capture now settles the layout before it measures anything ([#18](https://github.com/sh4wty1/squint-mcp/issues/18)).
 

@@ -862,7 +862,7 @@ The eight residual mutants (R7) were not put to the maintainer as a decision: th
 
 ### F7: Preserve whitespace and decode hexadecimal escapes in a family name
 
-- [ ] Done
+- [x] Done
 
 **What**: The fifth pass left FACE-TRIM, FACE-COLLAPSE-SPACES and FIRST-TRIM alive. The maintainer asked for a measurement across character classes before another fix. On Windows, Chromium 153, that measurement found two bugs to fix: `namesOf` trims Unicode whitespace that belongs to a name, and `bare` does not decode a hexadecimal escape. FNT-66 pins ASCII edge and doubled spaces and leading U+00A0, on `#spaced-name` and `#nbsp-name`; FNT-67 pins a tab on `#tab-name`. Write both tests first and see each fail against the source at `875eae4`. Then trim only CSS whitespace in `namesOf` and decode hexadecimal escapes in `bare`, keeping other escaped characters. The final-sigma case mismatch stays an accepted limit, with a ponytail and a row in the design. No Verifier runs in this session and `validation.md` is not edited, at the maintainer's explicit request.
 **Where**: `src/squint_mcp/js/font_widths.js`, `tests/test_font_fallback.py`, `tests/fixtures/font-fallback-names.html`, `.specs/features/font-fallback/design.md`, `CHANGELOG.md`; status and traceability in this file and `spec.md`
@@ -877,19 +877,39 @@ The eight residual mutants (R7) were not put to the maintainer as a decision: th
 
 **Done when**:
 
-- [ ] The Face names and computed `font-family` of all three cases are read in Chromium 153 on Windows, and the fixture comment says what was read and where
-- [ ] Both new tests fail against a scratch copy of `src/squint_mcp` from `875eae4`, then pass after the two corrections
-- [ ] `namesOf` trims only CSS whitespace (space, tab, LF, CR, FF), using a small function without `String.prototype.trim`
-- [ ] `bare` decodes 1 to 6 hexadecimal digits after a backslash with `String.fromCodePoint`, consuming one optional CSS whitespace, and still decodes other escaped characters
-- [ ] FACE-TRIM, FACE-COLLAPSE-SPACES, FIRST-TRIM, NAMESOF-JS-TRIM and BARE-SIMPLE-ESCAPES each fail a new test on a scratch copy with `PYTHONPATH` and `squint_mcp.__file__` checked
-- [ ] FNT-58 to FNT-60 and FNT-63 to FNT-65 pass unchanged
-- [ ] The obsolete hexadecimal-escape ponytail and accepted-limit row are removed or updated; final sigma is documented as an accepted limit in the script and design; the changelog names the corrected behaviour
-- [ ] Gate check passes: Full, then Build in the background with a log, awaited to completion
-- [ ] Test count: 58 in the module, 503 in the suite; none deleted
+- [x] The Face names and computed `font-family` of all three cases are read in Chromium 153 on Windows, and the fixture comment says what was read and where
+- [x] Both new tests fail against a scratch copy of `src/squint_mcp` from `875eae4`, then pass after the two corrections
+- [x] `namesOf` trims only CSS whitespace (space, tab, LF, CR, FF), using a small function without `String.prototype.trim`
+- [x] `bare` decodes 1 to 6 hexadecimal digits after a backslash with `String.fromCodePoint`, consuming one optional CSS whitespace, and still decodes other escaped characters
+- [x] FACE-TRIM, FACE-COLLAPSE-SPACES, FIRST-TRIM, NAMESOF-JS-TRIM and BARE-SIMPLE-ESCAPES each fail a new test on a scratch copy with `PYTHONPATH` and `squint_mcp.__file__` checked
+- [x] FNT-58 to FNT-60 and FNT-63 to FNT-65 pass unchanged
+- [x] The obsolete hexadecimal-escape ponytail and accepted-limit row are removed or updated; final sigma is documented as an accepted limit in the script and design; the changelog names the corrected behaviour
+- [x] Gate check passes: Full, then Build in the background with a log, awaited to completion
+- [x] Test count: 58 in the module, 503 in the suite; none deleted
 
 **Tests**: integration
 **Gate**: build
 
 **Commit**: `test(font-fallback): preserve whitespace and decode escaped names` (footer `Refs #20`)
 
-**Notes**: Pending.
+**Notes**: The maintainer approved FNT-66 and FNT-67 on 2026-10-16. Read from the fixture on Windows in Chromium 153.0.8010.12: the last three Faces are `error`, named `" Two  Spaces "`, `"\u00a0NBSP"` and `"Tab\tName"` (JSON string notation); the computed values are `" Two  Spaces ", Ahem`, U+00A0 followed by `NBSP, Ahem` without quotes, and `"Tab\9 Name", Ahem`. These cases were not read in the Playwright Linux image. Both new tests failed against a source copy from `875eae4` (2 failed in 8.31s): FNT-66 lacked `('#nbsp-name', '\u00a0NBSP')`, FNT-67 lacked `('#tab-name', 'Tab\tName')`. With the corrections, both passed (2 passed in 5.56s). Every isolated run set `PYTHONPATH` to the copy's `src`, printed and asserted `squint_mcp.__file__` inside that copy, and checked hashes of real `src/` and `tests/` before and after. All existing test functions are unchanged, including FNT-58 to FNT-60 and FNT-63 to FNT-65; the Full passed them. Full: pyright 0 errors, ruff check and format check passed, 58 tests passed in 195.03s (200.39s total). Build ran in the background to its final exit 0, with a log: the same three static checks passed and 503 tests passed in 1410.69s (1415.12s total). No test deleted or skipped. The final-sigma limit remains accepted and is documented beside the comparison and in the design. `validation.md` was not edited and no Verifier ran, as explicitly requested by the maintainer; the separate independent verification is still pending.
+
+| Mutant | Mutation on the scratch copy | Where it dies | Observed result |
+| --- | --- | --- | --- |
+| FACE-TRIM | `family: face.family.trim()` | `tests/test_font_fallback.py:590`, FNT-66 | `[]` instead of both whitespace Findings; FNT-67 passes |
+| FACE-COLLAPSE-SPACES | `family: face.family.replace(/\s+/g, " ")`, exactly as the fifth report gives it | `tests/test_font_fallback.py:590` and `:600`, FNT-66 and FNT-67 | Both tests fail; a separate ASCII-only variant `/ +/g` also dies at `:590` |
+| FIRST-TRIM | `const family = bare(names[0]).trim()` | `tests/test_font_fallback.py:590`, FNT-66 | `[]` instead of both whitespace Findings; FNT-67 passes |
+| NAMESOF-JS-TRIM | The CSS-only trim helper is replaced by `name.trim()` | `tests/test_font_fallback.py:590`, FNT-66 | The U+00A0 Finding is absent; FNT-67 passes |
+| BARE-SIMPLE-ESCAPES | The decoder is replaced by the pre-F7 `bare`, `\X` to `X` only | `tests/test_font_fallback.py:600`, FNT-67 | `[]` instead of the tab Finding; FNT-66 passes |
+
+**F7 adequacy review**: both criteria assert the exact selectors and family strings through `reported` at the MCP boundary, following `CONTRIBUTING.md` and `docs/SPEC.md`. The assertions discriminate against each named fault, contain no mocks or assertion-free checks, and add no behaviour outside FNT-66 and FNT-67.
+
+| Criterion | Assertion evidence | Spec-defined outcome | Covered? |
+| --- | --- | --- | --- |
+| FNT-66 | `tests/test_font_fallback.py:590`: `assert await reported(client, NAMES, families=families, on=on) == [("#spaced-name", " Two  Spaces "), ("#nbsp-name", "\u00a0NBSP")]` | Both Findings, preserving every space and the leading U+00A0 | Yes |
+| FNT-67 | `tests/test_font_fallback.py:600`: `assert await reported(client, NAMES, families=families, on=("#tab-name",)) == [("#tab-name", "Tab\tName")]` | One Finding, with a real U+0009 in the family name | Yes |
+
+| New assertion | Maps to | Keep? |
+| --- | --- | --- |
+| `tests/test_font_fallback.py:590`, equality of the two `(selector, family)` pairs | FNT-66 | Yes |
+| `tests/test_font_fallback.py:600`, equality of the tab `(selector, family)` pair | FNT-67 | Yes |

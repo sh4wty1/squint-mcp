@@ -7,6 +7,10 @@
 ({ shaping }) => {
   // The names of a `font-family` as the computed value writes them: split at the
   // commas outside strings, a backslash taking the character after it.
+  // Only CSS whitespace can separate a name from the commas around it.
+  const trimCssWhitespace = (name) =>
+    name.replace(/^[ \t\n\r\f]+|[ \t\n\r\f]+$/g, "");
+
   const namesOf = (fontFamily) => {
     const names = [];
     let name = "";
@@ -23,22 +27,22 @@
         quote = char;
         name += char;
       } else if (char === ",") {
-        names.push(name.trim());
+        names.push(trimCssWhitespace(name));
         name = "";
       } else {
         name += char;
       }
     }
-    names.push(name.trim());
+    names.push(trimCssWhitespace(name));
     return names;
   };
 
   // A name without the quotes and the escapes Chromium serializes it with.
-  // ponytail: a hexadecimal escape, which Chromium writes for a name that starts
-  // with a digit (`\31 st`), is not decoded; such a family matches no Face and is
-  // never reported.
   const bare = (name) =>
-    name.replace(/^(["'])(.*)\1$/s, "$2").replace(/\\(.)/gs, "$1");
+    name.replace(/^(["'])(.*)\1$/s, "$2").replace(
+      /\\(?:([0-9a-f]{1,6})[ \t\n\r\f]?|(.))/gis,
+      (_, hex, char) => (hex ? String.fromCodePoint(parseInt(hex, 16)) : char),
+    );
 
   // Before any copy is made: a copy can ask for a font, and change a status.
   // `document.fonts` gives the name of a Face with no quotes and no escapes.
@@ -46,7 +50,8 @@
     family: face.family,
     status: face.status,
   }));
-  // In lower case: a family is matched whatever the case of its name.
+  // ponytail: names are compared with toLowerCase, not Chromium's case folding.
+  // A final sigma written differently in the Face name is not reported.
   const failed = new Set(
     faces
       .filter((face) => face.status === "error")
