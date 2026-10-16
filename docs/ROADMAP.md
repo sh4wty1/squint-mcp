@@ -106,7 +106,7 @@ A v0.2 fecha a fase 2 da especificação inicial ([`.docs/START.md`](../.docs/ST
 | # | Fatia | Depende de | Skill | Status |
 |---|---|---|---|---|
 | 6 | Orçamento de pixels por Capture | — | `tlc-spec-lean` | concluída |
-| 7 | `offscreen-overflow` | — | `tlc-spec-lean` | pendente |
+| 7 | `offscreen-overflow` | — | `tlc-spec-lean` | concluída |
 | 8 | `overlap` | — | `tlc-spec-driven` | pendente |
 | 9 | `font-fallback` | — | `tlc-spec-driven` | pendente |
 | 10 | `extract_tokens` | — | `tlc-spec-driven` | pendente |
@@ -134,7 +134,7 @@ A v0.2 fecha a fase 2 da especificação inicial ([`.docs/START.md`](../.docs/ST
 - **Não entra:** overflow vertical; scroll dentro de contêineres; `compare_viewports`.
 - **Dependência:** nenhuma.
 - **Skill:** `tlc-spec-lean`.
-- **Status:** pendente.
+- **Status:** concluída. Plano, checks e relatório de verificação em [`.specs/features/offscreen-overflow/`](../.specs/features/offscreen-overflow/).
 
 ## 8. `overlap`
 
