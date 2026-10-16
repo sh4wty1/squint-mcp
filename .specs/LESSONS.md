@@ -591,8 +591,14 @@ Seen once or not yet corroborated. Tracked, not trusted.
 ### L-097 - When a value must be kept exactly as given, pin it with fixture values that hold every character class a normalization could change, whitespace at the edges and doubled included, not one class per fix round
 - signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,names` · harmful: 0
 - features: font-fallback
-- evidence: mutants FACE-TRIM, FACE-COLLAPSE-SPACES (src/squint_mcp/js/font_widths.js:46), FIRST-TRIM (font_widths.js:101); validation.md G1 (tests,names)
-- last seen: 2026-10-15T20:03:26Z
+- evidence: mutants FACE-TRIM, FACE-COLLAPSE-SPACES (src/squint_mcp/js/font_widths.js:46), FIRST-TRIM (font_widths.js:101); validation.md G1 (tests,names) (+1 more)
+- last seen: 2026-10-16T15:08:20Z
+
+### L-098 - Pin a decoder with an input whose value changes under each misreading of it: several digits, a letter digit, a value that differs between bases, and a delimiter after the one it consumes
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,names` · harmful: 0
+- features: font-fallback
+- evidence: mutants HEX-ONE-DIGIT, HEX-DECIMAL, HEX-UPPER-ONLY, HEX-ALL-WS (src/squint_mcp/js/font_widths.js:43-44); validation.md G1 (tests,names)
+- last seen: 2026-10-16T15:08:20Z
 
 ## Quarantined (failed when applied - ignore)
 
