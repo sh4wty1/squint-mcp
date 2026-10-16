@@ -10,10 +10,10 @@ A web font that answers 404, a wrong path in an `@font-face` rule, an icon font 
 
 ## Goals
 
-- [ ] `font-fallback` reports every family of its "bug" fixture that did not load, once, and nothing on its "clean" fixture, which holds loaded web fonts, a stack of system fonts, families that are declared and never used, and text that is not on the page.
-- [ ] A Finding names the family and says how many elements render their text in a fallback.
-- [ ] Every outcome a test asserts is the same on Windows and on Linux.
-- [ ] Slice 9 is marked done in `docs/ROADMAP.md` once verification passes.
+- [x] `font-fallback` reports every family of its "bug" fixture that did not load, once, and nothing on its "clean" fixture, which holds loaded web fonts, a stack of system fonts, families that are declared and never used, and text that is not on the page.
+- [x] A Finding names the family and says how many elements render their text in a fallback.
+- [x] Every outcome a test asserts is the same on Windows and on Linux.
+- [x] Slice 9 is marked done in `docs/ROADMAP.md` once verification passes.
 
 ## Terms
 
@@ -254,73 +254,73 @@ On 2026-10-13 the Verifier's first pass ([`validation.md`](validation.md)) found
 
 | Requirement ID | Story | Phase | Status |
 | --- | --- | --- | --- |
-| FNT-01 | P1: Report a font that did not load | T2 | Implemented |
-| FNT-02 | P1: Report a font that did not load | T2 | Implemented |
-| FNT-03 | P1: Report a font that did not load | T2 | Implemented |
-| FNT-04 | P1: Report a font that did not load | T2 | Implemented |
-| FNT-05 | P1: Report a font that did not load | T5 | Implemented |
-| FNT-06 | P1: Report a font that did not load | T5 | Implemented |
-| FNT-07 | P1: Report a font that did not load | T2 | Implemented |
-| FNT-08 | P1: Report a font that did not load | T5 | Implemented |
-| FNT-09 | P1: Report a font that did not load | T5 | Implemented |
-| FNT-10 | P1: Report a font that did not load | T5 | Implemented |
-| FNT-11 | P1: Report a font that did not load | T6 | Implemented |
-| FNT-12 | P1: Report a font that did not load | T6 | Implemented |
-| FNT-13 | P1: Report a font that did not load | T2 | Implemented |
-| FNT-14 | P1: Report a font that did not load | T8 | Implemented |
-| FNT-15 | P1: Report a font that did not load | T5 | Implemented |
-| FNT-16 | P1: Stay silent when the text is in the font it asks for | T4 | Implemented |
-| FNT-17 | P1: Stay silent when the text is in the font it asks for | T4 | Implemented |
-| FNT-18 | P1: Stay silent when the text is in the font it asks for | T4 | Implemented |
-| FNT-19 | P1: Stay silent when the text is in the font it asks for | T4 | Implemented |
-| FNT-20 | P1: Stay silent when the text is in the font it asks for | T6 | Implemented |
-| FNT-21 | P1: Stay silent when the text is in the font it asks for | T6 | Implemented |
-| FNT-22 | P1: Stay silent when the text is in the font it asks for | T6 | Implemented |
-| FNT-23 | P1: Stay silent when the text is in the font it asks for | T4 | Implemented |
-| FNT-24 | P1: Stay silent when the text is in the font it asks for | T4 | Implemented |
-| FNT-25 | P1: Stay silent when the text is in the font it asks for | T4 | Implemented |
-| FNT-26 | P1: Stay silent when the text is in the font it asks for | T6 | Implemented |
-| FNT-27 | P1: Read the Finding | T3 | Implemented |
-| FNT-28 | P1: Read the Finding | T2 | Implemented |
-| FNT-29 | P1: Read the Finding | T5 | Implemented |
-| FNT-30 | P1: Read the Finding | T6 | Implemented |
-| FNT-31 | P1: Read the Finding | T6 | Implemented |
-| FNT-32 | P1: Read the Finding | T6 | Implemented |
-| FNT-33 | P1: With the other Checks | T2 | Implemented |
-| FNT-34 | P1: With the other Checks | T1 | Implemented |
-| FNT-35 | P1: With the other Checks | T2 | Implemented |
-| FNT-36 | P1: With the other Checks | T9 | Implemented |
-| FNT-37 | P1: With the other Checks | T1 | Implemented |
-| FNT-38 | P1: With the other Checks | T1 | Implemented |
-| FNT-39 | P1: With the other Checks | T9 | Implemented |
-| FNT-40 | P2: Check contract, Capture and documents | T1 | Implemented |
-| FNT-41 | P2: Check contract, Capture and documents | T2 | Implemented |
-| FNT-42 | P2: Check contract, Capture and documents | T2 | Implemented |
-| FNT-43 | P2: Check contract, Capture and documents | T2 | Implemented |
-| FNT-44 | P2: Check contract, Capture and documents | T11 | Implemented |
-| FNT-45 | P2: Check contract, Capture and documents | T11 | Implemented |
-| FNT-46 | P2: Check contract, Capture and documents | T12 | Implemented |
-| FNT-47 | Edge cases | T2 | Implemented |
-| FNT-48 | Edge cases | T5 | Implemented |
-| FNT-49 | P1: Stay silent when the text is in the font it asks for | T7 | Implemented |
-| FNT-50 | P1: Report a font that did not load | T7 | Implemented |
-| FNT-51 | P1: Read the Finding | T7 | Implemented |
-| FNT-52 | P1: Stay silent when the text is in the font it asks for | T6 | Implemented |
-| FNT-53 | P1: Stay silent when the text is in the font it asks for | T5 | Implemented |
-| FNT-54 | P1: Read the Finding | T6 | Implemented |
-| FNT-55 | P1: Stay silent when the text is in the font it asks for | F1 | Implemented |
-| FNT-56 | P1: Stay silent when the text is in the font it asks for | F1 | Implemented |
-| FNT-57 | P1: Stay silent when the text is in the font it asks for | F1 | Implemented |
-| FNT-58 | P1: Read the Finding | F2 | Implemented |
-| FNT-59 | P1: Report a font that did not load | F2 | Implemented |
-| FNT-60 | P1: Report a font that did not load | F2 | Implemented |
-| FNT-61 | P1: Read the Finding | F3 | Implemented |
-| FNT-62 | P1: Read the Finding | F3 | Implemented |
-| FNT-63 | P1: Report a font that did not load | F4 | Implemented |
-| FNT-64 | P1: Report a font that did not load | F5 | Implemented |
-| FNT-65 | P1: Report a font that did not load | F6 | Implemented |
-| FNT-66 | P1: Report a font that did not load | F7 | Implemented |
-| FNT-67 | P1: Report a font that did not load | F7 | Implemented |
+| FNT-01 | P1: Report a font that did not load | T2 | Verified |
+| FNT-02 | P1: Report a font that did not load | T2 | Verified |
+| FNT-03 | P1: Report a font that did not load | T2 | Verified |
+| FNT-04 | P1: Report a font that did not load | T2 | Verified |
+| FNT-05 | P1: Report a font that did not load | T5 | Verified |
+| FNT-06 | P1: Report a font that did not load | T5 | Verified |
+| FNT-07 | P1: Report a font that did not load | T2 | Verified |
+| FNT-08 | P1: Report a font that did not load | T5 | Verified |
+| FNT-09 | P1: Report a font that did not load | T5 | Verified |
+| FNT-10 | P1: Report a font that did not load | T5 | Verified |
+| FNT-11 | P1: Report a font that did not load | T6 | Verified |
+| FNT-12 | P1: Report a font that did not load | T6 | Verified |
+| FNT-13 | P1: Report a font that did not load | T2 | Verified |
+| FNT-14 | P1: Report a font that did not load | T8 | Verified |
+| FNT-15 | P1: Report a font that did not load | T5 | Verified |
+| FNT-16 | P1: Stay silent when the text is in the font it asks for | T4 | Verified |
+| FNT-17 | P1: Stay silent when the text is in the font it asks for | T4 | Verified |
+| FNT-18 | P1: Stay silent when the text is in the font it asks for | T4 | Verified |
+| FNT-19 | P1: Stay silent when the text is in the font it asks for | T4 | Verified |
+| FNT-20 | P1: Stay silent when the text is in the font it asks for | T6 | Verified |
+| FNT-21 | P1: Stay silent when the text is in the font it asks for | T6 | Verified |
+| FNT-22 | P1: Stay silent when the text is in the font it asks for | T6 | Verified |
+| FNT-23 | P1: Stay silent when the text is in the font it asks for | T4 | Verified |
+| FNT-24 | P1: Stay silent when the text is in the font it asks for | T4 | Verified |
+| FNT-25 | P1: Stay silent when the text is in the font it asks for | T4 | Verified |
+| FNT-26 | P1: Stay silent when the text is in the font it asks for | T6 | Verified |
+| FNT-27 | P1: Read the Finding | T3 | Verified |
+| FNT-28 | P1: Read the Finding | T2 | Verified |
+| FNT-29 | P1: Read the Finding | T5 | Verified |
+| FNT-30 | P1: Read the Finding | T6 | Verified |
+| FNT-31 | P1: Read the Finding | T6 | Verified |
+| FNT-32 | P1: Read the Finding | T6 | Verified |
+| FNT-33 | P1: With the other Checks | T2 | Verified |
+| FNT-34 | P1: With the other Checks | T1 | Verified |
+| FNT-35 | P1: With the other Checks | T2 | Verified |
+| FNT-36 | P1: With the other Checks | T9 | Verified |
+| FNT-37 | P1: With the other Checks | T1 | Verified |
+| FNT-38 | P1: With the other Checks | T1 | Verified |
+| FNT-39 | P1: With the other Checks | T9 | Verified |
+| FNT-40 | P2: Check contract, Capture and documents | T1 | Verified |
+| FNT-41 | P2: Check contract, Capture and documents | T2 | Verified |
+| FNT-42 | P2: Check contract, Capture and documents | T2 | Verified |
+| FNT-43 | P2: Check contract, Capture and documents | T2 | Verified |
+| FNT-44 | P2: Check contract, Capture and documents | T11 | Verified |
+| FNT-45 | P2: Check contract, Capture and documents | T11 | Verified |
+| FNT-46 | P2: Check contract, Capture and documents | T12 | Verified |
+| FNT-47 | Edge cases | T2 | Verified |
+| FNT-48 | Edge cases | T5 | Verified |
+| FNT-49 | P1: Stay silent when the text is in the font it asks for | T7 | Verified |
+| FNT-50 | P1: Report a font that did not load | T7 | Verified |
+| FNT-51 | P1: Read the Finding | T7 | Verified |
+| FNT-52 | P1: Stay silent when the text is in the font it asks for | T6 | Verified |
+| FNT-53 | P1: Stay silent when the text is in the font it asks for | T5 | Verified |
+| FNT-54 | P1: Read the Finding | T6 | Verified |
+| FNT-55 | P1: Stay silent when the text is in the font it asks for | F1 | Verified |
+| FNT-56 | P1: Stay silent when the text is in the font it asks for | F1 | Verified |
+| FNT-57 | P1: Stay silent when the text is in the font it asks for | F1 | Verified |
+| FNT-58 | P1: Read the Finding | F2 | Verified |
+| FNT-59 | P1: Report a font that did not load | F2 | Verified |
+| FNT-60 | P1: Report a font that did not load | F2 | Verified |
+| FNT-61 | P1: Read the Finding | F3 | Verified |
+| FNT-62 | P1: Read the Finding | F3 | Verified |
+| FNT-63 | P1: Report a font that did not load | F4 | Verified |
+| FNT-64 | P1: Report a font that did not load | F5 | Verified |
+| FNT-65 | P1: Report a font that did not load | F6 | Verified |
+| FNT-66 | P1: Report a font that did not load | F7, F8 | Verified |
+| FNT-67 | P1: Report a font that did not load | F7, F8 | Verified |
 
 **Coverage:** 67 total, 67 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
 
@@ -328,7 +328,7 @@ On 2026-10-13 the Verifier's first pass ([`validation.md`](validation.md)) found
 
 ## Success Criteria
 
-- [ ] All 67 requirements verified by the Verifier, FNT-40 to FNT-46 from file evidence.
-- [ ] The gate passes: typecheck, lint, format check and the whole test suite.
+- [x] All 67 requirements verified by the Verifier, FNT-40 to FNT-46 from file evidence.
+- [x] The gate passes: typecheck, lint, format check and the whole test suite.
 - [ ] The first run of the suite on the CI's Linux passes the tests of this slice with no assertion changed for it.
-- [ ] The discrimination sensor leaves alive none of the mutants that a validation report or a task names, nor any of the code the last fix round changed, in the Check and in what the Capture gains for it (Assumptions, "When the discrimination sensor is satisfied").
+- [x] The discrimination sensor leaves alive none of the mutants that a validation report or a task names, nor any of the code the last fix round changed, in the Check and in what the Capture gains for it (Assumptions, "When the discrimination sensor is satisfied").
