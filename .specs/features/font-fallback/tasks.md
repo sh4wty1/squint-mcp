@@ -9,7 +9,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ---
 
 **Design**: `.specs/features/font-fallback/design.md`
-**Status**: Written on 2026-10-12. The maintainer read it the same day, accepted FNT-52 to FNT-54 and had it committed, then asked for one phase per session. Execute: phase 1 (T1 to T3) is done and its Build passed on `9953077`, phase 2 (T4 to T6) is done and its Build passed on `357206d`, and phase 3 (T7 to T9) is done and its Build passed on `ba860c9`, all the same day; phase 4 (T10 and T11) is done and its Build passed on `82fa6cc` on 2026-10-13. The Verifier's first pass returned FAIL on its sensor the same day: its fix round, F1 to F3, is at the end of this file. The second pass is a PASS, and the closing step (T12) is done but for the push of the new commits and the pull request, which wait for the maintainer; #21 was merged on 2026-10-13. Issue #20 is a round of its own, F4, at the end of this file (2026-10-15); the third pass failed it on one mutant, and F5 closes it; the fourth pass passed it with one residual mutant, and F6 closes that
+**Status**: Written on 2026-10-12. The maintainer read it the same day, accepted FNT-52 to FNT-54 and had it committed, then asked for one phase per session. Execute: phase 1 (T1 to T3) is done and its Build passed on `9953077`, phase 2 (T4 to T6) is done and its Build passed on `357206d`, and phase 3 (T7 to T9) is done and its Build passed on `ba860c9`, all the same day; phase 4 (T10 and T11) is done and its Build passed on `82fa6cc` on 2026-10-13. The Verifier's first pass returned FAIL on its sensor the same day: its fix round, F1 to F3, is at the end of this file. The second pass is a PASS, and the closing step (T12) is done but for the push of the new commits and the pull request, which wait for the maintainer; #21 was merged on 2026-10-13. Issue #20 is a round of its own, F4, at the end of this file (2026-10-15); the third pass failed it on one mutant, and F5 closes it; the fourth pass passed it with one residual mutant, and F6 closes that. After the fifth pass and a character-class measurement, the maintainer accepted FNT-66 and FNT-67 on 2026-10-16; F7 below implements them.
 
 ---
 
@@ -19,7 +19,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 
 | Code Layer | Required Test Type | Coverage Expectation | Location Pattern | Run Command |
 | ---------- | ------------------ | -------------------- | ---------------- | ----------- |
-| MCP tools (handlers, and the Check, Capture, page script, models and config they drive) | integration, through the in-memory MCP client only, real Chromium; written before the code of the task | 1:1 to the criteria FNT-01 to FNT-39 and FNT-47 to FNT-62; every listed edge case | `tests/test_font_fallback.py` | `uv run pytest tests/test_font_fallback.py` |
+| MCP tools (handlers, and the Check, Capture, page script, models and config they drive) | integration, through the in-memory MCP client only, real Chromium; written before the code of the task | 1:1 to the criteria FNT-01 to FNT-39 and FNT-47 to FNT-67; every listed edge case | `tests/test_font_fallback.py` | `uv run pytest tests/test_font_fallback.py` |
 | Documents, the roadmap, a run on another platform | none | file evidence (FNT-44 to FNT-46); the gate | - | gate only |
 
 FNT-40 to FNT-43 are not observable through the tool boundary: the Verifier reads them from the files of the task that the Requirement Coverage table names.
@@ -858,3 +858,38 @@ The eight residual mutants (R7) were not put to the maintainer as a decision: th
 **Commit**: `test(font-fallback): pin a family name wrapped in apostrophes`
 
 **Notes**: Read on Windows, Chromium 153, 2026-10-15: the Face is `'Single'`, apostrophes included, `error`, last of the eight; the computed `font-family` of `#single` is `"'Single'", Ahem`; not read in the Playwright image. FACE-UNQUOTE-SINGLE-ONLY (`family: face.family.replace(/^'(.*)'$/s, "$1"),`, as the fourth pass gives it), applied to a scratch copy of `src/squint_mcp` (`squint_mcp.__file__` in the copy), fails the test of FNT-65 on `[] == [('#single', "'Single'")]` and leaves those of FNT-59, FNT-60, FNT-63 and FNT-64 passing. The comment at the top of the fixture now lists the three Faces of issue #20 and where each was read. Full: pyright, ruff check, ruff format and 56 passed in 156s.
+
+
+### F7: Preserve whitespace and decode hexadecimal escapes in a family name
+
+- [ ] Done
+
+**What**: The fifth pass left FACE-TRIM, FACE-COLLAPSE-SPACES and FIRST-TRIM alive. The maintainer asked for a measurement across character classes before another fix. On Windows, Chromium 153, that measurement found two bugs to fix: `namesOf` trims Unicode whitespace that belongs to a name, and `bare` does not decode a hexadecimal escape. FNT-66 pins ASCII edge and doubled spaces and leading U+00A0, on `#spaced-name` and `#nbsp-name`; FNT-67 pins a tab on `#tab-name`. Write both tests first and see each fail against the source at `875eae4`. Then trim only CSS whitespace in `namesOf` and decode hexadecimal escapes in `bare`, keeping other escaped characters. The final-sigma case mismatch stays an accepted limit, with a ponytail and a row in the design. No Verifier runs in this session and `validation.md` is not edited, at the maintainer's explicit request.
+**Where**: `src/squint_mcp/js/font_widths.js`, `tests/test_font_fallback.py`, `tests/fixtures/font-fallback-names.html`, `.specs/features/font-fallback/design.md`, `CHANGELOG.md`; status and traceability in this file and `spec.md`
+**Depends on**: F6
+**Reuses**: `reported` of the test module; the form of the test of FNT-65; the character-class measurement outside the repository
+**Requirement**: FNT-66, FNT-67
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [ ] The Face names and computed `font-family` of all three cases are read in Chromium 153 on Windows, and the fixture comment says what was read and where
+- [ ] Both new tests fail against a scratch copy of `src/squint_mcp` from `875eae4`, then pass after the two corrections
+- [ ] `namesOf` trims only CSS whitespace (space, tab, LF, CR, FF), using a small function without `String.prototype.trim`
+- [ ] `bare` decodes 1 to 6 hexadecimal digits after a backslash with `String.fromCodePoint`, consuming one optional CSS whitespace, and still decodes other escaped characters
+- [ ] FACE-TRIM, FACE-COLLAPSE-SPACES, FIRST-TRIM, NAMESOF-JS-TRIM and BARE-SIMPLE-ESCAPES each fail a new test on a scratch copy with `PYTHONPATH` and `squint_mcp.__file__` checked
+- [ ] FNT-58 to FNT-60 and FNT-63 to FNT-65 pass unchanged
+- [ ] The obsolete hexadecimal-escape ponytail and accepted-limit row are removed or updated; final sigma is documented as an accepted limit in the script and design; the changelog names the corrected behaviour
+- [ ] Gate check passes: Full, then Build in the background with a log, awaited to completion
+- [ ] Test count: 58 in the module, 503 in the suite; none deleted
+
+**Tests**: integration
+**Gate**: build
+
+**Commit**: `test(font-fallback): preserve whitespace and decode escaped names` (footer `Refs #20`)
+
+**Notes**: Pending.
