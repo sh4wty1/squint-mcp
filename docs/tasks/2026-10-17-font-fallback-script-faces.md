@@ -8,4 +8,4 @@
 
 **Verificação:** o teste novo falhou antes da correção (`[] == [...]`) e passa depois; `tests/test_font_fallback.py` 59 passed; o resto da suíte 445 passed (504 no total, Linux local). Prova do C4 sai com 0; ruff check e ruff format passam; pyright 0 erros (com `--pythonpath .venv/bin/python`, `uv` não está no PATH deste shell). Verifier independente: PASS em C1-C4, `validate_verification.py` exit 0 (`.specs/features/font-fallback-script-faces/verification.md`). O achado 1 dele (a outra direção do limite sem rótulo) foi corrigido no comentário `ponytail:` em `3bf383c`. Commits locais: `dd359a2`, `c27ce2e`, `3bf383c`.
 
-**Pendências:** push do branch `fix/font-name-backslash` e resposta à review do PR #29 aguardam autorização. Achados 2 e 3 do Verifier (C1/C2 num só teste; C3 só roda testes pré-existentes) ficam como estão: as afirmações estão cobertas.
+**Pendências:** nenhuma de código: branch enviado (`7ca4d59`) e os dois comentários da review respondidos; falta o CI do PR e a decisão de merge do mantenedor. Achados 2 e 3 do Verifier (C1/C2 num só teste; C3 só roda testes pré-existentes) ficam como estão: as afirmações estão cobertas.
