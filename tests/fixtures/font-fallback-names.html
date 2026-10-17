@@ -161,6 +161,14 @@
       #unit-sep {
         font-family: "Unit\1f  Sep", Ahem;
       }
+
+      #script-face {
+        font-family: "Script Face", Ahem;
+      }
+
+      #script-slash {
+        font-family: "Script\\Slash", Ahem;
+      }
     </style>
   </head>
   <body>
@@ -176,5 +184,21 @@
     <div id="tab-name" class="text">XXXXXXXXXX</div>
     <div id="nbsp-end" class="text">XXXXXXXXXX</div>
     <div id="unit-sep" class="text">XXXXXXXXXX</div>
+    <div id="script-face" class="text">XXXXXXXXXX</div>
+    <div id="script-slash" class="text">XXXXXXXXXX</div>
+    <script>
+      // Faces no `@font-face` rule declares: a script adds them and loads them, and
+      // they fail. `document.fonts` gives their names CSS-serialized, as
+      // "Script Face" with its quotation marks and "Script\\Slash" with its escape
+      // (Chromium 153), where a rule's Face has its name as written.
+      for (const [name, file] of [
+        ["Script Face", "no-such-script-face.woff2"],
+        ["Script\\Slash", "no-such-script-slash.woff2"],
+      ]) {
+        const face = new FontFace(name, `url("${file}")`);
+        document.fonts.add(face);
+        face.load().catch(() => {});
+      }
+    </script>
   </body>
 </html>

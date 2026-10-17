@@ -45,18 +45,29 @@
     );
 
   // Before any copy is made: a copy can ask for a font, and change a status.
-  // `document.fonts` gives the name of a Face with no quotes and no escapes.
   const faces = [...document.fonts].map((face) => ({
     family: face.family,
     status: face.status,
   }));
-  // ponytail: names are compared with toLowerCase, not Chromium's case folding.
-  // A final sigma written differently in the Face name is not reported.
-  const failed = new Set(
-    faces
-      .filter((face) => face.status === "error")
-      .map((face) => face.family.toLowerCase()),
-  );
+  // `document.fonts` gives the name of a Face of an `@font-face` rule as written,
+  // and that of a Face a script adds serialized, quoted and escaped; the string
+  // cannot tell which, so a Face answers to its name as given and decoded. A
+  // family is matched whatever the case of its name and named as the first of its
+  // Faces has it, a name as given before any decoded one.
+  // ponytail: a failed Face of a rule whose name reads as a serialized one, such
+  // as "Quoted" with its quotation marks, also catches the family of its decoded
+  // name. Names are compared with toLowerCase, not Chromium's case folding: a
+  // final sigma written differently in the Face name is not reported.
+  const named = new Map();
+  const failed = new Set();
+  for (const read of [(name) => name, bare]) {
+    for (const face of faces) {
+      const name = read(face.family);
+      const key = name.toLowerCase();
+      if (!named.has(key)) named.set(key, name);
+      if (face.status === "error") failed.add(key);
+    }
+  }
 
   const important = (element, declarations) => {
     for (const [name, value] of declarations) {
@@ -103,8 +114,9 @@
     if (nodes.length === 0) return;
     const style = getComputedStyle(element);
     const names = namesOf(style.fontFamily);
-    const family = bare(names[0]);
-    if (!failed.has(family.toLowerCase())) return;
+    const key = bare(names[0]).toLowerCase();
+    if (!failed.has(key)) return;
+    const family = named.get(key);
     // ponytail: the Tail can start with a family the page declares and no text had
     // used; its copy then asks for that font, one request the page had not made.
     const tail = names.slice(1).join(", ") || "initial";

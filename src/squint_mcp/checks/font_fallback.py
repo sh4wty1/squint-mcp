@@ -43,20 +43,11 @@ def _finding(
 def check(capture: Capture) -> list[Finding]:
     if capture.faces is None:
         return []
-    # A family is matched whatever the case of its name, and reported under the
-    # name the first of its faces has.
-    names: dict[str, str] = {}
-    for face in capture.faces:
-        names.setdefault(face.family.lower(), face.family)
-    failed = {face.family.lower() for face in capture.faces if face.status == "error"}
     # Each family with the elements that fall back in it, both in document order.
     fallen: dict[str, list[tuple[Element, float]]] = {}
     for element in capture.elements:
         widths = element.line_widths
         if widths is None:
-            continue
-        family = widths.family.lower()
-        if family not in failed:
             continue
         # Judged: its own text paints a box, and is not hidden on purpose.
         if not element.own_text_boxes or element.computed["visibility"] != "visible":
@@ -65,5 +56,5 @@ def check(capture: Capture) -> list[Finding]:
         # widths are of one text laid out twice in one page, so they are compared
         # as they are.
         if widths.own == widths.tail:
-            fallen.setdefault(family, []).append((element, widths.own))
-    return [_finding(capture, names[family], found) for family, found in fallen.items()]
+            fallen.setdefault(widths.family, []).append((element, widths.own))
+    return [_finding(capture, family, found) for family, found in fallen.items()]

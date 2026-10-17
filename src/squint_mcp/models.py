@@ -68,7 +68,8 @@ class Face(BaseModel):
     """An entry of `document.fonts` when the Capture was taken."""
 
     family: str
-    """Without quotes."""
+    """As `document.fonts` gives it: as written for a Face of an `@font-face`
+    rule, CSS-serialized for one a script adds."""
     status: Literal["unloaded", "loading", "loaded", "error"]
 
 
@@ -76,7 +77,8 @@ class LineWidths(BaseModel):
     """How wide the own text of an element is set on one line (AD-008)."""
 
     family: str
-    """The first name of its computed `font-family`, without quotes."""
+    """The family with a face that failed that the first name of its computed
+    `font-family` asks for, named as the first of its faces has it."""
     own: float
     """In its computed `font-family`."""
     tail: float

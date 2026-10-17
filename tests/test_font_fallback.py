@@ -605,6 +605,17 @@ async def test_a_family_name_serialized_with_a_hexadecimal_escape_is_reported(
     ]
 
 
+async def test_a_family_a_script_adds_is_reported_under_its_name(
+    client: Client,
+) -> None:
+    families = ("Script Face", "Script\\Slash")
+    on = ("#script-face", "#script-slash")
+    assert await reported(client, NAMES, families=families, on=on) == [
+        ("#script-face", "Script Face"),
+        ("#script-slash", "Script\\Slash"),
+    ]
+
+
 async def test_the_width_is_of_the_text_in_the_direction_of_its_element(
     client: Client,
 ) -> None:
