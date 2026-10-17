@@ -186,6 +186,38 @@ A v0.2 fecha a fase 2 da especificação inicial ([`.docs/START.md`](../.docs/ST
 - **Skill:** `tlc-implement`.
 - **Status:** pendente.
 
+# Páginas atrás de login
+
+O Squint só vê o estado inicial de uma página aberta sem cookies ([`SPEC.md`](SPEC.md), história 15 e Out of Scope). Um painel atrás de login, como o Admin do central-jogos-gc2, fica de fora: o Squint vê só a tela de login. A fatia 12 leva o Squint para a primeira tela depois do login; a 13, para os estados que só existem depois de um clique, pelo caminho que o [ADR-0002](adr/0002-checks-consume-captures-only.md) já prevê.
+
+| # | Fatia | Depende de | Skill | Status |
+|---|---|---|---|---|
+| 12 | Sessão de login por arquivo (`storage_state`) | — | `tlc-spec-lean` | pendente |
+| 13 | Capture de um Chrome aberto (CDP) | 12 | `tlc-spec-driven` | pendente |
+
+## 12. Sessão de login por arquivo (`storage_state`)
+
+- **Objetivo:** examinar a primeira tela de uma página atrás de login, com cada chamada ainda isolada das outras.
+- **Entra:**
+  - Parâmetro opcional nas tools que abrem uma URL: o caminho de um arquivo `storage_state` do Playwright (cookies e `localStorage`), carregado no contexto de cada chamada
+  - Erro claro para um arquivo que falta ou não se lê
+  - Como gerar o arquivo (por exemplo `playwright codegen --save-storage`), no README
+  - Testes pela fronteira MCP com um cookie `HttpOnly` que a página exige
+  - Entrada no CHANGELOG
+- **Não entra:** `sessionStorage`; fluxo de login dentro do Squint; estados depois de clique (fatia 13).
+- **Dependência:** nenhuma.
+- **Skill:** `tlc-spec-lean`.
+- **Status:** pendente.
+
+## 13. Capture de um Chrome aberto (CDP)
+
+- **Objetivo:** examinar um estado que só existe depois de cliques (editor, diálogos, páginas sem rota), conectando o Squint a um Chrome que o usuário já abriu e levou até ele.
+- **Entra:** a decidir na spec. Questões abertas: como escolher a aba, quem controla o viewport, e o que a estabilização (animações zeradas) muda na aba do usuário.
+- **Não entra:** ações de interação nas tools do Squint (ADR-0002).
+- **Dependência:** fatia 12.
+- **Skill:** `tlc-spec-driven`, porque ainda falta decidir o que construir.
+- **Status:** pendente.
+
 ## Depois da v0.2
 
 Sem fatias ainda: os outros Checks da seção 10 (`ellipsis-unintended`, `invisible-content`, `broken-image`, `tap-target-small`, `layout-shift`), a fase 3 (`compare_viewports`, `compare_with_mockup`), a fase 4 (axe-core, Profiles, `audit_ui`) e a fase 5 (HTTP, Docker, registros de MCP).
