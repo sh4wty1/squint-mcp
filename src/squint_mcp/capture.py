@@ -108,11 +108,12 @@ def _first_line(error: PlaywrightError) -> str:
 async def _settle_layout(page: Page) -> None:
     """Have Chromium lay the page out as its screenshots will show it.
 
-    On Windows the first screenshot that reaches beyond the viewport changes the
-    font of the generic `monospace` family, and the page is laid out again: boxes
-    read before it are of another layout than the pixels (issue #18, AD-006). A
-    small one taken first, and thrown away, leaves one layout for both. Linux does
-    not show the fault, so no test holds this.
+    The first screenshot that reaches beyond the viewport changes the font of the
+    generic `monospace` family, and the page is laid out again: boxes read before
+    it are of another layout than the pixels (issue #18, AD-006). Measured on
+    Windows and in the Playwright image for Linux. A small one taken first, and
+    thrown away, leaves one layout for both. The test of FNT-14 holds this on
+    Windows.
     """
     corner = FloatRect(x=0, y=0, width=16, height=16)
     try:
