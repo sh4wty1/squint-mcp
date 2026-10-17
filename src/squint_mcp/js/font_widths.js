@@ -56,8 +56,10 @@
   // Faces has it, a name as given before any decoded one.
   // ponytail: a failed Face of a rule whose name reads as a serialized one, such
   // as "Quoted" with its quotation marks, also catches the family of its decoded
-  // name. Names are compared with toLowerCase, not Chromium's case folding: a
-  // final sigma written differently in the Face name is not reported.
+  // name; and a failed script Face, given as "Script Face", also catches a family
+  // named with those quotation marks, reported under them. Names are compared
+  // with toLowerCase, not Chromium's case folding: a final sigma written
+  // differently in the Face name is not reported.
   const named = new Map();
   const failed = new Set();
   for (const read of [(name) => name, bare]) {
