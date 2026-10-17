@@ -9,7 +9,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ---
 
 **Design**: `.specs/features/font-fallback/design.md`
-**Status**: Written on 2026-10-12. The maintainer read it the same day, accepted FNT-52 to FNT-54 and had it committed, then asked for one phase per session. Execute: phase 1 (T1 to T3) is done and its Build passed on `9953077`, phase 2 (T4 to T6) is done and its Build passed on `357206d`, and phase 3 (T7 to T9) is done and its Build passed on `ba860c9`, all the same day; phase 4 (T10 and T11) is done and its Build passed on `82fa6cc` on 2026-10-13. The Verifier's first pass returned FAIL on its sensor the same day: its fix round, F1 to F3, is at the end of this file. The second pass is a PASS, and the closing step (T12) is done but for the push of the new commits and the pull request, which wait for the maintainer
+**Status**: Written on 2026-10-12. The maintainer read it the same day, accepted FNT-52 to FNT-54 and had it committed, then asked for one phase per session. Execute: phase 1 (T1 to T3) is done and its Build passed on `9953077`, phase 2 (T4 to T6) is done and its Build passed on `357206d`, and phase 3 (T7 to T9) is done and its Build passed on `ba860c9`, all the same day; phase 4 (T10 and T11) is done and its Build passed on `82fa6cc` on 2026-10-13. The Verifier's first pass returned FAIL on its sensor the same day: its fix round, F1 to F3, is at the end of this file. The second pass is a PASS, and the closing step (T12) is done but for the push of the new commits and the pull request, which wait for the maintainer; #21 was merged on 2026-10-13. Issue #20 is a round of its own, F4, at the end of this file (2026-10-15); the third pass failed it on one mutant, and F5 closes it; the fourth pass passed it with one residual mutant, and F6 closes that. After the fifth pass and a character-class measurement, the maintainer accepted FNT-66 and FNT-67 on 2026-10-16; F7 below implements them.
 
 ---
 
@@ -19,7 +19,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 
 | Code Layer | Required Test Type | Coverage Expectation | Location Pattern | Run Command |
 | ---------- | ------------------ | -------------------- | ---------------- | ----------- |
-| MCP tools (handlers, and the Check, Capture, page script, models and config they drive) | integration, through the in-memory MCP client only, real Chromium; written before the code of the task | 1:1 to the criteria FNT-01 to FNT-39 and FNT-47 to FNT-62; every listed edge case | `tests/test_font_fallback.py` | `uv run pytest tests/test_font_fallback.py` |
+| MCP tools (handlers, and the Check, Capture, page script, models and config they drive) | integration, through the in-memory MCP client only, real Chromium; written before the code of the task | 1:1 to the criteria FNT-01 to FNT-39 and FNT-47 to FNT-67; every listed edge case | `tests/test_font_fallback.py` | `uv run pytest tests/test_font_fallback.py` |
 | Documents, the roadmap, a run on another platform | none | file evidence (FNT-44 to FNT-46); the gate | - | gate only |
 
 FNT-40 to FNT-43 are not observable through the tool boundary: the Verifier reads them from the files of the task that the Requirement Coverage table names.
@@ -761,3 +761,186 @@ Taken on 2026-10-13, one at a time, before the push of the commits after `ab1dba
 - **The text behind the round is brought up to it** (R9 of the report): the list of fixtures and the sentence on "Judged element" of `design.md`, the Requirement of T10 and the summary of the first pass above.
 
 The eight residual mutants (R7) were not put to the maintainer as a decision: they stay as the report lists them.
+
+---
+
+## Fix of issue #20
+
+[sh4wty1/squint-mcp#20](https://github.com/sh4wty1/squint-mcp/issues/20) is I-1 of the second pass: a Failed family whose name holds a backslash gets no Finding, because `font_widths.js` takes the escapes off the name of a Face, which `document.fonts` gives without any. The maintainer accepted FNT-63 on 2026-10-15. One task: the case and its test first, seen red on the code as it is, then the fix. A new Verifier runs after it.
+
+### F4: Report a family whose name holds a backslash
+
+- [x] Done
+
+**What**: The case `#slash` in `font-fallback-names.html` (the family `Back\slash`, declared with a `src` that names no file) and its test, red on the code as it is. Then `font_widths.js` takes the name of a Face as `document.fonts` gives it; `bare` stays for the names read from a computed `font-family`. The hexadecimal escape stays the limit the design accepts.
+**Where**: `src/squint_mcp/js/font_widths.js`, `tests/test_font_fallback.py` (with `tests/fixtures/font-fallback-names.html`)
+**Depends on**: F3
+**Reuses**: `reported` and `sits_on` of the test module; the form of the cases of FNT-59 and FNT-60
+**Requirement**: FNT-63
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [x] The computed `font-family` of `#slash` is `"Back\\slash", Ahem` and its Face is `error` under the name `Back\slash`, as read from the page; the comment of the fixture says so
+- [x] The test fails on the code as it is, on `[] == [('#slash', 'Back\\slash')]`, and passes with the fix
+- [x] N60-unescape-quotes-only, applied to a scratch copy with the fix, fails the test of FNT-63
+- [x] The tests of FNT-58 to FNT-60 pass unchanged
+- [x] Gate check passes: Full
+- [x] Test count: 54 in the module, 499 collected; none deleted
+
+**Tests**: integration
+**Gate**: full
+
+**Commit**: `fix(font-fallback): report a family whose name holds a backslash`
+
+**Notes**: Read on Windows, Chromium 153, 2026-10-15: the Faces are `Dual`, `DUAL`, `Acme, Inc`, `Vinyl 12"` and `Back\slash`, all `error`, and the computed `font-family` of `#slash` is `"Back\\slash", Ahem`; not read in the Playwright image. On the code as it is the test failed on `[] == [('#slash', 'Back\\slash')]`. N60-unescape-quotes-only, applied to a scratch copy of `src/squint_mcp` with the fix (`squint_mcp.__file__` in the copy), fails the test of FNT-63 on the same assertion and leaves those of FNT-59 and FNT-60 passing. Full: pyright, ruff check, ruff format and 54 passed in 153s.
+
+### F5: Report a family whose name starts and ends with a quotation mark
+
+- [x] Done
+
+**What**: The third pass ([`validation.md`](validation.md)) failed F4 on one mutant: FACE-UNQUOTE-ONLY, which takes the quotation marks off the name of a Face and leaves its escapes, passes the 54 tests. The case `#quoted` in `font-fallback-names.html` (the family `"Quoted"`, its quotation marks part of the name, declared with a `src` that names no file) and its test. No change to `src/`: the test is a pin, red under the mutant.
+**Where**: `tests/test_font_fallback.py` (with `tests/fixtures/font-fallback-names.html`)
+**Depends on**: F4
+**Reuses**: `reported` of the test module; the form of the case of FNT-63
+**Requirement**: FNT-64
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [x] The computed `font-family` of `#quoted` and the name of its Face, as read from the page, are in the comment of the fixture
+- [x] The test passes on the code as it is and fails under FACE-UNQUOTE-ONLY on a scratch copy
+- [x] The tests of FNT-58 to FNT-60 and FNT-63 pass unchanged
+- [x] Gate check passes: Full
+- [x] Test count: 55 in the module, 500 collected; none deleted
+
+**Tests**: integration
+**Gate**: full
+
+**Commit**: `test(font-fallback): pin a family name wrapped in quotation marks`
+
+**Notes**: Read on Windows, Chromium 153, 2026-10-15: the Face is `"Quoted"`, marks included, `error`, after the five others; the computed `font-family` of `#quoted` is `"\"Quoted\"", Ahem`; not read in the Playwright image. FACE-UNQUOTE-ONLY (`family: face.family.replace(/^(["'])(.*)\1$/s, "$2"),`, as the third pass gives it), applied to a scratch copy of `src/squint_mcp` (`squint_mcp.__file__` in the copy), fails the test of FNT-64 on `[] == [('#quoted', '"Quoted"')]` and leaves those of FNT-59, FNT-60 and FNT-63 passing. Full: pyright, ruff check, ruff format and 55 passed in 154s.
+
+### F6: Report a family whose name starts and ends with an apostrophe
+
+- [x] Done
+
+**What**: The fourth pass ([`validation.md`](validation.md)) passed with one residual: FACE-UNQUOTE-SINGLE-ONLY, which takes apostrophes off the name of a Face, passes the 55 tests. The maintainer chose to close it. The case `#single` in `font-fallback-names.html` (the family `'Single'`, its apostrophes part of the name, declared with a `src` that names no file) and its test. No change to `src/`: the test is a pin, red under the mutant.
+**Where**: `tests/test_font_fallback.py` (with `tests/fixtures/font-fallback-names.html`)
+**Depends on**: F5
+**Reuses**: `reported` of the test module; the form of the case of FNT-64
+**Requirement**: FNT-65
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [x] The computed `font-family` of `#single` and the name of its Face, as read from the page, are in the comment of the fixture
+- [x] The test passes on the code as it is and fails under FACE-UNQUOTE-SINGLE-ONLY on a scratch copy
+- [x] The tests of FNT-58 to FNT-60, FNT-63 and FNT-64 pass unchanged
+- [x] Gate check passes: Full
+- [x] Test count: 56 in the module, 501 collected; none deleted
+
+**Tests**: integration
+**Gate**: full
+
+**Commit**: `test(font-fallback): pin a family name wrapped in apostrophes`
+
+**Notes**: Read on Windows, Chromium 153, 2026-10-15: the Face is `'Single'`, apostrophes included, `error`, last of the eight; the computed `font-family` of `#single` is `"'Single'", Ahem`; not read in the Playwright image. FACE-UNQUOTE-SINGLE-ONLY (`family: face.family.replace(/^'(.*)'$/s, "$1"),`, as the fourth pass gives it), applied to a scratch copy of `src/squint_mcp` (`squint_mcp.__file__` in the copy), fails the test of FNT-65 on `[] == [('#single', "'Single'")]` and leaves those of FNT-59, FNT-60, FNT-63 and FNT-64 passing. The comment at the top of the fixture now lists the three Faces of issue #20 and where each was read. Full: pyright, ruff check, ruff format and 56 passed in 156s.
+
+
+### F7: Preserve whitespace and decode hexadecimal escapes in a family name
+
+- [x] Done
+
+**What**: The fifth pass left FACE-TRIM, FACE-COLLAPSE-SPACES and FIRST-TRIM alive. The maintainer asked for a measurement across character classes before another fix. On Windows, Chromium 153, that measurement found two bugs to fix: `namesOf` trims Unicode whitespace that belongs to a name, and `bare` does not decode a hexadecimal escape. FNT-66 pins ASCII edge and doubled spaces and leading U+00A0, on `#spaced-name` and `#nbsp-name`; FNT-67 pins a tab on `#tab-name`. Write both tests first and see each fail against the source at `875eae4`. Then trim only CSS whitespace in `namesOf` and decode hexadecimal escapes in `bare`, keeping other escaped characters. The final-sigma case mismatch stays an accepted limit, with a ponytail and a row in the design. No Verifier runs in this session and `validation.md` is not edited, at the maintainer's explicit request.
+**Where**: `src/squint_mcp/js/font_widths.js`, `tests/test_font_fallback.py`, `tests/fixtures/font-fallback-names.html`, `.specs/features/font-fallback/design.md`, `CHANGELOG.md`; status and traceability in this file and `spec.md`
+**Depends on**: F6
+**Reuses**: `reported` of the test module; the form of the test of FNT-65; the character-class measurement outside the repository
+**Requirement**: FNT-66, FNT-67
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [x] The Face names and computed `font-family` of all three cases are read in Chromium 153 on Windows, and the fixture comment says what was read and where
+- [x] Both new tests fail against a scratch copy of `src/squint_mcp` from `875eae4`, then pass after the two corrections
+- [x] `namesOf` trims only CSS whitespace (space, tab, LF, CR, FF), using a small function without `String.prototype.trim`
+- [x] `bare` decodes 1 to 6 hexadecimal digits after a backslash with `String.fromCodePoint`, consuming one optional CSS whitespace, and still decodes other escaped characters
+- [x] FACE-TRIM, FACE-COLLAPSE-SPACES, FIRST-TRIM, NAMESOF-JS-TRIM and BARE-SIMPLE-ESCAPES each fail a new test on a scratch copy with `PYTHONPATH` and `squint_mcp.__file__` checked
+- [x] FNT-58 to FNT-60 and FNT-63 to FNT-65 pass unchanged
+- [x] The obsolete hexadecimal-escape ponytail and accepted-limit row are removed or updated; final sigma is documented as an accepted limit in the script and design; the changelog names the corrected behaviour
+- [x] Gate check passes: Full, then Build in the background with a log, awaited to completion
+- [x] Test count: 58 in the module, 503 in the suite; none deleted
+
+**Tests**: integration
+**Gate**: build
+
+**Commit**: `fix(font-fallback): keep whitespace and decode escapes in names` (footer `Refs #20`; `d02f632`, reworded from `test(font-fallback): preserve whitespace and decode escaped names`, since it changes `src/`)
+
+**Notes**: The maintainer approved FNT-66 and FNT-67 on 2026-10-16. Read from the fixture on Windows in Chromium 153.0.8010.12: the last three Faces are `error`, named `" Two  Spaces "`, `"\u00a0NBSP"` and `"Tab\tName"` (JSON string notation); the computed values are `" Two  Spaces ", Ahem`, U+00A0 followed by `NBSP, Ahem` without quotes, and `"Tab\9 Name", Ahem`. These cases were not read in the Playwright Linux image. Both new tests failed against a source copy from `875eae4` (2 failed in 8.31s): FNT-66 lacked `('#nbsp-name', '\u00a0NBSP')`, FNT-67 lacked `('#tab-name', 'Tab\tName')`. With the corrections, both passed (2 passed in 5.56s). Every isolated run set `PYTHONPATH` to the copy's `src`, printed and asserted `squint_mcp.__file__` inside that copy, and checked hashes of real `src/` and `tests/` before and after. All existing test functions are unchanged, including FNT-58 to FNT-60 and FNT-63 to FNT-65; the Full passed them. Full: pyright 0 errors, ruff check and format check passed, 58 tests passed in 195.03s (200.39s total). Build ran in the background to its final exit 0, with a log: the same three static checks passed and 503 tests passed in 1410.69s (1415.12s total). No test deleted or skipped. The final-sigma limit remains accepted and is documented beside the comparison and in the design. `validation.md` was not edited and no Verifier ran, as explicitly requested by the maintainer; the separate independent verification is still pending.
+
+| Mutant | Mutation on the scratch copy | Where it dies | Observed result |
+| --- | --- | --- | --- |
+| FACE-TRIM | `family: face.family.trim()` | `tests/test_font_fallback.py:590`, FNT-66 | `[]` instead of both whitespace Findings; FNT-67 passes |
+| FACE-COLLAPSE-SPACES | `family: face.family.replace(/\s+/g, " ")`, exactly as the fifth report gives it | `tests/test_font_fallback.py:590` and `:600`, FNT-66 and FNT-67 | Both tests fail; a separate ASCII-only variant `/ +/g` also dies at `:590` |
+| FIRST-TRIM | `const family = bare(names[0]).trim()` | `tests/test_font_fallback.py:590`, FNT-66 | `[]` instead of both whitespace Findings; FNT-67 passes |
+| NAMESOF-JS-TRIM | The CSS-only trim helper is replaced by `name.trim()` | `tests/test_font_fallback.py:590`, FNT-66 | The U+00A0 Finding is absent; FNT-67 passes |
+| BARE-SIMPLE-ESCAPES | The decoder is replaced by the pre-F7 `bare`, `\X` to `X` only | `tests/test_font_fallback.py:600`, FNT-67 | `[]` instead of the tab Finding; FNT-66 passes |
+
+**F7 adequacy review**: both criteria assert the exact selectors and family strings through `reported` at the MCP boundary, following `CONTRIBUTING.md` and `docs/SPEC.md`. The assertions discriminate against each named fault, contain no mocks or assertion-free checks, and add no behaviour outside FNT-66 and FNT-67.
+
+| Criterion | Assertion evidence | Spec-defined outcome | Covered? |
+| --- | --- | --- | --- |
+| FNT-66 | `tests/test_font_fallback.py:590`: `assert await reported(client, NAMES, families=families, on=on) == [("#spaced-name", " Two  Spaces "), ("#nbsp-name", "\u00a0NBSP")]` | Both Findings, preserving every space and the leading U+00A0 | Yes |
+| FNT-67 | `tests/test_font_fallback.py:600`: `assert await reported(client, NAMES, families=families, on=("#tab-name",)) == [("#tab-name", "Tab\tName")]` | One Finding, with a real U+0009 in the family name | Yes |
+
+| New assertion | Maps to | Keep? |
+| --- | --- | --- |
+| `tests/test_font_fallback.py:590`, equality of the two `(selector, family)` pairs | FNT-66 | Yes |
+| `tests/test_font_fallback.py:600`, equality of the tab `(selector, family)` pair | FNT-67 | Yes |
+
+### F8: Pin the decoder and a U+00A0 at the end of a name
+
+- [x] Done
+
+**What**: The sixth pass ([`validation.md`](validation.md)) failed F7 on its pins, not its code: FNT-67 held the decoder with `\9` alone, which every misreading reads right, and FNT-66 had U+00A0 only at the start of a name. The maintainer chose one case more for each, on the same criteria, and a last Verifier limited to them. The cases `#nbsp-end` (`NBSP` + U+00A0, which Chromium writes unquoted) and `#unit-sep` (`Unit` + U+001F + one space + `Sep`, written `"Unit\1f  Sep"`) in `font-fallback-names.html`, each added to the test of its criterion. No change to `src/`.
+**Where**: `tests/test_font_fallback.py` (with `tests/fixtures/font-fallback-names.html`)
+**Depends on**: F7
+**Reuses**: the tests of FNT-66 and FNT-67
+**Requirement**: FNT-66, FNT-67
+
+**Tools**:
+
+- MCP: NONE
+- Skill: NONE
+
+**Done when**:
+
+- [x] The Face names and computed `font-family` of both cases, as read from the page, are in the comment of the fixture
+- [x] Both tests pass on the code as it is
+- [x] HEX-ONE-DIGIT, HEX-DECIMAL, HEX-UPPER-ONLY and HEX-ALL-WS each fail the test of FNT-67, and TRIM-END-UNICODE that of FNT-66, on a scratch copy, as the sixth pass gives them
+- [x] The other tests of the module pass unchanged
+- [x] Gate check passes: Full
+- [x] Test count: 58 in the module, 503 collected; none deleted
+
+**Tests**: integration
+**Gate**: full
+
+**Commit**: `test(font-fallback): pin the escape decoder and a trailing U+00A0`
+
+**Notes**: Read on Windows, Chromium 153, 2026-10-16: the two Faces are `error`, last of the twelve, named `"NBSP\u00a0"` and `"Unit\u001f Sep"` (JSON notation); the computed values are `NBSP` + U+00A0 + `, Ahem`, unquoted, and `"Unit\1f  Sep", Ahem`; not read in the Playwright image. Each mutant was applied to a scratch copy of `src/squint_mcp` as the sixth pass gives it, with an assertion that `squint_mcp.__file__` is in the copy. HEX-ONE-DIGIT, HEX-DECIMAL, HEX-UPPER-ONLY and HEX-ALL-WS fail the test of FNT-67 on `[('#tab-name', 'Tab\tName')] == [('#tab-name', 'Tab\tName'), ('#unit-sep', 'Unit\x1f Sep')]`; TRIM-END-UNICODE fails that of FNT-66, where `('#nbsp-end', 'NBSP\xa0')` is missing; in each run the other test passes. Full: pyright, ruff check, ruff format and 58 passed in 164s.

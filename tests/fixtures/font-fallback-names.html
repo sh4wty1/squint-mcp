@@ -14,7 +14,22 @@
          Faces, read from `document.fonts` in Chromium 153 on Windows and on Linux
          when this fixture was written (the tool does not show them): Ahem is
          `loaded` and the other four are `error`, under the names Dual, DUAL,
-         Acme, Inc and Vinyl 12" in this order, each without quotes. */
+         Acme, Inc and Vinyl 12" in this order, each without quotes. Back\slash,
+         "Quoted" and 'Single', added later (issue #20), are `error` too, after
+         them in this order, with no quotes put around them: one backslash, the
+         quotation marks and the apostrophes are part of each name. Read on Windows,
+         and the first two on Linux as well by the fourth validation pass.
+         FNT-66 and FNT-67, read on Windows in Chromium 153 on 2026-10-16:
+         the three Faces after 'Single' are `error`, named " Two  Spaces ", U+00A0 + NBSP,
+         and Tab + U+0009 + Name. Their computed `font-family` values are
+         `" Two  Spaces ", Ahem`, U+00A0 + `NBSP, Ahem` (no quotes), and
+         `"Tab\9 Name", Ahem`. ASCII edge and doubled spaces, the leading
+         U+00A0, and the tab in the Face name are preserved by Chromium.
+         The sixth validation pass read these three in the Playwright Linux image
+         too, the same. F8, read on Windows on 2026-10-16: after them come
+         `error` Faces named NBSP + U+00A0 and Unit + U+001F + one space + Sep;
+         their computed `font-family` values are `NBSP` + U+00A0 + `, Ahem` (no
+         quotes) and `"Unit\1f  Sep", Ahem`. */
       /* One family whose two Faces write its name in two cases. Both fail. */
       @font-face {
         font-family: Dual;
@@ -36,6 +51,53 @@
       @font-face {
         font-family: 'Vinyl 12"';
         src: url("no-such-vinyl.woff2");
+      }
+      /* A name with a backslash in it (FNT-63). The computed `font-family` of
+         `#slash` writes it with a second one: "Back\\slash", Ahem. */
+      @font-face {
+        font-family: "Back\\slash";
+        src: url("no-such-back-slash.woff2");
+      }
+      /* A name that starts and ends with a quotation mark (FNT-64): the marks are
+         part of the name. Read on Windows, its Face is `error`, last, under the
+         name "Quoted" with its marks, and the computed `font-family` of `#quoted`
+         is "\"Quoted\"", Ahem. */
+      @font-face {
+        font-family: '"Quoted"';
+        src: url("no-such-quoted.woff2");
+      }
+      /* A name that starts and ends with an apostrophe (FNT-65): the apostrophes
+         are part of the name. Read on Windows, its Face is `error`, last, under the
+         name 'Single' with its apostrophes, and the computed `font-family` of
+         `#single` is "'Single'", Ahem. */
+      @font-face {
+        font-family: "'Single'";
+        src: url("no-such-single.woff2");
+      }
+      /* Whitespace belongs to the name, including its edges (FNT-66). */
+      @font-face {
+        font-family: " Two  Spaces ";
+        src: url("no-such-spaced-name.woff2");
+      }
+      @font-face {
+        font-family: "\a0 NBSP";
+        src: url("no-such-nbsp-name.woff2");
+      }
+      /* The tab is serialized as a hexadecimal escape (FNT-67). */
+      @font-face {
+        font-family: "Tab\9 Name";
+        src: url("no-such-tab-name.woff2");
+      }
+      /* U+00A0 at the end of a name (FNT-66). */
+      @font-face {
+        font-family: "NBSP\a0";
+        src: url("no-such-nbsp-end.woff2");
+      }
+      /* U+001F, an escape of two hexadecimal digits, one a letter, and a space
+         of the name after the one the escape consumes (FNT-67). */
+      @font-face {
+        font-family: "Unit\1f  Sep";
+        src: url("no-such-unit-sep.woff2");
       }
       html,
       body {
@@ -67,6 +129,46 @@
       #inch {
         font-family: 'Vinyl 12"', Ahem;
       }
+
+      #slash {
+        font-family: "Back\\slash", Ahem;
+      }
+
+      #quoted {
+        font-family: '"Quoted"', Ahem;
+      }
+
+      #single {
+        font-family: "'Single'", Ahem;
+      }
+
+      #spaced-name {
+        font-family: " Two  Spaces ", Ahem;
+      }
+
+      #nbsp-name {
+        font-family: "\a0 NBSP", Ahem;
+      }
+
+      #tab-name {
+        font-family: "Tab\9 Name", Ahem;
+      }
+
+      #nbsp-end {
+        font-family: "NBSP\a0", Ahem;
+      }
+
+      #unit-sep {
+        font-family: "Unit\1f  Sep", Ahem;
+      }
+
+      #script-face {
+        font-family: "Script Face", Ahem;
+      }
+
+      #script-slash {
+        font-family: "Script\\Slash", Ahem;
+      }
     </style>
   </head>
   <body>
@@ -74,5 +176,29 @@
     <div id="dual-bold" class="text">XXXXXXXXXX</div>
     <div id="comma" class="text">XXXXXXXXXX</div>
     <div id="inch" class="text">XXXXXXXXXX</div>
+    <div id="slash" class="text">XXXXXXXXXX</div>
+    <div id="quoted" class="text">XXXXXXXXXX</div>
+    <div id="single" class="text">XXXXXXXXXX</div>
+    <div id="spaced-name" class="text">XXXXXXXXXX</div>
+    <div id="nbsp-name" class="text">XXXXXXXXXX</div>
+    <div id="tab-name" class="text">XXXXXXXXXX</div>
+    <div id="nbsp-end" class="text">XXXXXXXXXX</div>
+    <div id="unit-sep" class="text">XXXXXXXXXX</div>
+    <div id="script-face" class="text">XXXXXXXXXX</div>
+    <div id="script-slash" class="text">XXXXXXXXXX</div>
+    <script>
+      // Faces no `@font-face` rule declares: a script adds them and loads them, and
+      // they fail. `document.fonts` gives their names CSS-serialized, as
+      // "Script Face" with its quotation marks and "Script\\Slash" with its escape
+      // (Chromium 153), where a rule's Face has its name as written.
+      for (const [name, file] of [
+        ["Script Face", "no-such-script-face.woff2"],
+        ["Script\\Slash", "no-such-script-slash.woff2"],
+      ]) {
+        const face = new FontFace(name, `url("${file}")`);
+        document.fonts.add(face);
+        face.load().catch(() => {});
+      }
+    </script>
   </body>
 </html>

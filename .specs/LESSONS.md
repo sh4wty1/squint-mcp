@@ -63,10 +63,10 @@ Corroborated across multiple features. Safe to apply as guidance.
 - last seen: 2026-10-11T12:46:50Z
 
 ### L-050 - Give every rule the Terms or the Assumptions table of a spec define an acceptance criterion with a fixture whose outcome changes when the rule is dropped
-- signal: `spec_precision_gap` · recurrence: 2 feature(s) · scope: `spec` · harmful: 0
-- features: overlap, font-fallback
-- evidence: spec.md:29, spec.md:75 (Terms: Coverer; Assumptions: the role attribute); mutants J4, J5, J8, J10 (spec) (+2 more)
-- last seen: 2026-10-13T17:39:23Z
+- signal: `spec_precision_gap` · recurrence: 3 feature(s) · scope: `spec` · harmful: 0
+- features: overlap, font-fallback, extract-tokens
+- evidence: spec.md:29, spec.md:75 (Terms: Coverer; Assumptions: the role attribute); mutants J4, J5, J8, J10 (spec) (+3 more)
+- last seen: 2026-10-15T14:32:24Z
 
 ### L-065 - Pin a rule that reads one chosen item of a list with a fixture where another item of the list would give another outcome
 - signal: `surviving_mutant` · recurrence: 2 feature(s) · scope: `tests,checks` · harmful: 0
@@ -581,6 +581,24 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - features: extract-tokens
 - evidence: TOK-57, TOK-58, TOK-69, TOK-70, TOK-71; tests/test_extract_tokens.py:58 (spec,mcp-tools)
 - last seen: 2026-10-14T19:00:03Z
+
+### L-096 - When a fix stops several transformations of one value, give each of them a fixture case whose outcome changes when only that one comes back
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,names` · harmful: 0
+- features: font-fallback
+- evidence: mutant FACE-UNQUOTE-ONLY, src/squint_mcp/js/font_widths.js:46 (FNT-63) (tests,names) (+1 more)
+- last seen: 2026-10-15T18:53:44Z
+
+### L-097 - When a value must be kept exactly as given, pin it with fixture values that hold every character class a normalization could change, whitespace at the edges and doubled included, not one class per fix round
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,names` · harmful: 0
+- features: font-fallback
+- evidence: mutants FACE-TRIM, FACE-COLLAPSE-SPACES (src/squint_mcp/js/font_widths.js:46), FIRST-TRIM (font_widths.js:101); validation.md G1 (tests,names) (+1 more)
+- last seen: 2026-10-16T15:08:20Z
+
+### L-098 - Pin a decoder with an input whose value changes under each misreading of it: several digits, a letter digit, a value that differs between bases, and a delimiter after the one it consumes
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `tests,names` · harmful: 0
+- features: font-fallback
+- evidence: mutants HEX-ONE-DIGIT, HEX-DECIMAL, HEX-UPPER-ONLY, HEX-ALL-WS (src/squint_mcp/js/font_widths.js:43-44); validation.md G1 (tests,names)
+- last seen: 2026-10-16T15:08:20Z
 
 ## Quarantined (failed when applied - ignore)
 

@@ -557,6 +557,65 @@ async def test_a_family_name_written_with_a_backslash_is_matched_to_its_face(
     assert finding["evidence"]["computed"]["font-family"] == '"Vinyl 12\\"", Ahem'
 
 
+async def test_a_family_name_that_holds_a_backslash_is_matched_to_its_face(
+    client: Client,
+) -> None:
+    families = ("Back\\slash",)
+    assert await reported(client, NAMES, families=families, on=("#slash",)) == [
+        ("#slash", "Back\\slash")
+    ]
+
+
+async def test_a_family_name_that_starts_and_ends_with_a_quotation_mark_keeps_it(
+    client: Client,
+) -> None:
+    families = ('"Quoted"',)
+    assert await reported(client, NAMES, families=families, on=("#quoted",)) == [
+        ("#quoted", '"Quoted"')
+    ]
+
+
+async def test_a_family_name_that_starts_and_ends_with_an_apostrophe_keeps_it(
+    client: Client,
+) -> None:
+    families = ("'Single'",)
+    assert await reported(client, NAMES, families=families, on=("#single",)) == [
+        ("#single", "'Single'")
+    ]
+
+
+async def test_whitespace_that_belongs_to_a_family_name_is_kept(client: Client) -> None:
+    families = (" Two  Spaces ", "\u00a0NBSP", "NBSP\u00a0")
+    on = ("#spaced-name", "#nbsp-name", "#nbsp-end")
+    assert await reported(client, NAMES, families=families, on=on) == [
+        ("#spaced-name", " Two  Spaces "),
+        ("#nbsp-name", "\u00a0NBSP"),
+        ("#nbsp-end", "NBSP\u00a0"),
+    ]
+
+
+async def test_a_family_name_serialized_with_a_hexadecimal_escape_is_reported(
+    client: Client,
+) -> None:
+    families = ("Tab\tName", "Unit\u001f Sep")
+    on = ("#tab-name", "#unit-sep")
+    assert await reported(client, NAMES, families=families, on=on) == [
+        ("#tab-name", "Tab\tName"),
+        ("#unit-sep", "Unit\u001f Sep"),
+    ]
+
+
+async def test_a_family_a_script_adds_is_reported_under_its_name(
+    client: Client,
+) -> None:
+    families = ("Script Face", "Script\\Slash")
+    on = ("#script-face", "#script-slash")
+    assert await reported(client, NAMES, families=families, on=on) == [
+        ("#script-face", "Script Face"),
+        ("#script-slash", "Script\\Slash"),
+    ]
+
+
 async def test_the_width_is_of_the_text_in_the_direction_of_its_element(
     client: Client,
 ) -> None:

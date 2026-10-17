@@ -10,10 +10,10 @@ A web font that answers 404, a wrong path in an `@font-face` rule, an icon font 
 
 ## Goals
 
-- [ ] `font-fallback` reports every family of its "bug" fixture that did not load, once, and nothing on its "clean" fixture, which holds loaded web fonts, a stack of system fonts, families that are declared and never used, and text that is not on the page.
-- [ ] A Finding names the family and says how many elements render their text in a fallback.
-- [ ] Every outcome a test asserts is the same on Windows and on Linux.
-- [ ] Slice 9 is marked done in `docs/ROADMAP.md` once verification passes.
+- [x] `font-fallback` reports every family of its "bug" fixture that did not load, once, and nothing on its "clean" fixture, which holds loaded web fonts, a stack of system fonts, families that are declared and never used, and text that is not on the page.
+- [x] A Finding names the family and says how many elements render their text in a fallback.
+- [x] Every outcome a test asserts is the same on Windows and on Linux.
+- [x] Slice 9 is marked done in `docs/ROADMAP.md` once verification passes.
 
 ## Terms
 
@@ -66,7 +66,7 @@ Every ambiguity is resolved or recorded here - nothing is left silently unclear.
 
 The maintainer accepted the spec on 2026-10-12 and took every default of the table below: all of them are confirmed. The same day the maintainer accepted what the design asked for: the criteria FNT-49 to FNT-51, on a fixture of their own, and one row of Out of Scope ("A Tail that starts with a family the page declares and no text has used"). With the tasks, still on 2026-10-12, the maintainer accepted FNT-52 to FNT-54: three rules that the Terms state and no criterion held (text that paints no box, a Face that is `unloaded`, the widths of several text nodes added), each on one case more of `font-fallback-bounds.html`, and the two rows FNT-15 gains for them.
 
-On 2026-10-13 the Verifier's first pass ([`validation.md`](validation.md)) found ten mutants alive on rules that the Terms, the Assumptions or the design state and that no criterion held. The criteria FNT-55 to FNT-62 pin those rules, on two fixtures of their own and on two cases more of `font-fallback-shaping.html`. With them came one word on whitespace, which the design had and the Terms did not: in the Term "Judged element", in the row "Which elements are judged" below and in the row of Out of Scope on text that is not seen; and the clause of FNT-49 that names `#lower-mixed`. No behaviour changes. They were the orchestrator's defaults, written from the report. The maintainer read them on 2026-10-13, after the second pass, and accepted each as written; with them the last sentence of the row "Fixtures" below was reworded to say what a Tail may name ([`tasks.md`](tasks.md), "The maintainer's decisions after the second pass").
+On 2026-10-13 the Verifier's first pass ([`validation.md`](validation.md)) found ten mutants alive on rules that the Terms, the Assumptions or the design state and that no criterion held. The criteria FNT-55 to FNT-62 pin those rules, on two fixtures of their own and on two cases more of `font-fallback-shaping.html`. With them came one word on whitespace, which the design had and the Terms did not: in the Term "Judged element", in the row "Which elements are judged" below and in the row of Out of Scope on text that is not seen; and the clause of FNT-49 that names `#lower-mixed`. No behaviour changes. They were the orchestrator's defaults, written from the report. The maintainer read them on 2026-10-13, after the second pass, and accepted each as written; with them the last sentence of the row "Fixtures" below was reworded to say what a Tail may name ([`tasks.md`](tasks.md), "The maintainer's decisions after the second pass"). On 2026-10-15 the maintainer accepted FNT-63, for issue #20 (I-1 of the second pass): a Failed family whose name holds a backslash, on one case more of `font-fallback-names.html`. The third pass found the other half of the rule held by no case (a mutant that still takes the quotation marks off the name of a Face lived), and the maintainer accepted FNT-64 the same day, on one case more of the same page. The fourth pass found the same of apostrophes (a mutant that still takes them off the name of a Face lived), and the maintainer accepted FNT-65 for them. On 2026-10-16, after the fifth pass found whitespace unpinned and the three fix iterations had ended, the maintainer asked for one measurement across character classes and accepted FNT-66 and FNT-67: preserve whitespace in names and decode hexadecimal escapes, with F7 correcting the two bugs measured on Chromium 153; the mismatch between lowercase comparison and Chromium case folding for final sigma stays an accepted limit. The string values of FNT-66 and FNT-67 are written in JSON notation. The sixth pass found two of their pins short (a U+00A0 at the end of a name, and an escape of one digit that every misreading of the decoder reads right), and the maintainer accepted one case more for each the same day, `#nbsp-end` and `#unit-sep`, closing the round with a Verifier limited to them.
 
 | Assumption / decision | Chosen default | Rationale | Confirmed? |
 | --- | --- | --- | --- |
@@ -139,6 +139,11 @@ On 2026-10-13 the Verifier's first pass ([`validation.md`](validation.md)) found
 16. WHEN the Face that failed is the italic one of a family and an element asks for it (in `font-fallback-shaping.html`, `Slant` has a Face of `font-style: normal` from the file of Ahem and one of `font-style: italic` with a `src` that names no file; `#slant-normal` and after it `#slant-italic`, of `font-style: italic`, both have `font-family: Slant, Wide`) THEN the Check SHALL return one Finding for the family, on `#slant-italic`, with `evidence.measured.elements` equal to 1 and `evidence.computed` equal to `{"font-family": "Slant, Wide", "font-weight": "400", "font-style": "italic"}`. <!-- FNT-50 -->
 17. WHEN the name of a Failed family holds a comma (`#comma` in `font-fallback-names.html`, `font-family: "Acme, Inc", Ahem`; the page declares `"Acme, Inc"` with a `src` that names no file) THEN the Check SHALL return one Finding for the element with `evidence.measured.family` equal to `Acme, Inc`: a `font-family` is split at the commas outside its quotes. <!-- FNT-59 -->
 18. WHEN the name of a Failed family holds a quotation mark, which a computed `font-family` writes with a backslash before it (`#inch` in `font-fallback-names.html`, of `font-family: 'Vinyl 12"', Ahem`; the page declares the family `Vinyl 12"` with a `src` that names no file) THEN the Check SHALL return one Finding for the element with `evidence.measured.family` equal to `Vinyl 12"`, and `evidence.computed` SHALL hold the `font-family` of the element as computed, `"Vinyl 12\"", Ahem`. <!-- FNT-60 -->
+19. WHEN the name of a Failed family holds a backslash, which a computed `font-family` writes with a second backslash before it (`#slash` in `font-fallback-names.html`, of `font-family: "Back\\slash", Ahem`; the page declares the family `Back\slash` with a `src` that names no file) THEN the Check SHALL return one Finding for the element with `evidence.measured.family` equal to `Back\slash`: the name of a Face is taken as `document.fonts` gives it, with no quote and no escape taken off. <!-- FNT-63 -->
+20. WHEN the name of a Failed family starts and ends with a quotation mark (`#quoted` in `font-fallback-names.html`, of `font-family: '"Quoted"', Ahem`; the page declares the family `"Quoted"`, its quotation marks part of the name, with a `src` that names no file) THEN the Check SHALL return one Finding for the element with `evidence.measured.family` equal to `"Quoted"`, quotation marks included: the quotation marks a name holds are not taken off it. <!-- FNT-64 -->
+21. WHEN the name of a Failed family starts and ends with an apostrophe (`#single` in `font-fallback-names.html`, of `font-family: "'Single'", Ahem`; the page declares the family `'Single'`, its apostrophes part of the name, with a `src` that names no file) THEN the Check SHALL return one Finding for the element with `evidence.measured.family` equal to `'Single'`, apostrophes included: the apostrophes a name holds are not taken off it. <!-- FNT-65 -->
+22. WHEN the name of a Failed family holds whitespace (`#spaced-name` in `font-fallback-names.html`, of `font-family: " Two  Spaces ", Ahem`, `#nbsp-name`, of `font-family: "\a0 NBSP", Ahem`, and `#nbsp-end`, of `font-family: "NBSP\a0", Ahem`; the page declares each family with a `src` that names no file) THEN the Check SHALL return one Finding for each element with `evidence.measured.family` equal to `" Two  Spaces "`, `"\u00a0NBSP"` and `"NBSP\u00a0"`, respectively: whitespace that is part of a family name is preserved, including its edge spaces, doubled internal spaces and a U+00A0 at either end. <!-- FNT-66 -->
+23. WHEN the name of a Failed family holds a control character, which Chromium serializes as a hexadecimal escape followed by one space (`#tab-name` in `font-fallback-names.html`, of `font-family: "Tab\9 Name", Ahem`, and `#unit-sep`, of `font-family: "Unit\1f  Sep", Ahem`, whose name holds U+001F and then one space of its own; the page declares each family with a `src` that names no file) THEN the Check SHALL return one Finding for each element with `evidence.measured.family` equal to `"Tab\tName"` and `"Unit\u001f Sep"`, respectively, with one U+0009 between `Tab` and `Name` and one U+001F and one space between `Unit` and `Sep`: every hexadecimal digit of an escape is read in base 16, and the escape consumes the one space after it and no more. <!-- FNT-67 -->
 
 **Independent Test**: Call `detect_visual_bugs` on `font-fallback-bug.html` and read the two Findings: `Brand` on three elements, `Icon Set` on one.
 
@@ -249,76 +254,81 @@ On 2026-10-13 the Verifier's first pass ([`validation.md`](validation.md)) found
 
 | Requirement ID | Story | Phase | Status |
 | --- | --- | --- | --- |
-| FNT-01 | P1: Report a font that did not load | T2 | Implemented |
-| FNT-02 | P1: Report a font that did not load | T2 | Implemented |
-| FNT-03 | P1: Report a font that did not load | T2 | Implemented |
-| FNT-04 | P1: Report a font that did not load | T2 | Implemented |
-| FNT-05 | P1: Report a font that did not load | T5 | Implemented |
-| FNT-06 | P1: Report a font that did not load | T5 | Implemented |
-| FNT-07 | P1: Report a font that did not load | T2 | Implemented |
-| FNT-08 | P1: Report a font that did not load | T5 | Implemented |
-| FNT-09 | P1: Report a font that did not load | T5 | Implemented |
-| FNT-10 | P1: Report a font that did not load | T5 | Implemented |
-| FNT-11 | P1: Report a font that did not load | T6 | Implemented |
-| FNT-12 | P1: Report a font that did not load | T6 | Implemented |
-| FNT-13 | P1: Report a font that did not load | T2 | Implemented |
-| FNT-14 | P1: Report a font that did not load | T8 | Implemented |
-| FNT-15 | P1: Report a font that did not load | T5 | Implemented |
-| FNT-16 | P1: Stay silent when the text is in the font it asks for | T4 | Implemented |
-| FNT-17 | P1: Stay silent when the text is in the font it asks for | T4 | Implemented |
-| FNT-18 | P1: Stay silent when the text is in the font it asks for | T4 | Implemented |
-| FNT-19 | P1: Stay silent when the text is in the font it asks for | T4 | Implemented |
-| FNT-20 | P1: Stay silent when the text is in the font it asks for | T6 | Implemented |
-| FNT-21 | P1: Stay silent when the text is in the font it asks for | T6 | Implemented |
-| FNT-22 | P1: Stay silent when the text is in the font it asks for | T6 | Implemented |
-| FNT-23 | P1: Stay silent when the text is in the font it asks for | T4 | Implemented |
-| FNT-24 | P1: Stay silent when the text is in the font it asks for | T4 | Implemented |
-| FNT-25 | P1: Stay silent when the text is in the font it asks for | T4 | Implemented |
-| FNT-26 | P1: Stay silent when the text is in the font it asks for | T6 | Implemented |
-| FNT-27 | P1: Read the Finding | T3 | Implemented |
-| FNT-28 | P1: Read the Finding | T2 | Implemented |
-| FNT-29 | P1: Read the Finding | T5 | Implemented |
-| FNT-30 | P1: Read the Finding | T6 | Implemented |
-| FNT-31 | P1: Read the Finding | T6 | Implemented |
-| FNT-32 | P1: Read the Finding | T6 | Implemented |
-| FNT-33 | P1: With the other Checks | T2 | Implemented |
-| FNT-34 | P1: With the other Checks | T1 | Implemented |
-| FNT-35 | P1: With the other Checks | T2 | Implemented |
-| FNT-36 | P1: With the other Checks | T9 | Implemented |
-| FNT-37 | P1: With the other Checks | T1 | Implemented |
-| FNT-38 | P1: With the other Checks | T1 | Implemented |
-| FNT-39 | P1: With the other Checks | T9 | Implemented |
-| FNT-40 | P2: Check contract, Capture and documents | T1 | Implemented |
-| FNT-41 | P2: Check contract, Capture and documents | T2 | Implemented |
-| FNT-42 | P2: Check contract, Capture and documents | T2 | Implemented |
-| FNT-43 | P2: Check contract, Capture and documents | T2 | Implemented |
-| FNT-44 | P2: Check contract, Capture and documents | T11 | Implemented |
-| FNT-45 | P2: Check contract, Capture and documents | T11 | Implemented |
-| FNT-46 | P2: Check contract, Capture and documents | T12 | Implemented |
-| FNT-47 | Edge cases | T2 | Implemented |
-| FNT-48 | Edge cases | T5 | Implemented |
-| FNT-49 | P1: Stay silent when the text is in the font it asks for | T7 | Implemented |
-| FNT-50 | P1: Report a font that did not load | T7 | Implemented |
-| FNT-51 | P1: Read the Finding | T7 | Implemented |
-| FNT-52 | P1: Stay silent when the text is in the font it asks for | T6 | Implemented |
-| FNT-53 | P1: Stay silent when the text is in the font it asks for | T5 | Implemented |
-| FNT-54 | P1: Read the Finding | T6 | Implemented |
-| FNT-55 | P1: Stay silent when the text is in the font it asks for | F1 | Implemented |
-| FNT-56 | P1: Stay silent when the text is in the font it asks for | F1 | Implemented |
-| FNT-57 | P1: Stay silent when the text is in the font it asks for | F1 | Implemented |
-| FNT-58 | P1: Read the Finding | F2 | Implemented |
-| FNT-59 | P1: Report a font that did not load | F2 | Implemented |
-| FNT-60 | P1: Report a font that did not load | F2 | Implemented |
-| FNT-61 | P1: Read the Finding | F3 | Implemented |
-| FNT-62 | P1: Read the Finding | F3 | Implemented |
+| FNT-01 | P1: Report a font that did not load | T2 | Verified |
+| FNT-02 | P1: Report a font that did not load | T2 | Verified |
+| FNT-03 | P1: Report a font that did not load | T2 | Verified |
+| FNT-04 | P1: Report a font that did not load | T2 | Verified |
+| FNT-05 | P1: Report a font that did not load | T5 | Verified |
+| FNT-06 | P1: Report a font that did not load | T5 | Verified |
+| FNT-07 | P1: Report a font that did not load | T2 | Verified |
+| FNT-08 | P1: Report a font that did not load | T5 | Verified |
+| FNT-09 | P1: Report a font that did not load | T5 | Verified |
+| FNT-10 | P1: Report a font that did not load | T5 | Verified |
+| FNT-11 | P1: Report a font that did not load | T6 | Verified |
+| FNT-12 | P1: Report a font that did not load | T6 | Verified |
+| FNT-13 | P1: Report a font that did not load | T2 | Verified |
+| FNT-14 | P1: Report a font that did not load | T8 | Verified |
+| FNT-15 | P1: Report a font that did not load | T5 | Verified |
+| FNT-16 | P1: Stay silent when the text is in the font it asks for | T4 | Verified |
+| FNT-17 | P1: Stay silent when the text is in the font it asks for | T4 | Verified |
+| FNT-18 | P1: Stay silent when the text is in the font it asks for | T4 | Verified |
+| FNT-19 | P1: Stay silent when the text is in the font it asks for | T4 | Verified |
+| FNT-20 | P1: Stay silent when the text is in the font it asks for | T6 | Verified |
+| FNT-21 | P1: Stay silent when the text is in the font it asks for | T6 | Verified |
+| FNT-22 | P1: Stay silent when the text is in the font it asks for | T6 | Verified |
+| FNT-23 | P1: Stay silent when the text is in the font it asks for | T4 | Verified |
+| FNT-24 | P1: Stay silent when the text is in the font it asks for | T4 | Verified |
+| FNT-25 | P1: Stay silent when the text is in the font it asks for | T4 | Verified |
+| FNT-26 | P1: Stay silent when the text is in the font it asks for | T6 | Verified |
+| FNT-27 | P1: Read the Finding | T3 | Verified |
+| FNT-28 | P1: Read the Finding | T2 | Verified |
+| FNT-29 | P1: Read the Finding | T5 | Verified |
+| FNT-30 | P1: Read the Finding | T6 | Verified |
+| FNT-31 | P1: Read the Finding | T6 | Verified |
+| FNT-32 | P1: Read the Finding | T6 | Verified |
+| FNT-33 | P1: With the other Checks | T2 | Verified |
+| FNT-34 | P1: With the other Checks | T1 | Verified |
+| FNT-35 | P1: With the other Checks | T2 | Verified |
+| FNT-36 | P1: With the other Checks | T9 | Verified |
+| FNT-37 | P1: With the other Checks | T1 | Verified |
+| FNT-38 | P1: With the other Checks | T1 | Verified |
+| FNT-39 | P1: With the other Checks | T9 | Verified |
+| FNT-40 | P2: Check contract, Capture and documents | T1 | Verified |
+| FNT-41 | P2: Check contract, Capture and documents | T2 | Verified |
+| FNT-42 | P2: Check contract, Capture and documents | T2 | Verified |
+| FNT-43 | P2: Check contract, Capture and documents | T2 | Verified |
+| FNT-44 | P2: Check contract, Capture and documents | T11 | Verified |
+| FNT-45 | P2: Check contract, Capture and documents | T11 | Verified |
+| FNT-46 | P2: Check contract, Capture and documents | T12 | Verified |
+| FNT-47 | Edge cases | T2 | Verified |
+| FNT-48 | Edge cases | T5 | Verified |
+| FNT-49 | P1: Stay silent when the text is in the font it asks for | T7 | Verified |
+| FNT-50 | P1: Report a font that did not load | T7 | Verified |
+| FNT-51 | P1: Read the Finding | T7 | Verified |
+| FNT-52 | P1: Stay silent when the text is in the font it asks for | T6 | Verified |
+| FNT-53 | P1: Stay silent when the text is in the font it asks for | T5 | Verified |
+| FNT-54 | P1: Read the Finding | T6 | Verified |
+| FNT-55 | P1: Stay silent when the text is in the font it asks for | F1 | Verified |
+| FNT-56 | P1: Stay silent when the text is in the font it asks for | F1 | Verified |
+| FNT-57 | P1: Stay silent when the text is in the font it asks for | F1 | Verified |
+| FNT-58 | P1: Read the Finding | F2 | Verified |
+| FNT-59 | P1: Report a font that did not load | F2 | Verified |
+| FNT-60 | P1: Report a font that did not load | F2 | Verified |
+| FNT-61 | P1: Read the Finding | F3 | Verified |
+| FNT-62 | P1: Read the Finding | F3 | Verified |
+| FNT-63 | P1: Report a font that did not load | F4 | Verified |
+| FNT-64 | P1: Report a font that did not load | F5 | Verified |
+| FNT-65 | P1: Report a font that did not load | F6 | Verified |
+| FNT-66 | P1: Report a font that did not load | F7, F8 | Verified |
+| FNT-67 | P1: Report a font that did not load | F7, F8 | Verified |
 
-**Coverage:** 62 total, 62 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
+**Coverage:** 67 total, 67 mapped to tasks, 0 unmapped. The Phase column names the task of [`tasks.md`](tasks.md).
 
 ---
 
 ## Success Criteria
 
-- [ ] All 62 requirements verified by the Verifier, FNT-40 to FNT-46 from file evidence.
-- [ ] The gate passes: typecheck, lint, format check and the whole test suite.
-- [ ] The first run of the suite on the CI's Linux passes the tests of this slice with no assertion changed for it.
-- [ ] The discrimination sensor leaves alive none of the mutants that a validation report or a task names, nor any of the code the last fix round changed, in the Check and in what the Capture gains for it (Assumptions, "When the discrimination sensor is satisfied").
+- [x] All 67 requirements verified by the Verifier, FNT-40 to FNT-46 from file evidence.
+- [x] The gate passes: typecheck, lint, format check and the whole test suite.
+- [x] The first run of the suite on the CI's Linux passes the tests of this slice with no assertion changed for it. (Run 38447799140 on `61c4378` for the tests before issue #20; run 38928445283 on `f26e730`, pull request #29, for FNT-63 to FNT-67.)
+- [x] The discrimination sensor leaves alive none of the mutants that a validation report or a task names, nor any of the code the last fix round changed, in the Check and in what the Capture gains for it (Assumptions, "When the discrimination sensor is satisfied").
