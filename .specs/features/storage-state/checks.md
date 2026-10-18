@@ -104,4 +104,5 @@ Proof: `uv run pytest`
 
 - **Boundary:** C1-C16 closed at the build commit of this branch
 - **Settled mid-build:** C15 named AD-009, a number slice 10 had taken; renumbered to AD-010, the claim unchanged. The SDK calls a tool with the alias of a Field as the keyword, so door 1's `storageState` is the Python name of the parameter itself (ruff selects no naming rules), as the door's literal shape reads
+- **Verification round 1:** PASS with one gap no check covered: a file that is not UTF-8 raised a `UnicodeDecodeError` outside both `try` blocks, an opaque error instead of the message of AC 9. Fixed by decoding inside the JSON `try`; C9's proof gains the case `not-utf-8` (4 cases), C9's text left as approved
 - **Abandoned:** `Annotated[str | None, Field(alias="storageState")]` on a `storage_state` parameter - the SDK passed `storageState=` to the function, a `TypeError`

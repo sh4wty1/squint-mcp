@@ -108,14 +108,15 @@ def _read_storage_state(path: str) -> StorageState:
     if not Path(path).is_absolute():
         raise ToolError(f'storageState must be an absolute path: "{path}".')
     try:
-        text = Path(path).read_text(encoding="utf-8")
+        data = Path(path).read_bytes()
     except OSError as error:
         reason = error.strerror or type(error).__name__
         raise ToolError(
             f'Could not read the storage state "{path}": {reason}.'
         ) from None
     try:
-        state = json.loads(text)
+        # Bytes that are not UTF-8 raise a ValueError too.
+        state = json.loads(data.decode("utf-8"))
     except ValueError:
         state = None
     if not isinstance(state, dict):

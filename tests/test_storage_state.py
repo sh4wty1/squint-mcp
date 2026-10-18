@@ -196,14 +196,14 @@ async def test_a_storage_state_that_cannot_be_read_is_refused(
 
 @pytest.mark.parametrize(
     "content",
-    ["not json", "[]", '{"cookies": "nope"}'],
-    ids=["not-json", "array", "rejected"],
+    [b"not json", b"[]", b'{"cookies": "nope"}', b"\xff\xfe{}"],
+    ids=["not-json", "array", "rejected", "not-utf-8"],
 )
 async def test_a_file_that_is_not_a_storage_state_is_refused(
-    client: Client, local_server: str, tmp_path: Path, content: str
+    client: Client, local_server: str, tmp_path: Path, content: bytes
 ) -> None:
     path = tmp_path / "state.json"
-    path.write_text(content)
+    path.write_bytes(content)
     message = await fail(client, page(local_server), storageState=str(path))
     assert message == f'"{path}" is not a Playwright storage state.'
 
