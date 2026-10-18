@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: a page behind a login</title>
+    <style>
+      @font-face {
+        font-family: Ahem;
+        src: url("Ahem.ttf");
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font: 20px/30px Ahem;
+      }
+      #campaigns {
+        color: #123456;
+      }
+      /* Ten glyphs of 20px in 150px: cut by 50px. */
+      #clipped {
+        margin: 20px 0 0 40px;
+        width: 150px;
+        overflow-x: hidden;
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      // As the Admin: one page whose screen is the answer of its API, which reads
+      // a session cookie scoped to the API path. Asked synchronously, so the
+      // screen is decided before `load`. With `?set-cookie`, the page sets a
+      // cookie of its own first, and the API says whether it came back.
+      if (location.search === "?set-cookie") document.cookie = "seen=1; path=/";
+      const request = new XMLHttpRequest();
+      request.open("GET", "/api/v1/admin/me", false);
+      request.send();
+      if (request.status === 200) {
+        const { seen } = JSON.parse(request.responseText);
+        document.write(
+          '<div id="campaigns"><p id="clipped">XXXXXXXXXX</p>' +
+            (seen ? '<p id="seen-sent">seen</p>' : "") +
+            "</div>",
+        );
+      } else {
+        document.write('<form id="login"><p>Sign in</p></form>');
+      }
+    </script>
+  </body>
+</html>

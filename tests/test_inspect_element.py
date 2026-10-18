@@ -98,7 +98,7 @@ async def test_inspect_element_takes_url_selector_and_optional_viewport(
 ) -> None:
     schema = (await inspect_tool(client)).input_schema
     properties = schema["properties"]
-    assert set(properties) == {"url", "selector", "viewport"}
+    assert set(properties) == {"url", "selector", "viewport", "storageState"}
     assert properties["url"]["type"] == "string"
     assert properties["selector"]["type"] == "string"
     assert set(schema["required"]) == {"url", "selector"}

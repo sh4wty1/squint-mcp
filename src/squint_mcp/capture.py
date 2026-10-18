@@ -2,11 +2,12 @@
 
 import asyncio
 import io
+import json
 import sys
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 from urllib.parse import urlsplit
 
 from mcp.server.mcpserver.exceptions import ToolError
@@ -16,6 +17,7 @@ from playwright.async_api import (
     FloatRect,
     Page,
     Playwright,
+    StorageState,
     async_playwright,
 )
 from playwright.async_api import Error as PlaywrightError
@@ -98,6 +100,28 @@ async def browser_lifespan(_: object) -> AsyncGenerator[BrowserSession]:
         yield session
     finally:
         await session.close()
+
+
+def _read_storage_state(path: str) -> StorageState:
+    """The storage state of the file at `path`, read whole. No message quotes the
+    file: it holds the cookies of a session."""
+    if not Path(path).is_absolute():
+        raise ToolError(f'storageState must be an absolute path: "{path}".')
+    try:
+        text = Path(path).read_text(encoding="utf-8")
+    except OSError as error:
+        reason = error.strerror or type(error).__name__
+        raise ToolError(
+            f'Could not read the storage state "{path}": {reason}.'
+        ) from None
+    try:
+        state = json.loads(text)
+    except ValueError:
+        state = None
+    if not isinstance(state, dict):
+        raise ToolError(f'"{path}" is not a Playwright storage state.')
+    # Its shape is Playwright's to judge, when the context is created.
+    return cast(StorageState, state)
 
 
 def _first_line(error: PlaywrightError) -> str:
@@ -301,6 +325,7 @@ async def capture(
     covered_text: bool = False,
     fonts: bool = False,
     descendants: bool = False,
+    storage_state: str | None = None,
 ) -> Capture:
     """Open `url` in a fresh context, stabilize it and capture it.
 
@@ -309,18 +334,30 @@ async def capture(
     also holds every element under a match, each once. With `covered_text`,
     the elements whose own text may be covered also say how much of it is. With
     `fonts`, the Capture holds the faces of the page, and the elements whose
-    font may not have loaded say how wide their own text is on one line.
+    font may not have loaded say how wide their own text is on one line. With
+    `storage_state`, the path of a Playwright storage state file, the context
+    starts with its cookies and `localStorage`; the file is never written.
     """
     scheme = urlsplit(url).scheme
     if scheme not in ("http", "https", "file"):
         raise ToolError(
             f'Unsupported URL scheme "{scheme}"; use http://, https:// or file://.'
         )
+    state = None if storage_state is None else _read_storage_state(storage_state)
     browser = await session.browser()
-    context = await browser.new_context(
-        viewport={"width": viewport.width, "height": viewport.height},
-        device_scale_factor=1,
-    )
+    try:
+        context = await browser.new_context(
+            viewport={"width": viewport.width, "height": viewport.height},
+            device_scale_factor=1,
+            storage_state=state,
+        )
+    except PlaywrightError:
+        if state is None:
+            raise
+        # Playwright's message may quote the file.
+        raise ToolError(
+            f'"{storage_state}" is not a Playwright storage state.'
+        ) from None
     try:
         # The tool's total timeout is the only clock; Playwright's own would race it.
         context.set_default_timeout(0)

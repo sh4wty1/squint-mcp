@@ -14,6 +14,9 @@ FIXTURES = Path(__file__).parent / "fixtures"
 DESKTOP = {"width": 1440, "height": 900}
 MOBILE = {"width": 390, "height": 844}
 
+SESSION_COOKIE = "s3cret-session"
+"""The value of `sid` that the API of `storage-state.html` takes as logged in."""
+
 
 def fixture_url(name: str) -> str:
     return (FIXTURES / name).as_uri()

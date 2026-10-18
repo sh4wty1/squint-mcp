@@ -24,6 +24,7 @@ async def extract_tokens(
     ctx: Context[BrowserSession],
     scope: str | None = None,
     viewport: Viewport | None = None,
+    storageState: str | None = None,
 ) -> Annotated[CallToolResult, ExtractTokensResult]:
     """Extract the design tokens a rendered page uses.
 
@@ -48,6 +49,10 @@ async def extract_tokens(
     reading to its matches and every element under them. `elements` is the
     number of elements read: those that paint a box, are visible and are not
     under an opacity of 0. `viewport` defaults to 1440x900.
+    `storageState`, the absolute path of a Playwright storage state file (the
+    cookies and `localStorage` that `playwright codegen --save-storage` saves),
+    opens the page as that login session sees it: the file is loaded into the
+    call and never written.
     `stabilized` is false when the network never went idle. A call that takes
     longer than 30s fails.
     """
@@ -63,6 +68,7 @@ async def extract_tokens(
                 viewport,
                 "*" if scope is None else scope,
                 descendants=scope is not None,
+                storage_state=storageState,
             )
     except TimeoutError as error:
         raise ToolError(f"Timed out after {config.TOTAL_TIMEOUT_S:g}s.") from error
