@@ -60,8 +60,8 @@ Proof: `grep -ci "expire" README.md` prints `1` or more
 **C14** - The `[Unreleased]` section of `CHANGELOG.md` has an entry under `### Added` that names `storageState` (AC 13)
 Proof: `sed -n '/^## \[Unreleased\]/,/^## \[0.1.0\]/p' CHANGELOG.md | sed -n '/^### Added/,/^### /p' | grep -c "storageState"` prints `1` or more
 
-**C15** - `.specs/STATE.md` records AD-009, active, for `storageState` beside ADR-0002 (plan, Impact)
-Proof: `sed -n '/^### AD-009/,/^### AD-010/p' .specs/STATE.md | grep -c "storageState"` prints `1` or more
+**C15** - `.specs/STATE.md` records AD-010, active, for `storageState` beside ADR-0002 (plan, Impact)
+Proof: `sed -n '/^### AD-010/,/^## Handoff/p' .specs/STATE.md | grep -c "storageState"` prints `1` or more
 
 ### S3 - gate
 
@@ -101,3 +101,7 @@ Proof: `uv run pytest`
 ## Handoff
 
 - S1-S2 = 50 KB of the files touched plus a new test module and fixture, ~16k tokens, one surface (`capture.capture` and the three tools), under the 150k budget - one builder
+
+- **Boundary:** C1-C16 closed at the build commit of this branch
+- **Settled mid-build:** C15 named AD-009, a number slice 10 had taken; renumbered to AD-010, the claim unchanged. The SDK calls a tool with the alias of a Field as the keyword, so door 1's `storageState` is the Python name of the parameter itself (ruff selects no naming rules), as the door's literal shape reads
+- **Abandoned:** `Annotated[str | None, Field(alias="storageState")]` on a `storage_state` parameter - the SDK passed `storageState=` to the function, a `TypeError`

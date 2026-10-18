@@ -25,7 +25,8 @@ Reuses Playwright's own storage state format and its loading into a new context 
 | domain | new term: Storage state - a file of cookies and `localStorage` per origin in Playwright's format, loaded into the context of one call. Lives in `capture.py` and the three tools |
 | domain | "each call is isolated" (`docs/SPEC.md` story 15) still holds: the state is loaded into a fresh context per Capture and never written back |
 | contract | the three tools gain one optional input; a call without it behaves as today |
-| docs | `docs/adr/0002-checks-consume-captures-only.md` names attaching over CDP as the way past the initial-state limit; this slice adds a second, narrower way for the first screen after a login. Recorded as AD-009 in `.specs/STATE.md` |
+| docs | `docs/adr/0002-checks-consume-captures-only.md` names attaching over CDP as the way past the initial-state limit; this slice adds a second, narrower way for the first screen after a login. Recorded as AD-010 in `.specs/STATE.md` |
+| existing tests | `test_inspect_element.py`, `test_detect_visual_bugs.py` and `test_extract_tokens.py` each assert the exact set of input names of their tool; each set gains `storageState`. No other existing assertion changes |
 | stored data | nothing to migrate - nothing is persisted |
 
 ## Relations
