@@ -958,3 +958,107 @@ async def test_a_page_that_never_goes_network_idle_is_read_unstabilized(
     assert result.structured_content["stabilized"] is False
     (text,) = texts(result)
     assert text.endswith("; not stabilized.")
+
+
+NO_STYLE_NOTICE = (
+    " The page has no style of its own: these values are the browser's defaults."
+)
+
+
+def author(local_server: str, case: str = "") -> str:
+    """The url of `tokens-author.html` with one style-like thing, or none."""
+    return f"{local_server}/tokens-author.html{f'?{case}' if case else ''}"
+
+
+async def test_author_styles_is_in_the_output_schema(client: Client) -> None:
+    schema = (await tokens_tool(client)).output_schema
+    assert schema is not None
+    assert schema["properties"]["authorStyles"]["type"] == "boolean"
+    assert "authorStyles" in schema["required"]
+
+
+async def test_a_page_with_no_style_says_its_values_are_the_defaults(
+    client: Client, local_server: str
+) -> None:
+    result = await call(client, author(local_server))
+    assert result.is_error is False, texts(result)
+    assert result.structured_content is not None
+    assert result.structured_content["authorStyles"] is False
+    (text,) = texts(result)
+    assert text.endswith(NO_STYLE_NOTICE), text
+
+
+async def test_a_style_element_is_an_author_style(
+    client: Client, local_server: str
+) -> None:
+    result = await call(client, author(local_server, "style"))
+    assert result.is_error is False, texts(result)
+    assert result.structured_content is not None
+    assert result.structured_content["authorStyles"] is True
+    (text,) = texts(result)
+    assert "no style of its own" not in text
+
+
+@pytest.mark.parametrize(
+    "case",
+    [
+        "link",
+        "attribute",
+        "adopted",
+        "shadow-style",
+        "shadow-adopted",
+        "cross-origin",
+        "print",
+    ],
+)
+async def test_each_author_style_turns_the_notice_off(
+    client: Client, local_server: str, case: str
+) -> None:
+    result = await extract(client, author(local_server, case))
+    assert result["authorStyles"] is True
+
+
+@pytest.mark.parametrize(
+    "case", ["empty-style", "empty-attribute", "missing-link", "disabled", "bgcolor"]
+)
+async def test_what_is_no_author_style_leaves_the_notice_on(
+    client: Client, local_server: str, case: str
+) -> None:
+    result = await extract(client, author(local_server, case))
+    assert result["authorStyles"] is False
+
+
+async def test_author_styles_describes_the_whole_page_whatever_the_scope(
+    client: Client, local_server: str
+) -> None:
+    result = await extract(client, author(local_server, "style"), scope="#inside")
+    assert result["elements"] == 1
+    assert result["authorStyles"] is True
+
+
+async def test_the_other_tools_gain_no_field(client: Client, local_server: str) -> None:
+    url = author(local_server)
+    inspected = await client.call_tool(
+        "inspect_element", {"url": url, "selector": "#inside"}
+    )
+    assert inspected.structured_content is not None, texts(inspected)
+    assert set(inspected.structured_content) == {
+        "box",
+        "boxModel",
+        "computed",
+        "sampledColors",
+        "stabilized",
+        "viewport",
+    }
+    detected = await client.call_tool("detect_visual_bugs", {"url": url})
+    assert detected.structured_content is not None, texts(detected)
+    assert set(detected.structured_content) == {"findings", "captures"}
+    for captured in detected.structured_content["captures"]:
+        assert set(captured) == {"viewport", "stabilized"}
+
+
+async def test_the_description_tells_author_styles(client: Client) -> None:
+    description = " ".join(((await tokens_tool(client)).description or "").split())
+    assert "`authorStyles`" in description
+    assert "the whole page, whatever `scope` is" in description
+    assert "the browser's defaults" in description

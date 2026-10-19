@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: one author style, or none</title>
+  </head>
+  <body>
+    <p id="inside">Inside</p>
+    <p id="other">Other</p>
+    <script>
+      // The query names one case, which adds that one style-like thing and
+      // nothing else. With no query the page has no style of its own.
+      const RULE = "#other { color: #aa0000 }";
+      const other = document.getElementById("other");
+
+      function style(text, root = document.head) {
+        const element = document.createElement("style");
+        element.textContent = text;
+        root.append(element);
+        return element;
+      }
+
+      function link(href) {
+        const element = document.createElement("link");
+        element.rel = "stylesheet";
+        element.href = href;
+        document.head.append(element);
+      }
+
+      function sheet(text) {
+        const adopted = new CSSStyleSheet();
+        adopted.replaceSync(text);
+        return adopted;
+      }
+
+      function shadow() {
+        const root = document.body
+          .appendChild(document.createElement("div"))
+          .attachShadow({ mode: "open" });
+        root.innerHTML = "<span>Shadow</span>";
+        return root;
+      }
+
+      const cases = {
+        style: () => style(RULE),
+        link: () => link("tokens-author.css"),
+        attribute: () => other.setAttribute("style", "color: #aa0000"),
+        adopted: () => (document.adoptedStyleSheets = [sheet(RULE)]),
+        "shadow-style": () => style("span { color: #aa0000 }", shadow()),
+        "shadow-adopted": () =>
+          (shadow().adoptedStyleSheets = [sheet("span { color: #aa0000 }")]),
+        "cross-origin": () =>
+          link(`http://localhost:${location.port}/tokens-author.css`),
+        print: () => (style(RULE).media = "print"),
+        "empty-style": () => style(""),
+        "empty-attribute": () => other.setAttribute("style", ""),
+        "missing-link": () => link("no-such-sheet.css"),
+        disabled: () => (style(RULE).sheet.disabled = true),
+        bgcolor: () => document.body.setAttribute("bgcolor", "#aa0000"),
+      };
+      const name = location.search.slice(1);
+      if (name) cases[name]();
+    </script>
+  </body>
+</html>

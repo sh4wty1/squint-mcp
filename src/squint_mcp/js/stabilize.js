@@ -15,6 +15,7 @@ async () => {
   for (const root of roots) {
     // Animations and transitions that start from now on take no time.
     const style = document.createElement("style");
+    style.setAttribute("data-squint-stabilize", "");
     style.textContent =
       "*, *::before, *::after {" +
       " animation-duration: 0s !important; animation-delay: 0s !important;" +

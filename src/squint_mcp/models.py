@@ -145,6 +145,10 @@ class Capture:
     """The full page in RGB with no text painted."""
     ink: Image.Image
     """How much text ink each pixel gets, 0 to 255, in mode L."""
+    author_styles: bool
+    """Whether the page has an Author style: a rule in a style sheet of the
+    document or of an open shadow root, or a declaration in a `style`
+    attribute."""
     faces: list[Face] | None = None
     """The faces of `document.fonts`, in its order; None when the Capture was
     not asked for fonts."""

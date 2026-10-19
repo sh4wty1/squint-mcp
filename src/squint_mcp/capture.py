@@ -42,6 +42,7 @@ _SCROLL_WIDTH = (_JS / "scroll_width.js").read_text(encoding="utf-8")
 _COVERED_TEXT = (_JS / "covered_text.js").read_text(encoding="utf-8")
 _FONT_WIDTHS = (_JS / "font_widths.js").read_text(encoding="utf-8")
 _SRGB_COLORS = (_JS / "srgb_colors.js").read_text(encoding="utf-8")
+_AUTHOR_STYLES = (_JS / "author_styles.js").read_text(encoding="utf-8")
 # Calls a method of the object the cover script leaves on the page.
 _COVERED_CALL = "([method, ...args]) => globalThis.__squintCovered[method](...args)"
 # Resolves once the page has painted two frames: whatever changed before the call
@@ -398,6 +399,8 @@ async def capture(
         # on the page.
         srgb = await _srgb_colors(page, elements)
         scroll_width = await page.evaluate(_SCROLL_WIDTH)
+        # Before the text fills below add styles of their own.
+        author_styles = await page.evaluate(_AUTHOR_STYLES)
         pixels = await _screenshot(page)
         # After the collector, which reads the page's own styles, and after the
         # pixels: from here on the text is not painted as the page asked (AD-004).
@@ -427,5 +430,6 @@ async def capture(
         background=background,
         # Only glyphs differ between the two fills, by how much they cover a pixel.
         ink=ImageChops.difference(black, white).convert("L"),
+        author_styles=author_styles,
         faces=faces,
     )

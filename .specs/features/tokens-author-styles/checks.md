@@ -80,3 +80,7 @@ Proof: `uv run pytest`
 ## Handoff
 
 - S1-S2 = `capture.py` 18 KB + `models.py` 6 KB + `js/stabilize.js` 1 KB + a new page script ~1 KB + `tools/extract_tokens.py` 5 KB + `tests/test_extract_tokens.py` 38 KB + the two fixtures ~2 KB (S1, 71 KB) and `README.md` 7 KB + `CHANGELOG.md` 12 KB + the tool again 5 KB (S2, 24 KB) = 95 KB / 4 ≈ 24k tokens, one surface (`extract_tokens`), under the 150k budget - one builder
+
+- **Boundary:** C1-C11 closed at the build commit of this branch. The whole suite ran 555 passed, 1 failed: `test_many_texts_over_millions_of_colours_add_little_to_the_call`, a wall-clock bound (`painted - bare < 10`s) missed during a 30-minute run while other commands shared the machine. It passed alone (9s), and this change adds one page script to both calls it compares
+- **Settled mid-build:** the stabilize script's own `<style>` now carries `data-squint-stabilize`, so the page script can leave it out with the text fill's `data-squint-fill`; the page script runs before the text fills. Two faults injected by the builder were caught: counting Squint's own style (C2 red) and treating an unreadable sheet as no style (C4 `cross-origin` red)
+- **Abandoned:** nothing
