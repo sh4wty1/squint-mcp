@@ -39,9 +39,9 @@ The server exposes four tools:
 | Tool | Input | Output |
 | --- | --- | --- |
 | `ping` | `message` (optional string) | server `name`, `version`, and the echoed `message` |
-| `inspect_element` | `url`, `selector`, `viewport` (optional) | one element's computed styles, box model, sampled colours, `stabilized`, and a crop |
-| `detect_visual_bugs` | `url`, `viewports` (optional), `checks` (optional) | Findings ordered by severity, `stabilized` per viewport, and up to five crops |
-| `extract_tokens` | `url`, `scope` (optional), `viewport` (optional) | the design tokens the page uses, in eight Families, each token with how many elements use it, and `stabilized` |
+| `inspect_element` | `url`, `selector`, `viewport` (optional), `storageState` (optional) | one element's computed styles, box model, sampled colours, `stabilized`, and a crop |
+| `detect_visual_bugs` | `url`, `viewports` (optional), `checks` (optional), `storageState` (optional) | Findings ordered by severity, `stabilized` per viewport, and up to five crops |
+| `extract_tokens` | `url`, `scope` (optional), `viewport` (optional), `storageState` (optional) | the design tokens the page uses, in eight Families, each token with how many elements use it, and `stabilized` |
 
 `detect_visual_bugs` runs five Checks: `text-clipped` (text cut off by its own box), `low-contrast-real` (text whose contrast against the background sampled from the pixels is below WCAG 2.2 SC 1.4.3, so it is right over images and gradients), `offscreen-overflow` (the element that makes the page scroll horizontally), `overlap` (text that another element is painted over, with how much of it is hidden and which element covers it) and `font-fallback` (a web font the page declares that did not load, with how many elements render their text in a fallback font). See [`docs/SPEC.md`](https://github.com/sh4wty1/squint-mcp/blob/main/docs/SPEC.md) for the v0.1 specification and [`CHANGELOG.md`](https://github.com/sh4wty1/squint-mcp/blob/main/CHANGELOG.md) for what each release contains.
 
@@ -51,6 +51,21 @@ The server exposes four tools:
 - font sizes, line heights, spacings and px radii less than 1px apart, a Squint default with no norm behind it: a Capture has one image pixel per CSS pixel, and the whole steps of a scale stay apart.
 
 Each Family returns at most 20 tokens, the most used, and its `total` counts every token it found.
+
+## Pages behind a login
+
+Every call opens its page with no cookies, so a page behind a login is examined as its login screen. To examine it logged in, log in once and save the session to a file in Playwright's storage state format:
+
+```bash
+uvx --from squint-mcp playwright codegen --save-storage=/home/me/admin-state.json https://example.com/admin
+```
+
+Log in in the window that opens, then close it: the file holds the cookies and `localStorage` of the session. Pass its absolute path as `storageState` to `inspect_element`, `detect_visual_bugs` or `extract_tokens`. Each call loads it into a fresh context and never writes it, so calls stay isolated from one another.
+
+- The file holds the secrets of the session: anyone who has it is logged in. Keep it out of the repository; do not commit it.
+- `sessionStorage` is not carried. A page that keeps its session there opens logged out.
+- When the session expires, the calls examine the login screen again, with no error: save the file anew.
+- The calls see the first screen after the login. A state reached only by clicking, such as a dialog or an editor with no URL of its own, is out of reach.
 
 ## Development
 

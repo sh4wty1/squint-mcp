@@ -74,6 +74,14 @@
 - **Date**: 2026-10-13
 - **Status**: active. Written with the design of slice 10 (`.specs/features/extract-tokens/design.md`); confirmed by the maintainer on 2026-10-13.
 
+### AD-010
+- **Decision**: `inspect_element`, `detect_visual_bugs` and `extract_tokens` take `storageState`, the absolute path of a Playwright storage state file. `capture.capture` reads it whole before the browser is asked for, and creates the context of each Capture with its cookies and `localStorage`. The file is never written; a relative path, an unreadable file and a file that is not a storage state are `ToolError`s that never quote it.
+- **Reason**: ADR-0002 keeps interaction out of the tools and names attaching over CDP as the way past the initial-state limit. A page behind a login, such as the Admin of central-jogos-gc2 (an `HttpOnly` session cookie scoped to its API path), needs no interaction for its first screen after the login, only the session. Playwright already defines the file and writes it (`playwright codegen --save-storage`); a path keeps the cookies out of the agent's transcript, and only an absolute one reads the same file whatever the server's working directory.
+- **Trade-off**: A second way past the initial state beside the CDP one of ADR-0002, reaching only the first screen after a login. `sessionStorage` is not carried. An expired session is examined as the login screen, with no error.
+- **Scope**: `src/squint_mcp/capture.py`, `src/squint_mcp/tools/inspect_element.py`, `src/squint_mcp/tools/detect_visual_bugs.py`, `src/squint_mcp/tools/extract_tokens.py`, every tool that opens a URL.
+- **Date**: 2026-10-17
+- **Status**: active. Written with the plan of slice 12 (`.specs/features/storage-state/plan.md`), approved by the maintainer on 2026-10-17.
+
 ## Handoff
 
 - **Feature**: `font-fallback` (slice 9) / `.specs/features/font-fallback/`: the round of issue #20 is **done** and waits for the merge of pull request #29. Criteria FNT-63 to FNT-67, tasks F4 to F8. The seventh Verifier is a **PASS**, limited in scope by the maintainer, after passes 3 to 6 each found a class of family name no case held (quotation marks, apostrophes, whitespace, the hexadecimal decoder). `validate_state.py font-fallback` exits 0. Every traceability row reads Verified, and every Goal and Success Criterion of `spec.md` is ticked. The third Success Criterion cites CI run 38928445283 on `f26e730`. The next slice of the roadmap is still 11, Release 0.2.0 (`tlc-implement`).

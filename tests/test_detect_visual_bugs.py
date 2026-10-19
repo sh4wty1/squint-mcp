@@ -50,7 +50,7 @@ async def test_detect_visual_bugs_takes_url_and_optional_viewports_and_checks(
 ) -> None:
     schema = (await detect_tool(client)).input_schema
     properties = schema["properties"]
-    assert set(properties) == {"url", "viewports", "checks"}
+    assert set(properties) == {"url", "viewports", "checks", "storageState"}
     assert properties["url"]["type"] == "string"
     assert schema["required"] == ["url"]
 

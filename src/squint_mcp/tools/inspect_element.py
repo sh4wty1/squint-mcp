@@ -31,6 +31,7 @@ async def inspect_element(
     selector: str,
     ctx: Context[BrowserSession],
     viewport: Viewport | None = None,
+    storageState: str | None = None,
 ) -> Annotated[CallToolResult, InspectElementResult]:
     """Inspect one element of a rendered page.
 
@@ -42,7 +43,10 @@ async def inspect_element(
     never went idle. A call that takes longer than 30s fails. `box` is the element
     as painted, after transforms; `boxModel` is its layout, before them,
     for HTML elements. For SVG and MathML elements `boxModel.content` is still
-    derived from the painted size.
+    derived from the painted size. `storageState`, the absolute path of a
+    Playwright storage state file (the cookies and `localStorage` that
+    `playwright codegen --save-storage` saves), opens the page as that login
+    session sees it: the file is loaded into the call and never written.
     """
     viewport = viewport or Viewport(
         width=config.DEFAULT_VIEWPORT_WIDTH, height=config.DEFAULT_VIEWPORT_HEIGHT
@@ -51,7 +55,11 @@ async def inspect_element(
         # asyncio.timeout cancels once, so the capture's cleanup still gets to run.
         async with asyncio.timeout(config.TOTAL_TIMEOUT_S):
             captured = await capture(
-                ctx.request_context.lifespan_context, url, viewport, selector
+                ctx.request_context.lifespan_context,
+                url,
+                viewport,
+                selector,
+                storage_state=storageState,
             )
     except TimeoutError as error:
         raise ToolError(f"Timed out after {config.TOTAL_TIMEOUT_S:g}s.") from error

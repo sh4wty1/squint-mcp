@@ -1,13 +1,16 @@
 """Tests drive the server only through an in-memory MCP client."""
 
+import json
 import threading
 from collections.abc import AsyncIterator, Iterator
 from functools import partial
+from http.cookies import SimpleCookie
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
 
 import pytest
+from helpers import SESSION_COOKIE
 from mcp import Client
 
 from squint_mcp.server import server
@@ -45,6 +48,20 @@ class _FixtureHandler(SimpleHTTPRequestHandler):
         if self.path == "/tick":
             self.send_response(204)
             self.end_headers()
+        elif self.path == "/api/v1/admin/me":
+            # The API of `storage-state.html`: 200 to the session, 401 otherwise.
+            cookies = SimpleCookie(self.headers.get("Cookie", ""))
+            if "sid" in cookies and cookies["sid"].value == SESSION_COOKIE:
+                body = json.dumps({"seen": "seen" in cookies}).encode()
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+            else:
+                self.send_response(401)
+                self.send_header("Content-Length", "0")
+                self.end_headers()
         elif self.path == "/hang":
             # Never answers: the page stays stuck before `load`.
             _server_closing.wait()

@@ -51,6 +51,7 @@ async def detect_visual_bugs(
     ctx: Context[BrowserSession],
     viewports: Annotated[list[Viewport], Field(min_length=1)] | None = None,
     checks: Annotated[list[str], Field(min_length=1)] | None = None,
+    storageState: str | None = None,
 ) -> Annotated[CallToolResult, DetectVisualBugsResult]:
     """Find visual bugs in a rendered page, without a baseline.
 
@@ -71,8 +72,11 @@ async def detect_visual_bugs(
     works in `inspect_element`, and carries the styles and measurements that
     back it. The five most severe Findings also get a crop of their element:
     `evidence.cropIndex` is the position of that image among the images of the
-    response, or null. A call that takes longer than 30s, all viewports
-    together, fails.
+    response, or null. `storageState`, the absolute path of a Playwright storage
+    state file (the cookies and `localStorage` that `playwright codegen
+    --save-storage` saves), opens the page in every viewport as that login
+    session sees it: the file is loaded into the call and never written. A call
+    that takes longer than 30s, all viewports together, fails.
     """
     # A repeated Check name or viewport counts once, at its first place.
     names = list(dict.fromkeys(checks or CHECKS))
@@ -100,7 +104,13 @@ async def detect_visual_bugs(
             # the idle wait; capture them concurrently if calls get slow.
             captures = [
                 await capture(
-                    session, url, viewport, "*", covered_text=covered_text, fonts=fonts
+                    session,
+                    url,
+                    viewport,
+                    "*",
+                    covered_text=covered_text,
+                    fonts=fonts,
+                    storage_state=storageState,
                 )
                 for viewport in viewports
             ]

@@ -136,7 +136,7 @@ async def test_extract_tokens_is_listed_with_its_hints_and_its_schemas(
 
     schema = tool.input_schema
     properties = schema["properties"]
-    assert set(properties) == {"url", "scope", "viewport"}
+    assert set(properties) == {"url", "scope", "viewport", "storageState"}
     assert schema["required"] == ["url"]
     assert properties["url"]["type"] == "string"
 
