@@ -84,3 +84,7 @@ Proof: `uv run pytest`
 ## Handoff
 
 - S1-S2 = `tokens.py` 15 KB + `tests/test_extract_tokens.py` 36 KB + a new fixture ~2 KB (S1, 53 KB) and `tools/extract_tokens.py` 4 KB + `README.md` 7 KB + `CHANGELOG.md` 11 KB (S2, 22 KB) = 75 KB / 4 ≈ 19k tokens, one surface (`extract_tokens`), under the 150k budget - one builder
+
+- **Boundary:** C1-C8 closed at the build commit of this branch; the whole suite, 538 tests, green
+- **Settled mid-build:** C5's proof compares the description with its whitespace collapsed, since the docstring wraps the phrase across lines; the claim unchanged
+- **Abandoned:** nothing
