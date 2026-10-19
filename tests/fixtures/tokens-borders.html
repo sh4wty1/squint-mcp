@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Squint fixture: borders of every style that paints</title>
+    <style>
+      /* No text, and each border a colour no other element has, so a Token
+         tells the border it was read from. The button keeps every style of the
+         browser. */
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background-color: #ffffff;
+      }
+      div {
+        width: 100px;
+        height: 20px;
+        margin: 8px;
+      }
+      #outset {
+        border: 4px outset #aa0000;
+      }
+      #inset {
+        border: 4px inset #00aa00;
+      }
+      #groove {
+        border: 4px groove #0000aa;
+      }
+      #ridge {
+        border: 4px ridge #aa00aa;
+      }
+      #mixed {
+        border: 4px outset #445566;
+        border-top: 4px solid #112233;
+      }
+      #solid {
+        border: 4px solid #cc6600;
+      }
+      #dashed {
+        border: 4px dashed #0066cc;
+      }
+      #dotted {
+        border: 4px dotted #66cc00;
+      }
+      #double {
+        border: 4px double #cc0066;
+      }
+    </style>
+  </head>
+  <body>
+    <button></button>
+    <div id="outset"></div>
+    <div id="inset"></div>
+    <div id="groove"></div>
+    <div id="ridge"></div>
+    <div id="mixed"></div>
+    <div id="solid"></div>
+    <div id="dashed"></div>
+    <div id="dotted"></div>
+    <div id="double"></div>
+  </body>
+</html>

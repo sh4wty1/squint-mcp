@@ -20,6 +20,7 @@ DEFAULT = "tokens-default.html"
 SCOPE = "tokens-scope.html"
 LIMIT = "tokens-limit.html"
 VIEWPORT = "tokens-viewport.html"
+BORDERS = "tokens-borders.html"
 TWENTY = [value * 10 for value in range(1, 21)]
 
 
@@ -316,6 +317,41 @@ async def test_each_side_of_a_border_gives_its_own_color(client: Client) -> None
     colors = (await extract(client, USED))["colors"]
     for value in ("#800000", "#008000", "#000080", "#808000"):
         assert held(colors, value)["roles"]["border"] == 1
+
+
+async def test_a_default_button_gives_no_border_color(client: Client) -> None:
+    # It computes `outset rgb(0, 0, 0)`; the theme paints it `#767676`.
+    colors = (await extract(client, BORDERS))["colors"]
+    assert "#000000" not in values(colors)
+
+
+@pytest.mark.parametrize("value", ["#aa0000", "#00aa00", "#0000aa", "#aa00aa"])
+async def test_a_shaded_border_gives_no_color(client: Client, value: str) -> None:
+    colors = (await extract(client, BORDERS))["colors"]
+    assert value not in values(colors)
+
+
+async def test_only_the_shaded_sides_of_a_border_are_left_out(client: Client) -> None:
+    colors = (await extract(client, BORDERS))["colors"]
+    token = held(colors, "#112233")
+    assert (token["uses"], token["roles"]["border"]) == (1, 1)
+    assert "#445566" not in values(colors)
+
+
+@pytest.mark.parametrize("value", ["#cc6600", "#0066cc", "#66cc00", "#cc0066"])
+async def test_a_border_of_any_other_style_gives_its_color(
+    client: Client, value: str
+) -> None:
+    colors = (await extract(client, BORDERS))["colors"]
+    token = held(colors, value)
+    assert (token["uses"], token["roles"]["border"]) == (1, 1)
+
+
+async def test_the_description_says_a_shaded_border_is_not_counted(
+    client: Client,
+) -> None:
+    description = " ".join(((await tokens_tool(client)).description or "").split())
+    assert "`outset`, `inset`, `groove` or `ridge` is not counted" in description
 
 
 async def test_a_color_in_the_srgb_notation_is_read(client: Client) -> None:

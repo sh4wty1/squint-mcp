@@ -118,6 +118,9 @@ SINGLE = "single"
 GAP_DISPLAYS = ("flex", "inline-flex", "grid", "inline-grid")
 """The computed displays whose `row-gap` and `column-gap` are spacings."""
 
+SHADED_STYLES = ("outset", "inset", "groove", "ridge")
+"""The border styles whose sides are not painted in their computed colour."""
+
 
 def _use[V](uses: Uses[V], role: str, values: Iterable[V]) -> None:
     """Count what one element has in one Role: a Value it has on several sides
@@ -209,11 +212,13 @@ def _colors(read: list[Element], srgb: dict[str, str]) -> Family[ColorToken]:
             fill = computed["-webkit-text-fill-color"]
             _use(uses, "text", _hexes([fill], srgb))
         _use(uses, "background", _hexes([computed["background-color"]], srgb))
-        # A side with no border still computes a colour: the width decides.
+        # A side with no border still computes a colour: the width decides. A
+        # shaded side is painted in shades of its colour or by the theme, never
+        # in the colour itself (issue #33).
         borders = (
             computed[f"border-{side}-color"]
             for side, width in _sides(element.box_model.border)
-            if width > 0
+            if width > 0 and computed[f"border-{side}-style"] not in SHADED_STYLES
         )
         _use(uses, "border", _hexes(borders, srgb))
     tokens: list[ColorToken] = []
