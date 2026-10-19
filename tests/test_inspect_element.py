@@ -46,6 +46,14 @@ COMPUTED_PROPERTIES = {
     "text-align",
     "text-overflow",
     "white-space",
+    "border-top-color",
+    "border-right-color",
+    "border-bottom-color",
+    "border-left-color",
+    "border-top-style",
+    "border-right-style",
+    "border-bottom-style",
+    "border-left-style",
 }
 
 
@@ -174,6 +182,28 @@ async def test_computed_values_are_what_the_browser_resolved(client: Client) -> 
     assert computed["font-size"] == "20px"
     assert computed["background-color"] == "rgb(255, 0, 0)"
     assert computed["display"] == "block"
+
+
+async def test_computed_holds_the_colour_of_each_border(client: Client) -> None:
+    computed = (await inspect(client, BOX, "#borders"))["computed"]
+    assert computed["border-top-color"] == "rgb(255, 0, 0)"
+    assert computed["border-right-color"] == "rgb(0, 128, 0)"
+    assert computed["border-bottom-color"] == "rgb(0, 0, 255)"
+    assert computed["border-left-color"] == "rgb(255, 165, 0)"
+
+
+async def test_computed_holds_the_style_of_each_border(client: Client) -> None:
+    computed = (await inspect(client, BOX, "#borders"))["computed"]
+    assert computed["border-top-style"] == "solid"
+    assert computed["border-right-style"] == "dashed"
+    assert computed["border-bottom-style"] == "dotted"
+    assert computed["border-left-style"] == "double"
+
+
+async def test_computed_holds_the_border_of_a_default_button(client: Client) -> None:
+    computed = (await inspect(client, BOX, "#button"))["computed"]
+    assert computed["border-top-style"] == "outset"
+    assert computed["border-top-color"] == "rgb(0, 0, 0)"
 
 
 async def test_default_viewport_is_1440_by_900(client: Client) -> None:

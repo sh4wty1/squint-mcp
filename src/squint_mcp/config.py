@@ -41,8 +41,9 @@ SAMPLED_COLORS_MAX = 3
 COLOR_COUNT_MAX_PIXELS = 512 * 512
 
 # Source: Squint default. Chromium resolves 350+ properties; these are the ones that
-# decide how a box and its text are painted. Margin, border and padding are reported
-# in the box model instead.
+# decide how a box and its text are painted. Margin, padding and the width of each
+# border are reported in the box model instead; the colour and style of each border
+# are here, since the box model cannot say how a border is painted (issue #32).
 INSPECT_COMPUTED_PROPERTIES = (
     "display",
     "position",
@@ -64,6 +65,14 @@ INSPECT_COMPUTED_PROPERTIES = (
     "text-align",
     "text-overflow",
     "white-space",
+    "border-top-color",
+    "border-right-color",
+    "border-bottom-color",
+    "border-left-color",
+    "border-top-style",
+    "border-right-style",
+    "border-bottom-style",
+    "border-left-style",
 )
 
 # Source: Squint default. What a Capture collects for every element: the inspect
@@ -71,20 +80,16 @@ INSPECT_COMPUTED_PROPERTIES = (
 # `-webkit-text-fill-color`, the colour that paints the glyphs: that of `color`
 # unless the page sets it, `z-index`, which with `position` decides what is
 # painted above an element, and `font-style`, which with `font-family` and
-# `font-weight` says which face of a family an element asks for. The twelve
-# after them are what the tokens of a page are made of besides the box model
-# (AD-009): the colour of each border, the radius of each corner, the two
-# shadows and the two gaps.
+# `font-weight` says which face of a family an element asks for. The eight
+# after them, with the border colours of the inspect properties, are what the
+# tokens of a page are made of besides the box model (AD-009): the radius of
+# each corner, the two shadows and the two gaps.
 CAPTURE_COMPUTED_PROPERTIES = (
     *INSPECT_COMPUTED_PROPERTIES,
     "direction",
     "-webkit-text-fill-color",
     "z-index",
     "font-style",
-    "border-top-color",
-    "border-right-color",
-    "border-bottom-color",
-    "border-left-color",
     "border-top-left-radius",
     "border-top-right-radius",
     "border-bottom-right-radius",

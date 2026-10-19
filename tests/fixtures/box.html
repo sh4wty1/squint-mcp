@@ -132,6 +132,23 @@
         height: 60px;
         background: rgb(0, 128, 0);
       }
+      /* A colour and a style of its own on each side. */
+      #borders {
+        position: absolute;
+        top: 1700px;
+        left: 40px;
+        width: 100px;
+        height: 40px;
+        border-width: 4px;
+        border-style: solid dashed dotted double;
+        border-color: rgb(255, 0, 0) rgb(0, 128, 0) rgb(0, 0, 255) rgb(255, 165, 0);
+      }
+      /* The browser's own border: 2px outset. */
+      #button {
+        position: absolute;
+        top: 1800px;
+        left: 40px;
+      }
     </style>
   </head>
   <body>
@@ -162,5 +179,7 @@
     <div id="rotated"></div>
     <svg id="vector" width="40" height="20"></svg>
     <div id="frac"></div>
+    <div id="borders"></div>
+    <button id="button">Button</button>
   </body>
 </html>
