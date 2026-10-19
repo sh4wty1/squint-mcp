@@ -192,7 +192,7 @@ O Squint só vê o estado inicial de uma página aberta sem cookies ([`SPEC.md`]
 
 | # | Fatia | Depende de | Skill | Status |
 |---|---|---|---|---|
-| 12 | Sessão de login por arquivo (`storage_state`) | — | `tlc-spec-lean` | pendente |
+| 12 | Sessão de login por arquivo (`storage_state`) | — | `tlc-spec-lean` | concluída |
 | 13 | Capture de um Chrome aberto (CDP) | 12 | `tlc-spec-driven` | pendente |
 
 ## 12. Sessão de login por arquivo (`storage_state`)
@@ -207,7 +207,7 @@ O Squint só vê o estado inicial de uma página aberta sem cookies ([`SPEC.md`]
 - **Não entra:** `sessionStorage`; fluxo de login dentro do Squint; estados depois de clique (fatia 13).
 - **Dependência:** nenhuma.
 - **Skill:** `tlc-spec-lean`.
-- **Status:** pendente.
+- **Status:** concluída. Plano, checks e relatório de verificação em [`.specs/features/storage-state/`](../.specs/features/storage-state/).
 
 ## 13. Capture de um Chrome aberto (CDP)
 
