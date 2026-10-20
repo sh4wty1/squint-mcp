@@ -52,6 +52,8 @@ The server exposes four tools:
 
 Each Family returns at most 20 tokens, the most used, and its `total` counts every token it found.
 
+`authorStyles` is false when the page has no style of its own: no rule in a style sheet, in the document or an open shadow root, and no `style` attribute. Every value is then the browser's default, and the summary says so. It tells only the whole page: a page with some style still reports the defaults of what it leaves unstyled, such as a default `<button>` and its `#efefef` background.
+
 ## Pages behind a login
 
 Every call opens its page with no cookies, so a page behind a login is examined as its login screen. To examine it logged in, log in once and save the session to a file in Playwright's storage state format:

@@ -6,17 +6,24 @@ from typing import Annotated
 from mcp.server.mcpserver import Context
 from mcp.server.mcpserver.exceptions import ToolError
 from mcp.types import CallToolResult, TextContent
+from pydantic import ConfigDict
+from pydantic.alias_generators import to_camel
 
 from squint_mcp import config
 from squint_mcp.capture import BrowserSession, capture
 from squint_mcp.models import Viewport
 from squint_mcp.tokens import Tokens, extract
 
+NO_STYLE = " The page has no style of its own: these values are the browser's defaults."
+
 
 class ExtractTokensResult(Tokens):
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
+
     viewport: Viewport
     stabilized: bool
     scope: str | None
+    author_styles: bool
 
 
 async def extract_tokens(
@@ -55,6 +62,11 @@ async def extract_tokens(
     cookies and `localStorage` that `playwright codegen --save-storage` saves),
     opens the page as that login session sees it: the file is loaded into the
     call and never written.
+    `authorStyles` is false when the page has no style of its own: no rule in a
+    style sheet of the document or of an open shadow root, and no declaration
+    in a `style` attribute. Its values are then the browser's defaults, and the
+    summary says so. It describes the whole page, whatever `scope` is. A page
+    with some style still reports the defaults of what it leaves unstyled.
     `stabilized` is false when the network never went idle. A call that takes
     longer than 30s fails.
     """
@@ -81,6 +93,7 @@ async def extract_tokens(
         viewport=captured.viewport,
         stabilized=captured.stabilized,
         scope=scope,
+        author_styles=captured.author_styles,
     )
     typography = result.typography
     totals = {
@@ -96,6 +109,8 @@ async def extract_tokens(
     counts = ", ".join(f"{name} {total}" for name, total in totals.items())
     state = "stabilized" if captured.stabilized else "not stabilized"
     summary = f"Tokens: {counts}; elements {result.elements}; {state}."
+    if not captured.author_styles:
+        summary += NO_STYLE
     return CallToolResult(
         content=[TextContent(type="text", text=summary)],
         structured_content=result.model_dump(mode="json", by_alias=True),
