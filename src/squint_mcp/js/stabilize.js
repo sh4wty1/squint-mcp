@@ -12,15 +12,20 @@ async () => {
     }
   }
 
+  // Every rule Squint adds to a page is in a constructable sheet: a `style-src`
+  // policy refuses a `<style>` the page did not ship, never an adopted sheet
+  // (issue #26). The set tells them from the page's own sheets (AD-011).
+  globalThis.__squintSheets ??= new WeakSet();
   for (const root of roots) {
     // Animations and transitions that start from now on take no time.
-    const style = document.createElement("style");
-    style.setAttribute("data-squint-stabilize", "");
-    style.textContent =
+    const sheet = new CSSStyleSheet();
+    sheet.replaceSync(
       "*, *::before, *::after {" +
-      " animation-duration: 0s !important; animation-delay: 0s !important;" +
-      " transition-duration: 0s !important; transition-delay: 0s !important; }";
-    (root.documentElement ?? root).append(style);
+        " animation-duration: 0s !important; animation-delay: 0s !important;" +
+        " transition-duration: 0s !important; transition-delay: 0s !important; }",
+    );
+    globalThis.__squintSheets.add(sheet);
+    root.adoptedStyleSheets = [...root.adoptedStyleSheets, sheet];
 
     // Those already running jump to their end. An infinite animation has no end,
     // so it is cancelled.

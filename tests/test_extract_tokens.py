@@ -988,6 +988,15 @@ async def test_a_page_with_no_style_says_its_values_are_the_defaults(
     assert text.endswith(NO_STYLE_NOTICE), text
 
 
+async def test_a_shadow_root_with_no_style_is_no_author_style(
+    client: Client, local_server: str
+) -> None:
+    result = await call(client, author(local_server, "shadow"))
+    assert result.is_error is False, texts(result)
+    assert result.structured_content is not None
+    assert result.structured_content["authorStyles"] is False
+
+
 async def test_a_style_element_is_an_author_style(
     client: Client, local_server: str
 ) -> None:

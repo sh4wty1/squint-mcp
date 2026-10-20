@@ -133,7 +133,7 @@
     });
   });
 
-  // A style does not cross a shadow boundary: one per root, as when filling. Two
+  // A sheet does not cross a shadow boundary: one per root, as when filling. Two
   // in each: what is painted, and the colours of the highlights.
   const roots = [document];
   for (const root of roots) {
@@ -141,13 +141,14 @@
       if (element.shadowRoot) roots.push(element.shadowRoot);
     }
   }
-  const styleIn = (root) => {
-    const style = document.createElement("style");
-    (root.documentElement ?? root).append(style);
-    return style;
+  const sheetIn = (root) => {
+    const sheet = new CSSStyleSheet();
+    globalThis.__squintSheets.add(sheet);
+    root.adoptedStyleSheets = [...root.adoptedStyleSheets, sheet];
+    return sheet;
   };
-  const painting = roots.map(styleIn);
-  const colors = roots.map(styleIn);
+  const painting = roots.map(sheetIn);
+  const colors = roots.map(sheetIn);
 
   // One highlight per channel of a screenshot. Red and blue at full strength and
   // green at a quarter of it: Chromium paints a bright green glyph fatter than a
@@ -211,7 +212,7 @@
         const painted = on ? color : "rgb(0, 0, 0)";
         return `::highlight(${highlightOf(channel)}) { color: ${painted} !important; }`;
       }).join(" ");
-      for (const style of colors) style.textContent = css;
+      for (const sheet of colors) sheet.replaceSync(css);
     },
 
     // What is painted. "page": everything, as the page asks. "glyphs": the glyphs
@@ -248,7 +249,7 @@
           "* { visibility: hidden !important; } " +
           `[${SHOWN}] { visibility: visible !important; }`;
       }
-      for (const style of painting) style.textContent = css;
+      for (const sheet of painting) sheet.replaceSync(css);
     },
 
     // Hit testing. `jobs` gives, for each text, the pixels to test as runs along

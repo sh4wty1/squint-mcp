@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Security-Policy" content="style-src file:" />
+    <title>Squint fixture: a policy that refuses inline styles</title>
+    <link rel="stylesheet" href="style-src.css" />
+  </head>
+  <body>
+    <div id="flat" class="text">XXXXXXXXXX</div>
+    <div class="row">
+      <div id="covered" class="text">XXXXXXXXXX</div>
+      <div class="cover"></div>
+    </div>
+    <div id="shadow-host" class="text"></div>
+    <div id="adopted" class="text">XXXXXXXXXX</div>
+    <div id="late" class="text">XXXXXXXXXX</div>
+    <script>
+      // The policy names no script source: scripts run, inline styles do not.
+      document
+        .getElementById("shadow-host")
+        .attachShadow({ mode: "open" }).innerHTML = "<span>XXXXXXXXXX</span>";
+      // A constructable sheet is outside `style-src`: the page's own, set at load.
+      const adopted = new CSSStyleSheet();
+      adopted.replaceSync("#adopted { color: rgb(119, 119, 119); }");
+      document.adoptedStyleSheets = [adopted];
+      addEventListener("load", () =>
+        setTimeout(() => document.getElementById("late").classList.add("go"), 200),
+      );
+    </script>
+  </body>
+</html>
