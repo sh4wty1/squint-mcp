@@ -87,7 +87,7 @@ The same page, with and without a policy that refuses inline styles, gives the s
 | Assumption | Chosen default | Rationale | Confirmed? |
 | --- | --- | --- | --- |
 | A page that replaces `adoptedStyleSheets` after the Capture added its sheets | Not handled: its sheets drop the Capture's, as today a page that removes a `<style>` it did not add would | A page script that reassigns the list between two screenshots is as rare as one that removes foreign `<style>` elements; same ceiling as today | n |
-| The route itself, instead of the two the issue names | Constructable sheets, no `bypass_csp` and no error | The issue asks the maintainer to decide `bypass_csp` because it changes how the page behaves; this route does not, so it needs only the plan's review | n |
+| The route itself, instead of the two the issue names | Constructable sheets, no `bypass_csp` and no error | The issue asks the maintainer to decide `bypass_csp` because it changes how the page behaves; this route does not, so it needs only the plan's review | y |
 
 **Open questions:** none - all resolved or logged above.
 
