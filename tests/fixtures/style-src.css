@@ -1,0 +1,47 @@
+/* The only styles of `style-src.html` and `style-src-refused.html`: their policy,
+   `style-src file:`, refuses every inline style. Ahem: every glyph is a 1em square of
+   ink, so 10 glyphs at 20px are a block of 200 x 20 text pixels. */
+@font-face {
+  font-family: Ahem;
+  src: url("Ahem.ttf");
+}
+html,
+body {
+  margin: 0;
+}
+body {
+  background: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
+  font: 20px/30px Ahem;
+}
+.text {
+  margin: 20px 0 0 40px;
+  width: 200px;
+}
+/* 4.47:1 on white, under 4.5:1. */
+#flat,
+#shadow-host {
+  color: rgb(119, 119, 119);
+}
+.row {
+  position: relative;
+  margin-top: 20px;
+  height: 30px;
+}
+/* The last 120px of the text, from 120px to 240px: 60%. */
+.cover {
+  position: absolute;
+  top: 0;
+  left: 120px;
+  width: 120px;
+  height: 30px;
+  background: rgb(200, 0, 0);
+}
+/* Black until the page's script adds `go` after load; then 10s to reach 4.47:1,
+   unless transitions take no time. */
+#late {
+  transition: color 10s linear;
+}
+#late.go {
+  color: rgb(119, 119, 119);
+}

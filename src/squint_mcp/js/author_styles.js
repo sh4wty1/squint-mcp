@@ -13,9 +13,7 @@
   for (const root of roots) {
     for (const sheet of [...root.styleSheets, ...root.adoptedStyleSheets]) {
       if (sheet.disabled) continue;
-      if (sheet.ownerNode?.matches?.("[data-squint-stabilize], [data-squint-fill]")) {
-        continue;
-      }
+      if (globalThis.__squintSheets?.has(sheet)) continue;
       try {
         if (sheet.cssRules.length > 0) return true;
       } catch {

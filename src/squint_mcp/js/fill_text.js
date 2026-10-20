@@ -4,7 +4,8 @@
 // The fill colour, not `color`: borders, underlines and shadows follow `color` and
 // have to stay as they are.
 (color) => {
-  // A style does not cross a shadow boundary: one per root, as when stabilizing.
+  // A sheet does not cross a shadow boundary: one per root, as when stabilizing,
+  // kept from one fill to the next.
   const roots = [document];
   for (const root of roots) {
     for (const element of root.querySelectorAll("*")) {
@@ -12,13 +13,17 @@
     }
   }
 
+  globalThis.__squintFills ??= new WeakMap();
   for (const root of roots) {
-    let style = root.querySelector("style[data-squint-fill]");
-    if (!style) {
-      style = document.createElement("style");
-      style.setAttribute("data-squint-fill", "");
-      (root.documentElement ?? root).append(style);
+    let sheet = globalThis.__squintFills.get(root);
+    if (!sheet) {
+      sheet = new CSSStyleSheet();
+      globalThis.__squintFills.set(root, sheet);
+      globalThis.__squintSheets.add(sheet);
+      root.adoptedStyleSheets = [...root.adoptedStyleSheets, sheet];
     }
-    style.textContent = `*, *::before, *::after { -webkit-text-fill-color: ${color} !important; }`;
+    sheet.replaceSync(
+      `*, *::before, *::after { -webkit-text-fill-color: ${color} !important; }`,
+    );
   }
 };

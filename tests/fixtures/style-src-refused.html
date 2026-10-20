@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Security-Policy" content="style-src file:" />
+    <title>Squint fixture: an inline style of the page that its policy refuses</title>
+    <link rel="stylesheet" href="style-src.css" />
+    <!-- Refused by the policy: #refused stays black. -->
+    <style>
+      #refused {
+        color: rgb(255, 0, 0);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="refused" class="text">XXXXXXXXXX</div>
+  </body>
+</html>

@@ -46,6 +46,7 @@
         link: () => link("tokens-author.css"),
         attribute: () => other.setAttribute("style", "color: #aa0000"),
         adopted: () => (document.adoptedStyleSheets = [sheet(RULE)]),
+        shadow: () => shadow(),
         "shadow-style": () => style("span { color: #aa0000 }", shadow()),
         "shadow-adopted": () =>
           (shadow().adoptedStyleSheets = [sheet("span { color: #aa0000 }")]),

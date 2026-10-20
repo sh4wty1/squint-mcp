@@ -82,6 +82,14 @@
 - **Date**: 2026-10-17
 - **Status**: active. Written with the plan of slice 12 (`.specs/features/storage-state/plan.md`), approved by the maintainer on 2026-10-17.
 
+### AD-011
+- **Decision**: Every rule a Capture adds to a page is in a constructable sheet (`new CSSStyleSheet()`, `replaceSync`) appended to the `adoptedStyleSheets` of the document or of an open shadow root, and kept in `globalThis.__squintSheets`, a `WeakSet` that `author_styles.js` skips. No page script appends a `<style>` element; the context is opened without `bypass_csp`.
+- **Reason**: A `style-src` policy without `'unsafe-inline'` refuses a `<style>` the page did not ship, and with it the fills of AD-004: every Check returned `No findings` on such a page (issue #26). An adopted sheet is outside `style-src` (spiked on Chromium 153, in the document, in an open shadow root and for `::highlight()`), so the page's own policy keeps applying to the page. `bypass_csp=True` would lift that policy and capture a page nobody sees.
+- **Trade-off**: A page that replaces its `adoptedStyleSheets` while it is captured drops the Capture's sheets. The marker set lives in the page's own world, as `__squintElements` does (AD-005).
+- **Scope**: `src/squint_mcp/js/stabilize.js`, `src/squint_mcp/js/fill_text.js`, `src/squint_mcp/js/covered_text.js`, `src/squint_mcp/js/author_styles.js`, every page script that adds a style.
+- **Date**: 2026-10-20
+- **Status**: active. Written with the plan of issue #26 (`.specs/features/capture-style-src/plan.md`), approved by the maintainer on 2026-10-20.
+
 ## Handoff
 
 - **Feature**: `font-fallback` (slice 9) / `.specs/features/font-fallback/`: the round of issue #20 is **done** and waits for the merge of pull request #29. Criteria FNT-63 to FNT-67, tasks F4 to F8. The seventh Verifier is a **PASS**, limited in scope by the maintainer, after passes 3 to 6 each found a class of family name no case held (quotation marks, apostrophes, whitespace, the hexadecimal decoder). `validate_state.py font-fallback` exits 0. Every traceability row reads Verified, and every Goal and Success Criterion of `spec.md` is ticked. The third Success Criterion cites CI run 38928445283 on `f26e730`. The next slice of the roadmap is still 11, Release 0.2.0 (`tlc-implement`).
